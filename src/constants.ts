@@ -1,4 +1,4 @@
-export const FIELDS = [
+export const SEMANTIC_FIELDS = [
     'abstract',
     'authors',
     'citationCount',
@@ -16,7 +16,7 @@ export const FIELDS = [
     'venue',
     'year'
 ]
-export const SEARCH_FIELDS = [
+export const SEMANTIC_SEARCH_FIELDS = [
     'abstract',
     'authors',
     'citationCount',

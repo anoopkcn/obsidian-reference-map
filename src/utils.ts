@@ -1,5 +1,6 @@
 import { FileSystemAdapter } from "obsidian";
 import path from "path";
+import doiRegex from "doi-regex";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -14,3 +15,13 @@ export const resolvePath = function (rawPath: string): string {
         ? this.app.vault.adapter.getBasePath() : '/';
     return path.normalize(path.resolve(vaultRoot, rawPath))
 }
+
+// Given a markdown file contents regex match the DOI's from the file 
+export const getPaperIds = (content: string): string[] => {
+    const doi_matches = content.match(doiRegex());
+    if (doi_matches) {
+        return doi_matches.unique();
+    }
+    return [];
+}
+

@@ -2,7 +2,7 @@ export interface ReferenceMapSettings {
     mySetting: string;
 }
 
-export interface Paper {
+export interface SemanticPaper {
     paperId: string
     externalIds: ExternalIds
     url: string
