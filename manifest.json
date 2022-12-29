@@ -3,7 +3,7 @@
 	"name": "Reference Map",
 	"version": "0.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Reference and citation map for literature discovery",
+	"description": "Reference and citation map for literature review and discovery",
 	"author": "Anoop K. Chandran",
 	"authorUrl": "anoopkcn.com",
 	"isDesktopOnly": true

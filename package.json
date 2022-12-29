@@ -1,7 +1,7 @@
 {
 	"name": "obsidian-reference-map",
 	"version": "0.0.1",
-	"description": "Reference and citation map for literature discovery",
+	"description": "Reference and citation map for literature review and discovery",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
