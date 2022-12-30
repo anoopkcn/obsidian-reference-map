@@ -6,6 +6,7 @@ export const SEMANTIC_FIELDS = [
     'fieldsOfStudy',
     'influentialCitationCount',
     'isOpenAccess',
+    'openAccessPdf',
     'journal',
     'paperId',
     'publicationDate',
@@ -14,7 +15,8 @@ export const SEMANTIC_FIELDS = [
     'title',
     'url',
     'venue',
-    'year'
+    'year',
+    'citationStyles'
 ]
 export const SEMANTIC_SEARCH_FIELDS = [
     'abstract',

@@ -1,14 +1,13 @@
-import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, WorkspaceLeaf, setIcon } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { getPaperMetadata } from './referencemap';
-import { getPaperIds } from './utils';
+import { copyElToClipboard, getPaperIds } from './utils';
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
     plugin: ReferenceMap;
-    activeMafkdownLeaf: MarkdownView;
     constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
 
@@ -51,20 +50,35 @@ export class ReferenceMapView extends ItemView {
             try {
                 const fileContent = await app.vault.cachedRead(activeView.file);
                 const paperIds = getPaperIds(fileContent)
-                console.log(paperIds)
+                // console.log(paperIds)
+
                 if (paperIds.length !== 0) {
                     const paper = await getPaperMetadata(paperIds[0]);
                     const rootPaper = paper[0];
+                    console.log(rootPaper)
+                    const bib = rootPaper.citationStyles.bibtex;
                     const paperEl = this.containerEl.createEl("div", { cls: "orm-paper" });
+                    paperEl.createDiv(
+                        {
+                            cls: 'orm-copy-bibtex',
+                            attr: {
+                                'aria-label': 'Copy reference as bibtex',
+                            },
+                        },
+                        (btn) => {
+                            setIcon(btn, 'ReferenceMapCopyIcon');
+                            btn.onClickEvent(() => copyElToClipboard(bib));
+                        }
+                    );
                     paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
-                    paperEl.createEl("div", { text: rootPaper.authors[0].name + ", " + rootPaper.authors[0].authorId, cls: "orm-paper-authors" });
+                    // paperEl.createEl("div", { text: `<a href="https://www.semanticscholar.org/author/${rootPaper.authors[0].authorId}">${rootPaper.authors[0].name}</a>`, cls: "orm-paper-authors" });
                     this.setViewContent(paperEl);
                 } else {
                     this.setNoContentMessage();
                 }
 
             } catch (e) {
-                console.error(e);
+                console.error('Error in Reference Map View: processReferences', e);
             }
         } else {
             this.setNoContentMessage();

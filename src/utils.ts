@@ -25,3 +25,7 @@ export const getPaperIds = (content: string): string[] => {
     return [];
 }
 
+export function copyElToClipboard(el: string) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('electron').clipboard.writeText(el);
+}

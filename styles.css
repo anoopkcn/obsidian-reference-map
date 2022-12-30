@@ -8,6 +8,15 @@ If your plugin does not need CSS, delete this file.
 */
 
 .orm-no-content {
-  /* opacity of the text element to half */
-    opacity: 0.5;
+	/* opacity of the text element to half */
+	opacity: 0.5;
+}
+.orm-copy-bibtex {
+    width:22px;
+	cursor: pointer;
+	color: var(--text-muted);
+}
+
+.orm-copy-bibtex:hover {
+	color: var(--text-accent);
 }
