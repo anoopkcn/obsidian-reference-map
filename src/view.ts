@@ -15,6 +15,9 @@ export class ReferenceMapView extends ItemView {
     getDisplayText() {
         return "Example view";
     }
+    getIcon() {
+        return 'ReferenceMapIcon';
+    }
 
     async onOpen() {
         const container = this.containerEl.children[1];

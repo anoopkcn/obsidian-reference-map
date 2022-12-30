@@ -1,7 +1,7 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { ReferenceMapSettings } from './types';
-import { SampleModal } from './modal';
+import { addIcons } from './ui/icons';
 // import { getPaperMetadata } from './referencemap';
 // import { getPaperIds } from './utils';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './view';
@@ -15,6 +15,7 @@ export default class ReferenceMap extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+		addIcons();
 		this.registerView(
 			REFERENCE_MAP_VIEW_TYPE,
 			(leaf: WorkspaceLeaf) => new ReferenceMapView(leaf, this)
@@ -30,8 +31,7 @@ export default class ReferenceMap extends Plugin {
 				this.activateView();
 			},
 		});
-
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Reference Map', async (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('ReferenceMapIcon', 'Reference Map', async (evt: MouseEvent) => {
 			// Function to fetch data from an API and return the data as a JSON object
 			// const doi = `10.1017/9781108955652.006`;
 			// const paper = await getPaperMetadata(doi);
@@ -47,28 +47,23 @@ export default class ReferenceMap extends Plugin {
 			// 	const tags = getPaperIds(fileContent)
 			// 	console.log(tags)
 			// }
-			// this.activateView();
+			this.activateView()
 		});
 
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
-
-		this.addCommand({
-			id: 'open-sample-modal-simple',
-			name: 'Open sample modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
-			}
-		});
+		ribbonIconEl.addClass('reference-map-ribbon-class');
 
 		this.addSettingTab(new ReferenceMapSettingTab(this.app, this));
 	}
 
+
 	onunload() {
-		this.app.workspace
-			.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
-			.forEach((leaf) => leaf.detach());
+		// TODO: in the production version unload the view
+		// this.app.workspace
+		// 	.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
+		// 	.forEach((leaf) => leaf.detach());
 	}
 
+	// Create the reference map 
 	async activateView() {
 		this.app.workspace.detachLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
 
@@ -82,6 +77,7 @@ export default class ReferenceMap extends Plugin {
 		);
 	}
 
+	// Get the reference map view
 	get view() {
 		const leaves = app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
 		if (!leaves?.length) return null;
