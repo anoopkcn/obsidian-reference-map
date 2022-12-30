@@ -6,3 +6,8 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.orm-no-content {
+  /* opacity of the text element to half */
+    opacity: 0.5;
+}

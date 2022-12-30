@@ -2,8 +2,6 @@ import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
-// import { getPaperMetadata } from './referencemap';
-// import { getPaperIds } from './utils';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './view';
 
 const DEFAULT_SETTINGS: ReferenceMapSettings = {
@@ -32,21 +30,6 @@ export default class ReferenceMap extends Plugin {
 			},
 		});
 		const ribbonIconEl = this.addRibbonIcon('ReferenceMapIcon', 'Reference Map', async (evt: MouseEvent) => {
-			// Function to fetch data from an API and return the data as a JSON object
-			// const doi = `10.1017/9781108955652.006`;
-			// const paper = await getPaperMetadata(doi);
-			// const references = await getPaperMetadata(doi, 'references');
-			// const citations = await getPaperMetadata(doi, 'citations');
-			// console.log(paper[0]);
-			// console.log(references[3]);
-			// console.log(citations[0]);
-			// parsing the DOI from the active file
-			// const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-			// if (activeView) {
-			// 	const fileContent = await app.vault.cachedRead(activeView.file);
-			// 	const tags = getPaperIds(fileContent)
-			// 	console.log(tags)
-			// }
 			this.activateView()
 		});
 
