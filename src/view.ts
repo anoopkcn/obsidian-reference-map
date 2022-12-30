@@ -1,14 +1,15 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
+import ReferenceMap from "./main";
 
-export const VIEW_TYPE_EXAMPLE = "example-view";
+export const REFERENCE_MAP_VIEW_TYPE = "example-view";
 
-export class ExampleView extends ItemView {
-    constructor(leaf: WorkspaceLeaf) {
+export class ReferenceMapView extends ItemView {
+    constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
     }
 
     getViewType() {
-        return VIEW_TYPE_EXAMPLE;
+        return REFERENCE_MAP_VIEW_TYPE;
     }
 
     getDisplayText() {

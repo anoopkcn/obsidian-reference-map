@@ -1,10 +1,10 @@
-import { Plugin } from 'obsidian';
+import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { ReferenceMapSettings } from './types';
 import { SampleModal } from './modal';
 // import { getPaperMetadata } from './referencemap';
 // import { getPaperIds } from './utils';
-import { ExampleView, VIEW_TYPE_EXAMPLE } from './view';
+import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './view';
 
 const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	mySetting: 'default'
@@ -16,9 +16,20 @@ export default class ReferenceMap extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		this.registerView(
-			VIEW_TYPE_EXAMPLE,
-			(leaf) => new ExampleView(leaf)
+			REFERENCE_MAP_VIEW_TYPE,
+			(leaf: WorkspaceLeaf) => new ReferenceMapView(leaf, this)
 		);
+
+		this.addCommand({
+			id: 'show-reference-map-view',
+			name: 'Reference Map: Open view',
+			checkCallback: (checking: boolean) => {
+				if (checking) {
+					return this.view === null;
+				}
+				this.activateView();
+			},
+		});
 
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Reference Map', async (evt: MouseEvent) => {
 			// Function to fetch data from an API and return the data as a JSON object
@@ -36,7 +47,7 @@ export default class ReferenceMap extends Plugin {
 			// 	const tags = getPaperIds(fileContent)
 			// 	console.log(tags)
 			// }
-			this.activateView();
+			// this.activateView();
 		});
 
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
@@ -53,20 +64,28 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	onunload() {
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_EXAMPLE);
+		this.app.workspace
+			.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
+			.forEach((leaf) => leaf.detach());
 	}
 
 	async activateView() {
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_EXAMPLE);
+		this.app.workspace.detachLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
 
 		await this.app.workspace.getRightLeaf(false).setViewState({
-			type: VIEW_TYPE_EXAMPLE,
+			type: REFERENCE_MAP_VIEW_TYPE,
 			active: true,
 		});
 
 		this.app.workspace.revealLeaf(
-			this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE)[0]
+			this.app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)[0]
 		);
+	}
+
+	get view() {
+		const leaves = app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
+		if (!leaves?.length) return null;
+		return leaves[0].view as ReferenceMapView;
 	}
 
 	async loadSettings() {
