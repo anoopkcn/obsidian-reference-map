@@ -9,6 +9,13 @@ export const errorlog = (data: Record<string, unknown>) => {
     console.error({ plugin: "Zotero Annotations", ...data });
 };
 
+export function areSetsEqual<T>(as: Set<T>, bs: Set<T>) {
+    if (as.size !== bs.size) return false;
+    return Array.from(as).every(element => {
+        return bs.has(element);
+    });
+}
+
 // Get normalized path
 export const resolvePath = function (rawPath: string): string {
     const vaultRoot = this.app.vault.adapter instanceof FileSystemAdapter
@@ -17,12 +24,17 @@ export const resolvePath = function (rawPath: string): string {
 }
 
 // Given a markdown file contents regex match the DOI's from the file 
-export const getPaperIds = (content: string): string[] => {
+export const getPaperIds = (content: string): Set<string> => {
+    const output = new Set<string>();
     const doi_matches = content.match(doiRegex());
     if (doi_matches) {
-        return doi_matches.unique();
+        for (const match of doi_matches) {
+            if (!output.has(match)) {
+                output.add(match);
+            }
+        }
     }
-    return [];
+    return output;
 }
 
 export function copyElToClipboard(el: string) {

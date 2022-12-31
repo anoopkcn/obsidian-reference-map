@@ -49,8 +49,7 @@ export class ReferenceMapView extends ItemView {
         const activeView = app.workspace.getActiveViewOfType(MarkdownView);
         if (activeView) {
             try {
-                const fileContent = await app.vault.cachedRead(activeView.file);
-                const rootPaper = await this.viewManager.getRootPaper(activeView.file, fileContent);
+                const rootPaper = await this.viewManager.getRootPaper(activeView.file);
                 if (rootPaper) {
                     const bib = rootPaper.citationStyles.bibtex;
                     const paperEl = this.containerEl.createEl("div", { cls: "orm-root-paper" });
