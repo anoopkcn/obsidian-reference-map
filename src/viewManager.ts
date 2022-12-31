@@ -3,7 +3,7 @@ import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
 import { areSetsEqual, getPaperIds } from './utils';
-import { getPaperMetadata } from './referencemap';
+import { getPaperMetadata, postPaperMetadata } from './referencemap';
 import { TFile } from 'obsidian';
 
 export interface DocCache {
@@ -26,6 +26,8 @@ export class ViewManager {
         if (paperIds.size === 0) {
             return null;
         }
+        const papers = await postPaperMetadata(paperIds);
+        console.log(papers);
         // Get the cached document if it exists
         const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
         // If the cached document doesn't exist or the paperIds are different, fetch the new document

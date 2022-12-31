@@ -32,3 +32,30 @@ export const getPaperMetadata = async (paperId: string, refType = 'paper', offli
     )
     return papermetadata
 }
+
+export const postPaperMetadata = async (paperIds: Set<string>): Promise<SemanticPaper[]> => {
+    const fields = `?fields=${SEMANTIC_FIELDS.join(',')}`
+    // add json body to request
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
+    const papermetadata: SemanticPaper[] = await requestUrl({
+        url: url,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ids: Array.from(paperIds) })
+    }).then(
+        (response) => {
+            if (response.status != 200) {
+                console.log(`Error ${response.status}`) //TODO: better error handling
+                return []
+            } else if (response.json.data) {
+                return response.json.data
+            } else {
+                return [response.json]
+            }
+        }
+    )
+    return papermetadata
+
+}
