@@ -35,9 +35,7 @@ export class ViewManager {
                 this.cache.set(file, { paperIds, rootPapers });
                 return rootPapers;
             } catch (e) {
-                if (!e.message.includes('Error in Reference Map View: getRootPaper')) {
-                    console.error(e);
-                }
+                // console.error(e);
                 return null;
             }
         }

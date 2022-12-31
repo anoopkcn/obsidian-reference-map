@@ -47,7 +47,7 @@ export const postPaperMetadata = async (paperIds: Set<string>): Promise<Semantic
     }).then(
         (response) => {
             if (response.status != 200) {
-                console.log(`Error ${response.status}`) //TODO: better error handling
+                // console.log(`Error ${response.status}`) //TODO: better error handling
                 return []
             } else if (response.json.data) {
                 return response.json.data

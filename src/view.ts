@@ -51,6 +51,7 @@ export class ReferenceMapView extends ItemView {
             try {
                 const rootPapers = await this.viewManager.getRootPapers(activeView.file);
                 const paperEls: HTMLDivElement[] = []
+                if (rootPapers) {
                 rootPapers?.forEach((rootPaper) => {
                     if (rootPaper) {
                         const bib = rootPaper.citationStyles.bibtex;
@@ -137,10 +138,15 @@ export class ReferenceMapView extends ItemView {
 
                             }
                         );
+                        paperEl.createEl("div", { cls: `orm-paper-references` });
+                        paperEl.createEl("div", { cls: `orm-paper-citations` });
                         paperEls.push(paperEl);
                     }
                 });
                 this.setViewContent(paperEls);
+                } else {
+                    this.setNoContentMessage(`No VALID reference ID's are found in the active document`);
+                }
             } catch (e) {
                 console.error('Error in Reference Map View: processReferences', e);
             }
@@ -176,7 +182,7 @@ export class ReferenceMapView extends ItemView {
         return t("REFERENCE_MAP")
     }
     getIcon() {
-        return 'ReferenceMapIcon';
+        return 'ReferenceMapIconScroll';
     }
 
     // async onOpen() {
@@ -184,8 +190,12 @@ export class ReferenceMapView extends ItemView {
     //     container.empty();
     //     container.createEl("span", { text: "Reference map" });
     // }
-    setNoContentMessage() {
-        this.setMessage(t('NO_REFERENCES_IN_FILE'));
+    setNoContentMessage(message = '') {
+        let showMessage = `No reference ID's are found in the active document`
+        if (message) {
+            showMessage = message;
+        }
+        this.setMessage(showMessage);
     }
     setMessage(message: string) {
         this.contentEl.empty();

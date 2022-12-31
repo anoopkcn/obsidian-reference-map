@@ -29,7 +29,7 @@ export default class ReferenceMap extends Plugin {
 				this.activateView();
 			},
 		});
-		const ribbonIconEl = this.addRibbonIcon('ReferenceMapIcon', 'Reference Map', async (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('ReferenceMapIconScroll', 'Reference Map', async (evt: MouseEvent) => {
 			this.activateView()
 		});
 
