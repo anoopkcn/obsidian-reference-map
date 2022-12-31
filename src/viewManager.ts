@@ -29,7 +29,6 @@ export class ViewManager {
         const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
         // If the cached document doesn't exist or the paperIds are different, fetch the new document
         if (!cachedDoc || !areSetsEqual(cachedDoc.paperIds, paperIds)) {
-            console.log(paperIds)
             try {
                 // const paper = await getPaperMetadata(paperIds.values().next().value);
                 const rootPapers = await postPaperMetadata(paperIds);
