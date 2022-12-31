@@ -192,6 +192,7 @@ export class ReferenceMapView extends ItemView {
     }
 
     async onClose() {
-        // Nothing to clean up.
+        this.viewManager.cache.clear();
+        return super.onClose();
     }
 }
