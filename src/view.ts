@@ -1,14 +1,20 @@
 import { ItemView, MarkdownView, WorkspaceLeaf, setIcon } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
-import { getPaperMetadata } from './referencemap';
-import { copyElToClipboard, getPaperIds } from './utils';
+import { copyElToClipboard } from './utils';
+import { ViewManager } from "./viewManager";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
+    plugin: ReferenceMap;
+    viewManager: ViewManager;
+    activeMarkdownLeaf: MarkdownView;
+
     constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
+        this.plugin = plugin;
+        this.viewManager = new ViewManager(plugin);
 
         this.registerEvent(
             app.metadataCache.on('changed', (file) => {
@@ -41,19 +47,13 @@ export class ReferenceMapView extends ItemView {
 
     processReferences = async () => {
         const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-
         if (activeView) {
             try {
                 const fileContent = await app.vault.cachedRead(activeView.file);
-                const paperIds = getPaperIds(fileContent)
-                // console.log(paperIds)
-
-                if (paperIds.length !== 0) {
-                    const paper = await getPaperMetadata(paperIds[0]);
-                    const rootPaper = paper[0];
-                    console.log(rootPaper)
+                const rootPaper = await this.viewManager.getRootPaper(activeView.file, fileContent);
+                if (rootPaper) {
                     const bib = rootPaper.citationStyles.bibtex;
-                    const paperEl = this.containerEl.createEl("div", { cls: "orm-paper" });
+                    const paperEl = this.containerEl.createEl("div", { cls: "orm-root-paper" });
                     paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
                     paperEl.createEl("div", { text: rootPaper.authors[0].name + ", " + rootPaper.year, cls: "orm-paper-authors" });
                     paperEl.createEl("div", { cls: "orm-paper-buttons" },
@@ -121,6 +121,18 @@ export class ReferenceMapView extends ItemView {
                                     // btn.onClickEvent(() => copyElToClipboard(bib));
                                 }
                             );
+                            div.createDiv(
+                                {
+                                    cls: 'orm-influential-citationCount',
+                                    attr: {
+                                        'aria-label': 'Influential Citation Count',
+                                    },
+                                },
+                                (btn) => {
+                                    btn.textContent = rootPaper.influentialCitationCount.toString();
+                                    // btn.onClickEvent(() => copyElToClipboard(bib));
+                                }
+                            );
 
                         }
                     );
@@ -128,7 +140,6 @@ export class ReferenceMapView extends ItemView {
                 } else {
                     this.setNoContentMessage();
                 }
-
             } catch (e) {
                 console.error('Error in Reference Map View: processReferences', e);
             }

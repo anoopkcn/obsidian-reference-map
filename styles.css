@@ -16,16 +16,33 @@ If your plugin does not need CSS, delete this file.
 	/* opacity of the text element to half */
 	opacity: 0.5;
 }
+
+/* Paper display section */
+
+.orm-root-paper{
+	border: 1px solid var(--color-base-40);
+	padding : 0.5rem;
+}
+.orm-paper-title{
+	margin-bottom: 0.5rem;
+}
+
+.orm-paper-authors{
+	color: #888;
+	margin-bottom: 0.5rem;
+}
 .orm-paper-buttons{
-	width:80%;
+	width:100%;
 	display: flex;
 	justify-content: space-between;
-	margin-top: 0.5rem;
+	padding-top: 0.6rem;
+	border-top: 1px solid var(--color-base-40);
 }
 
 .orm-paper-buttons > div {
-	width:22px;
+	width:20%;
 	cursor: pointer;
+	/* text-align: center; */
 	color: var(--text-muted);
 
 }
