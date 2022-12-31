@@ -36,7 +36,7 @@ export class ViewManager {
                 this.cache.set(file, { paperIds, rootPaper });
                 return paper[0];
             } catch (e) {
-                if (!e.message.includes('references container not found')) {
+                if (!e.message.includes('Error in Reference Map View: getRootPaper')) {
                     console.error(e);
                 }
                 return null;
