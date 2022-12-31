@@ -49,96 +49,98 @@ export class ReferenceMapView extends ItemView {
         const activeView = app.workspace.getActiveViewOfType(MarkdownView);
         if (activeView) {
             try {
-                const rootPaper = await this.viewManager.getRootPaper(activeView.file);
-                if (rootPaper) {
-                    const bib = rootPaper.citationStyles.bibtex;
-                    const paperEl = this.containerEl.createEl("div", { cls: "orm-root-paper" });
-                    paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
-                    paperEl.createEl("div", { text: rootPaper.authors[0].name + ", " + rootPaper.year, cls: "orm-paper-authors" });
-                    paperEl.createEl("div", { cls: "orm-paper-buttons" },
-                        (div) => {
-                            div.createDiv(
-                                {
-                                    cls: 'orm-copy-bibtex',
-                                    attr: {
-                                        'aria-label': 'Copy reference as bibtex',
-                                    },
-                                },
-                                (btn) => {
-                                    setIcon(btn, 'ReferenceMapCopyIcon');
-                                    btn.onClickEvent(() => copyElToClipboard(bib));
-                                }
-                            );
-                            if (rootPaper.isOpenAccess) {
+                const rootPapers = await this.viewManager.getRootPapers(activeView.file);
+                const paperEls: HTMLDivElement[] = []
+                rootPapers?.forEach((rootPaper) => {
+                    if (rootPaper) {
+                        const bib = rootPaper.citationStyles.bibtex;
+                        const paperEl = this.containerEl.createEl("div", { cls: "orm-root-paper" });
+                        paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
+                        paperEl.createEl("div", { text: rootPaper.authors[0].name + ", " + rootPaper.year, cls: "orm-paper-authors" });
+                        paperEl.createEl("div", { cls: "orm-paper-buttons" },
+                            (div) => {
                                 div.createDiv(
                                     {
-                                        cls: 'orm-openaccesson-bibtex',
+                                        cls: 'orm-copy-bibtex',
                                         attr: {
-                                            'aria-label': 'Open acess to reference',
+                                            'aria-label': 'Copy reference as bibtex',
                                         },
                                     },
                                     (btn) => {
-                                        setIcon(btn, 'ReferenceMapOpenAccessActiveIcon');
-                                        // btn.onClickEvent(() => copyElToClipboard(bib));
+                                        setIcon(btn, 'ReferenceMapCopyIcon');
+                                        btn.onClickEvent(() => copyElToClipboard(bib));
                                     }
                                 );
-                            } else {
+                                if (rootPaper.isOpenAccess) {
+                                    div.createDiv(
+                                        {
+                                            cls: 'orm-openaccesson-bibtex',
+                                            attr: {
+                                                'aria-label': 'Open acess to reference',
+                                            },
+                                        },
+                                        (btn) => {
+                                            setIcon(btn, 'ReferenceMapOpenAccessActiveIcon');
+                                            // btn.onClickEvent(() => copyElToClipboard(bib));
+                                        }
+                                    );
+                                } else {
+                                    div.createDiv(
+                                        {
+                                            cls: 'orm-openaccessoff-bibtex',
+                                            attr: {
+                                                'aria-label': 'Open acess to reference',
+                                            },
+                                        },
+                                        (btn) => {
+                                            setIcon(btn, 'ReferenceMapOpenAccessPassiveIcon');
+                                            // btn.onClickEvent(() => copyElToClipboard(bib));
+                                        }
+                                    );
+                                }
                                 div.createDiv(
                                     {
-                                        cls: 'orm-openaccessoff-bibtex',
+                                        cls: 'orm-referenceCount',
                                         attr: {
-                                            'aria-label': 'Open acess to reference',
+                                            'aria-label': 'Show references',
                                         },
                                     },
                                     (btn) => {
-                                        setIcon(btn, 'ReferenceMapOpenAccessPassiveIcon');
+                                        btn.textContent = rootPaper.referenceCount.toString();
                                         // btn.onClickEvent(() => copyElToClipboard(bib));
                                     }
                                 );
-                            }
-                            div.createDiv(
-                                {
-                                    cls: 'orm-referenceCount',
-                                    attr: {
-                                        'aria-label': 'Show references',
+                                div.createDiv(
+                                    {
+                                        cls: 'orm-citationCount',
+                                        attr: {
+                                            'aria-label': 'Show citations',
+                                        },
                                     },
-                                },
-                                (btn) => {
-                                    btn.textContent = rootPaper.referenceCount.toString();
-                                    // btn.onClickEvent(() => copyElToClipboard(bib));
-                                }
-                            );
-                            div.createDiv(
-                                {
-                                    cls: 'orm-citationCount',
-                                    attr: {
-                                        'aria-label': 'Show citations',
+                                    (btn) => {
+                                        btn.textContent = rootPaper.citationCount.toString();
+                                        // btn.onClickEvent(() => copyElToClipboard(bib));
+                                    }
+                                );
+                                div.createDiv(
+                                    {
+                                        cls: 'orm-influential-citationCount',
+                                        attr: {
+                                            'aria-label': 'Influential Citation Count',
+                                        },
                                     },
-                                },
-                                (btn) => {
-                                    btn.textContent = rootPaper.citationCount.toString();
-                                    // btn.onClickEvent(() => copyElToClipboard(bib));
-                                }
-                            );
-                            div.createDiv(
-                                {
-                                    cls: 'orm-influential-citationCount',
-                                    attr: {
-                                        'aria-label': 'Influential Citation Count',
-                                    },
-                                },
-                                (btn) => {
-                                    btn.textContent = rootPaper.influentialCitationCount.toString();
-                                    // btn.onClickEvent(() => copyElToClipboard(bib));
-                                }
-                            );
+                                    (btn) => {
+                                        btn.textContent = rootPaper.influentialCitationCount.toString();
+                                        // btn.onClickEvent(() => copyElToClipboard(bib));
+                                    }
+                                );
 
-                        }
-                    );
-                    this.setViewContent(paperEl);
-                } else {
-                    this.setNoContentMessage();
-                }
+                            }
+                        );
+                        paperEls.push(paperEl);
+                    }
+                });
+                this.setViewContent(paperEls);
             } catch (e) {
                 console.error('Error in Reference Map View: processReferences', e);
             }
@@ -147,8 +149,8 @@ export class ReferenceMapView extends ItemView {
         }
     };
 
-    setViewContent(referenceEl: HTMLElement) {
-        if (referenceEl && this.contentEl.firstChild !== referenceEl) {
+    setViewContent(referenceEls: HTMLElement[]) {
+        if (referenceEls) {
             this.contentEl.empty();
             this.contentEl.createDiv(
                 {
@@ -158,8 +160,10 @@ export class ReferenceMapView extends ItemView {
                     div.createDiv({ text: this.getDisplayText() });
                 }
             );
-            this.contentEl.append(referenceEl);
-        } else if (!referenceEl) {
+            referenceEls.forEach((referenceEl) => {
+                this.contentEl.append(referenceEl);
+            });
+        } else if (!referenceEls) {
             this.setNoContentMessage();
         }
     }

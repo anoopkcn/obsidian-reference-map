@@ -52,7 +52,7 @@ export const postPaperMetadata = async (paperIds: Set<string>): Promise<Semantic
             } else if (response.json.data) {
                 return response.json.data
             } else {
-                return [response.json]
+                return response.json
             }
         }
     )

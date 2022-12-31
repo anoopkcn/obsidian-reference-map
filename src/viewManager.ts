@@ -1,14 +1,13 @@
 import LRUCache from 'lru-cache';
-// import { TFile } from 'obsidian';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
 import { areSetsEqual, getPaperIds } from './utils';
-import { getPaperMetadata, postPaperMetadata } from './referencemap';
+import { postPaperMetadata } from './referencemap';
 import { TFile } from 'obsidian';
 
 export interface DocCache {
     paperIds: Set<string>;
-    rootPaper: SemanticPaper;
+    rootPapers: SemanticPaper[];
 }
 
 export class ViewManager {
@@ -20,23 +19,22 @@ export class ViewManager {
         this.cache = new LRUCache({ max: 20 });
     }
 
-    getRootPaper = async (file: TFile): Promise<SemanticPaper | null> => {
+    getRootPapers = async (file: TFile): Promise<SemanticPaper[] | null> => {
         const fileContent = await app.vault.cachedRead(file);
         const paperIds = getPaperIds(fileContent)
         if (paperIds.size === 0) {
             return null;
         }
-        const papers = await postPaperMetadata(paperIds);
-        console.log(papers);
         // Get the cached document if it exists
         const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
         // If the cached document doesn't exist or the paperIds are different, fetch the new document
         if (!cachedDoc || !areSetsEqual(cachedDoc.paperIds, paperIds)) {
+            console.log(paperIds)
             try {
-                const paper = await getPaperMetadata(paperIds.values().next().value);
-                const rootPaper = paper[0];
-                this.cache.set(file, { paperIds, rootPaper });
-                return paper[0];
+                // const paper = await getPaperMetadata(paperIds.values().next().value);
+                const rootPapers = await postPaperMetadata(paperIds);
+                this.cache.set(file, { paperIds, rootPapers });
+                return rootPapers;
             } catch (e) {
                 if (!e.message.includes('Error in Reference Map View: getRootPaper')) {
                     console.error(e);
@@ -44,7 +42,7 @@ export class ViewManager {
                 return null;
             }
         }
-        return cachedDoc.rootPaper;
+        return cachedDoc.rootPapers;
 
     }
 
