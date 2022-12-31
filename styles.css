@@ -6,17 +6,29 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+.orm-view-title {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	/* border-bottom: 1px solid #cccccc; */
+}
 
 .orm-no-content {
 	/* opacity of the text element to half */
 	opacity: 0.5;
 }
-.orm-copy-bibtex {
-    width:22px;
-	cursor: pointer;
-	color: var(--text-muted);
+.orm-paper-buttons{
+	width:80%;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.5rem;
 }
 
-.orm-copy-bibtex:hover {
+.orm-paper-buttons > div {
+	width:22px;
+	cursor: pointer;
+	color: var(--text-muted);
+
+}
+.orm-paper-buttons > div:hover {
 	color: var(--text-accent);
 }

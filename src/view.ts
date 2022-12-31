@@ -7,12 +7,8 @@ import { copyElToClipboard, getPaperIds } from './utils';
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
-    plugin: ReferenceMap;
     constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
-
-        this.plugin = plugin;
-        // this.viewManager = new ViewManager(plugin);
 
         this.registerEvent(
             app.metadataCache.on('changed', (file) => {
@@ -58,20 +54,76 @@ export class ReferenceMapView extends ItemView {
                     console.log(rootPaper)
                     const bib = rootPaper.citationStyles.bibtex;
                     const paperEl = this.containerEl.createEl("div", { cls: "orm-paper" });
-                    paperEl.createDiv(
-                        {
-                            cls: 'orm-copy-bibtex',
-                            attr: {
-                                'aria-label': 'Copy reference as bibtex',
-                            },
-                        },
-                        (btn) => {
-                            setIcon(btn, 'ReferenceMapCopyIcon');
-                            btn.onClickEvent(() => copyElToClipboard(bib));
+                    paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
+                    paperEl.createEl("div", { text: rootPaper.authors[0].name + ", " + rootPaper.year, cls: "orm-paper-authors" });
+                    paperEl.createEl("div", { cls: "orm-paper-buttons" },
+                        (div) => {
+                            div.createDiv(
+                                {
+                                    cls: 'orm-copy-bibtex',
+                                    attr: {
+                                        'aria-label': 'Copy reference as bibtex',
+                                    },
+                                },
+                                (btn) => {
+                                    setIcon(btn, 'ReferenceMapCopyIcon');
+                                    btn.onClickEvent(() => copyElToClipboard(bib));
+                                }
+                            );
+                            if (rootPaper.isOpenAccess) {
+                                div.createDiv(
+                                    {
+                                        cls: 'orm-openaccesson-bibtex',
+                                        attr: {
+                                            'aria-label': 'Open acess to reference',
+                                        },
+                                    },
+                                    (btn) => {
+                                        setIcon(btn, 'ReferenceMapOpenAccessActiveIcon');
+                                        // btn.onClickEvent(() => copyElToClipboard(bib));
+                                    }
+                                );
+                            } else {
+                                div.createDiv(
+                                    {
+                                        cls: 'orm-openaccessoff-bibtex',
+                                        attr: {
+                                            'aria-label': 'Open acess to reference',
+                                        },
+                                    },
+                                    (btn) => {
+                                        setIcon(btn, 'ReferenceMapOpenAccessPassiveIcon');
+                                        // btn.onClickEvent(() => copyElToClipboard(bib));
+                                    }
+                                );
+                            }
+                            div.createDiv(
+                                {
+                                    cls: 'orm-referenceCount',
+                                    attr: {
+                                        'aria-label': 'Show references',
+                                    },
+                                },
+                                (btn) => {
+                                    btn.textContent = rootPaper.referenceCount.toString();
+                                    // btn.onClickEvent(() => copyElToClipboard(bib));
+                                }
+                            );
+                            div.createDiv(
+                                {
+                                    cls: 'orm-citationCount',
+                                    attr: {
+                                        'aria-label': 'Show citations',
+                                    },
+                                },
+                                (btn) => {
+                                    btn.textContent = rootPaper.citationCount.toString();
+                                    // btn.onClickEvent(() => copyElToClipboard(bib));
+                                }
+                            );
+
                         }
                     );
-                    paperEl.createEl("div", { text: rootPaper.title, cls: "orm-paper-title" });
-                    // paperEl.createEl("div", { text: `<a href="https://www.semanticscholar.org/author/${rootPaper.authors[0].authorId}">${rootPaper.authors[0].name}</a>`, cls: "orm-paper-authors" });
                     this.setViewContent(paperEl);
                 } else {
                     this.setNoContentMessage();
