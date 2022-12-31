@@ -20,7 +20,7 @@ export class ViewManager {
         this.cache = new LRUCache({ max: 20 });
     }
 
-    getRootPaper = async (file: TFile) => {
+    getRootPaper = async (file: TFile): Promise<SemanticPaper | null> => {
         const fileContent = await app.vault.cachedRead(file);
         const paperIds = getPaperIds(fileContent)
         if (paperIds.size === 0) {
@@ -30,7 +30,6 @@ export class ViewManager {
         const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
         // If the cached document doesn't exist or the paperIds are different, fetch the new document
         if (!cachedDoc || !areSetsEqual(cachedDoc.paperIds, paperIds)) {
-            console.log(paperIds)
             try {
                 const paper = await getPaperMetadata(paperIds.values().next().value);
                 const rootPaper = paper[0];

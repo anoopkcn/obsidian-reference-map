@@ -147,8 +147,8 @@ export class ReferenceMapView extends ItemView {
         }
     };
 
-    setViewContent(bib: HTMLElement) {
-        if (bib && this.contentEl.firstChild !== bib) {
+    setViewContent(referenceEl: HTMLElement) {
+        if (referenceEl && this.contentEl.firstChild !== referenceEl) {
             this.contentEl.empty();
             this.contentEl.createDiv(
                 {
@@ -158,8 +158,8 @@ export class ReferenceMapView extends ItemView {
                     div.createDiv({ text: this.getDisplayText() });
                 }
             );
-            this.contentEl.append(bib);
-        } else if (!bib) {
+            this.contentEl.append(referenceEl);
+        } else if (!referenceEl) {
             this.setNoContentMessage();
         }
     }
