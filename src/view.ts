@@ -138,9 +138,7 @@ export class ReferenceMapView extends ItemView {
 
                             }
                         );
-                        paperEl.createEl("div", { cls: `orm-paper-references` });
-                        paperEl.createEl("div", { cls: `orm-paper-citations` });
-                        paperEls.push(paperEl);
+                        paperEls.push(paperEl)
                     }
                 });
                 this.setViewContent(paperEls);
@@ -181,6 +179,7 @@ export class ReferenceMapView extends ItemView {
     getDisplayText() {
         return t("REFERENCE_MAP")
     }
+
     getIcon() {
         return 'ReferenceMapIconScroll';
     }
@@ -190,6 +189,7 @@ export class ReferenceMapView extends ItemView {
     //     container.empty();
     //     container.createEl("span", { text: "Reference map" });
     // }
+
     setNoContentMessage(message = '') {
         let showMessage = `No reference ID's are found in the active document`
         if (message) {
@@ -197,6 +197,7 @@ export class ReferenceMapView extends ItemView {
         }
         this.setMessage(showMessage);
     }
+
     setMessage(message: string) {
         this.contentEl.empty();
         this.contentEl.createDiv({
