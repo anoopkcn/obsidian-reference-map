@@ -1,9 +1,9 @@
+import { TFile } from 'obsidian';
 import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
 import { areSetsEqual, getPaperIds } from './utils';
 import { postPaperMetadata } from './referencemap';
-import { TFile } from 'obsidian';
 
 export interface DocCache {
     paperIds: Set<string>;
