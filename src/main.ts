@@ -2,7 +2,7 @@ import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
-import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './nativeView';
+import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView';
 
 const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	mySetting: 'default'
