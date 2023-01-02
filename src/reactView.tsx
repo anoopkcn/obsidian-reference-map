@@ -5,17 +5,9 @@ import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
+import { RootReferenceList } from "./components/RootReferenceList";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
-
-export const ReferenceViewRoot = (props: Record<string, SemanticPaper[]>) => {
-	const rootPapers: SemanticPaper[] = props.papers;
-	// console.log(rootPapers);
-	if (!rootPapers) {
-		return <div>No papers found</div>;
-	}
-	return <div>{rootPapers[0].title}</div>;
-};
 
 export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap;
@@ -43,11 +35,7 @@ export class ReferenceMapView extends ItemView {
 				if (leaf) {
 					app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							if (leaf.view instanceof MarkdownView) {
-								this.processReferences(rootEl);
-							} else {
-								this.setNoContentMessage();
-							}
+							this.processReferences(rootEl);
 						}
 					});
 				}
@@ -55,49 +43,6 @@ export class ReferenceMapView extends ItemView {
 		);
 
 		this.processReferences(rootEl);
-	}
-
-	processReferences = async (rootEl: Root) => {
-		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-
-		if (activeView) {
-			try {
-				const rootPapers = await this.viewManager.getRootPapers(
-					activeView.file
-				);
-				rootEl.render(
-					<React.StrictMode>
-						<ReferenceViewRoot papers={rootPapers} />
-					</React.StrictMode>
-				);
-			} catch (error) {
-				console.error(
-					"Error in Reference Map View: processReferences",
-					error
-				);
-			}
-		} else {
-			this.setNoContentMessage();
-		}
-	};
-
-	setViewContent(referenceEls: HTMLElement[]) {
-		if (referenceEls) {
-			this.contentEl.empty();
-			this.contentEl.createDiv(
-				{
-					cls: "orm-view-title",
-				},
-				(div) => {
-					div.createDiv({ text: this.getDisplayText() });
-				}
-			);
-			referenceEls.forEach((referenceEl) => {
-				this.contentEl.append(referenceEl);
-			});
-		} else if (!referenceEls) {
-			this.setNoContentMessage();
-		}
 	}
 
 	getViewType() {
@@ -118,24 +63,31 @@ export class ReferenceMapView extends ItemView {
 	//     container.createEl("span", { text: "Reference map" });
 	// }
 
-	setNoContentMessage(message = "") {
-		let showMessage = `No reference ID's are found in the active document`;
-		if (message) {
-			showMessage = message;
-		}
-		this.setMessage(showMessage);
-	}
-
-	setMessage(message: string) {
-		this.contentEl.empty();
-		this.contentEl.createDiv({
-			cls: "orm-no-content",
-			text: message,
-		});
-	}
-
 	async onClose() {
 		this.viewManager.cache.clear();
 		return super.onClose();
 	}
+
+	processReferences = async (rootEl: Root) => {
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		let rootPapers: SemanticPaper[] = [];
+		const isActiveView = activeView && activeView.file;
+		if (isActiveView) {
+			try {
+				rootPapers = await this.viewManager.getRootPapers(
+					activeView.file
+				);
+			} catch (error) {
+				console.error(
+					"Error in Reference Map View: processReferences",
+					error
+				);
+			}
+		}
+		rootEl.render(
+			<React.StrictMode>
+				<RootReferenceList papers={rootPapers} />
+			</React.StrictMode>
+		);
+	};
 }
