@@ -42,6 +42,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .orm-paper-buttons > div {
+	font-size: small;
 	width:20%;
 	cursor: pointer;
 	/* text-align: center; */

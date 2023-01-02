@@ -1,5 +1,9 @@
 import { SemanticPaper } from "src/types";
 import React from "react";
+import { copyElToClipboard } from "src/utils";
+import { HiOutlineClipboardCopy } from "react-icons/hi";
+import { SiOpenaccess } from "react-icons/si";
+import { FiSlash } from "react-icons/fi";
 
 export const RootReferenceList = (props: Record<string, SemanticPaper[]>) => {
 	const rootPapers: SemanticPaper[] = props.papers;
@@ -11,8 +15,41 @@ export const RootReferenceList = (props: Record<string, SemanticPaper[]>) => {
 		);
 	}
 
-	const paperList = rootPapers.map((paper) => {
-		return <div key={paper.paperId}>{paper.title}</div>;
+	const paperList = rootPapers.map((paper, paperIndex) => {
+		return (
+			<div key={paperIndex} className="orm-root-paper">
+				<div className="orm-paper-title">{paper.title}</div>
+				<div className="orm-paper-authors">
+					{paper.authors[0].name + ", " + paper.year}
+				</div>
+				<div className="orm-paper-buttons">
+					<div
+						className="orm-copy-bibtex"
+						onClick={() => {
+							copyElToClipboard(paper.citationStyles.bibtex);
+						}}
+					>
+						<HiOutlineClipboardCopy size={16} />
+					</div>
+					<div className="orm-copy-bibtex">
+						{paper.isOpenAccess ? (
+							<SiOpenaccess size={16} />
+						) : (
+							<FiSlash size={16} />
+						)}
+					</div>
+					<div className="orm-copy-bibtex">
+						{paper.referenceCount.toString()}
+					</div>
+					<div className="orm-copy-bibtex">
+						{paper.citationCount.toString()}
+					</div>
+					<div className="orm-copy-bibtex">
+						{paper.influentialCitationCount.toString()}
+					</div>
+				</div>
+			</div>
+		);
 	});
 
 	return <div>{paperList}</div>;
