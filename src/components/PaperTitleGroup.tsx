@@ -5,6 +5,8 @@ import { copyElToClipboard } from "src/utils";
 
 export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 	const paper: SemanticPaper = props.paper;
+	let abstract = "";
+	if (paper.abstract) abstract = paper.abstract;
 	return (
 		<>
 			<div className="orm-paper-title-group">
@@ -16,7 +18,9 @@ export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 								", " +
 								paper.authors[0].name +
 								", " +
-								paper.year
+								paper.year +
+								"\n" +
+								abstract
 						);
 					}}
 				>
