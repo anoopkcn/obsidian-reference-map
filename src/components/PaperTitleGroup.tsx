@@ -3,8 +3,8 @@ import { AiOutlinePaperClip } from "react-icons/ai";
 import { SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
 
-export const PaperTitleGroup = (props: { rootPaper: SemanticPaper }) => {
-	const rootPaper: SemanticPaper = props.rootPaper;
+export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
+	const paper: SemanticPaper = props.paper;
 	return (
 		<>
 			<div className="orm-paper-title-group">
@@ -12,18 +12,18 @@ export const PaperTitleGroup = (props: { rootPaper: SemanticPaper }) => {
 					className="orm-copy-metadata"
 					onClick={() => {
 						copyElToClipboard(
-							rootPaper.title +
+							paper.title +
 								", " +
-								rootPaper.authors[0].name +
+								paper.authors[0].name +
 								", " +
-								rootPaper.year
+								paper.year
 						);
 					}}
 				>
 					<AiOutlinePaperClip size={17} />
 				</span>
 				<span className="orm-paper-title">
-					{" " + rootPaper.title + " "}
+					{" " + paper.title + " "}
 				</span>
 				{/* <span className="orm-external-link">
 					<RiExternalLinkFill size={14} />
@@ -31,7 +31,7 @@ export const PaperTitleGroup = (props: { rootPaper: SemanticPaper }) => {
 			</div>
 			<div className="orm-paper-authors-group">
 				<span className="orm-paper-authors">
-					{rootPaper.authors[0].name + ", " + rootPaper.year + " "}
+					{paper.authors[0].name + ", " + paper.year + " "}
 				</span>
 			</div>
 		</>

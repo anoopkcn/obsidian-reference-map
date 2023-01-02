@@ -28,7 +28,7 @@ export const RootReference = (props: {
 	const rootPaper: SemanticPaper = props.rootPaper;
 	return (
 		<div className="orm-root-paper">
-			<PaperTitleGroup rootPaper={rootPaper} />
+			<PaperTitleGroup paper={rootPaper} />
 			<div className="orm-paper-buttons">
 				<div
 					className="orm-copy-bibtex"

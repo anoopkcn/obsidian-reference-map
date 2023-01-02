@@ -14,7 +14,7 @@ export const ReferencesList = (props: { references: SemanticPaper[] }) => {
 				key={reference.paperId + index}
 				className="orm-reference-paper"
 			>
-				<PaperTitleGroup rootPaper={reference} />
+				<PaperTitleGroup paper={reference} />
 				<div className="orm-paper-buttons">
 					<div
 						className="orm-copy-bibtex"
