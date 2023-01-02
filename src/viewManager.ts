@@ -19,11 +19,11 @@ export class ViewManager {
         this.cache = new LRUCache({ max: 20 });
     }
 
-    getRootPapers = async (file: TFile): Promise<SemanticPaper[] | null> => {
+    getRootPapers = async (file: TFile): Promise<SemanticPaper[]> => {
         const fileContent = await app.vault.cachedRead(file);
         const paperIds = getPaperIds(fileContent)
         if (paperIds.size === 0) {
-            return null;
+            return [];
         }
         // Get the cached document if it exists
         const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
@@ -36,7 +36,7 @@ export class ViewManager {
                 return rootPapers;
             } catch (e) {
                 // console.error(e);
-                return null;
+                return [];
             }
         }
         return cachedDoc.rootPapers;
