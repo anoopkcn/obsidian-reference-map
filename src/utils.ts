@@ -27,6 +27,13 @@ export const resolvePath = function (rawPath: string): string {
 // Given a markdown file contents regex match the DOI's from the file 
 export const getPaperIds = (content: string): Set<string> => {
     const output = new Set<string>();
+    const arxivRegex = /arXiv.(\d{4}\.\d{4,5})/i
+    const arXivMatches = content.match(arxivRegex)
+    if (arXivMatches) {
+        arXivMatches.slice(1).forEach(match => {
+            output.add(`arXiv:${match}`)
+        })
+    }
     const doi_matches = content.match(doiRegex());
     if (doi_matches) {
         for (const match of doi_matches) {
