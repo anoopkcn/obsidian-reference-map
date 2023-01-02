@@ -13,7 +13,8 @@
 		"strictNullChecks": true,
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
+		"jsx": "react",
 		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2021"]
 	},
-	"include": ["**/*.ts"]
+	"include": ["**/*.ts", "**/*.tsx"]
 }
