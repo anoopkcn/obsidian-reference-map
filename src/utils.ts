@@ -1,6 +1,7 @@
 import { FileSystemAdapter } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
+import { SemanticPaper } from "./types";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -40,4 +41,14 @@ export const getPaperIds = (content: string): Set<string> => {
 export function copyElToClipboard(el: string) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('electron').clipboard.writeText(el);
+}
+
+export function removeNullReferences(references: SemanticPaper[]) {
+    const result = references.filter((element) => {
+        if (element.paperId !== null) {
+            return true;
+        }
+        return false;
+    });
+    return result;
 }

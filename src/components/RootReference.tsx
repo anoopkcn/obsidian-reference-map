@@ -4,6 +4,7 @@ import { copyElToClipboard } from "src/utils";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { FiSlash } from "react-icons/fi";
+import { AiOutlinePaperClip } from "react-icons/ai";
 import { ReferencesList } from "./ReferencesList";
 
 export const RootReference = (props: {
@@ -26,7 +27,23 @@ export const RootReference = (props: {
 	const rootPaper: SemanticPaper = props.rootPaper;
 	return (
 		<div className="orm-root-paper">
-			<div className="orm-paper-title">{rootPaper.title}</div>
+			<div className="orm-paper-title">
+				<div
+					className="orm-paper-copy-metadata"
+					onClick={() => {
+						copyElToClipboard(
+							rootPaper.title +
+								", " +
+								rootPaper.authors[0].name +
+								", " +
+								rootPaper.year
+						);
+					}}
+				>
+					<AiOutlinePaperClip size={17} />
+				</div>
+				{rootPaper.title}
+			</div>
 			<div className="orm-paper-authors">
 				{rootPaper.authors[0].name + ", " + rootPaper.year}
 			</div>

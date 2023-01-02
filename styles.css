@@ -27,6 +27,17 @@ If your plugin does not need CSS, delete this file.
 }
 .orm-paper-title{
 	margin-bottom: 0.5rem;
+	/* display: flex; */
+}
+.orm-paper-copy-metadata{
+	width:17px;
+	height:17px;
+	float:left;
+	margin: 1px;
+	cursor: pointer;
+}
+orm-paper-copy-metadata:hover {
+	color: var(--text-accent);
 }
 
 .orm-paper-authors{
@@ -38,7 +49,7 @@ If your plugin does not need CSS, delete this file.
 	display: flex;
 	justify-content: space-between;
 	padding-top: 0.6rem;
-	border-top: 1px solid var(--color-base-30);
+	/* border-top: 1px solid var(--color-base-30); */
 }
 
 .orm-paper-buttons > div {
@@ -55,10 +66,17 @@ If your plugin does not need CSS, delete this file.
 
 .orm-reference-list{
 	margin:0.5rem 0;
-	border-top:1px solid var(--color-base-30) ;
+	font-size: small;
 }
 .orm-reference-list-title{
 	text-align: center;
 	font-weight: 500;
 	margin:0.5rem;
+}
+
+.orm-reference-paper{
+	border-bottom: 1px solid var(--color-base-30);
+	border-radius: 0.25rem;
+	padding : 0.5rem;
+	margin-bottom: 0.5rem;
 }
