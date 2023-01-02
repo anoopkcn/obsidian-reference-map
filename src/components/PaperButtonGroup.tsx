@@ -26,10 +26,10 @@ export const PaperButtonGroup = (props: { paper: SemanticPaper }) => {
 					<FiSlash size={16} />
 				)}
 			</div>
-			<div className="orm-references">
+			<div className="orm-references-2">
 				{paper.referenceCount.toString()}
 			</div>
-			<div className="orm-citations">
+			<div className="orm-citations-2">
 				{paper.citationCount.toString()}
 			</div>
 			<div className="orm-influential-citations">
