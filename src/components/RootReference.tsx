@@ -4,7 +4,7 @@ import { copyElToClipboard } from "src/utils";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { FiSlash } from "react-icons/fi";
-import { AiOutlinePaperClip } from "react-icons/ai";
+import { RiExternalLinkFill } from "react-icons/ri";
 import { ReferencesList } from "./ReferencesList";
 
 export const RootReference = (props: {
@@ -24,12 +24,13 @@ export const RootReference = (props: {
 		setShowCitations(!showCitations);
 		setShowReferences(false);
 	};
+
 	const rootPaper: SemanticPaper = props.rootPaper;
 	return (
 		<div className="orm-root-paper">
-			<div className="orm-paper-title">
-				<div
-					className="orm-paper-copy-metadata"
+			<div className="orm-paper-title-group">
+				<span
+					className="orm-paper-title"
 					onClick={() => {
 						copyElToClipboard(
 							rootPaper.title +
@@ -40,12 +41,19 @@ export const RootReference = (props: {
 						);
 					}}
 				>
-					<AiOutlinePaperClip size={17} />
-				</div>
-				{rootPaper.title}
+					{rootPaper.title + " "}
+				</span>
+				<span className="orm-external-link">
+					<RiExternalLinkFill size={14} />
+				</span>
 			</div>
-			<div className="orm-paper-authors">
-				{rootPaper.authors[0].name + ", " + rootPaper.year}
+			<div className="orm-paper-authors-group">
+				<span className="orm-paper-authors">
+					{rootPaper.authors[0].name + ", " + rootPaper.year + " "}
+				</span>
+				<span className="orm-external-link">
+					<RiExternalLinkFill size={14} />
+				</span>
 			</div>
 			<div className="orm-paper-buttons">
 				<div
@@ -64,7 +72,7 @@ export const RootReference = (props: {
 					)}
 				</div>
 				<div
-					className="orm-references"
+					className={`orm-references`}
 					onClick={() => handleShowReferencesClick()}
 				>
 					{rootPaper.referenceCount.toString()}

@@ -19,30 +19,37 @@ If your plugin does not need CSS, delete this file.
 
 /* Paper display section */
 
+.orm-external-link{
+	width:15px;
+	height:15px;
+	cursor: pointer;
+}
+.orm-external-link:hover{
+	color: var(--text-accent);
+}
 .orm-root-paper{
 	border: 1px solid var(--color-base-30);
 	border-radius: 0.25rem;
 	padding : 0.5rem;
 	margin-bottom: 0.5rem;
+	position: relative;
+}
+.orm-paper-title-group{
+	margin-bottom: 0.5rem;
 }
 .orm-paper-title{
-	margin-bottom: 0.5rem;
-	/* display: flex; */
-}
-.orm-paper-copy-metadata{
-	width:17px;
-	height:17px;
-	float:left;
-	margin: 1px;
 	cursor: pointer;
 }
-orm-paper-copy-metadata:hover {
+.orm-paper-title:hover {
 	color: var(--text-accent);
+}
+
+.orm-paper-authors-group{
+	margin-bottom: 0.5rem;
 }
 
 .orm-paper-authors{
 	color: #888;
-	margin-bottom: 0.5rem;
 }
 .orm-paper-buttons{
 	width:100%;
@@ -79,4 +86,5 @@ orm-paper-copy-metadata:hover {
 	border-radius: 0.25rem;
 	padding : 0.5rem;
 	margin-bottom: 0.5rem;
+	position: relative;
 }
