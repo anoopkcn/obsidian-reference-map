@@ -42,7 +42,9 @@ export const RootReference = (props: {
 				</div>
 				<div className="orm-openaccess">
 					{rootPaper.isOpenAccess ? (
-						<SiOpenaccess size={16} />
+						<a href={`${rootPaper.openAccessPdf.url}`}>
+							<SiOpenaccess size={16} />
+						</a>
 					) : (
 						<FiSlash size={16} />
 					)}

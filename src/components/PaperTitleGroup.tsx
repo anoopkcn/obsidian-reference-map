@@ -1,5 +1,6 @@
 import React from "react";
 import { AiOutlinePaperClip } from "react-icons/ai";
+import { SEMANTICSCHOLAR_URL } from "src/constants";
 import { SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
 
@@ -27,7 +28,9 @@ export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 					<AiOutlinePaperClip size={17} />
 				</span>
 				<span className="orm-paper-title">
-					{" " + paper.title + " "}
+					<a href={`${SEMANTICSCHOLAR_URL}/paper/${paper.paperId}`}>
+						{" " + paper.title + " "}
+					</a>
 				</span>
 				{/* <span className="orm-external-link">
 					<RiExternalLinkFill size={14} />
@@ -35,7 +38,11 @@ export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 			</div>
 			<div className="orm-paper-authors-group">
 				<span className="orm-paper-authors">
-					{paper.authors[0].name + ", " + paper.year + " "}
+					<a
+						href={`${SEMANTICSCHOLAR_URL}/author/${paper.authors[0].authorId}`}
+					>
+						{paper.authors[0].name + ", " + paper.year + " "}
+					</a>
 				</span>
 			</div>
 		</>

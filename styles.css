@@ -43,6 +43,9 @@ If your plugin does not need CSS, delete this file.
 .orm-paper-title:hover {
 	color: var(--text-accent);
 }
+.orm-paper-title a{
+	text-decoration: none;
+}
 
 .orm-paper-authors-group{
 	margin-bottom: 0.5rem;
@@ -51,6 +54,15 @@ If your plugin does not need CSS, delete this file.
 .orm-paper-authors{
 	color: #888;
 }
+
+.orm-paper-authors a{
+	color: #888;
+	text-decoration: none;
+}
+.orm-paper-authors a:hover{
+	color: var(--text-accent);
+}
+
 .orm-paper-buttons{
 	width:100%;
 	display: flex;
@@ -62,12 +74,14 @@ If your plugin does not need CSS, delete this file.
 .orm-paper-buttons > div {
 	font-size: small;
 	width:18%;
-	cursor: pointer;
 	/* text-align: center; */
 	color: var(--text-muted);
 
 }
-.orm-paper-buttons > div:hover {
+.orm-paper-buttons > .orm-copy-bibtex, .orm-references, .orm-citations {
+	cursor: pointer;
+}
+.orm-paper-buttons > .orm-copy-bibtex:hover, .orm-references:hover, .orm-citations:hover {
 	color: var(--text-accent);
 }
 

@@ -40,3 +40,4 @@ export const SEMANTIC_SEARCH_FIELDS = [
 
 export const SEMANTICSCHOLAR_API_URL = 'https://api.semanticscholar.org/graph/v1'
 export const SEMANTICSCHOLAR_PARTNER_API_URL = 'https://partner.semanticscholar.org/graph/v1'
+export const SEMANTICSCHOLAR_URL = "https://www.semanticscholar.org";

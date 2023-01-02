@@ -19,7 +19,9 @@ export const PaperButtonGroup = (props: { paper: SemanticPaper }) => {
 			</div>
 			<div className="orm-openaccess">
 				{paper.isOpenAccess ? (
-					<SiOpenaccess size={16} />
+					<a href={`${paper.openAccessPdf.url}`}>
+						<SiOpenaccess size={16} />
+					</a>
 				) : (
 					<FiSlash size={16} />
 				)}
