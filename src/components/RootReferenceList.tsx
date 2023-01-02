@@ -1,7 +1,7 @@
 import { SemanticPaper } from "src/types";
 import React from "react";
 import { copyElToClipboard } from "src/utils";
-import { HiOutlineClipboardCopy } from "react-icons/hi";
+import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { FiSlash } from "react-icons/fi";
 
@@ -29,7 +29,7 @@ export const RootReferenceList = (props: Record<string, SemanticPaper[]>) => {
 							copyElToClipboard(paper.citationStyles.bibtex);
 						}}
 					>
-						<HiOutlineClipboardCopy size={16} />
+						<IoMdClipboard size={17} />
 					</div>
 					<div className="orm-copy-bibtex">
 						{paper.isOpenAccess ? (
