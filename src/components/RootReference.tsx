@@ -9,6 +9,7 @@ import { ReferencesList } from "./ReferencesList";
 export const RootReference = (props: {
 	key: string;
 	rootPaper: SemanticPaper;
+	references: SemanticPaper[];
 }) => {
 	const [showReferences, setShowReferences] = useState(false);
 	const [showCitations, setShowCitations] = useState(false);
@@ -61,7 +62,7 @@ export const RootReference = (props: {
 					{rootPaper.influentialCitationCount.toString()}
 				</div>
 			</div>
-			{showReferences && <ReferencesList paperId={rootPaper.paperId} />}
+			{showReferences && <ReferencesList references={props.references} />}
 			{showCitations && <div>Citations</div>}
 		</div>
 	);

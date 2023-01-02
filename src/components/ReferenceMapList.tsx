@@ -5,6 +5,7 @@ import { MarkdownView } from "obsidian";
 
 export const ReferenceMapList = (props: {
 	papers: SemanticPaper[];
+	references: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
 	const rootPapers: SemanticPaper[] = props.papers;
@@ -22,9 +23,10 @@ export const ReferenceMapList = (props: {
 				// file name in the key is to force a re-render when the file changes or rerender if paper id is present in multiple files
 				key={paper.paperId + index + props.view?.file.name}
 				rootPaper={paper}
+				references={props.references[index]}
 			/>
 		);
 	});
 
-	return <div>{paperList}</div>;
+	return <div className="orm-reference-map">{paperList}</div>;
 };

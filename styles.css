@@ -43,7 +43,7 @@ If your plugin does not need CSS, delete this file.
 
 .orm-paper-buttons > div {
 	font-size: small;
-	width:20%;
+	width:18%;
 	cursor: pointer;
 	/* text-align: center; */
 	color: var(--text-muted);
@@ -56,4 +56,9 @@ If your plugin does not need CSS, delete this file.
 .orm-reference-list{
 	margin:0.5rem 0;
 	border-top:1px solid var(--color-base-30) ;
+}
+.orm-reference-list-title{
+	text-align: center;
+	font-weight: 500;
+	margin:0.5rem;
 }

@@ -71,6 +71,8 @@ export class ReferenceMapView extends ItemView {
 	processReferences = async (rootEl: Root) => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let rootPapers: SemanticPaper[] = [];
+		let reference: SemanticPaper[] = [];
+		let references: SemanticPaper[][] = [];
 		const isActiveView = activeView && activeView.file;
 		if (isActiveView) {
 			try {
@@ -84,9 +86,33 @@ export class ReferenceMapView extends ItemView {
 				);
 			}
 		}
+		if (rootPapers.length > 0) {
+			try {
+				// for each paper in rootPapers, get the references and push them to references
+				references = await Promise.all(
+					rootPapers.map(async (paper) => {
+						reference = await this.viewManager.getReferences(
+							paper.paperId
+						);
+						return reference;
+					})
+				);
+
+				// console.log(references);
+			} catch (error) {
+				console.error(
+					"Error in Reference Map View: processReferences",
+					error
+				);
+			}
+		}
 		rootEl.render(
 			<React.StrictMode>
-				<ReferenceMapList papers={rootPapers} view={activeView} />
+				<ReferenceMapList
+					papers={rootPapers}
+					references={references}
+					view={activeView}
+				/>
 			</React.StrictMode>
 		);
 	};
