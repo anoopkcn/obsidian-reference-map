@@ -6,11 +6,13 @@ import { SiOpenaccess } from "react-icons/si";
 import { FiSlash } from "react-icons/fi";
 import { ReferencesList } from "./ReferencesList";
 import { PaperTitleGroup } from "./PaperTitleGroup";
+import { CitationsList } from "./CitationsList";
 
 export const RootReference = (props: {
 	key: string;
 	rootPaper: SemanticPaper;
 	references: SemanticPaper[];
+	citations: SemanticPaper[];
 }) => {
 	const [showReferences, setShowReferences] = useState(false);
 	const [showCitations, setShowCitations] = useState(false);
@@ -62,7 +64,7 @@ export const RootReference = (props: {
 				</div>
 			</div>
 			{showReferences && <ReferencesList references={props.references} />}
-			{showCitations && <div>Citations</div>}
+			{showCitations && <CitationsList citations={props.citations} />}
 		</div>
 	);
 };

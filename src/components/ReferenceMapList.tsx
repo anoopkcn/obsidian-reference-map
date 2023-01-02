@@ -7,6 +7,7 @@ import { removeNullReferences } from "src/utils";
 export const ReferenceMapList = (props: {
 	papers: SemanticPaper[];
 	references: SemanticPaper[][];
+	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
 	const rootPapers: SemanticPaper[] = removeNullReferences(props.papers);
@@ -25,6 +26,7 @@ export const ReferenceMapList = (props: {
 				key={paper.paperId + index + props.view?.file.name}
 				rootPaper={paper}
 				references={props.references[index]}
+				citations={props.citations[index]}
 			/>
 		);
 	});

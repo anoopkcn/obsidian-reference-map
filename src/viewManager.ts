@@ -14,11 +14,13 @@ export class ViewManager {
     plugin: ReferenceMap;
     cache: LRUCache<TFile, DocCache>;
     refCache: LRUCache<string, SemanticPaper[]>;
+    citeCache: LRUCache<string, SemanticPaper[]>;
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
         this.cache = new LRUCache({ max: 20 });
         this.refCache = new LRUCache({ max: 20 });
+        this.citeCache = new LRUCache({ max: 20 });
     }
 
     getRootPapers = async (file: TFile): Promise<SemanticPaper[]> => {
@@ -57,5 +59,19 @@ export class ViewManager {
             }
         }
         return cachedRefs
+    }
+    getCitations = async (paperId: string): Promise<SemanticPaper[]> => {
+        const cachedCitations = this.citeCache.has(paperId) ? this.citeCache.get(paperId) : null;
+        if (!cachedCitations) {
+            try {
+                const citations = await getPaperMetadata(paperId, 'citations');
+                this.citeCache.set(paperId, citations);
+                return citations;
+            } catch (e) {
+                // console.error(e);
+                return [];
+            }
+        }
+        return cachedCitations
     }
 }
