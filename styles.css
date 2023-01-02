@@ -9,15 +9,11 @@ If your plugin does not need CSS, delete this file.
 .orm-view-title {
 	font-weight: 600;
 	margin-bottom: 0.5rem;
-	/* border-bottom: 1px solid #cccccc; */
 }
 
 .orm-no-content {
-	/* opacity of the text element to half */
 	opacity: 0.5;
 }
-
-/* Paper display section */
 
 .orm-external-link{
 	width:15px;
@@ -40,11 +36,13 @@ If your plugin does not need CSS, delete this file.
 .orm-paper-title{
 	cursor: pointer;
 }
-.orm-paper-title:hover {
-	color: var(--text-accent);
-}
+
 .orm-paper-title a{
+	color: var(--text-normal);
 	text-decoration: none;
+}
+.orm-paper-title a:hover{
+	color: var(--text-accent);
 }
 
 .orm-paper-authors-group{
@@ -68,13 +66,11 @@ If your plugin does not need CSS, delete this file.
 	display: flex;
 	justify-content: space-between;
 	padding-top: 0.6rem;
-	/* border-top: 1px solid var(--color-base-30); */
 }
 
 .orm-paper-buttons > div {
 	font-size: small;
 	width:18%;
-	/* text-align: center; */
 	color: var(--text-muted);
 
 }
