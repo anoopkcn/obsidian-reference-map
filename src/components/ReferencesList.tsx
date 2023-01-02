@@ -1,10 +1,10 @@
 import React from "react";
 import { FiSlash } from "react-icons/fi";
 import { IoMdClipboard } from "react-icons/io";
-import { RiExternalLinkFill } from "react-icons/ri";
 import { SiOpenaccess } from "react-icons/si";
 import { SemanticPaper } from "src/types";
 import { copyElToClipboard, removeNullReferences } from "src/utils";
+import { PaperTitleGroup } from "./PaperTitleGroup";
 
 export const ReferencesList = (props: { references: SemanticPaper[] }) => {
 	const references = removeNullReferences(props.references);
@@ -14,36 +14,7 @@ export const ReferencesList = (props: { references: SemanticPaper[] }) => {
 				key={reference.paperId + index}
 				className="orm-reference-paper"
 			>
-				<div className="orm-paper-title-group">
-					<span
-						className="orm-paper-title"
-						onClick={() => {
-							copyElToClipboard(
-								reference.title +
-									", " +
-									reference.authors[0].name +
-									", " +
-									reference.year
-							);
-						}}
-					>
-						{reference.title + " "}
-					</span>
-					<span className="orm-external-link">
-						<RiExternalLinkFill size={14} />
-					</span>
-				</div>
-				<div className="orm-paper-authors-group">
-					<span className="orm-paper-authors">
-						{reference.authors[0].name +
-							", " +
-							reference.year +
-							" "}
-					</span>
-					<span className="orm-external-link">
-						<RiExternalLinkFill size={14} />
-					</span>
-				</div>
+				<PaperTitleGroup rootPaper={reference} />
 				<div className="orm-paper-buttons">
 					<div
 						className="orm-copy-bibtex"

@@ -4,8 +4,8 @@ import { copyElToClipboard } from "src/utils";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { FiSlash } from "react-icons/fi";
-import { RiExternalLinkFill } from "react-icons/ri";
 import { ReferencesList } from "./ReferencesList";
+import { PaperTitleGroup } from "./PaperTitleGroup";
 
 export const RootReference = (props: {
 	key: string;
@@ -28,33 +28,7 @@ export const RootReference = (props: {
 	const rootPaper: SemanticPaper = props.rootPaper;
 	return (
 		<div className="orm-root-paper">
-			<div className="orm-paper-title-group">
-				<span
-					className="orm-paper-title"
-					onClick={() => {
-						copyElToClipboard(
-							rootPaper.title +
-								", " +
-								rootPaper.authors[0].name +
-								", " +
-								rootPaper.year
-						);
-					}}
-				>
-					{rootPaper.title + " "}
-				</span>
-				<span className="orm-external-link">
-					<RiExternalLinkFill size={14} />
-				</span>
-			</div>
-			<div className="orm-paper-authors-group">
-				<span className="orm-paper-authors">
-					{rootPaper.authors[0].name + ", " + rootPaper.year + " "}
-				</span>
-				<span className="orm-external-link">
-					<RiExternalLinkFill size={14} />
-				</span>
-			</div>
+			<PaperTitleGroup rootPaper={rootPaper} />
 			<div className="orm-paper-buttons">
 				<div
 					className="orm-copy-bibtex"

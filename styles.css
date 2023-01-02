@@ -77,14 +77,23 @@ If your plugin does not need CSS, delete this file.
 }
 .orm-reference-list-title{
 	text-align: center;
+	font-size: medium;
 	font-weight: 500;
 	margin:0.5rem;
 }
+.orm-reference-list .orm-paper-title-group{
+	border-top: 1px solid var(--color-base-30);
+	padding-top: 0.5rem;
 
+}
 .orm-reference-paper{
-	border-bottom: 1px solid var(--color-base-30);
-	border-radius: 0.25rem;
-	padding : 0.5rem;
-	margin-bottom: 0.5rem;
-	position: relative;
+	padding : 0.25rem;
+}
+
+.orm-copy-metadata{
+	cursor: pointer;
+	margin-bottom: -10px;
+}
+.orm-copy-metadata:hover{
+	color: var(--text-accent);
 }
