@@ -5,7 +5,7 @@ import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
-import { RootReferenceList } from "./components/RootReferenceList";
+import { ReferenceMapList } from "./components/ReferenceMapList";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
@@ -86,7 +86,7 @@ export class ReferenceMapView extends ItemView {
 		}
 		rootEl.render(
 			<React.StrictMode>
-				<RootReferenceList papers={rootPapers} />
+				<ReferenceMapList papers={rootPapers} />
 			</React.StrictMode>
 		);
 	};

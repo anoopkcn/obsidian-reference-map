@@ -3,7 +3,7 @@ import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
 import { areSetsEqual, getPaperIds } from './utils';
-import { postPaperMetadata } from './referencemap';
+import { getPaperMetadata, postPaperMetadata } from './referencemap';
 
 export interface DocCache {
     paperIds: Set<string>;
@@ -13,10 +13,12 @@ export interface DocCache {
 export class ViewManager {
     plugin: ReferenceMap;
     cache: LRUCache<TFile, DocCache>;
+    refCache: LRUCache<string, SemanticPaper[]>;
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
         this.cache = new LRUCache({ max: 20 });
+        this.refCache = new LRUCache({ max: 20 });
     }
 
     getRootPapers = async (file: TFile): Promise<SemanticPaper[]> => {
@@ -41,6 +43,21 @@ export class ViewManager {
         }
         return cachedDoc.rootPapers;
 
+    }
+
+    getReferences = async (paperId: string): Promise<SemanticPaper[]> => {
+        const cachedRefs = this.refCache.has(paperId) ? this.refCache.get(paperId) : null;
+        if (!cachedRefs) {
+            try {
+                const references = await getPaperMetadata(paperId, 'references');
+                this.refCache.set(paperId, references);
+                return references;
+            } catch (e) {
+                // console.error(e);
+                return [];
+            }
+        }
+        return cachedRefs
     }
 
 }
