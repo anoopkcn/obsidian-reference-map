@@ -86,7 +86,7 @@ export class ReferenceMapView extends ItemView {
 		}
 		rootEl.render(
 			<React.StrictMode>
-				<ReferenceMapList papers={rootPapers} />
+				<ReferenceMapList papers={rootPapers} view={activeView} />
 			</React.StrictMode>
 		);
 	};
