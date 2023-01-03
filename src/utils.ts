@@ -27,14 +27,50 @@ export const resolvePath = function (rawPath: string): string {
 // Given a markdown file contents regex match the DOI's from the file 
 export const getPaperIds = (content: string): Set<string> => {
     const output = new Set<string>();
-    const arxivRegex = /arXiv.(\d{4}\.\d{4,5})/i
+    const arxivRegex = /arXiv.\s?(\d{4}\.\d{4,5})/i
     const arXivMatches = content.match(arxivRegex)
+    const corpusRegex = /CorpusId.\s?(\d{4,})/i
+    const corpusMatches = content.match(corpusRegex)
+    const magRegex = /MAG.\s?(\d{4,})/i
+    const magMatches = content.match(magRegex)
+    const pmidRegex = /PMID.\s?(\d{4,})/i
+    const pmidMatches = content.match(pmidRegex)
+    const pmcidRegex = /PMCID.\s?(\d{4,})/i
+    const pmcidMatches = content.match(pmcidRegex)
+    const urlRegex = /URL.\s?(https:.[^\s]+)/i
+    const urlMatches = content.match(urlRegex)
+    const doi_matches = content.match(doiRegex());
+
     if (arXivMatches) {
         arXivMatches.slice(1).forEach(match => {
             output.add(`arXiv:${match}`)
         })
     }
-    const doi_matches = content.match(doiRegex());
+    if (corpusMatches) {
+        corpusMatches.slice(1).forEach(match => {
+            output.add(`CorpusId:${match}`)
+        })
+    }
+    if (magMatches) {
+        magMatches.slice(1).forEach(match => {
+            output.add(`MAG:${match}`)
+        })
+    }
+    if (pmidMatches) {
+        pmidMatches.slice(1).forEach(match => {
+            output.add(`PMID:${match}`)
+        })
+    }
+    if (pmcidMatches) {
+        pmcidMatches.slice(1).forEach(match => {
+            output.add(`PMCID:${match}`)
+        })
+    }
+    if (urlMatches) {
+        urlMatches.slice(1).forEach(match => {
+            output.add(`URL:${match}`)
+        })
+    }
     if (doi_matches) {
         for (const match of doi_matches) {
             if (!output.has(match)) {
