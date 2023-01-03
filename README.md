@@ -16,7 +16,8 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 ## Features
 Identifies research literature ID's from the current document and displays a map of references and citations. The map can be used to navigate to the references and citations.
-**NOTE**papers are ordered according to the publish date.
+
+**NOTE**: papers are ordered according to the publish date.
 
 ![obsidian-reference-map-demo](./images/obsidian-reference-map-demo.png)
 
@@ -27,9 +28,9 @@ Identifies research literature ID's from the current document and displays a map
 
     (1) Copy `bibtex` to the clipboard
 
-    (2) Copy `title`, `authors`, `year` and `abstract` to clipboard
+    (2) Copy `title`, `authors`, `year` and `abstract` to the clipboard
 
-    (3) if openaccess PDF is present for reference it will show a open PDF button
+    (3) if openaccess PDF is present for reference, it will show an open PDF button
 
     (4) Click to open a list of all References contained inside a paper
 
