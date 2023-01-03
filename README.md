@@ -23,14 +23,14 @@ Identifies research literature ID's from the current document and displays a map
 
 ## Usage
 - Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
-- Click on the author's name to open author's details
+- Click on the author's name to open author's details [semanticscholar](https://www.semanticscholar.org/)
 - Button functions:
 
     (1) Copy `bibtex` to the clipboard
 
-    (2) Copy `title`, `authors`, `year` and `abstract` to the clipboard
+    (2) Copy the `title`, `authors``, `year` and `abstract` to the clipboard
 
-    (3) if openaccess PDF is present for reference, it will show an open PDF button
+    (3) Click to open PDF if openaccess PDF is present for a reference
 
     (4) Click to open a list of all References contained inside a paper
 
