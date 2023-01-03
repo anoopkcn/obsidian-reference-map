@@ -23,7 +23,7 @@ Identifies research literature ID's from the current document and displays a map
 
 ## Usage
 - Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
-- Click on the author's name to open author's details [semanticscholar](https://www.semanticscholar.org/)](https://www.semanticscholar.org/)
+- Click on the author's name to open author's details
 - Button functions:
 
     (1) Copy `bibtex` to the clipboard
