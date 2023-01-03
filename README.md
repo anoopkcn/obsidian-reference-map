@@ -21,15 +21,24 @@ Identifies research literature ID's from the current document and displays a map
 
 ![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
 
+## Usage
+- Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
+- Click on the author's name to open author details [semanticscholar](https://www.semanticscholar.org/)
+- Button functions:
+    1. Copy `bibtex` to clipboard
+    2. Copy `title`, `authors`, `year` and `abstract` to clipboard
+    3. if openaccess PDF is present for a reference it will show a opne PDF button
+    4. Click to open a list of all References contained inside a paper
+    5. Click to open a list of all Citations contained inside a paper
 
 ## Paper ID's can be the following:
 The following types of IDs are supported:
--   `CorpusId:<id>` - Semantic Scholar numerical ID, e.g. `215416146`
--   `DOI:<doi>` - a [Digital Object Identifier](http://doi.org/), e.g. `DOI:10.18653/v1/N18-3011`
--   `ARXIV:<id>` - [arXiv.rg](https://arxiv.org/), e.g. `ARXIV:2106.15928`
--   `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
--   `ACL:<id>` - Association for Computational Linguistics, e.g. `ACL:W12-3903`
--   `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
--   `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
--   `URL:<url>` - URL from one of the sites listed below, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
+- `CorpusId:<id>` - Semantic Scholar numerical ID, e.g. `215416146`
+- `DOI:<doi>` - a [Digital Object Identifier](http://doi.org/), e.g. `DOI:10.18653/v1/N18-3011`
+- `ARXIV:<id>` - [arXiv.rg](https://arxiv.org/), e.g. `ARXIV:2106.15928`
+- `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
+- `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
+- `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
+- `URL:<url>` - URL from one of the sites listed below, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
+<!-- - `ACL:<id>` - Association for Computational Linguistics, e.g. `ACL:W12-3903` -->
 
