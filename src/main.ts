@@ -20,8 +20,8 @@ export default class ReferenceMap extends Plugin {
 		);
 
 		this.addCommand({
-			id: 'show-reference-map-view',
-			name: 'Reference Map: Open view',
+			id: 'show-reference-map-sidebar-view',
+			name: 'Open view',
 			checkCallback: (checking: boolean) => {
 				if (checking) {
 					return this.view === null;
