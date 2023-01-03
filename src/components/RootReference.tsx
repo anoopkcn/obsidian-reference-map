@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { copyElToClipboard } from "src/utils";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
-import { FiSlash } from "react-icons/fi";
+import { FiPaperclip, FiSlash } from "react-icons/fi";
 import { ReferencesList } from "./ReferencesList";
 import { PaperTitleGroup } from "./PaperTitleGroup";
 import { CitationsList } from "./CitationsList";
@@ -28,6 +28,8 @@ export const RootReference = (props: {
 	};
 
 	const rootPaper: SemanticPaper = props.rootPaper;
+	let abstract = "";
+	if (rootPaper.abstract) abstract = rootPaper.abstract;
 	return (
 		<div className="orm-root-paper">
 			<PaperTitleGroup paper={rootPaper} />
@@ -40,6 +42,24 @@ export const RootReference = (props: {
 				>
 					<IoMdClipboard size={17} />
 				</div>
+
+				<div
+					className="orm-copy-metadata"
+					onClick={() => {
+						copyElToClipboard(
+							rootPaper.title +
+								", " +
+								rootPaper.authors[0].name +
+								", " +
+								rootPaper.year +
+								"\n" +
+								abstract
+						);
+					}}
+				>
+					<FiPaperclip size={16} />
+				</div>
+
 				<div className="orm-openaccess">
 					{rootPaper.isOpenAccess ? (
 						<a href={`${rootPaper.openAccessPdf.url}`}>
