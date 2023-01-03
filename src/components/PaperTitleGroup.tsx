@@ -21,7 +21,10 @@ export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 					<a
 						href={`${SEMANTICSCHOLAR_URL}/author/${paper.authors[0].authorId}`}
 					>
-						{paper.authors[0].name + ", " + paper.year + " "}
+						{paper.authors[0].name +
+							", " +
+							paper.publicationDate +
+							" "}
 					</a>
 				</span>
 			</div>
