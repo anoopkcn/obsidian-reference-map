@@ -21,8 +21,6 @@ Identifies research literature ID's from the current document and displays a map
 
 ![obsidian-reference-map-demo](./images/obsidian-reference-map-demo.png)
 
-![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
-
 ## Usage
 - Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
 - Click on the author's name to open author details [semanticscholar](https://www.semanticscholar.org/)
@@ -32,6 +30,10 @@ Identifies research literature ID's from the current document and displays a map
     3. if openaccess PDF is present for a reference it will show a opne PDF button
     4. Click to open a list of all References contained inside a paper
     5. Click to open a list of all Citations contained inside a paper
+
+
+![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
+
 
 ## Paper ID's can be the following:
 The following types of IDs are supported:
