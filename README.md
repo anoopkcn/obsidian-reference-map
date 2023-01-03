@@ -16,21 +16,24 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 ## Features
 Identifies research literature ID's from the current document and displays a map of references and citations. The map can be used to navigate to the references and citations.
-
-**NOTE**: papers are orderd according to the publish date.
+**NOTE**papers are ordered according to the publish date.
 
 ![obsidian-reference-map-demo](./images/obsidian-reference-map-demo.png)
 
 ## Usage
 - Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
-- Click on the author's name to open author details [semanticscholar](https://www.semanticscholar.org/)
+- Click on the author's name to open author's details [semanticscholar](https://www.semanticscholar.org/)](https://www.semanticscholar.org/)
 - Button functions:
-    1. Copy `bibtex` to clipboard
-    2. Copy `title`, `authors`, `year` and `abstract` to clipboard
-    3. if openaccess PDF is present for a reference it will show a opne PDF button
-    4. Click to open a list of all References contained inside a paper
-    5. Click to open a list of all Citations contained inside a paper
 
+    (1) Copy `bibtex` to the clipboard
+
+    (2) Copy `title`, `authors`, `year` and `abstract` to clipboard
+
+    (3) if openaccess PDF is present for reference it will show a open PDF button
+
+    (4) Click to open a list of all References contained inside a paper
+
+    (5) Click to open a list of all Citations contained inside a paper
 
 ![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
 
