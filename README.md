@@ -47,6 +47,6 @@ The following types of IDs are supported:
 - `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
 - `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
 - `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
-- `URL:<url>` - URL from one of the sites listed below, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
+- `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
 <!-- - `ACL:<id>` - Association for Computational Linguistics, e.g. `ACL:W12-3903` -->
 
