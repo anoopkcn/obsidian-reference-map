@@ -28,7 +28,7 @@ Identifies research literature ID's from the current document and displays a map
 
     (1) Copy `bibtex` to the clipboard
 
-    (2) Copy the `title`, `authors``, `year` and `abstract` to the clipboard
+    (2) Copy the `title`, `authors`, `year` and `abstract` to the clipboard
 
     (3) Click to open PDF if openaccess PDF is present for a reference
 
