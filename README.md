@@ -17,6 +17,8 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 ## Features
 Identifies research literature ID's from the current document and displays a map of references and citations. The map can be used to navigate to the references and citations.
 
+**NOTE**: papers are orderd according to the publish date.
+
 ![obsidian-reference-map-demo](./images/obsidian-reference-map-demo.png)
 
 ![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
