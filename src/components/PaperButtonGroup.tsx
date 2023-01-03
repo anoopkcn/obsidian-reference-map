@@ -50,9 +50,9 @@ export const PaperButtonGroup = (props: { paper: SemanticPaper }) => {
 			<div className="orm-citations-2">
 				{paper.citationCount.toString()}
 			</div>
-			<div className="orm-influential-citations">
+			{/* <div className="orm-influential-citations">
 				{paper.influentialCitationCount.toString()}
-			</div>
+			</div> */}
 		</div>
 	);
 };

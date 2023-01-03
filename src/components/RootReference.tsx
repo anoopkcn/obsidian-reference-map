@@ -81,9 +81,9 @@ export const RootReference = (props: {
 				>
 					{rootPaper.citationCount.toString()}
 				</div>
-				<div className="orm-influential-citations">
+				{/* <div className="orm-influential-citations">
 					{rootPaper.influentialCitationCount.toString()}
-				</div>
+				</div> */}
 			</div>
 			{showReferences && <ReferencesList references={props.references} />}
 			{showCitations && <CitationsList citations={props.citations} />}
