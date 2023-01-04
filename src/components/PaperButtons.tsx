@@ -2,11 +2,12 @@ import React from "react";
 import { FiPaperclip, FiSlash } from "react-icons/fi";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
-import { SemanticPaper } from "src/types";
+import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
 import styled from "styled-components";
 
 type Props = {
+	settings: ReferenceMapSettings;
 	paper: SemanticPaper;
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>;
 	showReferences?: boolean;
@@ -35,6 +36,7 @@ const ButtonC = styled.div`
 `;
 
 export const PaperButtons = ({
+	settings,
 	paper,
 	setShowReferences = undefined,
 	showReferences = false,
@@ -52,6 +54,9 @@ export const PaperButtons = ({
 	const bibTex = paper.citationStyles.bibtex
 		? paper.citationStyles.bibtex
 		: "No BibTex available";
+	const influentialCount = paper.influentialCitationCount
+		? paper.influentialCitationCount.toString()
+		: "0";
 	let openAccessPdfUrl = "";
 	if (paper.isOpenAccess) {
 		openAccessPdfUrl = paper.openAccessPdf.url
@@ -142,6 +147,9 @@ export const PaperButtons = ({
 				)}
 			</div>
 			{citingCited}
+			{settings.influentialCount && (
+				<div className="orm-influential">{influentialCount}</div>
+			)}
 		</div>
 	);
 };

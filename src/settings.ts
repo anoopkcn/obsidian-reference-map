@@ -19,6 +19,17 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', { text: 'General Settings' });
 
         new Setting(containerEl)
+            .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
+            .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.influentialCount)
+                .onChange(async (value) => {
+                    this.plugin.settings.influentialCount = value;
+                    await this.plugin.saveSettings();
+                    this.plugin.refresh();
+                }));
+
+        new Setting(containerEl)
             .setName(t('HIDE_SHOW_BUTTONS_ON_HOVER'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
             .addToggle(toggle => toggle

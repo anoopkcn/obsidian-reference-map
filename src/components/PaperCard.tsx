@@ -23,7 +23,9 @@ export const PaperCard = (props: {
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
 			<PaperHeading paper={paper} />
-			{isButtonShown && <PaperButtons paper={paper} />}
+			{isButtonShown && (
+				<PaperButtons settings={props.settings} paper={paper} />
+			)}
 		</div>
 	);
 };
