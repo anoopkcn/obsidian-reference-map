@@ -1,6 +1,6 @@
 import { SemanticPaper } from "src/types";
 import React, { useState } from "react";
-import { copyElToClipboard } from "src/utils";
+import { copyElToClipboard, removeNullReferences } from "src/utils";
 import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { FiPaperclip, FiSlash } from "react-icons/fi";
@@ -26,6 +26,9 @@ export const RootReference = (props: {
 		setShowCitations(!showCitations);
 		setShowReferences(false);
 	};
+
+	const references = removeNullReferences(props.references);
+	const citations = removeNullReferences(props.citations);
 
 	const rootPaper: SemanticPaper = props.rootPaper;
 	let abstract = "";
@@ -85,8 +88,8 @@ export const RootReference = (props: {
 					{rootPaper.influentialCitationCount.toString()}
 				</div> */}
 			</div>
-			{showReferences && <ReferencesList references={props.references} />}
-			{showCitations && <CitationsList citations={props.citations} />}
+			{showReferences && <ReferencesList references={references} />}
+			{showCitations && <CitationsList citations={citations} />}
 		</div>
 	);
 };

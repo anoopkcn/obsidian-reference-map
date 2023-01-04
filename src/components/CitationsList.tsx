@@ -2,10 +2,9 @@ import React from "react";
 import { SemanticPaper } from "src/types";
 import { PaperTitleGroup } from "./PaperTitleGroup";
 import { PaperButtonGroup } from "./PaperButtonGroup";
-import { removeNullReferences } from "src/utils";
 
 export const CitationsList = (props: { citations: SemanticPaper[] }) => {
-	const citations = removeNullReferences(props.citations);
+	const citations = props.citations;
 	const referenceList = citations.map((citation, index) => {
 		return (
 			<div key={citation.paperId + index} className="orm-reference-paper">

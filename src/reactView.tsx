@@ -6,6 +6,7 @@ import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
 import { ReferenceMapList } from "./components/ReferenceMapList";
+import { removeNullReferences } from "./utils";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
@@ -81,6 +82,7 @@ export class ReferenceMapView extends ItemView {
 				rootPapers = await this.viewManager.getRootPapers(
 					activeView.file
 				);
+				rootPapers = removeNullReferences(rootPapers);
 			} catch (error) {
 				console.error(
 					"Error in Reference Map View: processReferences",
@@ -99,7 +101,6 @@ export class ReferenceMapView extends ItemView {
 						return reference;
 					})
 				);
-
 				// console.log(references);
 			} catch (error) {
 				console.error(

@@ -2,7 +2,7 @@ import { SemanticPaper } from "src/types";
 import React from "react";
 import { RootReference } from "./RootReference";
 import { MarkdownView } from "obsidian";
-import { removeNullReferences } from "src/utils";
+// import { removeNullReferences } from "src/utils";
 
 export const ReferenceMapList = (props: {
 	papers: SemanticPaper[];
@@ -10,7 +10,7 @@ export const ReferenceMapList = (props: {
 	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
-	const rootPapers: SemanticPaper[] = removeNullReferences(props.papers);
+	const rootPapers: SemanticPaper[] = props.papers;
 	if (!(rootPapers.length > 0)) {
 		return (
 			<div className="orm-no-content">

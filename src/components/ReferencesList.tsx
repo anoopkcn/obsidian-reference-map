@@ -2,10 +2,9 @@ import React from "react";
 import { SemanticPaper } from "src/types";
 import { PaperTitleGroup } from "./PaperTitleGroup";
 import { PaperButtonGroup } from "./PaperButtonGroup";
-import { removeNullReferences } from "src/utils";
 
 export const ReferencesList = (props: { references: SemanticPaper[] }) => {
-	const references = removeNullReferences(props.references);
+	const references = props.references;
 	const referenceList = references.map((reference, index) => {
 		return (
 			<div
