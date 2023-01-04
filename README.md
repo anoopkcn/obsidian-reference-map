@@ -11,6 +11,7 @@ The plugin is not available in the community plugin section in Obsidian. So you 
 1. Download the latest release from [here](https://github.com/anoopkcn/obsidian-reference-map/releases) and unzip it.
 2. Copy the `obsidian-reference-map` folder to your vault's `.obsidian/plugins` folder.
 3. Reload Obsidian.
+4. Enable the plugin in the community plugins section.
 
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
