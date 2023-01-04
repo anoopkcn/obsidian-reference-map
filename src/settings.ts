@@ -1,8 +1,9 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
-import { camelToNormalCase, fragWithHTML } from "./utils";
-import { SORTING_METADATA } from "./constants";
+import { fragWithHTML } from "./utils";
+// import { camelToNormalCase, fragWithHTML } from "./utils";
+// import { SORTING_METADATA } from "./constants";
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
     plugin: ReferenceMap;
