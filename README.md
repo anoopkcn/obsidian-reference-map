@@ -35,6 +35,8 @@ Identifies research literature ID's from the current document and displays a map
     (4) Click to open a list of all cited papers (References)
 
     (5) Click to open a list of all citing papers (Citations)
+    
+Check out the settings tab to configure the plugin.
 
 ![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
 
