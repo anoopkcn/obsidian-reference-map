@@ -31,8 +31,24 @@ export const RootReference = (props: {
 	const citations = removeNullReferences(props.citations);
 
 	const rootPaper: SemanticPaper = props.rootPaper;
-	let abstract = "";
-	if (rootPaper.abstract) abstract = rootPaper.abstract;
+
+	const paperTitle = rootPaper.title ? rootPaper.title : "Unknown Title";
+	const firstAuthor = rootPaper.authors[0]?.name
+		? rootPaper.authors[0].name
+		: "Unknown Author";
+	const year = rootPaper.year ? rootPaper.year : "Unknown Year";
+	const abstract = rootPaper.abstract
+		? rootPaper.abstract
+		: "No abstract available";
+	const bibTex = rootPaper.citationStyles.bibtex
+		? rootPaper.citationStyles.bibtex
+		: "No BibTex available";
+	let openAccessPdfUrl = "";
+	if (rootPaper.isOpenAccess) {
+		openAccessPdfUrl = rootPaper.openAccessPdf.url
+			? rootPaper.openAccessPdf.url
+			: "";
+	}
 	return (
 		<div className="orm-root-paper">
 			<PaperTitleGroup paper={rootPaper} />
@@ -40,7 +56,7 @@ export const RootReference = (props: {
 				<div
 					className="orm-copy-bibtex"
 					onClick={() => {
-						copyElToClipboard(rootPaper.citationStyles.bibtex);
+						copyElToClipboard(bibTex);
 					}}
 				>
 					<IoMdClipboard size={17} />
@@ -50,13 +66,7 @@ export const RootReference = (props: {
 					className="orm-copy-metadata"
 					onClick={() => {
 						copyElToClipboard(
-							rootPaper.title +
-								", " +
-								rootPaper.authors[0].name +
-								", " +
-								rootPaper.year +
-								"\n" +
-								abstract
+							`${paperTitle}, ${firstAuthor}, ${year}\n${abstract}`
 						);
 					}}
 				>
@@ -65,7 +75,7 @@ export const RootReference = (props: {
 
 				<div className="orm-openaccess">
 					{rootPaper.isOpenAccess ? (
-						<a href={`${rootPaper.openAccessPdf.url}`}>
+						<a href={`${openAccessPdfUrl}`}>
 							<SiOpenaccess size={16} />
 						</a>
 					) : (
