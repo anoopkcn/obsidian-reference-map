@@ -21,9 +21,6 @@ export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
 						{" " + paperTitle + " "}
 					</a>
 				</span>
-				{/* <span className="orm-external-link">
-					<RiExternalLinkFill size={14} />
-				</span> */}
 			</div>
 			<div className="orm-paper-authors-group">
 				<span className="orm-paper-authors">
