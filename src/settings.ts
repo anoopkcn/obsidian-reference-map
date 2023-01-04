@@ -45,17 +45,17 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', { text: 'Sorting Settings' });
         // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
 
-        new Setting(containerEl)
-            .setName(t('ENABLE_SORTING'))
-            .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
-            .addToggle(toggle => toggle
-                .setValue(settings.enableSorting)
-                .onChange(async (value) => {
-                    settings.enableSorting = value;
-                    await plugin.saveSettings();
-                    this.display();
-                    plugin.refresh();
-                }));
+        // new Setting(containerEl)
+        //     .setName(t('ENABLE_SORTING'))
+        //     .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
+        //     .addToggle(toggle => toggle
+        //         .setValue(settings.enableSorting)
+        //         .onChange(async (value) => {
+        //             settings.enableSorting = value;
+        //             await plugin.saveSettings();
+        //             this.display();
+        //             plugin.refresh();
+        //         }));
 
         if (settings.enableSorting) {
             new Setting(containerEl)
