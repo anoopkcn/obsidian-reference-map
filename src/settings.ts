@@ -27,5 +27,15 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.settings.mySetting = value;
                     await this.plugin.saveSettings();
                 }));
+        new Setting(containerEl)
+            .setName('Hide and show buttons on Hover')
+            .setDesc('Buttons on cards will be shown for every reference. If you want to hide them, and show them on hover you can enable this option.')
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.hideButtonsOnHover)
+                .onChange(async (value) => {
+                    this.plugin.settings.hideButtonsOnHover = value;
+                    await this.plugin.saveSettings();
+                    this.plugin.refresh();
+                }));
     }
 }

@@ -127,6 +127,7 @@ export class ReferenceMapView extends ItemView {
 		rootEl.render(
 			<React.StrictMode>
 				<ReferenceMapList
+					settings={this.plugin.settings}
 					papers={rootPapers}
 					references={references}
 					citations={citations}

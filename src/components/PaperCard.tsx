@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
-import { SemanticPaper } from "src/types";
+import { ReferenceMapSettings, SemanticPaper } from "src/types";
 
-export const PaperCard = (props: { paper: SemanticPaper }) => {
+export const PaperCard = (props: {
+	paper: SemanticPaper;
+	settings: ReferenceMapSettings;
+}) => {
 	const paper = props.paper;
-	const [isButtonShown, setIsButtonShown] = useState(false);
+	const [isButtonShown, setIsButtonShown] = useState(
+		props.settings.hideButtonsOnHover ? false : true
+	);
+	const handleHoverButtons = (isShow: boolean) => {
+		props.settings.hideButtonsOnHover
+			? setIsButtonShown(isShow)
+			: setIsButtonShown(true);
+	};
 	return (
 		<div
 			className="orm-paper-card"
-			onMouseEnter={() => setIsButtonShown(true)}
-			onMouseLeave={() => setIsButtonShown(false)}
+			onMouseEnter={() => handleHoverButtons(true)}
+			onMouseLeave={() => handleHoverButtons(false)}
 		>
 			<PaperHeading paper={paper} />
 			{isButtonShown && <PaperButtons paper={paper} />}

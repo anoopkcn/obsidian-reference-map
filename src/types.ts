@@ -1,5 +1,6 @@
 export interface ReferenceMapSettings {
     mySetting: string;
+    hideButtonsOnHover: boolean;
 }
 
 export interface SemanticPaper {

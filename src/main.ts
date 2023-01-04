@@ -1,12 +1,9 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
-// import { ReferenceMapSettingTab } from './settings';
+import { ReferenceMapSettingTab } from './settings';
 import { ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView';
-
-const DEFAULT_SETTINGS: ReferenceMapSettings = {
-	mySetting: 'default'
-}
+import { DEFAULT_SETTINGS } from './constants';
 
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings;
@@ -35,7 +32,7 @@ export default class ReferenceMap extends Plugin {
 
 		ribbonIconEl.addClass('reference-map-ribbon-class');
 
-		// this.addSettingTab(new ReferenceMapSettingTab(this.app, this));
+		this.addSettingTab(new ReferenceMapSettingTab(this.app, this));
 	}
 
 
@@ -73,5 +70,10 @@ export default class ReferenceMap extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	//refresh view on setting schange 
+	refresh = () => {
+		this.activateView()
 	}
 }

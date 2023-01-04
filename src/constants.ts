@@ -1,3 +1,10 @@
+import { ReferenceMapSettings } from "./types"
+
+export const DEFAULT_SETTINGS: ReferenceMapSettings = {
+    mySetting: 'default',
+    hideButtonsOnHover: false
+}
+
 export const SEMANTIC_FIELDS = [
     'abstract',
     'authors',
