@@ -18,11 +18,10 @@ type Props = {
 };
 
 const ButtonR = styled.div`
-	border: 1px solid transparent;
 	${(props: { showReferences: boolean }) =>
 		props.showReferences &&
 		`
-		border: 1px solid #888;
+		font-weight: bold;
 	`}
 `;
 
@@ -31,7 +30,7 @@ const ButtonC = styled.div`
 	${(props: { showCitations: boolean }) =>
 		props.showCitations &&
 		`
-		border: 1px solid  #888;
+		font-weight: bold;
 	`}
 `;
 
