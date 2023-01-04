@@ -2,7 +2,7 @@ import React from "react";
 import { SEMANTICSCHOLAR_URL } from "src/constants";
 import { SemanticPaper } from "src/types";
 
-export const PaperTitleGroup = (props: { paper: SemanticPaper }) => {
+export const PaperHeading = (props: { paper: SemanticPaper }) => {
 	const paper: SemanticPaper = props.paper;
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
 	const firstAuthor = paper.authors[0]

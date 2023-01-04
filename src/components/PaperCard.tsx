@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { PaperButtonGroup } from "./PaperButtonGroup";
-import { PaperTitleGroup } from "./PaperTitleGroup";
+import { PaperHeading } from "./PaperHeading";
+import { PaperButtons } from "./PaperButtons";
 import { SemanticPaper } from "src/types";
 
 export const PaperCard = (props: { paper: SemanticPaper }) => {
@@ -12,8 +12,8 @@ export const PaperCard = (props: { paper: SemanticPaper }) => {
 			onMouseEnter={() => setIsButtonShown(true)}
 			onMouseLeave={() => setIsButtonShown(false)}
 		>
-			<PaperTitleGroup paper={paper} />
-			{isButtonShown && <PaperButtonGroup paper={paper} />}
+			<PaperHeading paper={paper} />
+			{isButtonShown && <PaperButtons paper={paper} />}
 		</div>
 	);
 };

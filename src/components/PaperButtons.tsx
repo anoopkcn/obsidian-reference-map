@@ -15,7 +15,7 @@ type Props = {
 	isButtonShown?: boolean;
 };
 
-export const PaperButtonGroup = ({
+export const PaperButtons = ({
 	paper,
 	setShowReferences = undefined,
 	showReferences = false,

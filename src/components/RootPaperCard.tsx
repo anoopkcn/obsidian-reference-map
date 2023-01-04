@@ -2,8 +2,8 @@ import { SemanticPaper } from "src/types";
 import React, { useState } from "react";
 import { removeNullReferences } from "src/utils";
 import { ReferencesList } from "./PaperList";
-import { PaperTitleGroup } from "./PaperTitleGroup";
-import { PaperButtonGroup } from "./PaperButtonGroup";
+import { PaperHeading } from "./PaperHeading";
+import { PaperButtons } from "./PaperButtons";
 
 export const RootPaperCard = (props: {
 	key: string;
@@ -30,9 +30,9 @@ export const RootPaperCard = (props: {
 					: setIsButtonShown(false);
 			}}
 		>
-			<PaperTitleGroup paper={rootPaper} />
+			<PaperHeading paper={rootPaper} />
 			{isButtonShown && (
-				<PaperButtonGroup
+				<PaperButtons
 					paper={rootPaper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
