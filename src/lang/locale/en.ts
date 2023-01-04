@@ -30,4 +30,6 @@ export default {
     SORTING_METADATA_DESC: "Sort Reference Map based on a metadata value.",
     SORTING_ORDER: "Sorting order",
     SORTING_ORDER_DESC: "Sort Reference Map in ascending or descending order.",
+    ENABLE_SORTING: "Enable sorting",
+    ENABLE_SORTING_DESC: "Enable sorting of Reference Map based on metadata values. Depending on the number of cited/citing papers this operation might be slow.",
 };
