@@ -4,6 +4,7 @@ import { IoMdClipboard } from "react-icons/io";
 import { SiOpenaccess } from "react-icons/si";
 import { SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
+import styled from "styled-components";
 
 type Props = {
 	paper: SemanticPaper;
@@ -14,6 +15,24 @@ type Props = {
 	setIsButtonShown?: React.Dispatch<React.SetStateAction<boolean>>;
 	isButtonShown?: boolean;
 };
+
+const ButtonR = styled.div`
+	border: 1px solid transparent;
+	${(props: { showReferences: boolean }) =>
+		props.showReferences &&
+		`
+		border: 1px solid #888;
+	`}
+`;
+
+const ButtonC = styled.div`
+	border: 1px solid transparent;
+	${(props: { showCitations: boolean }) =>
+		props.showCitations &&
+		`
+		border: 1px solid  #888;
+	`}
+`;
 
 export const PaperButtons = ({
 	paper,
@@ -63,18 +82,22 @@ export const PaperButtons = ({
 		};
 		citingCited = (
 			<>
-				<div
-					className="orm-references"
-					onClick={() => handleShowReferencesClick()}
-				>
-					{paper.referenceCount.toString()}
-				</div>
-				<div
-					className="orm-citations"
-					onClick={() => handleShowCitationsClick()}
-				>
-					{paper.citationCount.toString()}
-				</div>
+				<ButtonR showReferences={showReferences}>
+					<div
+						className="orm-references"
+						onClick={() => handleShowReferencesClick()}
+					>
+						{paper.referenceCount.toString()}
+					</div>
+				</ButtonR>
+				<ButtonC showCitations={showCitations}>
+					<div
+						className="orm-citations"
+						onClick={() => handleShowCitationsClick()}
+					>
+						{paper.citationCount.toString()}
+					</div>
+				</ButtonC>
 			</>
 		);
 	} else {

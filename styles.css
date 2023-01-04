@@ -72,7 +72,9 @@ If your plugin does not need CSS, delete this file.
 
 .orm-paper-buttons > div {
 	font-size: small;
-	width:18%;
+	display: inline-block;
+	/* min-width:20px; */
+	padding: 0.25rem;
 	color: var(--text-muted);
 
 }
