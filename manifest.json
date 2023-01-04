@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-reference-map",
 	"name": "Reference Map",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"minAppVersion": "0.15.0",
 	"description": "Reference and citation map for literature review and discovery",
 	"author": "Anoop K. Chandran",
