@@ -1,6 +1,14 @@
 export interface ReferenceMapSettings {
     hideButtonsOnHover: boolean;
     influentialCount: boolean;
+    copyTitle: boolean;
+    copyPaperDOI: boolean;
+    copyAuthors: boolean;
+    copyYear: boolean;
+    copyAbstract: boolean;
+    copyUrl: boolean;
+    copyJournal: boolean;
+    copyOpenAccessPdf: boolean;
 }
 
 export interface SemanticPaper {
@@ -28,6 +36,7 @@ export interface ExternalIds {
     ArXiv: string
     DBLP: string
     PubMedCentral: string
+    DOI: string
 }
 
 export interface OpenAccessPdf {

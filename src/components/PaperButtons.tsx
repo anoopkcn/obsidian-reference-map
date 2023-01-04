@@ -45,9 +45,12 @@ export const PaperButtons = ({
 	isButtonShown = false,
 }: Props) => {
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
-	const firstAuthor = paper.authors[0]?.name
-		? paper.authors[0].name
-		: "Unknown Author";
+	// const firstAuthor = paper.authors[0]?.name
+	// 	? paper.authors[0].name
+	// 	: "Unknown Author";
+	let authors = "Unknown Authors";
+	if (paper.authors.length > 0)
+		authors = paper.authors.map((author) => author.name).join(", ");
 	const year = paper.year ? paper.year : "Unknown Year";
 	const abstract = paper.abstract ? paper.abstract : "No abstract available";
 	const bibTex = paper.citationStyles.bibtex
@@ -62,6 +65,17 @@ export const PaperButtons = ({
 			? paper.openAccessPdf.url
 			: "";
 	}
+	const paperURL = paper.url ? paper.url : "Unknown URL";
+	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
+
+	let copyToClipboard = "";
+	if (settings.copyTitle) copyToClipboard += `${paperTitle}\n`;
+	if (settings.copyAuthors) copyToClipboard += `${authors}\n`;
+	if (settings.copyYear) copyToClipboard += `${year}\n`;
+	if (settings.copyAbstract) copyToClipboard += `${abstract}\n`;
+	if (settings.copyUrl) copyToClipboard += `${paperURL}\n`;
+	if (settings.copyOpenAccessPdf) copyToClipboard += `${openAccessPdfUrl}\n`;
+	if (settings.copyPaperDOI) copyToClipboard += `${doi}\n`;
 
 	let citingCited = null;
 	if (
@@ -129,9 +143,7 @@ export const PaperButtons = ({
 			<div
 				className="orm-copy-metadata"
 				onClick={() => {
-					copyElToClipboard(
-						`${paperTitle}, ${firstAuthor}, ${year}\n${abstract}`
-					);
+					copyElToClipboard(copyToClipboard);
 				}}
 			>
 				<FiPaperclip size={15} />

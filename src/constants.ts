@@ -1,8 +1,16 @@
 import { ReferenceMapSettings } from "./types"
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
-    mySetting: 'default',
-    hideButtonsOnHover: false
+    hideButtonsOnHover: false,
+    influentialCount: false,
+    copyTitle: true,
+    copyPaperDOI: false,
+    copyAuthors: true,
+    copyYear: true,
+    copyAbstract: true,
+    copyUrl: false,
+    copyJournal: false,
+    copyOpenAccessPdf: false,
 }
 
 export const SEMANTIC_FIELDS = [
