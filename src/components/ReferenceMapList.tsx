@@ -14,7 +14,8 @@ export const ReferenceMapList = (props: {
 	if (!(rootPapers.length > 0)) {
 		return (
 			<div className="orm-no-content">
-				No VALID reference ID's are found in the active document
+				No {props.view ? "VALID" : ""} reference ID's are found in the
+				active document
 			</div>
 		);
 	}
