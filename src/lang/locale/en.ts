@@ -26,4 +26,8 @@ export default {
     COPY_URL_DESC: "Add the URL (if present) of the reference to the clipboard.",
     COPY_OPEN_ACCESS_PDF: "Copy open access PDF",
     COPY_OPEN_ACCESS_PDF_DESC: "Add the open access PDF URL (if present) of the reference to the clipboard.",
+    SORTING_METADATA: "Sorting metadata",
+    SORTING_METADATA_DESC: "Sort Reference Map based on a metadata value.",
+    SORTING_ORDER: "Sorting order",
+    SORTING_ORDER_DESC: "Sort Reference Map in ascending or descending order.",
 };

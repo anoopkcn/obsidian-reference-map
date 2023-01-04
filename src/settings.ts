@@ -2,6 +2,8 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { fragWithHTML } from "./utils";
+// import { camelToNormalCase, fragWithHTML } from "./utils";
+// import { SORTING_METADATA } from "./constants";
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
     plugin: ReferenceMap;
@@ -17,6 +19,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h2', { text: 'General Settings' });
+        containerEl.createEl('p', { text: 'Changing the settings will refresh the Reference Map.' });
 
         new Setting(containerEl)
             .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
@@ -39,6 +42,36 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings();
                     this.plugin.refresh();
                 }));
+        // containerEl.createEl('h2', { text: 'Sorting Settings' });
+        // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
+
+        // new Setting(containerEl)
+        //     .setName(t('SORTING_METADATA'))
+        //     .setDesc(fragWithHTML(t('SORTING_METADATA_DESC')))
+        //     .addDropdown(dropdown => dropdown
+        //         .addOption(SORTING_METADATA[0], camelToNormalCase(SORTING_METADATA[0]))
+        //         .addOption(SORTING_METADATA[1], camelToNormalCase(SORTING_METADATA[1]))
+        //         .addOption(SORTING_METADATA[2], camelToNormalCase(SORTING_METADATA[2]))
+        //         .addOption(SORTING_METADATA[3], camelToNormalCase(SORTING_METADATA[3]))
+        //         .setValue(this.plugin.settings.sortingMetadata)
+        //         .onChange(async (value) => {
+        //             this.plugin.settings.sortingMetadata = value;
+        //             await this.plugin.saveSettings();
+        //             this.plugin.refresh();
+        //         }));
+
+        // new Setting(containerEl)
+        //     .setName(t('SORTING_ORDER'))
+        //     .setDesc(fragWithHTML(t('SORTING_ORDER_DESC')))
+        //     .addDropdown(dropdown => dropdown
+        //         .addOption('asc', 'Ascending')
+        //         .addOption('desc', 'Descending')
+        //         .setValue(this.plugin.settings.sortingOrder)
+        //         .onChange(async (value) => {
+        //             this.plugin.settings.sortingOrder = value;
+        //             await this.plugin.saveSettings();
+        //             this.plugin.refresh();
+        //         }));
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });

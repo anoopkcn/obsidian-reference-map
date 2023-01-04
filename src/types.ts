@@ -9,6 +9,8 @@ export interface ReferenceMapSettings {
     copyUrl: boolean;
     copyJournal: boolean;
     copyOpenAccessPdf: boolean;
+    sortingMetadata: string;
+    sortingOrder: string;
 }
 
 export interface SemanticPaper {

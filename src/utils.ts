@@ -17,6 +17,14 @@ export function areSetsEqual<T>(as: Set<T>, bs: Set<T>) {
     });
 }
 
+export function camelToNormalCase(str: string) {
+    return (
+        str.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+            return str.toUpperCase();
+        })
+    );
+}
+
 // Get normalized path
 export const resolvePath = function (rawPath: string): string {
     const vaultRoot = this.app.vault.adapter instanceof FileSystemAdapter

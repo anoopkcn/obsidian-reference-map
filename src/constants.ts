@@ -11,7 +11,21 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     copyUrl: false,
     copyJournal: false,
     copyOpenAccessPdf: false,
+    sortingMetadata: 'year',
+    sortingOrder: 'desc'
 }
+
+export const SORTING_METADATA = [
+    'year',
+    'citationCount',
+    'referenceCount',
+    'influentialCitationCount',
+] as const;
+
+export const SORTING_ORDER = [
+    'asc',
+    'desc'
+] as const;
 
 export const SEMANTIC_FIELDS = [
     'abstract',
