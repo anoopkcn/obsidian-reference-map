@@ -84,14 +84,30 @@ export const PaperButtons = ({
 			<>
 				<div
 					className="orm-references"
-					style={showReferences ? { fontWeight: "bold" } : {}}
+					style={
+						showReferences
+							? {
+									fontWeight: "bold",
+									color: "var(--text-accent)",
+									// eslint-disable-next-line no-mixed-spaces-and-tabs
+							  }
+							: {}
+					}
 					onClick={() => handleShowReferencesClick()}
 				>
 					{paper.referenceCount.toString()}
 				</div>
 				<div
 					className="orm-citations"
-					style={showCitations ? { fontWeight: "bold" } : {}}
+					style={
+						showCitations
+							? {
+									fontWeight: "bold",
+									color: "var(--text-accent)",
+									// eslint-disable-next-line no-mixed-spaces-and-tabs
+							  }
+							: {}
+					}
 					onClick={() => handleShowCitationsClick()}
 				>
 					{paper.citationCount.toString()}

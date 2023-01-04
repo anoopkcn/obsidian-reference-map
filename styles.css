@@ -79,11 +79,18 @@ If your plugin does not need CSS, delete this file.
 
 }
 
+.orm-paper-buttons > .orm-openaccess a{
+	color: var(--icon-color)
+}
+.orm-paper-buttons > .orm-openaccess a:hover{
+	color: var(--text-accent);
+}
+
 .orm-paper-buttons > .orm-copy-bibtex,.orm-copy-metadata, .orm-references, .orm-citations {
 	cursor: pointer;
 }
 
-.orm-paper-buttons > .orm-copy-bibtex:hover, .orm-copy-metadata:hover,.orm-references:hover, .orm-citations:hover {
+.orm-paper-buttons > .orm-copy-bibtex:hover, .orm-copy-metadata:hover,.orm-references:hover, .orm-citations:hover{
 	color: var(--text-accent);
 }
 
