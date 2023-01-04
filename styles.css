@@ -15,30 +15,31 @@ If your plugin does not need CSS, delete this file.
 	opacity: 0.5;
 }
 
-.orm-external-link{
-	width:15px;
-	height:15px;
-	cursor: pointer;
+/* ReferenceMapList */
+.orm-reference-map{
+	display: block;
 }
 
-.orm-external-link:hover{
-	color: var(--text-accent);
-}
-
+/* RootPaperCard */
 .orm-root-paper{
 	border: 1px solid var(--color-base-30);
 	border-radius: 0.25rem;
 	padding : 0.5rem;
 	margin-bottom: 0.5rem;
 	position: relative;
+
 }
 
-.orm-paper-title-group{
+/* Paper Heading */
+.orm-paper-heading{
 	margin-bottom: 0.5rem;
+	font-size: small
 }
 
 .orm-paper-title{
+	display: block;
 	cursor: pointer;
+	padding-bottom: 0.25rem;
 }
 
 .orm-paper-title a{
@@ -63,45 +64,35 @@ If your plugin does not need CSS, delete this file.
 	color: var(--text-accent);
 }
 
-.orm-paper-buttons-group{
+.orm-paper-buttons{
 	width:100%;
 	display: flex;
 	justify-content: space-between;
-	padding-top: 0.6rem;
 }
 
-.orm-paper-buttons-group > div {
+.orm-paper-buttons > div {
 	font-size: small;
 	width:18%;
 	color: var(--text-muted);
 
 }
 
-.orm-paper-buttons-group > .orm-copy-bibtex, .orm-references, .orm-citations {
+.orm-paper-buttons > .orm-copy-bibtex,.orm-copy-metadata, .orm-references, .orm-citations {
 	cursor: pointer;
 }
 
-.orm-paper-buttons-group > .orm-copy-bibtex:hover, .orm-references:hover, .orm-citations:hover {
+.orm-paper-buttons > .orm-copy-bibtex:hover, .orm-copy-metadata:hover,.orm-references:hover, .orm-citations:hover {
 	color: var(--text-accent);
 }
 
+/* Paper List */
 .orm-paper-list{
 	margin: 0.5rem 0;
-	font-size: small;
 }
 
-.orm-paper-list .orm-paper-title-group{
+.orm-paper-list .orm-paper-heading{
 	border-top: 1px solid var(--color-base-30);
 	padding-top: 0.5rem;
 	margin-top: 0.5rem;
 
-}
-
-.orm-copy-metadata{
-	cursor: pointer;
-	margin-bottom: -10px;
-}
-
-.orm-copy-metadata:hover{
-	color: var(--text-accent);
 }

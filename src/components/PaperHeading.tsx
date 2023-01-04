@@ -15,14 +15,12 @@ export const PaperHeading = (props: { paper: SemanticPaper }) => {
 	}
 	return (
 		<>
-			<div className="orm-paper-title-group">
+			<div className="orm-paper-heading">
 				<span className="orm-paper-title">
 					<a href={`${SEMANTICSCHOLAR_URL}/paper/${paper.paperId}`}>
 						{" " + paperTitle + " "}
 					</a>
 				</span>
-			</div>
-			<div className="orm-paper-authors-group">
 				<span className="orm-paper-authors">
 					<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
 						{firstAuthor + ", " + year}

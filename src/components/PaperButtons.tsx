@@ -90,14 +90,14 @@ export const PaperButtons = ({
 		);
 	}
 	return (
-		<div className="orm-paper-buttons-group">
+		<div className="orm-paper-buttons">
 			<div
 				className="orm-copy-bibtex"
 				onClick={() => {
 					copyElToClipboard(bibTex);
 				}}
 			>
-				<IoMdClipboard size={17} />
+				<IoMdClipboard size={16} />
 			</div>
 			<div
 				className="orm-copy-metadata"
@@ -107,21 +107,18 @@ export const PaperButtons = ({
 					);
 				}}
 			>
-				<FiPaperclip size={16} />
+				<FiPaperclip size={15} />
 			</div>
 			<div className="orm-openaccess">
 				{paper.isOpenAccess ? (
 					<a href={`${openAccessPdfUrl}`}>
-						<SiOpenaccess size={16} />
+						<SiOpenaccess size={15} />
 					</a>
 				) : (
-					<FiSlash size={16} />
+					<FiSlash size={15} />
 				)}
 			</div>
 			{citingCited}
-			{/* <div className="orm-influential-citations">
-				{paper.influentialCitationCount.toString()}
-			</div> */}
 		</div>
 	);
 };
