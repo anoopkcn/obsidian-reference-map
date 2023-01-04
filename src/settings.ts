@@ -57,35 +57,35 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         //             plugin.refresh();
         //         }));
 
-        if (settings.enableSorting) {
-            new Setting(containerEl)
-                .setName(t('SORTING_METADATA'))
-                .setDesc(fragWithHTML(t('SORTING_METADATA_DESC')))
-                .addDropdown(dropdown => dropdown
-                    .addOption(SORTING_METADATA[0], camelToNormalCase(SORTING_METADATA[0]))
-                    .addOption(SORTING_METADATA[1], camelToNormalCase(SORTING_METADATA[1]))
-                    .addOption(SORTING_METADATA[2], camelToNormalCase(SORTING_METADATA[2]))
-                    .addOption(SORTING_METADATA[3], camelToNormalCase(SORTING_METADATA[3]))
-                    .setValue(settings.sortingMetadata)
-                    .onChange(async (value) => {
-                        settings.sortingMetadata = value;
-                        await plugin.saveSettings();
-                        plugin.refresh();
-                    }));
+        // if (settings.enableSorting) {
+        //     new Setting(containerEl)
+        //         .setName(t('SORTING_METADATA'))
+        //         .setDesc(fragWithHTML(t('SORTING_METADATA_DESC')))
+        //         .addDropdown(dropdown => dropdown
+        //             .addOption(SORTING_METADATA[0], camelToNormalCase(SORTING_METADATA[0]))
+        //             .addOption(SORTING_METADATA[1], camelToNormalCase(SORTING_METADATA[1]))
+        //             .addOption(SORTING_METADATA[2], camelToNormalCase(SORTING_METADATA[2]))
+        //             .addOption(SORTING_METADATA[3], camelToNormalCase(SORTING_METADATA[3]))
+        //             .setValue(settings.sortingMetadata)
+        //             .onChange(async (value) => {
+        //                 settings.sortingMetadata = value;
+        //                 await plugin.saveSettings();
+        //                 plugin.refresh();
+        //             }));
 
-            new Setting(containerEl)
-                .setName(t('SORTING_ORDER'))
-                .setDesc(fragWithHTML(t('SORTING_ORDER_DESC')))
-                .addDropdown(dropdown => dropdown
-                    .addOption('asc', 'Ascending')
-                    .addOption('desc', 'Descending')
-                    .setValue(settings.sortingOrder)
-                    .onChange(async (value) => {
-                        settings.sortingOrder = value;
-                        await plugin.saveSettings();
-                        plugin.refresh();
-                    }));
-        }
+        //     new Setting(containerEl)
+        //         .setName(t('SORTING_ORDER'))
+        //         .setDesc(fragWithHTML(t('SORTING_ORDER_DESC')))
+        //         .addDropdown(dropdown => dropdown
+        //             .addOption('asc', 'Ascending')
+        //             .addOption('desc', 'Descending')
+        //             .setValue(settings.sortingOrder)
+        //             .onChange(async (value) => {
+        //                 settings.sortingOrder = value;
+        //                 await plugin.saveSettings();
+        //                 plugin.refresh();
+        //             }));
+        // }
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });
