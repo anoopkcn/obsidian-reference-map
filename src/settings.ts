@@ -19,7 +19,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h2', { text: 'General Settings' });
-        containerEl.createEl('p', { text: 'Changing the settings will refresh the Reference Map.' });
+        // containerEl.createEl('p', { text: 'Changing the settings will refresh the Reference Map.' });
 
         new Setting(containerEl)
             .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
@@ -43,7 +43,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     plugin.refresh();
                 }));
         containerEl.createEl('h2', { text: 'Sorting Settings' });
-        containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
+        // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
 
         new Setting(containerEl)
             .setName(t('ENABLE_SORTING'))
@@ -88,7 +88,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         }
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
-        containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });
+        // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });
         new Setting(containerEl)
             .setName(t('COPY_TITLE'))
             .setDesc(fragWithHTML(t('COPY_TITLE_DESC')))
