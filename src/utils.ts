@@ -26,20 +26,21 @@ export const resolvePath = function (rawPath: string): string {
 
 // Given a markdown file contents regex match the DOI's from the file 
 export const getPaperIds = (content: string): Set<string> => {
+    const modContent = content.replace("](", " ")
     const output = new Set<string>();
     const arxivRegex = /arXiv.\s?(\d{4}\.\d{4,5})/i
-    const arXivMatches = content.match(arxivRegex)
+    const arXivMatches = modContent.match(arxivRegex)
     const corpusRegex = /CorpusId.\s?(\d{4,})/i
-    const corpusMatches = content.match(corpusRegex)
+    const corpusMatches = modContent.match(corpusRegex)
     const magRegex = /MAG.\s?(\d{4,})/i
-    const magMatches = content.match(magRegex)
+    const magMatches = modContent.match(magRegex)
     const pmidRegex = /PMID.\s?(\d{4,})/i
-    const pmidMatches = content.match(pmidRegex)
+    const pmidMatches = modContent.match(pmidRegex)
     const pmcidRegex = /PMCID.\s?(\d{4,})/i
-    const pmcidMatches = content.match(pmcidRegex)
+    const pmcidMatches = modContent.match(pmcidRegex)
     const urlRegex = /URL.\s?(https:.[^\s]+)/i
-    const urlMatches = content.match(urlRegex)
-    const doi_matches = content.match(doiRegex());
+    const urlMatches = modContent.match(urlRegex)
+    const doi_matches = modContent.match(doiRegex());
 
     if (arXivMatches) {
         arXivMatches.slice(1).forEach(match => {
