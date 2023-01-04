@@ -43,7 +43,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     await plugin.saveSettings();
                     plugin.refresh();
                 }));
-        containerEl.createEl('h2', { text: 'Sorting Settings' });
+        // containerEl.createEl('h2', { text: 'Sorting Settings' });
         // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
 
         // new Setting(containerEl)

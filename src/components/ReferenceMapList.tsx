@@ -2,7 +2,7 @@ import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
-import { SORTING_METADATA } from "src/constants";
+// import { SORTING_METADATA } from "src/constants";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
@@ -11,7 +11,7 @@ export const ReferenceMapList = (props: {
 	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
-	let rootPapers: SemanticPaper[] = props.papers;
+	const rootPapers: SemanticPaper[] = props.papers;
 	if (!(rootPapers.length > 0)) {
 		return (
 			<div className="orm-no-content">
@@ -20,20 +20,20 @@ export const ReferenceMapList = (props: {
 			</div>
 		);
 	}
-	if (props.settings.enableSorting) {
-		let index = 0;
-		if (props.settings.sortingMetadata === SORTING_METADATA[0]) index = 0;
-		if (props.settings.sortingMetadata === SORTING_METADATA[1]) index = 1;
-		if (props.settings.sortingMetadata === SORTING_METADATA[2]) index = 2;
-		if (props.settings.sortingMetadata === SORTING_METADATA[3]) index = 3;
+	// if (props.settings.enableSorting) {
+	// 	let index = 0;
+	// 	if (props.settings.sortingMetadata === SORTING_METADATA[0]) index = 0;
+	// 	if (props.settings.sortingMetadata === SORTING_METADATA[1]) index = 1;
+	// 	if (props.settings.sortingMetadata === SORTING_METADATA[2]) index = 2;
+	// 	if (props.settings.sortingMetadata === SORTING_METADATA[3]) index = 3;
 
-		rootPapers = props.papers.sort((a, b) => {
-			return b[SORTING_METADATA[index]] - a[SORTING_METADATA[index]];
-		});
-		if (props.settings.sortingOrder === "asc") {
-			rootPapers = rootPapers.reverse();
-		}
-	}
+	// 	rootPapers = props.papers.sort((a, b) => {
+	// 		return b[SORTING_METADATA[index]] - a[SORTING_METADATA[index]];
+	// 	});
+	// 	if (props.settings.sortingOrder === "asc") {
+	// 		rootPapers = rootPapers.reverse();
+	// 	}
+	// }
 	const paperList = rootPapers.map((paper, index) => {
 		return (
 			<RootPaperCard
