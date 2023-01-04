@@ -1,8 +1,7 @@
 import { SemanticPaper } from "src/types";
 import React from "react";
-import { RootReference } from "./RootReference";
+import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
-// import { removeNullReferences } from "src/utils";
 
 export const ReferenceMapList = (props: {
 	papers: SemanticPaper[];
@@ -21,7 +20,7 @@ export const ReferenceMapList = (props: {
 
 	const paperList = rootPapers.map((paper, index) => {
 		return (
-			<RootReference
+			<RootPaperCard
 				// file name in the key is to force a re-render when the file changes or rerender if paper id is present in multiple files
 				key={paper.paperId + index + props.view?.file.name}
 				rootPaper={paper}

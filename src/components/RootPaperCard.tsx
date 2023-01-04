@@ -5,7 +5,7 @@ import { ReferencesList } from "./PaperList";
 import { PaperTitleGroup } from "./PaperTitleGroup";
 import { PaperButtonGroup } from "./PaperButtonGroup";
 
-export const RootReference = (props: {
+export const RootPaperCard = (props: {
 	key: string;
 	rootPaper: SemanticPaper;
 	references: SemanticPaper[];
