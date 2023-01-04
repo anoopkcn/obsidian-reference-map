@@ -76,7 +76,7 @@ export const PaperButtonGroup = ({
 		);
 	}
 	return (
-		<div className="orm-paper-buttons">
+		<div className="orm-paper-buttons-group">
 			<div
 				className="orm-copy-bibtex"
 				onClick={() => {
