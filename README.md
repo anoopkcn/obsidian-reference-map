@@ -19,7 +19,7 @@ Identifies research literature ID's from the current document and displays a map
 
 **NOTE**: papers are ordered according to the publish date.
 
-![obsidian-reference-map-demo](./images/obsidian-reference-map-demo.png)
+![obsidian-reference-map-demo](./images/obsidian-reference-map.png)
 
 ## Usage
 - Click on the title of the paper to open the paper in [semanticscholar](https://www.semanticscholar.org/)
