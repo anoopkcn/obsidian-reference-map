@@ -24,7 +24,11 @@ export const RootReference = (props: {
 		<div
 			className="orm-root-paper"
 			onMouseEnter={() => setIsButtonShown(true)}
-			onMouseLeave={() => setIsButtonShown(false)}
+			onMouseLeave={() => {
+				showReferences || showCitations
+					? null
+					: setIsButtonShown(false);
+			}}
 		>
 			<PaperTitleGroup paper={rootPaper} />
 			{isButtonShown && (
@@ -34,6 +38,8 @@ export const RootReference = (props: {
 					showReferences={showReferences}
 					setShowCitations={setShowCitations}
 					showCitations={showCitations}
+					setIsButtonShown={setIsButtonShown}
+					isButtonShown={isButtonShown}
 				/>
 			)}
 			{showReferences && <ReferencesList papers={references} />}

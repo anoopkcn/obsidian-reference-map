@@ -11,6 +11,8 @@ type Props = {
 	showReferences?: boolean;
 	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>;
 	showCitations?: boolean;
+	setIsButtonShown?: React.Dispatch<React.SetStateAction<boolean>>;
+	isButtonShown?: boolean;
 };
 
 export const PaperButtonGroup = ({
@@ -19,6 +21,8 @@ export const PaperButtonGroup = ({
 	showReferences = false,
 	setShowCitations = undefined,
 	showCitations = false,
+	setIsButtonShown = undefined,
+	isButtonShown = false,
 }: Props) => {
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
 	const firstAuthor = paper.authors[0]?.name
@@ -37,15 +41,25 @@ export const PaperButtonGroup = ({
 	}
 
 	let citingCited = null;
-	if (setShowReferences !== undefined && setShowCitations !== undefined) {
+	if (
+		setShowReferences !== undefined &&
+		setShowCitations !== undefined &&
+		setIsButtonShown !== undefined
+	) {
 		const handleShowReferencesClick = () => {
 			setShowReferences(!showReferences);
 			setShowCitations(false);
+			if (showReferences || showCitations) {
+				setIsButtonShown(true);
+			}
 		};
 
 		const handleShowCitationsClick = () => {
 			setShowCitations(!showCitations);
 			setShowReferences(false);
+			if (showReferences || showCitations) {
+				setIsButtonShown(true);
+			}
 		};
 		citingCited = (
 			<>
