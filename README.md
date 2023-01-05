@@ -46,11 +46,14 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
     (4) Click to open a list of all cited papers (References)
 
     (5) Click to open a list of all citing papers (Citations)
+
+### Configuration 
     
-Check out the settings tab to configure the plugin.
+Check out the settings tab to configure the plugin behaviour.
+
+If you want to configure the style of the view you can use [obsidian-style-settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
 ![orm-ref-cite](./images/orm-references-citations.png)
-
 
 ## Paper ID's can be the following:
 The following types of IDs are supported:
