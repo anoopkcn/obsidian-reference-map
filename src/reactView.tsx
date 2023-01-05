@@ -7,26 +7,26 @@ import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
 import { ReferenceMapList } from "./components/ReferenceMapList";
 import { removeNullReferences } from "./utils";
-
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap;
 	viewManager: ViewManager;
 	activeMarkdownLeaf: MarkdownView;
+	rootEl: Root;
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf);
 		this.plugin = plugin;
 		this.viewManager = new ViewManager(plugin);
-		const rootEl = createRoot(this.containerEl.children[1]);
+		this.rootEl = createRoot(this.containerEl.children[1]);
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
 				const activeView =
 					app.workspace.getActiveViewOfType(MarkdownView);
 				if (activeView && file === activeView.file) {
-					this.processReferences(rootEl);
+					this.processReferences();
 				}
 			})
 		);
@@ -36,14 +36,14 @@ export class ReferenceMapView extends ItemView {
 				if (leaf) {
 					app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							this.processReferences(rootEl);
+							this.processReferences();
 						}
 					});
 				}
 			})
 		);
 
-		this.processReferences(rootEl);
+		this.processReferences();
 	}
 
 	getViewType() {
@@ -65,11 +65,12 @@ export class ReferenceMapView extends ItemView {
 	// }
 
 	async onClose() {
+		this.rootEl.unmount();
 		this.viewManager.cache.clear();
 		return super.onClose();
 	}
 
-	processReferences = async (rootEl: Root) => {
+	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let rootPapers: SemanticPaper[] = [];
 		let reference: SemanticPaper[] = [];
@@ -124,7 +125,7 @@ export class ReferenceMapView extends ItemView {
 				);
 			}
 		}
-		rootEl.render(
+		this.rootEl.render(
 			<React.StrictMode>
 				<ReferenceMapList
 					settings={this.plugin.settings}
