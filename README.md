@@ -16,9 +16,19 @@ The plugin is not available in the community plugin section in Obsidian. So you 
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
 ## Features
-Identifies research literature ID's from the current document and displays a map of references and citations. The map can be used to navigate to the references and citations.
+- [x] Identifies research literature ID's from the current document and displays a map of references and citations. 
+- [x] Copy metadata and bibtex to the clipboard.
+- [x] Open PDF if available
+- [x] Open paper in [semanticscholar](https://www.semanticscholar.org/)
+- [x] Open author's details in [semanticscholar](https://www.semanticscholar.org/)
+- [x] List citations
+- [x] List references
+- [x] Search references and Citations list
+- [ ] Sorting of references and citations
+- [ ] Get references via title of the paper
+- [ ] Get references via author's name
 
-**NOTE**: papers are ordered according to the publish date.
+**NOTE**:Papers are ordered according to the publish date.
 
 ![obsidian-reference-map-demo](./images/obsidian-reference-map.png)
 
@@ -39,7 +49,7 @@ Identifies research literature ID's from the current document and displays a map
     
 Check out the settings tab to configure the plugin.
 
-![obsidian-reference-map-ref-cite](./images/obsidian-reference-map-ref-cite.png)
+![orm-ref-cite](./images/orm-references-citations.png)
 
 
 ## Paper ID's can be the following:
