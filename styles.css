@@ -88,10 +88,13 @@ body {
 	--orm-paper-author-font-size: small;
 	--orm-paper-title-font-weight: 400;
 	--orm-paper-author-font-weight: 400;
+	--orm-paper-abstract-font-size: small;
+	--orm-paper-abstract-font-weight: 400;
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
 	--orm-paper-author-link-hover-color: var(--text-accent);
+	--orm-paper-abstract-color: var(--text-muted);
 	--orm-paper-buttons-color: var(--icon-color);
 	--orm-paper-buttons-hover-color: var(--text-accent);
 	--orm-paper-line-color: var(--color-base-30);
@@ -122,13 +125,14 @@ body {
 
 /* Paper Heading */
 .orm-paper-heading {
+	/* position: relative; */
 	margin-bottom: 0.5rem;
 }
 
 .orm-paper-title {
 	font-size: var(--orm-paper-title-font-size);
 	font-weight: var(--orm-paper-title-font-weight);
-	display: block;
+	/* display: inline-block; */
 	cursor: pointer;
 	padding-bottom: 0.25rem;
 }
@@ -141,10 +145,17 @@ body {
 .orm-paper-title a:hover {
 	color: var(--orm-paper-title-link-hover-color);
 }
-
+.orm-paper-abstract{
+	display: block;
+	font-size: var(--orm-paper-abstract-font-size);
+	color: var(--orm-paper-abstract-color);
+	margin-top: 0.25rem;
+	margin-bottom: 0.25rem;
+}
 .orm-paper-authors {
 	font-size: var(--orm-paper-author-font-size);
 	font-weight: var(--orm-paper-author-font-weight);
+	display: block;
 }
 
 .orm-paper-authors a {
@@ -187,7 +198,8 @@ body {
 .orm-paper-buttons > .orm-copy-bibtex:hover,
 .orm-copy-metadata:hover,
 .orm-references:hover,
-.orm-citations:hover {
+.orm-citations:hover,
+.orm-paper-heading-showmore:hover {
 	color: var(--orm-paper-buttons-hover-color);
 }
 

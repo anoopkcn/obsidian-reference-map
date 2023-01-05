@@ -36,7 +36,7 @@ export const RootPaperCard = (props: {
 			onMouseEnter={() => handleHoverButtons(true)}
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
-			<PaperHeading paper={rootPaper} />
+			<PaperHeading paper={rootPaper} settings={props.settings} />
 			{isButtonShown && (
 				<PaperButtons
 					settings={props.settings}

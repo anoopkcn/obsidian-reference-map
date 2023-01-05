@@ -1,13 +1,19 @@
 import React from "react";
 import { SEMANTICSCHOLAR_URL } from "src/constants";
-import { SemanticPaper } from "src/types";
+import { ReferenceMapSettings, SemanticPaper } from "src/types";
 
-export const PaperHeading = (props: { paper: SemanticPaper }) => {
+export const PaperHeading = (props: {
+	paper: SemanticPaper;
+	settings: ReferenceMapSettings;
+}) => {
 	const paper: SemanticPaper = props.paper;
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
 	const firstAuthor = paper.authors[0]
 		? paper.authors[0].name
 		: "Unknown Author";
+	let authors = "";
+	if (paper.authors.length > 0)
+		authors = paper.authors.map((author) => author.name).join(", ");
 	const year = paper.year ? paper.year : "Unknown Year";
 	let authorID = null;
 	if (paper.authors[0]) {
@@ -16,16 +22,30 @@ export const PaperHeading = (props: { paper: SemanticPaper }) => {
 	return (
 		<>
 			<div className="orm-paper-heading">
-				<span className="orm-paper-title">
+				<div className="orm-paper-title">
 					<a href={`${SEMANTICSCHOLAR_URL}/paper/${paper.paperId}`}>
 						{" " + paperTitle + " "}
 					</a>
-				</span>
-				<span className="orm-paper-authors">
-					<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
-						{firstAuthor + ", " + year}
-					</a>
-				</span>
+				</div>
+				{props.settings.showDetails && (
+					<span className="orm-paper-abstract">
+						{" " + paper.abstract + " "}
+					</span>
+				)}
+				{props.settings.showDetails && (
+					<span className="orm-paper-authors">
+						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+							{authors + ", " + year}
+						</a>
+					</span>
+				)}
+				{!props.settings.showDetails && (
+					<span className="orm-paper-authors">
+						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+							{firstAuthor + ", " + year}
+						</a>
+					</span>
+				)}
 			</div>
 		</>
 	);

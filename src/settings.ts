@@ -20,7 +20,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         containerEl.createEl('h2', { text: 'General Settings' });
         new Setting(containerEl)
-            .setDesc(t('REFRESH_VIEW_DESC'))
+            .setDesc(fragWithHTML(t('REFRESH_VIEW_DESC')))
             .addButton((button) => {
                 button.setButtonText(t('REFRESH_VIEW'))
                     .setCta()
@@ -41,6 +41,17 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.settings.loadingPuff = value;
                     this.plugin.saveSettings();
                 }));
+
+        new Setting(containerEl)
+            .setName(t('HIDE_SHOW_ABSTRACT'))
+            .setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.showDetails)
+                .onChange(async (value) => {
+                    this.plugin.settings.showDetails = value;
+                    this.plugin.saveSettings();
+                }));
+
 
 
         new Setting(containerEl)
