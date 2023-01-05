@@ -73,9 +73,7 @@ export class ReferenceMapView extends ItemView {
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let rootPapers: SemanticPaper[] = [];
-		let reference: SemanticPaper[] = [];
 		let references: SemanticPaper[][] = [];
-		let citaion: SemanticPaper[] = [];
 		let citations: SemanticPaper[][] = [];
 		const isActiveView = activeView && activeView.file;
 		if (isActiveView) {
@@ -96,10 +94,9 @@ export class ReferenceMapView extends ItemView {
 				// for each paper in rootPapers, get the references and push them to references
 				references = await Promise.all(
 					rootPapers.map(async (paper) => {
-						reference = await this.viewManager.getReferences(
+						return await this.viewManager.getReferences(
 							paper.paperId
 						);
-						return reference;
 					})
 				);
 				// console.log(references);
@@ -112,10 +109,9 @@ export class ReferenceMapView extends ItemView {
 			try {
 				citations = await Promise.all(
 					rootPapers.map(async (paper) => {
-						citaion = await this.viewManager.getCitations(
+						return await this.viewManager.getCitations(
 							paper.paperId
 						);
-						return citaion;
 					})
 				);
 			} catch (error) {

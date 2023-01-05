@@ -11,8 +11,7 @@ export const ReferenceMapList = (props: {
 	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
-	const rootPapers: SemanticPaper[] = props.papers;
-	if (!(rootPapers.length > 0)) {
+	if (!(props.papers.length > 0)) {
 		return (
 			<div className="orm-no-content">
 				No {props.view ? "VALID" : ""} reference ID's are found in the
@@ -27,14 +26,14 @@ export const ReferenceMapList = (props: {
 	// 	if (props.settings.sortingMetadata === SORTING_METADATA[2]) index = 2;
 	// 	if (props.settings.sortingMetadata === SORTING_METADATA[3]) index = 3;
 
-	// 	rootPapers = props.papers.sort((a, b) => {
+	// 	props.papers = props.papers.sort((a, b) => {
 	// 		return b[SORTING_METADATA[index]] - a[SORTING_METADATA[index]];
 	// 	});
 	// 	if (props.settings.sortingOrder === "asc") {
-	// 		rootPapers = rootPapers.reverse();
+	// 		props.papers = props.papers.reverse();
 	// 	}
 	// }
-	const paperList = rootPapers.map((paper, index) => {
+	const paperList = props.papers.map((paper, index) => {
 		return (
 			<RootPaperCard
 				// file name in the key is to force a re-render when the file changes or rerender if paper id is present in multiple files
