@@ -226,8 +226,11 @@ body {
 
 .orm-search-input {
 	width: 100%;
-}
-form.orm-search-form {
 	border: none;
 	padding: 0;
+}
+.orm-search-form {
+	border: none;
+	padding: 0;
+	
 }

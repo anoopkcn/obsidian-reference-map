@@ -40,14 +40,14 @@ export const ReferencesList = (props: {
 	});
 	return (
 		<div className="orm-paper-list">
-			<form className="orm-search-form">
+			<div className="orm-search-form">
 				<input
 					type="search"
 					className="orm-search-input"
 					placeholder={props.type}
 					onChange={(e) => setQuery(e.target.value)}
 				/>
-			</form>
+			</div>
 			{paperList}
 		</div>
 	);
