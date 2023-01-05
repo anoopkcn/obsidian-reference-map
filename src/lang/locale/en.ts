@@ -4,6 +4,10 @@ export default {
     NO_REFERENCES_IN_FILE: "No reference ID's are found in the active document.",
     REFRESH_VIEW: "Refresh Reference Map",
     REFRESH_VIEW_DESC: "Settings changes will not affect the current view. If you prefer to apply changes also to the current view, you can press this button",
+    LOADING_PUFF: "Loading puff animation",
+    LOADING_PUFF_DESC: "Reference map view loading puff animation<br>" +
+        "<b> Toggle OFF: </b> Loading text will be shown.<br>" +
+        "<b> Toggle ON: </b> Loading puff animation will be shown.",
     HIDE_SHOW_BUTTONS_ON_HOVER: "Hide and show buttons on hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
         "Hide and show the buttons of references on hover.<br>"

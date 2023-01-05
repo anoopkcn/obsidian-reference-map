@@ -29,7 +29,8 @@ export const ReferenceMapList = (props: {
 	} else if (!isLoaded) {
 		return (
 			<div className="orm-no-content">
-				<LoadingPuff />
+				{props.settings.loadingPuff && <LoadingPuff />}
+				{!props.settings.loadingPuff && "Looking..."}
 			</div>
 		);
 	}

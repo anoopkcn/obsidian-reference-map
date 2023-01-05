@@ -33,6 +33,17 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
+            .setName(t('LOADING_PUFF'))
+            .setDesc(fragWithHTML(t('LOADING_PUFF_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.loadingPuff)
+                .onChange(async (value) => {
+                    this.plugin.settings.loadingPuff = value;
+                    this.plugin.saveSettings();
+                }));
+
+
+        new Setting(containerEl)
             .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
             .addToggle(toggle => toggle
