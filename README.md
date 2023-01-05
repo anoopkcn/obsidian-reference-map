@@ -28,7 +28,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 - [ ] Get references via title of the paper
 - [ ] Get references via author's name
 
-**NOTE**:Papers are ordered according to the publish date.
+**NOTE**: Papers are ordered according to the publish date.
 
 ![obsidian-reference-map-demo](./images/obsidian-reference-map.png)
 
@@ -49,7 +49,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 ### Configuration 
     
-Check out the settings tab to configure the plugin behaviour.
+Check out the settings tab to configure the plugin behaviour (while you are there you can disable the annoying loading puff animation 😁).
 
 If you want to configure the style of the view you can use [obsidian-style-settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
