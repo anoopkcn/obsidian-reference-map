@@ -13,12 +13,18 @@ export const ReferencesList = (props: {
 
 	const search = (data: SemanticPaper[]) => {
 		return data.filter((item: SemanticPaper) =>
-			SEARCH_PARAMETERS.some((parameter) =>
-				item[parameter as keyof typeof item]
-					?.toString()
-					.toLowerCase()
-					.includes(query)
-			)
+			SEARCH_PARAMETERS.some((parameter) => {
+				if (parameter === "authors") {
+					return item.authors.some((author) =>
+						author.name?.toLowerCase().includes(query.toLowerCase())
+					);
+				} else {
+					return item[parameter as keyof typeof item]
+						?.toString()
+						.toLowerCase()
+						.includes(query.toLowerCase());
+				}
+			})
 		);
 	};
 
