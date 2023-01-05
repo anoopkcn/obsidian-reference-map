@@ -1,11 +1,96 @@
-/*
+/* @settings
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
+name: Reference Map
+id: obsidian-reference-map
+settings:
+	- 
+		id: orm-paper-title-font-size
+		title: Reference paper title font size
+		type: variable-number-slider
+		default: 14
+		format: px
+		min: 8
+		max: 24
+		step: 1
+	-
+		id: orm-paper-title-font-weight
+		title: Reference map view title font weight
+		type: variable-number-slider
+		default: 400
+		format: px
+		min: 100
+		max: 900
+		step: 100
+	-
+		id: orm-paper-author-font-size
+		title: Reference paper author font size
+		type: variable-number-slider
+		default: 12
+		format: px
+		min: 8
+		max: 24
+		step: 1
+	-
+		id: orm-paper-author-font-weight
+		title: Reference map view author font weight
+		type: variable-number-slider
+		default: 400
+		format: px
+		min: 100
+		max: 900
+		step: 100
+	-
+		id: orm-paper-title-link-color
+		title: Reference paper title link color
+		type: variable-color
+		format: hex
+		default: var(--text-normal)
+	-
+		id: orm-paper-title-link-hover-color
+		title: Reference paper title link hover color
+		type: variable-color
+		format: hex
+		default: var(--text-accent)
+	-
+		id: orm-paper-author-link-color
+		title: Reference paper author link color
+		type: variable-color
+		format: hex
+		default: var(--text-muted)
+	-
+		id: orm-paper-author-link-hover-color
+		title: Reference paper author link hover color
+		type: variable-color
+		format: hex
+		default: var(--text-accent)
+	-
+		id: orm-paper-buttons-color
+		title: Reference paper buttons color
+		type: variable-color
+		format: hex
+		default: var(--icon-color)
+	-
+		id: orm-paper-buttons-hover-color
+		title: Reference paper buttons hover color
+		type: variable-color
+		format: hex
+		default: var(--text-accent)
+		
 */
+body {
+	--orm-paper-title-font-size: small;
+	--orm-paper-author-font-size: small;
+	--orm-paper-title-font-weight: 400;
+	--orm-paper-author-font-weight: 400;
+	--orm-paper-title-link-color: var(--text-normal);
+	--orm-paper-title-link-hover-color: var(--text-accent);
+	--orm-paper-author-link-color: var(--text-muted);
+	--orm-paper-author-link-hover-color: var(--text-accent);
+	--orm-paper-buttons-color: var(--icon-color);
+	--orm-paper-buttons-hover-color: var(--text-accent);
+  }
+  
+
 .orm-view-title {
 	font-weight: 600;
 	margin-bottom: 0.5rem;
@@ -33,35 +118,37 @@ If your plugin does not need CSS, delete this file.
 /* Paper Heading */
 .orm-paper-heading{
 	margin-bottom: 0.5rem;
-	font-size: small
 }
 
 .orm-paper-title{
+	font-size: var(--orm-paper-title-font-size);
+	font-weight: var(--orm-paper-title-font-weight);
 	display: block;
 	cursor: pointer;
 	padding-bottom: 0.25rem;
 }
 
 .orm-paper-title a{
-	color: var(--text-normal);
+	color: var(--orm-paper-title-link-color);
 	text-decoration: none;
 }
 
 .orm-paper-title a:hover{
-	color: var(--text-accent);
+	color: var(--orm-paper-title-link-hover-color);
 }
 
 .orm-paper-authors{
-	color: #888;
+	font-size: var(--orm-paper-author-font-size);
+	font-weight: var(--orm-paper-author-font-weight);
 }
 
 .orm-paper-authors a{
-	color: #888;
+	color: var(--orm-paper-author-link-color);
 	text-decoration: none;
 }
 
 .orm-paper-authors a:hover{
-	color: var(--text-accent);
+	color: var(--orm-paper-author-link-hover-color);
 }
 
 .orm-paper-buttons{
@@ -75,15 +162,14 @@ If your plugin does not need CSS, delete this file.
 	display: inline-block;
 	min-width:20%;
 	padding: 0.25rem;
-	color: var(--text-muted);
-
+	color: var(--orm-paper-buttons-color);
 }
 
 .orm-paper-buttons > .orm-openaccess a{
-	color: var(--icon-color)
+	color: var(--orm-paper-buttons-color);
 }
 .orm-paper-buttons > .orm-openaccess a:hover{
-	color: var(--text-accent);
+	color: var(--orm-paper-buttons-hover-color);
 }
 
 .orm-paper-buttons > .orm-copy-bibtex,.orm-copy-metadata, .orm-references, .orm-citations {
@@ -91,7 +177,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .orm-paper-buttons > .orm-copy-bibtex:hover, .orm-copy-metadata:hover,.orm-references:hover, .orm-citations:hover{
-	color: var(--text-accent);
+	color: var(--orm-paper-buttons-hover-color);
 }
 
 /* Paper List */
