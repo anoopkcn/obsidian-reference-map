@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { PluginSettingTab, Setting } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { fragWithHTML } from "./utils";
@@ -8,40 +8,50 @@ import { fragWithHTML } from "./utils";
 export class ReferenceMapSettingTab extends PluginSettingTab {
     plugin: ReferenceMap;
 
-    constructor(app: App, plugin: ReferenceMap) {
+    constructor(plugin: ReferenceMap) {
         super(app, plugin);
         this.plugin = plugin;
     }
 
     display(): void {
-        const { containerEl, plugin } = this;
-        const { settings } = plugin;
+        const { containerEl } = this;
 
         containerEl.empty();
 
         containerEl.createEl('h2', { text: 'General Settings' });
-        // containerEl.createEl('p', { text: 'Changing the settings will refresh the Reference Map.' });
+        new Setting(containerEl)
+            .setDesc('Settings changes will not affect the current view. If you prefer to apply changes also to the current view, you can press this button')
+            .addButton((button) => {
+                button.setButtonText("Reload Reference Map")
+                    .setCta()
+                    .onClick(() => {
+                        this.plugin.saveSettings();
+                        // Force refresh
+                        this.plugin.refresh();
+                        this.display();
+                    });
+            });
 
         new Setting(containerEl)
             .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.influentialCount)
+                .setValue(this.plugin.settings.influentialCount)
                 .onChange(async (value) => {
-                    settings.influentialCount = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.influentialCount = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }));
 
         new Setting(containerEl)
             .setName(t('HIDE_SHOW_BUTTONS_ON_HOVER'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.hideButtonsOnHover)
+                .setValue(this.plugin.settings.hideButtonsOnHover)
                 .onChange(async (value) => {
-                    settings.hideButtonsOnHover = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.hideButtonsOnHover = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }));
         // containerEl.createEl('h2', { text: 'Sorting Settings' });
         // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
@@ -50,12 +60,12 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         //     .setName(t('ENABLE_SORTING'))
         //     .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
         //     .addToggle(toggle => toggle
-        //         .setValue(settings.enableSorting)
+        //         .setValue(this.plugin.settings.enableSorting)
         //         .onChange(async (value) => {
         //             settings.enableSorting = value;
-        //             await plugin.saveSettings();
+        //             this.plugin.saveSettings();
         //             this.display();
-        //             plugin.refresh();
+                    // plugin.refresh();
         //         }));
 
         // if (settings.enableSorting) {
@@ -67,11 +77,11 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         //             .addOption(SORTING_METADATA[1], camelToNormalCase(SORTING_METADATA[1]))
         //             .addOption(SORTING_METADATA[2], camelToNormalCase(SORTING_METADATA[2]))
         //             .addOption(SORTING_METADATA[3], camelToNormalCase(SORTING_METADATA[3]))
-        //             .setValue(settings.sortingMetadata)
+        //             .setValue(this.plugin.settings.sortingMetadata)
         //             .onChange(async (value) => {
         //                 settings.sortingMetadata = value;
-        //                 await plugin.saveSettings();
-        //                 plugin.refresh();
+        //                 this.plugin.saveSettings();
+                        // plugin.refresh();
         //             }));
 
         //     new Setting(containerEl)
@@ -80,11 +90,11 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         //         .addDropdown(dropdown => dropdown
         //             .addOption('asc', 'Ascending')
         //             .addOption('desc', 'Descending')
-        //             .setValue(settings.sortingOrder)
+        //             .setValue(this.plugin.settings.sortingOrder)
         //             .onChange(async (value) => {
         //                 settings.sortingOrder = value;
-        //                 await plugin.saveSettings();
-        //                 plugin.refresh();
+        //                 this.plugin.saveSettings();
+                        // plugin.refresh();
         //             }));
         // }
 
@@ -94,76 +104,76 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             .setName(t('COPY_TITLE'))
             .setDesc(fragWithHTML(t('COPY_TITLE_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyTitle)
+                .setValue(this.plugin.settings.copyTitle)
                 .onChange(async (value) => {
-                    settings.copyTitle = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyTitle = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }));
         new Setting(containerEl)
             .setName(t('COPY_PAPER_DOI'))
             .setDesc(fragWithHTML(t('COPY_PAPER_DOI_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyPaperDOI)
+                .setValue(this.plugin.settings.copyPaperDOI)
                 .onChange(async (value) => {
-                    settings.copyPaperDOI = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyPaperDOI = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
             .setName(t('COPY_AUTHORS'))
             .setDesc(fragWithHTML(t('COPY_AUTHORS_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyAuthors)
+                .setValue(this.plugin.settings.copyAuthors)
                 .onChange(async (value) => {
-                    settings.copyAuthors = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyAuthors = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
             .setName(t('COPY_YEAR'))
             .setDesc(fragWithHTML(t('COPY_YEAR_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyYear)
+                .setValue(this.plugin.settings.copyYear)
                 .onChange(async (value) => {
-                    settings.copyYear = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyYear = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
             .setName(t('COPY_ABSTRACT'))
             .setDesc(fragWithHTML(t('COPY_ABSTRACT_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyAbstract)
+                .setValue(this.plugin.settings.copyAbstract)
                 .onChange(async (value) => {
-                    settings.copyAbstract = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyAbstract = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
             .setName(t('COPY_URL'))
             .setDesc(fragWithHTML(t('COPY_URL_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyUrl)
+                .setValue(this.plugin.settings.copyUrl)
                 .onChange(async (value) => {
-                    settings.copyUrl = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyUrl = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
             .setName(t('COPY_OPEN_ACCESS_PDF'))
             .setDesc(fragWithHTML(t('COPY_OPEN_ACCESS_PDF_DESC')))
             .addToggle(toggle => toggle
-                .setValue(settings.copyOpenAccessPdf)
+                .setValue(this.plugin.settings.copyOpenAccessPdf)
                 .onChange(async (value) => {
-                    settings.copyOpenAccessPdf = value;
-                    await plugin.saveSettings();
-                    plugin.refresh();
+                    this.plugin.settings.copyOpenAccessPdf = value;
+                    this.plugin.saveSettings();
+                    // plugin.refresh();
                 }
                 ));
     }

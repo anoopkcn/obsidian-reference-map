@@ -11,6 +11,9 @@ export default class ReferenceMap extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		addIcons();
+
+		this.addSettingTab(new ReferenceMapSettingTab(this));
+
 		this.registerView(
 			REFERENCE_MAP_VIEW_TYPE,
 			(leaf: WorkspaceLeaf) => new ReferenceMapView(leaf, this)
@@ -29,10 +32,7 @@ export default class ReferenceMap extends Plugin {
 		const ribbonIconEl = this.addRibbonIcon('ReferenceMapIconScroll', 'Reference Map', async (evt: MouseEvent) => {
 			this.activateView()
 		});
-
 		ribbonIconEl.addClass('reference-map-ribbon-class');
-
-		this.addSettingTab(new ReferenceMapSettingTab(this.app, this));
 	}
 
 
