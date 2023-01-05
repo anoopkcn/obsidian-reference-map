@@ -20,9 +20,9 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         containerEl.createEl('h2', { text: 'General Settings' });
         new Setting(containerEl)
-            .setDesc('Settings changes will not affect the current view. If you prefer to apply changes also to the current view, you can press this button')
+            .setDesc(t('REFRESH_VIEW_DESC'))
             .addButton((button) => {
-                button.setButtonText("Reload Reference Map")
+                button.setButtonText(t('REFRESH_VIEW'))
                     .setCta()
                     .onClick(() => {
                         this.plugin.saveSettings();

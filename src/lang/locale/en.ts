@@ -2,6 +2,8 @@
 export default {
     REFERENCE_MAP: "Reference Map",
     NO_REFERENCES_IN_FILE: "No reference ID's are found in the active document.",
+    REFRESH_VIEW: "Refresh Reference Map",
+    REFRESH_VIEW_DESC: "Settings changes will not affect the current view. If you prefer to apply changes also to the current view, you can press this button",
     HIDE_SHOW_BUTTONS_ON_HOVER: "Hide and show buttons on hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
         "Hide and show the buttons of references on hover.<br>"
