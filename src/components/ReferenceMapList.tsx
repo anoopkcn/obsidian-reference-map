@@ -30,7 +30,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				{props.settings.loadingPuff && <LoadingPuff />}
-				{!props.settings.loadingPuff && "Looking..."}
+				{!props.settings.loadingPuff && "Reference Map View"}
 			</div>
 		);
 	}
@@ -52,7 +52,8 @@ export const ReferenceMapList = (props: {
 	const paperList = props.papers.map((paper, index) => {
 		return (
 			<RootPaperCard
-				// file name in the key is to force a re-render when the file changes or rerender if paper id is present in multiple files
+				// file name in the key is to force a re-render when the file changes ..
+				//.. or rerender if paper id is present in multiple files
 				settings={props.settings}
 				key={paper.paperId + index + props.view?.file.name}
 				rootPaper={paper}
