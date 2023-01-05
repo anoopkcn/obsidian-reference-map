@@ -2,6 +2,7 @@ import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
+import { LoadingPuff } from "./LoadingPuff";
 // import { SORTING_METADATA } from "src/constants";
 
 export const ReferenceMapList = (props: {
@@ -11,14 +12,28 @@ export const ReferenceMapList = (props: {
 	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
-	if (!(props.papers.length > 0)) {
+	const [isLoaded, setLoaded] = React.useState(false);
+	React.useEffect(() => {
+		setLoaded(false);
+		if (props.papers.length > 0) {
+			setLoaded(true);
+		}
+	}, [props.papers]);
+
+	if (!props.view) {
 		return (
 			<div className="orm-no-content">
-				No {props.view ? "VALID" : ""} reference ID's are found in the
-				active document
+				Active view is not a markdown file
+			</div>
+		);
+	} else if (!isLoaded) {
+		return (
+			<div className="orm-no-content">
+				<LoadingPuff />
 			</div>
 		);
 	}
+
 	// if (props.settings.enableSorting) {
 	// 	let index = 0;
 	// 	if (props.settings.sortingMetadata === SORTING_METADATA[0]) index = 0;
