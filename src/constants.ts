@@ -49,6 +49,7 @@ export const SEMANTIC_FIELDS = [
     'year',
     'citationStyles'
 ]
+export const SEARCH_PARAMETERS = ['paperId', 'externalIds', 'url', 'title', 'abstract', 'venue', 'year', 'referenceCount', 'citationCount', 'influentialCitationCount', 'isOpenAccess', 'openAccessPdf', 'fieldsOfStudy', 'publicationTypes', 'publicationDate', 'journal', 'citationStyles', 'authors']
 export const SEMANTIC_SEARCH_FIELDS = [
     'abstract',
     'authors',

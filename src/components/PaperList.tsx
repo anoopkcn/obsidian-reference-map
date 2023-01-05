@@ -1,28 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { PaperCard } from "./PaperCard";
+import { SEARCH_PARAMETERS } from "src/constants";
 // import { SORTING_METADATA } from "src/constants";
 
 export const ReferencesList = (props: {
 	papers: SemanticPaper[];
 	settings: ReferenceMapSettings;
+	type: string;
 }) => {
-	const papers = props.papers;
-	// if (props.settings.enableSorting) {
-	// 	let index = 0;
-	// 	if (props.settings.sortingMetadata === SORTING_METADATA[0]) index = 0;
-	// 	if (props.settings.sortingMetadata === SORTING_METADATA[1]) index = 1;
-	// 	if (props.settings.sortingMetadata === SORTING_METADATA[2]) index = 2;
-	// 	if (props.settings.sortingMetadata === SORTING_METADATA[3]) index = 3;
+	const [query, setQuery] = useState("");
 
-	// 	papers = props.papers.sort((a, b) => {
-	// 		return b[SORTING_METADATA[index]] - a[SORTING_METADATA[index]];
-	// 	});
-	// 	if (props.settings.sortingOrder === "asc") {
-	// 		papers = papers.reverse();
-	// 	}
-	// }
-	const paperList = papers.map((paper, index) => {
+	const search = (data: SemanticPaper[]) => {
+		return data.filter((item: SemanticPaper) =>
+			SEARCH_PARAMETERS.some((parameter) =>
+				item[parameter as keyof typeof item]
+					?.toString()
+					.toLowerCase()
+					.includes(query)
+			)
+		);
+	};
+
+	const papers = props.papers;
+	const paperList = search(papers).map((paper, index) => {
 		return (
 			<PaperCard
 				key={paper.paperId + index}
@@ -31,5 +32,17 @@ export const ReferencesList = (props: {
 			/>
 		);
 	});
-	return <div className="orm-paper-list">{paperList}</div>;
+	return (
+		<div className="orm-paper-list">
+			<form className="orm-search-form">
+				<input
+					type="search"
+					className="orm-search-input"
+					placeholder={props.type}
+					onChange={(e) => setQuery(e.target.value)}
+				/>
+			</form>
+			{paperList}
+		</div>
+	);
 };

@@ -27,6 +27,9 @@ export const RootPaperCard = (props: {
 	const references = removeNullReferences(props.references);
 	const citations = removeNullReferences(props.citations);
 
+	// const search_parameters = Object.keys(Object.assign({}, ...references));
+	// console.log(search_parameters);
+
 	return (
 		<div
 			className="orm-root-paper"
@@ -47,10 +50,18 @@ export const RootPaperCard = (props: {
 				/>
 			)}
 			{showReferences && (
-				<ReferencesList settings={props.settings} papers={references} />
+				<ReferencesList
+					settings={props.settings}
+					papers={references}
+					type={"References"}
+				/>
 			)}
 			{showCitations && (
-				<ReferencesList settings={props.settings} papers={citations} />
+				<ReferencesList
+					settings={props.settings}
+					papers={citations}
+					type={"Citaions"}
+				/>
 			)}
 		</div>
 	);
