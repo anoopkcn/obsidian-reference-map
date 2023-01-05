@@ -60,7 +60,7 @@ export const RootPaperCard = (props: {
 				<ReferencesList
 					settings={props.settings}
 					papers={citations}
-					type={"Citaions"}
+					type={"Citations"}
 				/>
 			)}
 		</div>
