@@ -4,7 +4,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
     influentialCount: false,
     showDetails: false,
-    searchTitle: true,
+    searchTitle: false,
     searchLimit: 3,
     copyTitle: true,
     copyPaperDOI: false,
