@@ -33,7 +33,7 @@ export class ViewManager {
                 this.searchCache.set(query, rootPapers);
                 return rootPapers;
             } catch (e) {
-                console.log('Reference Map: S2AG API request error', e);
+                // console.log('Reference Map: S2AG API request error', e);
                 return [];
             }
         }
@@ -57,7 +57,7 @@ export class ViewManager {
                 this.cache.set(file, { paperIds, rootPapers });
                 return rootPapers;
             } catch (e) {
-                console.log('Reference Map: S2AG API request error', e);
+                // console.log('Reference Map: S2AG API request error', e);
                 return [];
             }
         }
@@ -72,7 +72,7 @@ export class ViewManager {
                 this.refCache.set(paperId, references);
                 return references;
             } catch (e) {
-                console.log('Reference Map: S2AG API request error', e);
+                // console.log('Reference Map: S2AG API request error', e);
                 return [];
             }
         }
@@ -86,7 +86,7 @@ export class ViewManager {
                 this.citeCache.set(paperId, citations);
                 return citations;
             } catch (e) {
-                console.log('Reference Map: S2AG API request error', e);
+                // console.log('Reference Map: S2AG API request error', e);
                 return [];
             }
         }

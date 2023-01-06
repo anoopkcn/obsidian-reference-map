@@ -24,7 +24,15 @@ export default {
         "<b>Toggle OFF:</b> Search using file name disabled<br>" +
         "<b>Toggle ON:</b> Search using file name is enabled",
     SEARCH_LIMIT: "Search References Limit",
-    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map in addition to references from paper IDs when <b>Search References</b> is enabled. ",
+    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled. ",
+    SEARCH_FRONT_MATTER: "Search Frontmatter",
+    SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs<br>" +
+        "<b>Toggle OFF:</b> Disable search using front matter<br>" +
+        "<b>Toggle ON:</b> Enable search using front matter",
+    SEARCH_FRONT_MATTER_LIMIT: "Search Frontmatter Limit",
+    SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
+    SEARCH_FRONT_MATTER_KEY: "Search Frontmatter key",
+    SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
     // Copy metadata
     COPY_TITLE: "Copy title",
     COPY_TITLE_DESC: "Add the title (if present) of the reference to the clipboard when copy metadata button is pressed",

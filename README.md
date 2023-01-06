@@ -16,7 +16,7 @@ The plugin is not available in the community plugin section in Obsidian. So you 
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
 ## Features
-- [x] Identifies research literature ID's from the current document and displays a map of references and citations. 
+- [x] Identifies research literature IDs from the current document and displays a map of references and citations.
 - [x] Copy metadata and BibTex to the clipboard.
 - [x] Open PDF if available
 - [x] Open paper in [Semantic Scholar](https://www.semanticscholar.org/)
@@ -24,9 +24,9 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 - [x] List citations
 - [x] List references
 - [x] Search references and citations list
+- [x] Get references(dynamic list) via keywords of the paper-Enable in settings
+- [x] Get references(dynamic list) via markdown note filename-Enable in settings
 - [ ] Sorting of references and citations
-- [ ] Get references via keywords of the paper
-- [ ] Get references via the author's name
 - [ ] On hover popover to show details of the reference
 - [ ] Create notes from listed references and citations
 - [ ] Graph view of connected references and citations
@@ -67,4 +67,4 @@ The following types of IDs are supported:
 - `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
 - `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
 - `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
-- You can enable reference search using the markdown note filename in the settings. 
+- You can enable reference search using the markdown note filename and/or keywords in the frontmatter of the note. Check out the settings tab to configure the plugin behaviour.

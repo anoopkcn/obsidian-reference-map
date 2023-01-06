@@ -76,6 +76,7 @@ export class ReferenceMapView extends ItemView {
 		let rootPapers: SemanticPaper[] = [];
 		let references: SemanticPaper[][] = [];
 		let citations: SemanticPaper[][] = [];
+		let query = "";
 		const isActiveView = activeView && activeView.file;
 		if (isActiveView) {
 			try {
@@ -97,14 +98,42 @@ export class ReferenceMapView extends ItemView {
 				)
 			) {
 				try {
-					const query = extractKeywords(
-						activeView.file?.basename
-					).join("+");
+					query = extractKeywords(activeView.file?.basename).join(
+						"+"
+					);
 					const titlePapers = await this.viewManager.searchRootPapers(
 						query,
 						[0, this.plugin.settings.searchLimit]
 					);
 					rootPapers = rootPapers.concat(titlePapers);
+				} catch (error) {
+					console.error(
+						"Error in Reference Map View: processReferences",
+						error
+					);
+				}
+			}
+			if (this.plugin.settings.searchFrontMatter) {
+				try {
+					await app.fileManager.processFrontMatter(
+						activeView.file,
+						(fmatter) => {
+							if (fmatter && Object.keys(fmatter).length > 0) {
+								query = extractKeywords(
+									fmatter[
+										this.plugin.settings
+											.searchFrontMatterKey
+									]
+								).join("+");
+							}
+						}
+					);
+					const frontMatterPapers =
+						await this.viewManager.searchRootPapers(query, [
+							0,
+							this.plugin.settings.searchFrontMatterLimit,
+						]);
+					rootPapers = rootPapers.concat(frontMatterPapers);
 				} catch (error) {
 					console.error(
 						"Error in Reference Map View: processReferences",

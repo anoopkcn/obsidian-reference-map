@@ -4,6 +4,9 @@ export interface ReferenceMapSettings {
     showDetails: boolean;
     searchTitle: boolean;
     searchLimit: number;
+    searchFrontMatter: boolean;
+    searchFrontMatterKey: string;
+    searchFrontMatterLimit: number;
     copyTitle: boolean;
     copyPaperDOI: boolean;
     copyAuthors: boolean;

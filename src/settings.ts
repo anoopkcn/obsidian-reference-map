@@ -92,6 +92,48 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 });
         }
 
+        new Setting(containerEl)
+            .setName(t('SEARCH_FRONT_MATTER'))
+            .setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.searchFrontMatter)
+                .onChange(async (value) => {
+                    this.plugin.settings.searchFrontMatter = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+        if (this.plugin.settings.searchFrontMatter) {
+            new Setting(containerEl)
+                .setName(t('SEARCH_FRONT_MATTER_KEY'))
+                .setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_KEY_DESC')))
+                .addText(text => text
+                    .setValue(this.plugin.settings.searchFrontMatterKey)
+                    .onChange(async (value) => {
+                        this.plugin.settings.searchFrontMatterKey = value;
+                        this.plugin.saveSettings();
+                    }));
+            new Setting(containerEl)
+                .setName(t('SEARCH_FRONT_MATTER_LIMIT'))
+                .setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_LIMIT_DESC')))
+                .addSlider(slider => slider
+                    .setLimits(1, 10, 1)
+                    .setValue(this.plugin.settings.searchFrontMatterLimit)
+                    .onChange(async (value) => {
+                        zoomText.innerText = ` ${value.toString()}`;
+                        this.plugin.settings.searchFrontMatterLimit = value;
+                        this.plugin.saveSettings();
+                    }
+                    ))
+                .settingEl.createDiv("", (el) => {
+                    zoomText = el;
+                    el.style.minWidth = "2.3em";
+                    el.style.textAlign = "right";
+                    el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`;
+                }
+                );
+        }
+
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });
