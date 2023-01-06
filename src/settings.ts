@@ -75,50 +75,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.saveSettings();
                     // plugin.refresh();
                 }));
-        // containerEl.createEl('h2', { text: 'Sorting Settings' });
-        // containerEl.createEl('p', { text: 'Sort Reference Map based on a metadata value' });
-
-        // new Setting(containerEl)
-        //     .setName(t('ENABLE_SORTING'))
-        //     .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
-        //     .addToggle(toggle => toggle
-        //         .setValue(this.plugin.settings.enableSorting)
-        //         .onChange(async (value) => {
-        //             settings.enableSorting = value;
-        //             this.plugin.saveSettings();
-        //             this.display();
-                    // plugin.refresh();
-        //         }));
-
-        // if (settings.enableSorting) {
-        //     new Setting(containerEl)
-        //         .setName(t('SORTING_METADATA'))
-        //         .setDesc(fragWithHTML(t('SORTING_METADATA_DESC')))
-        //         .addDropdown(dropdown => dropdown
-        //             .addOption(SORTING_METADATA[0], camelToNormalCase(SORTING_METADATA[0]))
-        //             .addOption(SORTING_METADATA[1], camelToNormalCase(SORTING_METADATA[1]))
-        //             .addOption(SORTING_METADATA[2], camelToNormalCase(SORTING_METADATA[2]))
-        //             .addOption(SORTING_METADATA[3], camelToNormalCase(SORTING_METADATA[3]))
-        //             .setValue(this.plugin.settings.sortingMetadata)
-        //             .onChange(async (value) => {
-        //                 settings.sortingMetadata = value;
-        //                 this.plugin.saveSettings();
-                        // plugin.refresh();
-        //             }));
-
-        //     new Setting(containerEl)
-        //         .setName(t('SORTING_ORDER'))
-        //         .setDesc(fragWithHTML(t('SORTING_ORDER_DESC')))
-        //         .addDropdown(dropdown => dropdown
-        //             .addOption('asc', 'Ascending')
-        //             .addOption('desc', 'Descending')
-        //             .setValue(this.plugin.settings.sortingOrder)
-        //             .onChange(async (value) => {
-        //                 settings.sortingOrder = value;
-        //                 this.plugin.saveSettings();
-                        // plugin.refresh();
-        //             }));
-        // }
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });

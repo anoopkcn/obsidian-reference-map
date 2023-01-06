@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { PaperCard } from "./PaperCard";
 import { SEARCH_PARAMETERS } from "src/constants";
-// import { SORTING_METADATA } from "src/constants";
 
-export const ReferencesList = (props: {
+export const PaperList = (props: {
 	papers: SemanticPaper[];
 	settings: ReferenceMapSettings;
 	type: string;

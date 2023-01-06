@@ -37,11 +37,5 @@ export default {
     COPY_URL_DESC: "Add the URL (if present) of the reference to the clipboard when copy metadata button is pressed",
     COPY_OPEN_ACCESS_PDF: "Copy open access PDF URL",
     COPY_OPEN_ACCESS_PDF_DESC: "Add the open access PDF URL (if present) of the reference to the clipboard when copy metadata button is pressed",
-    SORTING_METADATA: "Sorting metadata",
-    SORTING_METADATA_DESC: "Sort Reference Map based on a metadata value",
-    SORTING_ORDER: "Sorting order",
-    SORTING_ORDER_DESC: "Sort Reference Map in ascending or descending order",
-    ENABLE_SORTING: "Enable sorting",
-    ENABLE_SORTING_DESC: "Enable sorting of Reference Map based on metadata values<br>"
-        + "Depending on the number of cited/citing papers, this operation might be slow",
+
 };

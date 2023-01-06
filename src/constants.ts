@@ -13,9 +13,6 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     copyUrl: false,
     copyJournal: false,
     copyOpenAccessPdf: false,
-    enableSorting: false,
-    sortingMetadata: 'year',
-    sortingOrder: 'desc'
 }
 
 export const SORTING_METADATA = [

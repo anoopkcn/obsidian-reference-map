@@ -1,7 +1,7 @@
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React, { useState } from "react";
 import { removeNullReferences } from "src/utils";
-import { ReferencesList } from "./PaperList";
+import { PaperList } from "./PaperList";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
 
@@ -50,14 +50,14 @@ export const RootPaperCard = (props: {
 				/>
 			)}
 			{showReferences && (
-				<ReferencesList
+				<PaperList
 					settings={props.settings}
 					papers={references}
 					type={"References"}
 				/>
 			)}
 			{showCitations && (
-				<ReferencesList
+				<PaperList
 					settings={props.settings}
 					papers={citations}
 					type={"Citations"}
