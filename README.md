@@ -23,7 +23,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 - [x] Open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
 - [x] List citations
 - [x] List references
-- [x] Search references and Citations list
+- [x] Search references and citations list
 - [ ] Sorting of references and citations
 - [ ] Get references via keywords of the paper
 - [ ] Get references via the author's name
