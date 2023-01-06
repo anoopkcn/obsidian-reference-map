@@ -48,25 +48,6 @@ export const SEMANTIC_FIELDS = [
     'citationStyles'
 ]
 export const SEARCH_PARAMETERS = ['paperId', 'externalIds', 'url', 'title', 'abstract', 'venue', 'year', 'referenceCount', 'citationCount', 'influentialCitationCount', 'isOpenAccess', 'openAccessPdf', 'fieldsOfStudy', 'publicationTypes', 'publicationDate', 'journal', 'citationStyles', 'authors']
-export const SEMANTIC_SEARCH_FIELDS = [
-    'abstract',
-    'authors',
-    'citationCount',
-    'externalIds',
-    'fieldsOfStudy',
-    'influentialCitationCount',
-    'isOpenAccess',
-    'journal',
-    'paperId',
-    'publicationDate',
-    'publicationTypes',
-    'referenceCount',
-    's2FieldsOfStudy',
-    'title',
-    'url',
-    'venue',
-    'year'
-]
 
 export const SEMANTICSCHOLAR_API_URL = 'https://api.semanticscholar.org/graph/v1'
 export const SEMANTICSCHOLAR_PARTNER_API_URL = 'https://partner.semanticscholar.org/graph/v1'

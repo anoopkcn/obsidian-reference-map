@@ -2,7 +2,12 @@ import { requestUrl } from "obsidian";
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "./constants";
 import { SemanticPaper } from "./types";
 
-export const getPaperMetadata = async (paperId: string, refType = 'paper', offlimit = [0, null], unknownRef = false): Promise<SemanticPaper[]> => {
+export const getPaperMetadata = async (
+    paperId: string,
+    refType = 'paper',
+    offlimit = [0, null],
+    unknownRef = false
+): Promise<SemanticPaper[]> => {
     let fields: string;
     let cite: string;
     const offset = offlimit[0]
@@ -47,7 +52,8 @@ export const postPaperMetadata = async (paperIds: Set<string>): Promise<Semantic
     }).then(
         (response) => {
             if (response.status != 200) {
-                // console.log(`Error ${response.status}`) //TODO: better error handling
+                // console.log(`Error ${response.status}`) 
+                //TODO: better error handling
                 return []
             } else if (response.json.data) {
                 return response.json.data

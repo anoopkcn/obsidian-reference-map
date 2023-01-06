@@ -2,8 +2,6 @@ import { PluginSettingTab, Setting } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { fragWithHTML } from "./utils";
-// import { camelToNormalCase, fragWithHTML } from "./utils";
-// import { SORTING_METADATA } from "./constants";
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
     plugin: ReferenceMap;
@@ -62,7 +60,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.influentialCount = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }));
 
         new Setting(containerEl)
@@ -73,7 +70,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.hideButtonsOnHover = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }));
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
@@ -86,7 +82,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyTitle = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }));
         new Setting(containerEl)
             .setName(t('COPY_PAPER_DOI'))
@@ -96,7 +91,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyPaperDOI = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
@@ -107,7 +101,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyAuthors = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
@@ -118,7 +111,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyYear = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
@@ -129,7 +121,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyAbstract = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
@@ -140,7 +131,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyUrl = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
         new Setting(containerEl)
@@ -151,7 +141,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                     this.plugin.settings.copyOpenAccessPdf = value;
                     this.plugin.saveSettings();
-                    // plugin.refresh();
                 }
                 ));
     }
