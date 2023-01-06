@@ -6,7 +6,8 @@ import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
 import { ReferenceMapList } from "./components/ReferenceMapList";
-import { removeNullReferences } from "./utils";
+import { extractKeywords, removeNullReferences } from "./utils";
+import { EXCLUDE_FILE_NAMES } from "./constants";
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
@@ -81,15 +82,39 @@ export class ReferenceMapView extends ItemView {
 				rootPapers = await this.viewManager.getRootPapers(
 					activeView.file
 				);
-				rootPapers = removeNullReferences(rootPapers);
 			} catch (error) {
 				console.error(
 					"Error in Reference Map View: processReferences",
 					error
 				);
 			}
+			if (
+				this.plugin.settings.searchTitle &&
+				!EXCLUDE_FILE_NAMES.some(
+					(name) =>
+						activeView.file?.basename.toString().toLowerCase() ===
+						name.toLowerCase()
+				)
+			) {
+				try {
+					const query = extractKeywords(
+						activeView.file?.basename
+					).join("+");
+					const titlePapers = await this.viewManager.searchRootPapers(
+						query,
+						[0, this.plugin.settings.searchLimit]
+					);
+					rootPapers = rootPapers.concat(titlePapers);
+				} catch (error) {
+					console.error(
+						"Error in Reference Map View: processReferences",
+						error
+					);
+				}
+			}
 		}
 		if (rootPapers.length > 0) {
+			rootPapers = removeNullReferences(rootPapers);
 			try {
 				// for each paper in rootPapers, get the references and push them to references
 				references = await Promise.all(

@@ -3,8 +3,9 @@ import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "src/constants";
 import { SemanticPaper } from "src/types";
 
 export const getPaperMetadata = async (
-    paperId: string,
+    paperId = '',
     refType = 'paper',
+    query = '',
     offlimit = [0, null],
     unknownRef = false
 ): Promise<SemanticPaper[]> => {
@@ -14,21 +15,26 @@ export const getPaperMetadata = async (
     const limit = offlimit[1]
 
 
-    if (refType == 'references') { fields = `/references?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citedPaper' }
-    else if (refType == 'citations') { fields = `/citations?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citingPaper' }
-    else { fields = `?fields=${SEMANTIC_FIELDS.join(',')}` }
+    if (refType === 'references') { fields = `${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citedPaper' }
+    else if (refType === 'citations') { fields = `${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citingPaper' }
+    else if (refType === "search") {
+        if (query === '') return []
+        fields = `search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')}`
+    }
+    else { fields = `${paperId}?fields=${SEMANTIC_FIELDS.join(',')}` }
 
     if (offset != 0) fields += `&offset=${offset}`
     if (limit != null) fields += `&limit=${limit}`
     if (unknownRef) fields += '&include_unknown_references=true'
 
-    const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}${fields}`
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/${fields}`
     const papermetadata: SemanticPaper[] = await requestUrl(url).then(
         (response) => {
             if (response.status != 200) {
                 console.log(`Error ${response.status}`) //TODO: better error handling
                 return []
             } else if (response.json.data) {
+                if (refType === 'search') return response.json.data
                 return response.json.data.map((e: Record<string, unknown>) => e[cite])
             } else {
                 return [response.json]

@@ -2,6 +2,7 @@ import { FileSystemAdapter } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
 import { SemanticPaper } from "./types";
+import { COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -104,3 +105,17 @@ export function removeNullReferences(references: SemanticPaper[]) {
     });
     return result;
 }
+
+// given a string of text, extract keywords from it excluding common words, punctuation, and numbers
+export function extractKeywords(text: string) {
+    const keywords = text.split(" ");
+    const result = keywords.filter((element) => {
+        if (!COMMONWORDS.includes(element) && !PUNCTUATION.includes(element) && !NUMBERS.includes(element)) {
+            return true;
+        }
+        return false;
+    }
+    );
+    return result;
+}
+

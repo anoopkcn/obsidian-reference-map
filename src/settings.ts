@@ -40,8 +40,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.saveSettings();
                 }));
 
-
-
         new Setting(containerEl)
             .setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
@@ -61,6 +59,31 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.settings.hideButtonsOnHover = value;
                     this.plugin.saveSettings();
                 }));
+
+        new Setting(containerEl)
+            .setName(t('SEARCH_TITLE'))
+            .setDesc(fragWithHTML(t('SEARCH_TITLE_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.searchTitle)
+                .onChange(async (value) => {
+                    this.plugin.settings.searchTitle = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+        if (this.plugin.settings.searchTitle) {
+            new Setting(containerEl)
+                .setName(t('SEARCH_LIMIT'))
+                .setDesc(fragWithHTML(t('SEARCH_LIMIT_DESC')))
+                .addText(text => text
+                    .setPlaceholder('3')
+                    .setValue(this.plugin.settings.searchLimit.toString())
+                    .onChange(async (value) => {
+                        this.plugin.settings.searchLimit = parseInt(value);
+                        this.plugin.saveSettings();
+                    }));
+        }
+
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });

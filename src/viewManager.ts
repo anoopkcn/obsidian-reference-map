@@ -15,13 +15,31 @@ export class ViewManager {
     cache: LRUCache<TFile, DocCache>;
     refCache: LRUCache<string, SemanticPaper[]>;
     citeCache: LRUCache<string, SemanticPaper[]>;
+    searchCache: LRUCache<string, SemanticPaper[]>;
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
         this.cache = new LRUCache({ max: 20 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });
+        this.searchCache = new LRUCache({ max: 20 });
     }
+
+    searchRootPapers = async (query: string, offlimit = [0, null]): Promise<SemanticPaper[]> => {
+        const cachedSearch = this.searchCache.has(query) ? this.searchCache.get(query) : null;
+        if (!cachedSearch) {
+            try {
+                const rootPapers = await getPaperMetadata('', 'search', query, offlimit);
+                this.searchCache.set(query, rootPapers);
+                return rootPapers;
+            } catch (e) {
+                console.log('Reference Map: S2AG API request error', e);
+                return [];
+            }
+        }
+        return cachedSearch;
+    }
+
 
     getRootPapers = async (file: TFile): Promise<SemanticPaper[]> => {
         const fileContent = await app.vault.cachedRead(file);

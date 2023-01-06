@@ -19,6 +19,11 @@ export default {
         "Hide and show the <a href='https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b'>influential citation count</a> of references<br>"
         + "<b> Toggle OFF: </b> Influential count will be hidden<br>"
         + "<b> Toggle ON: </b> Influential count will be visible",
+    SEARCH_TITLE: "Search References",
+    SEARCH_TITLE_DESC: "Find references using markdown note file name",
+    SEARCH_LIMIT: "Search Limit",
+    SEARCH_LIMIT_DESC: "Limit the number of references shown in the map",
+    // Copy metadata
     COPY_TITLE: "Copy title",
     COPY_TITLE_DESC: "Add the title (if present) of the reference to the clipboard when copy metadata button is pressed",
     COPY_PAPER_DOI: "Copy paper DOI",
