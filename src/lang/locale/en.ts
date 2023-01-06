@@ -20,9 +20,9 @@ export default {
         + "<b> Toggle OFF: </b> Influential count will be hidden<br>"
         + "<b> Toggle ON: </b> Influential count will be visible",
     SEARCH_TITLE: "Search References",
-    SEARCH_TITLE_DESC: "Find references also using the markdown note file name",
-    SEARCH_LIMIT: "Search Limit",
-    SEARCH_LIMIT_DESC: "Limit the number of references shown in the map",
+    SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs",
+    SEARCH_LIMIT: "Search References Limit",
+    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map in addition to references from paper IDs when <b>Search References</b> is enabled. ",
     // Copy metadata
     COPY_TITLE: "Copy title",
     COPY_TITLE_DESC: "Add the title (if present) of the reference to the clipboard when copy metadata button is pressed",
