@@ -20,7 +20,7 @@ export default {
         + "<b> Toggle OFF: </b> Influential count will be hidden<br>"
         + "<b> Toggle ON: </b> Influential count will be visible",
     SEARCH_TITLE: "Search References",
-    SEARCH_TITLE_DESC: "Find references using markdown note file name",
+    SEARCH_TITLE_DESC: "Find references also using the markdown note file name",
     SEARCH_LIMIT: "Search Limit",
     SEARCH_LIMIT_DESC: "Limit the number of references shown in the map",
     // Copy metadata
