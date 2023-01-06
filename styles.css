@@ -192,6 +192,10 @@ body {
 	color: var(--orm-paper-buttons-hover-color);
 }
 
+.orm-button-disable{
+	opacity: 0.3;
+}
+
 .orm-paper-buttons > .orm-copy-bibtex,
 .orm-copy-metadata,
 .orm-references,

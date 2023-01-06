@@ -1,5 +1,5 @@
 import React from "react";
-import { FiPaperclip, FiSlash, FiClipboard } from "react-icons/fi";
+import { FiPaperclip, FiClipboard } from "react-icons/fi";
 import { SiOpenaccess } from "react-icons/si";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
@@ -140,15 +140,18 @@ export const PaperButtons = ({
 			>
 				<FiPaperclip size={15} />
 			</div>
-			<div className="orm-openaccess">
-				{paper.isOpenAccess ? (
+
+			{paper.isOpenAccess ? (
+				<div className="orm-openaccess">
 					<a href={`${openAccessPdfUrl}`}>
 						<SiOpenaccess size={15} />
 					</a>
-				) : (
-					<FiSlash size={15} />
-				)}
-			</div>
+				</div>
+			) : (
+				<div className="orm-button-disable">
+					<SiOpenaccess size={15} />
+				</div>
+			)}
 			{citingCited}
 			{settings.influentialCount && (
 				<div className="orm-influential">{influentialCount}</div>
