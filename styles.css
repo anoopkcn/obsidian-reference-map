@@ -14,7 +14,7 @@ settings:
 		step: 1
 	-
 		id: orm-paper-title-font-weight
-		title: Reference map view title font weight
+		title: Reference paper title font weight
 		type: variable-number-slider
 		default: 400
 		format: px
@@ -32,7 +32,7 @@ settings:
 		step: 1
 	-
 		id: orm-paper-author-font-weight
-		title: Reference map view author font weight
+		title: Reference paper author font weight
 		type: variable-number-slider
 		default: 400
 		format: px
