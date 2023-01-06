@@ -2,7 +2,6 @@ import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
-import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
@@ -22,14 +21,21 @@ export const ReferenceMapList = (props: {
 	if (!props.view) {
 		return (
 			<div className="orm-no-content">
-				Active view is not a markdown file
+				<div>
+					Reference Map View
+					<br />
+					Active pane is not a markdown file
+				</div>
 			</div>
 		);
 	} else if (!isLoaded) {
 		return (
 			<div className="orm-no-content">
-				{props.settings.loadingPuff && <LoadingPuff />}
-				{!props.settings.loadingPuff && "Reference Map View"}
+				<div>
+					Reference Map View
+					<br />
+					...
+				</div>
 			</div>
 		);
 	}

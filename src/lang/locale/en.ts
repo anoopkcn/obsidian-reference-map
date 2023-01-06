@@ -5,10 +5,6 @@ export default {
     REFRESH_VIEW: "Refresh Map",
     REFRESH_VIEW_DESC: "Settings changes will not affect the current view.<br>" +
         "If you prefer to apply changes also to the current view, you can press this button",
-    LOADING_PUFF: "Loading puff animation",
-    LOADING_PUFF_DESC: "Reference map view searching animation<br>" +
-        "<b>Toggle OFF:</b> Searching animation will be turned off<br>" +
-        "<b>Toggle ON:</b> Searching animation will be shown",
     HIDE_SHOW_ABSTRACT: "Hide and show additional details",
     HIDE_SHOW_ABSTRACT_DESC: "Hide and show the abstract and all author names of a references in the respective card<br>" +
         "<b>Toggle OFF:</b> Abstract will be hidden<br>" +

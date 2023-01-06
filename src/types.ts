@@ -1,7 +1,6 @@
 export interface ReferenceMapSettings {
     hideButtonsOnHover: boolean;
     influentialCount: boolean;
-    loadingPuff: boolean;
     showDetails: boolean;
     copyTitle: boolean;
     copyPaperDOI: boolean;

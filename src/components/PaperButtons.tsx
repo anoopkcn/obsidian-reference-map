@@ -1,6 +1,5 @@
 import React from "react";
-import { FiPaperclip, FiSlash } from "react-icons/fi";
-import { IoMdClipboard } from "react-icons/io";
+import { FiPaperclip, FiSlash, FiClipboard } from "react-icons/fi";
 import { SiOpenaccess } from "react-icons/si";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
@@ -134,7 +133,7 @@ export const PaperButtons = ({
 					copyElToClipboard(bibTex);
 				}}
 			>
-				<IoMdClipboard size={16} />
+				<FiClipboard size={16} />
 			</div>
 			<div
 				className="orm-copy-metadata"

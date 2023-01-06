@@ -3,7 +3,6 @@ import { ReferenceMapSettings } from "./types"
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
     influentialCount: false,
-    loadingPuff: false,
     showDetails: false,
     copyTitle: true,
     copyPaperDOI: false,

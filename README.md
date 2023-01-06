@@ -33,7 +33,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 **NOTE**: Papers are ordered according to the publish date.
 
-![obsidian-reference-map-demo](./images/orm-demo.png)
+![ORM-demo](./images/orm-demo.png)
 
 ## Usage
 - Click on the title of the paper to open the paper in [Semantic Scholar](https://www.semanticscholar.org/)
@@ -50,11 +50,11 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
     (5) Click to open a list of all citing papers (Citations)
 
-![orm-ref-cite](./images/orm-list-demo.png)
+![ORM-ref-cite](./images/orm-list-demo.png)
 
 ### Configuration 
     
-Check out the settings tab to configure the plugin behaviour (while you are there you can disable the annoying loading puff animation 😁).
+Check out the settings tab to configure the plugin behaviour.
 
 If you want to configure the style of the view you can use the [Obsidian-style-settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
