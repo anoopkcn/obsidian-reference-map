@@ -77,6 +77,7 @@ export class ReferenceMapView extends ItemView {
 		let references: SemanticPaper[][] = [];
 		let citations: SemanticPaper[][] = [];
 		let query = "";
+		let frontmatter: Record<string, string> = {};
 		const isActiveView = activeView && activeView.file;
 		if (isActiveView) {
 			try {
@@ -101,11 +102,14 @@ export class ReferenceMapView extends ItemView {
 					query = extractKeywords(activeView.file?.basename).join(
 						"+"
 					);
-					const titlePapers = await this.viewManager.searchRootPapers(
-						query,
-						[0, this.plugin.settings.searchLimit]
-					);
-					rootPapers = rootPapers.concat(titlePapers);
+					if (query) {
+						const titlePapers =
+							await this.viewManager.searchRootPapers(query, [
+								0,
+								this.plugin.settings.searchLimit,
+							]);
+						rootPapers = rootPapers.concat(titlePapers);
+					}
 				} catch (error) {
 					console.error(
 						"Error in Reference Map View: processReferences",
@@ -119,21 +123,26 @@ export class ReferenceMapView extends ItemView {
 						activeView.file,
 						(fmatter) => {
 							if (fmatter && Object.keys(fmatter).length > 0) {
-								query = extractKeywords(
-									fmatter[
-										this.plugin.settings
-											.searchFrontMatterKey
-									]
-								).join("+");
+								frontmatter = fmatter;
 							}
 						}
 					);
-					const frontMatterPapers =
-						await this.viewManager.searchRootPapers(query, [
-							0,
-							this.plugin.settings.searchFrontMatterLimit,
-						]);
-					rootPapers = rootPapers.concat(frontMatterPapers);
+					if (frontmatter) {
+						const fmatterString =
+							frontmatter[
+								this.plugin.settings
+									.searchFrontMatterKey as keyof typeof frontmatter
+							];
+						if (fmatterString) {
+							query = extractKeywords(fmatterString).join("+");
+						}
+						const frontMatterPapers =
+							await this.viewManager.searchRootPapers(query, [
+								0,
+								this.plugin.settings.searchFrontMatterLimit,
+							]);
+						rootPapers = rootPapers.concat(frontMatterPapers);
+					}
 				} catch (error) {
 					console.error(
 						"Error in Reference Map View: processReferences",
