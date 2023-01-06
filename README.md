@@ -42,7 +42,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
     (1) Copy `BibTex` to the clipboard
 
-    (2) Copy the `title`, `authors`, `year`, `abstract, etc. to the clipboard
+    (2) Copy the `title`, `authors`, `year`, `abstract`, etc. to the clipboard
 
     (3) Click to open PDF if [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF is present for a reference
 
@@ -60,11 +60,11 @@ If you want to configure the style of the view you can use the [Obsidian-style-s
 
 ## Paper IDs can be the following:
 The following types of IDs are supported:
-corpus:<id>` - Semantic Scholar numerical ID, e.g. `215416146`
+- `corpus:<id>` - Semantic Scholar numerical ID, e.g. `corpus:215416146`
 - `DOI:<doi>` - a [Digital Object Identifier](http://doi.org/), e.g. `DOI:10.18653/v1/N18-3011`
 - `ARXIV:<id>` - [arXiv.rg](https://arxiv.org/), e.g. `ARXIV:2106.15928`
 - `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
 - `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
 - `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
 - `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
-
+- You can enable reference search using the markdown note filename in the settings. 
