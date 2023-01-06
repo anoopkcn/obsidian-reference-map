@@ -15,56 +15,69 @@ The plugin is not available in the community plugin section in Obsidian. So you 
 
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
-## Features
-- [x] Identifies research literature IDs from the current document and displays a map of references and citations.
-- [x] Copy metadata and BibTex to the clipboard.
-- [x] Open PDF if available
-- [x] Open paper in [Semantic Scholar](https://www.semanticscholar.org/)
-- [x] Open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
-- [x] List citations
-- [x] List references
-- [x] Search references and citations list
-- [x] Get references(dynamic list) via keywords of the paper-Enable in settings
-- [x] Get references(dynamic list) via markdown note filename-Enable in settings
-- [ ] Sorting of references and citations
-- [ ] On hover popover to show details of the reference
-- [ ] Create notes from listed references and citations
-- [ ] Graph view of connected references and citations
-
-**NOTE**: Papers are ordered according to the publish date.
-
+## Usage
 ![ORM-demo](./images/orm-demo.png)
 
-## Usage
-- Click on the title of the paper to open the paper in [Semantic Scholar](https://www.semanticscholar.org/)
-- Click on the author's name to open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
-- Button functions:
+### View Description
+Reference Map View contains Reference Cards.
 
-    (1) Copy `BibTex` to the clipboard
+Each reference card in the view will show the following information:
+- Title
+    - On click will open the paper in [Semantic Scholar](https://www.semanticscholar.org/)
+- Authors (Full authors list can be enabled in settings)
+    - on click will open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
+- Year
+- Abstract (Enabled in settings)
+- BibTex (The clipboard icon, **Button 1 in the image**)
+    - On click will copy the BibTex to the clipboard
+- Metadata (The paperclip icon, **Button 2 in the image**)
+    - On click will copy the metadata to the clipboard
+- PDF (The Open Access icon, **Button 3 in the image**)
+    - On click will open the [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF of the paper if it is present for a reference
+- Reference count (**Button 4 in the image**)
+    - On click will open a searchable list of all cited papers (References)
+- Citation count (**Button 5 in the image**)
+    - On click will open a searchable list of all citing papers (Citations)
+- Influential citation count(Enabled in settings)
 
-    (2) Copy the `title`, `authors`, `year`, `abstract`, etc. to the clipboard
+## Static Reference List
+Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. valid IDs can be added anywhere in the document and they will be detected.
 
-    (3) Click to open PDF if [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF is present for a reference
+The following types of IDs are supported:
+- `corpus:<id>` - Semantic Scholar numerical ID, e.g. `corpus:215416146`
+- `DOI:<doi>` - a [Digital Object Identifier](http://doi.org/), e.g. `DOI:10.18653/v1/N18-3011`
+- `ARXIV:<id>` - [arXiv.org](https://arxiv.org/), e.g. `ARXIV:2106.15928`
+- `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
+- `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
+- `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
+- `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
 
-    (4) Click to open a list of all cited papers (References)
+## Dynamic Reference List
+The reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords. Check out the settings tab to configure the plugin behaviour.
 
-    (5) Click to open a list of all citing papers (Citations)
+Example: For a file named "Attention is all you need.md"  cards will be displayed for references that match "Attention+all+need". 
+
+For frontmatter keywords, you can configure a keyword to be used for reference search.  By default, the keyword is `keywords`.
+
+Example: For a frontmatter given as follows:
+```
+---
+tags: reference
+keywords: autoencoders, machine learning
+---
+```
+Cards will be displayed for references that match "autoencoders+machine+learning".
+
+Note that since new references are added to the database every day the dynamic list might not stay the same each time you open the file. Especially for generic keywords like "machine learning", "deep learning", "history" etc.
+
+**This feature can be used for keeping up to date with the latest research in a specific field as well**
 
 ![ORM-ref-cite](./images/orm-list-demo.png)
 
 ### Configuration 
     
-Check out the settings tab to configure the plugin behaviour.
-
 If you want to configure the style of the view you can use the [Obsidian-style-settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
-## Paper IDs can be the following:
-The following types of IDs are supported:
-- `corpus:<id>` - Semantic Scholar numerical ID, e.g. `corpus:215416146`
-- `DOI:<doi>` - a [Digital Object Identifier](http://doi.org/), e.g. `DOI:10.18653/v1/N18-3011`
-- `ARXIV:<id>` - [arXiv.rg](https://arxiv.org/), e.g. `ARXIV:2106.15928`
-- `MAG:<id>` - Microsoft Academic Graph, e.g. `MAG:112218234`
-- `PMID:<id>` - PubMed/Medline, e.g. `PMID:19872477`
-- `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
-- `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
-- You can enable reference search using the markdown note filename and/or keywords in the frontmatter of the note. Check out the settings tab to configure the plugin behaviour.
+The settings tab contains options to configure the behaviour of the plugin.
+
+## Please feel free to open an issue if you find any bugs or have any suggestions.
