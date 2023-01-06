@@ -106,6 +106,7 @@ body {
 }
 
 .orm-no-content {
+	text-align: center;
 	opacity: 0.5;
 }
 
