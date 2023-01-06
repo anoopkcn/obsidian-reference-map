@@ -25,7 +25,7 @@ Each reference card in the view will show the following information:
 - Title
     - On click will open the paper in [Semantic Scholar](https://www.semanticscholar.org/)
 - Authors (Full authors list can be enabled in settings)
-    - on click will open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
+    - On click will open the author's details in [Semantic Scholar](https://www.semanticscholar.org/)
 - Year
 - Abstract (Enabled in settings)
 - BibTex (The clipboard icon, **Button 1 in the image**)
@@ -41,7 +41,7 @@ Each reference card in the view will show the following information:
 - Influential citation count(Enabled in settings)
 
 ## Static Reference List
-Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. valid IDs can be added anywhere in the document and they will be detected.
+Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
 - `corpus:<id>` - Semantic Scholar numerical ID, e.g. `corpus:215416146`
@@ -53,7 +53,7 @@ The following types of IDs are supported:
 - `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
 
 ## Dynamic Reference List
-The reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords. Check out the settings tab to configure the plugin behaviour.
+The Reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords. Check out the settings tab to configure the plugin behaviour.
 
 Example: For a file named "Attention is all you need.md"  cards will be displayed for references that match "Attention+all+need". 
 
