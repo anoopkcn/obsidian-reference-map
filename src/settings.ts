@@ -71,17 +71,25 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.display();
                 }));
 
+        let zoomText: HTMLDivElement;
         if (this.plugin.settings.searchTitle) {
             new Setting(containerEl)
                 .setName(t('SEARCH_LIMIT'))
                 .setDesc(fragWithHTML(t('SEARCH_LIMIT_DESC')))
-                .addText(text => text
-                    .setPlaceholder('3')
-                    .setValue(this.plugin.settings.searchLimit.toString())
+                .addSlider(slider => slider
+                    .setLimits(1, 10, 1)
+                    .setValue(this.plugin.settings.searchLimit)
                     .onChange(async (value) => {
-                        this.plugin.settings.searchLimit = parseInt(value);
+                        zoomText.innerText = ` ${value.toString()}`;
+                        this.plugin.settings.searchLimit = value;
                         this.plugin.saveSettings();
-                    }));
+                    }))
+                .settingEl.createDiv("", (el) => {
+                    zoomText = el;
+                    el.style.minWidth = "2.3em";
+                    el.style.textAlign = "right";
+                    el.innerText = ` ${this.plugin.settings.searchLimit.toString()}`;
+                });
         }
 
 
