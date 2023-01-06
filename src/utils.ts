@@ -108,7 +108,8 @@ export function removeNullReferences(references: SemanticPaper[]) {
 
 // given a string of text, extract keywords from it excluding common words, punctuation, and numbers
 export function extractKeywords(text: string) {
-    const keywords = text.split(" ");
+    const regex = new RegExp(`[${PUNCTUATION.join('')}]`, "gmi")
+    const keywords = text.replace(regex, " ").split(" ");
     const result = keywords.filter((element) => {
         if (!COMMONWORDS.includes(element) && !PUNCTUATION.includes(element) && !NUMBERS.includes(element)) {
             return true;
