@@ -18,7 +18,7 @@ export const ReferenceMapList = (props: {
 		if (props.papers.length > 0) {
 			setLoaded(true);
 		}
-	}, [props.papers]);
+	}, [props.papers.length, props.view?.file.name]);
 
 	if (!props.view) {
 		return (
