@@ -40,7 +40,7 @@ Each reference card in the view will show the following information:
     - On click will open a searchable list of all citing papers (Citations)
 - Influential citation count(Enabled in settings)
 
-## Static Reference List
+### Static Reference List
 Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
@@ -52,7 +52,7 @@ The following types of IDs are supported:
 - `PMCID:<id>` - PubMed Central, e.g. `PMCID:2323736`
 - `URL:<url>` - URL from sites, e.g. `URL:https://arxiv.org/abs/2106.15928v1`
 
-## Dynamic Reference List
+### Dynamic Reference List
 The Reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords. Check out the settings tab to configure the plugin behaviour.
 
 Example: For a file named "Attention is all you need.md"  cards will be displayed for references that match "Attention+all+need". 
@@ -67,13 +67,13 @@ keywords: autoencoders, machine learning
 ```
 Cards will be displayed for references that match "autoencoders+machine+learning".
 
-Note that since new references are added to the database every day the dynamic list might not stay the same each time you open the file. Especially for generic keywords like "machine learning", "deep learning", "history" etc.
+Note that since new references are added to the database regularly the dynamic list might not stay the same each time you open the file. Especially for generic keywords like "machine learning", "deep learning", "history" etc.
 
 **This feature can be used for keeping up to date with the latest research in a specific field as well**
 
 ![ORM-ref-cite](./images/orm-list-demo.png)
 
-### Configuration 
+## Configuration 
     
 If you want to configure the style of the view you can use the [Obsidian-style-settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
