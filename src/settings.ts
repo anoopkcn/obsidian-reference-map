@@ -103,6 +103,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.display();
                 }));
 
+        let zoomText2: HTMLDivElement;
         if (this.plugin.settings.searchFrontMatter) {
             new Setting(containerEl)
                 .setName(t('SEARCH_FRONT_MATTER_KEY'))
@@ -120,13 +121,13 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     .setLimits(1, 10, 1)
                     .setValue(this.plugin.settings.searchFrontMatterLimit)
                     .onChange(async (value) => {
-                        zoomText.innerText = ` ${value.toString()}`;
+                        zoomText2.innerText = ` ${value.toString()}`;
                         this.plugin.settings.searchFrontMatterLimit = value;
                         this.plugin.saveSettings();
                     }
                     ))
                 .settingEl.createDiv("", (el) => {
-                    zoomText = el;
+                    zoomText2 = el;
                     el.style.minWidth = "2.3em";
                     el.style.textAlign = "right";
                     el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`;
