@@ -62,7 +62,6 @@ For frontmatter keywords, you can configure a keyword to be used for reference s
 Example: For a frontmatter given as follows:
 ```
 ---
-tags: reference
 keywords: autoencoders, machine learning
 ---
 ```
