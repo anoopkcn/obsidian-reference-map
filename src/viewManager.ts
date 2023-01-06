@@ -3,7 +3,7 @@ import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
 import { areSetsEqual, getPaperIds } from './utils';
-import { getPaperMetadata, postPaperMetadata } from './referenceMap';
+import { getPaperMetadata, postPaperMetadata } from './routers/s2agAPI';
 
 export interface DocCache {
     paperIds: Set<string>;

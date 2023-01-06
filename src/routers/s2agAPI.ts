@@ -1,6 +1,6 @@
 import { requestUrl } from "obsidian";
-import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "./constants";
-import { SemanticPaper } from "./types";
+import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "src/constants";
+import { SemanticPaper } from "src/types";
 
 export const getPaperMetadata = async (
     paperId: string,
