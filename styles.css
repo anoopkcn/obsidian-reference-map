@@ -202,8 +202,7 @@ body {
 .orm-paper-buttons > .orm-copy-bibtex:hover,
 .orm-copy-metadata:hover,
 .orm-references:hover,
-.orm-citations:hover,
-.orm-paper-heading-showmore:hover {
+.orm-citations:hover {
 	color: var(--orm-paper-buttons-hover-color);
 }
 

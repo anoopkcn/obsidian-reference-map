@@ -26,15 +26,12 @@ export const PaperButtons = ({
 	isButtonShown = false,
 }: Props) => {
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
-	// const firstAuthor = paper.authors[0]?.name
-	// 	? paper.authors[0].name
-	// 	: "Unknown Author";
 	let authors = "Unknown Authors";
 	if (paper.authors.length > 0)
 		authors = paper.authors.map((author) => author.name).join(", ");
 	const year = paper.year ? paper.year : "Unknown Year";
 	const abstract = paper.abstract ? paper.abstract : "No abstract available";
-	const bibTex = paper.citationStyles.bibtex
+	const bibTex = paper.citationStyles?.bibtex
 		? paper.citationStyles.bibtex
 		: "No BibTex available";
 	const influentialCount = paper.influentialCitationCount
@@ -42,7 +39,7 @@ export const PaperButtons = ({
 		: "0";
 	let openAccessPdfUrl = "";
 	if (paper.isOpenAccess) {
-		openAccessPdfUrl = paper.openAccessPdf.url
+		openAccessPdfUrl = paper.openAccessPdf?.url
 			? paper.openAccessPdf.url
 			: "";
 	}
