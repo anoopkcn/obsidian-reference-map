@@ -33,6 +33,22 @@ export default {
     SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
+    ENABLE_SORTING: "Enable Sorting",
+    ENABLE_SORTING_DESC: "Enable sorting of references in the map. <br>" +
+        "This options applies to citations and references listed in each card<br>" +
+        "<b>Toggle OFF:</b> Default sorting, newest to oldest reference<br>" +
+        "<b>Toggle ON:</b> Sorting enabled",
+    SORT_BY: "Sort By",
+    SORT_BY_DESC: "Sort references and citations by the selected value",
+    SORT_BY_YEAR: "Year",
+    SORT_BY_CITATION_COUNT: "Citation Count",
+    SORT_BY_REFERENCE_COUNT: "Reference Count",
+    SORT_BY_INFLUENTIAL_CITATION_COUNT: "Influential Citation Count",
+    SORT_ORDER: "Sort Order",
+    SORT_ORDER_DESC: "Sort references and citations in the selected order",
+    SORT_ORDER_ASC: "Ascending",
+    SORT_ORDER_DESCE: "Descending",
+
     // Copy metadata
     COPY_TITLE: "Copy Title",
     COPY_TITLE_DESC: "Add the title (if present) of the reference to the clipboard when copy metadata button is pressed",

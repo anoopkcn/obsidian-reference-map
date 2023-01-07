@@ -27,7 +27,34 @@ export const PaperList = (props: {
 		);
 	};
 
-	const papers = props.papers;
+	const sort = (
+		data: SemanticPaper[],
+		sortProperty: string,
+		sortOrder: string
+	) => {
+		return data.sort((a, b) => {
+			if (sortOrder === "asc") {
+				return a[sortProperty as keyof typeof a] >
+					b[sortProperty as keyof typeof b]
+					? 1
+					: -1;
+			} else {
+				return a[sortProperty as keyof typeof a] <
+					b[sortProperty as keyof typeof b]
+					? 1
+					: -1;
+			}
+		});
+	};
+
+	let papers = props.papers;
+	if (props.settings.enableSorting)
+		papers = sort(
+			props.papers,
+			props.settings.sortBy,
+			props.settings.sortOrder
+		);
+
 	const paperList = search(papers).map((paper, index) => {
 		return (
 			<PaperCard

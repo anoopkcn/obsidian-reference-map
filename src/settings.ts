@@ -135,6 +135,45 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 );
         }
 
+        new Setting(containerEl)
+            .setName(t('ENABLE_SORTING'))
+            .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.enableSorting)
+                .onChange(async (value) => {
+                    this.plugin.settings.enableSorting = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+        if (this.plugin.settings.enableSorting) {
+            new Setting(containerEl)
+                .setName(t('SORT_BY'))
+                .setDesc(fragWithHTML(t('SORT_BY_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('year', t('SORT_BY_YEAR'))
+                    .addOption('citationCount', t('SORT_BY_CITATION_COUNT'))
+                    .addOption('referenceCount', t('SORT_BY_REFERENCE_COUNT'))
+                    .addOption('influentialCitationCount', t('SORT_BY_INFLUENTIAL_CITATION_COUNT'))
+                    .setValue(this.plugin.settings.sortBy)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortBy = value;
+                        this.plugin.saveSettings();
+                    }));
+            new Setting(containerEl)
+                .setName(t('SORT_ORDER'))
+                .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('desc', t('SORT_ORDER_DESCE'))
+                    .addOption('asc', t('SORT_ORDER_ASC'))
+                    .setValue(this.plugin.settings.sortOrder)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortOrder = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
 
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });

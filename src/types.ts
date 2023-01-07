@@ -7,6 +7,9 @@ export interface ReferenceMapSettings {
     searchFrontMatter: boolean;
     searchFrontMatterKey: string;
     searchFrontMatterLimit: number;
+    enableSorting: boolean;
+    sortBy: string;
+    sortOrder: string;
     copyTitle: boolean;
     copyPaperDOI: boolean;
     copyAuthors: boolean;
