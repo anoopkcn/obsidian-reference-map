@@ -10,25 +10,17 @@ export const ReferenceMapList = (props: {
 	citations: SemanticPaper[][];
 	view: MarkdownView | null;
 }) => {
-	const [isLoaded, setLoaded] = React.useState(false);
-	React.useEffect(() => {
-		setLoaded(false);
-		if (props.papers.length > 0) {
-			setLoaded(true);
-		}
-	}, [props.papers.length, props.view?.file.name]);
-
 	if (!props.view) {
 		return (
 			<div className="orm-no-content">
 				<div>
 					Reference Map View
 					<br />
-					Active pane is not a markdown file
+					No Active Markdown File
 				</div>
 			</div>
 		);
-	} else if (!isLoaded) {
+	} else if (props.papers.length <= 0) {
 		return (
 			<div className="orm-no-content">
 				<div>
