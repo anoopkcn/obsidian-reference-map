@@ -1,5 +1,6 @@
 // English
 export default {
+    GENERAL_SETTINGS: "General Settings",
     REFERENCE_MAP: "Reference Map",
     NO_REFERENCES_IN_FILE: "No reference ID's are found in the active document",
     REFRESH_VIEW: "Refresh Map",
@@ -19,13 +20,13 @@ export default {
         "Hide and show the influential citation count of references<br>"
         + "<b> Toggle OFF: </b> Influential count will be hidden<br>"
         + "<b> Toggle ON: </b> Influential count will be visible",
-    SEARCH_TITLE: "Search References",
+    SEARCH_TITLE: "Search References Using File Name",
     SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs<br>" +
         "<b>Toggle OFF:</b> Search using file name disabled<br>" +
         "<b>Toggle ON:</b> Search using file name is enabled",
     SEARCH_LIMIT: "Search References Limit",
     SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled. ",
-    SEARCH_FRONT_MATTER: "Search Frontmatter",
+    SEARCH_FRONT_MATTER: "Search References Using Frontmatter",
     SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs<br>" +
         "<b>Toggle OFF:</b> Disable search using front matter<br>" +
         "<b>Toggle ON:</b> Enable search using front matter",
@@ -33,8 +34,8 @@ export default {
     SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
-    ENABLE_SORTING: "Enable Sorting",
-    ENABLE_SORTING_DESC: "Enable sorting of references in the map. <br>" +
+    ENABLE_SORTING: "Sorting References and Citations",
+    ENABLE_SORTING_DESC: "Enable or Disable sorting of references in the map. <br>" +
         "This options applies to citations and references listed in each card<br>" +
         "<b>Toggle OFF:</b> Default sorting, newest to oldest reference<br>" +
         "<b>Toggle ON:</b> Sorting enabled",
@@ -64,5 +65,6 @@ export default {
     COPY_URL_DESC: "Add the URL (if present) of the reference to the clipboard when copy metadata button is pressed",
     COPY_OPEN_ACCESS_PDF: "Copy Open Access PDF URL",
     COPY_OPEN_ACCESS_PDF_DESC: "Add the open access PDF URL (if present) of the reference to the clipboard when copy metadata button is pressed",
-
+    SEE_DOCUMENTATION: "See Documentation",
+    SEE_DOCUMENTATION_DESC: "For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map'>obsidian-reference-map</a> <code>README.md</code> file",
 };
