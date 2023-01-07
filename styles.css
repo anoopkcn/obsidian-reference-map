@@ -147,7 +147,7 @@ body {
 	color: var(--orm-paper-title-link-hover-color);
 }
 
-.orm-paper-abstract{
+.orm-paper-abstract {
 	display: block;
 	font-size: var(--orm-paper-abstract-font-size);
 	color: var(--orm-paper-abstract-color);
@@ -173,13 +173,13 @@ body {
 .orm-paper-buttons {
 	width: 100%;
 	display: flex;
-	justify-content: space-between;
+    justify-content: space-between;
 }
 
 .orm-paper-buttons > div {
 	font-size: small;
-	display: inline-block;
-	min-width: 20%;
+	text-align: left;
+	min-width: 16%;
 	padding: 0.25rem;
 	color: var(--orm-paper-buttons-color);
 }
@@ -192,7 +192,7 @@ body {
 	color: var(--orm-paper-buttons-hover-color);
 }
 
-.orm-button-disable{
+.orm-button-disable {
 	opacity: 0.3;
 }
 
