@@ -33,7 +33,7 @@ Each reference card in the view will show the following information:
 | PDF | Open Access PDF of the paper | Open the [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF of the paper if it is present for a reference |
 | Reference count | Number of references | Open a searchable list of all cited papers (References) |
 | Citation count | Number of citations | Open a searchable list of all citing papers (Citations) |
-| Influential citation count | Number of influential citations |  |
+| Influential citation count | [Number of influential citations](https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b) |  |
 
 ### Static Reference List
 Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
