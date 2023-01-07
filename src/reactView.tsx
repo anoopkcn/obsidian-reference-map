@@ -77,7 +77,7 @@ export class ReferenceMapView extends ItemView {
 		let references: SemanticPaper[][] = [];
 		let citations: SemanticPaper[][] = [];
 		let query = "";
-		let frontmatter: Record<string, string> = {};
+		let frontMatter: Record<string, string> = {};
 		const isActiveView = activeView && activeView.file;
 		if (isActiveView) {
 			try {
@@ -121,20 +121,24 @@ export class ReferenceMapView extends ItemView {
 				try {
 					await app.fileManager.processFrontMatter(
 						activeView.file,
-						(fmatter) => {
-							if (fmatter && Object.keys(fmatter).length > 0) {
-								frontmatter = fmatter;
+						(frontMatterObj) => {
+							if (
+								frontMatterObj &&
+								Object.keys(frontMatterObj).length > 0
+							) {
+								frontMatter = frontMatterObj;
 							}
 						}
 					);
-					if (frontmatter) {
-						const fmatterString =
-							frontmatter[
+					if (frontMatter) {
+						const frontMatterString =
+							frontMatter[
 								this.plugin.settings
-									.searchFrontMatterKey as keyof typeof frontmatter
+									.searchFrontMatterKey as keyof typeof frontMatter
 							];
-						if (fmatterString) {
-							query = extractKeywords(fmatterString).join("+");
+						if (frontMatterString) {
+							query =
+								extractKeywords(frontMatterString).join("+");
 						}
 						const frontMatterPapers =
 							await this.viewManager.searchRootPapers(query, [
