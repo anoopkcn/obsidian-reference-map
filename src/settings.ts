@@ -174,7 +174,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
-
+        containerEl.createEl('br');
         containerEl.createEl('h2', { text: 'Metadata for copy' });
         // containerEl.createEl('p', { text: 'Select metadata values to add to the 📎 button for copying to clipboard' });
         new Setting(containerEl)
