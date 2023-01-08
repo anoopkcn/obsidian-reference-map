@@ -13,10 +13,15 @@ export const ReferenceMapList = (props: {
 	fileNameString: string;
 }) => {
 	const [papers, setPapers] = useState<SemanticPaper[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		if (props.view) processPapers(props.view);
 	}, [props.view?.file, props.frontMatterString, props.fileNameString]);
+
+	useEffect(() => {
+		setIsLoading(true);
+	}, [props.view?.file.basename]);
 
 	const processPapers = async (currentView: MarkdownView) => {
 		let rootPapers: SemanticPaper[] = [];
@@ -35,7 +40,12 @@ export const ReferenceMapList = (props: {
 			);
 			rootPapers = rootPapers.concat(frontMatterPapers);
 		}
-		if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+		if (rootPapers.length > 0) {
+			setPapers(removeNullReferences(rootPapers));
+		} else {
+			setPapers([]);
+		}
+		setIsLoading(false);
 	};
 
 	if (!props.view) {
@@ -48,7 +58,17 @@ export const ReferenceMapList = (props: {
 				</div>
 			</div>
 		);
-	} else if (papers.length !== 0) {
+	} else if (isLoading) {
+		return (
+			<div className="orm-no-content">
+				<div>
+					Reference Map View
+					<br />
+					Loading...
+				</div>
+			</div>
+		);
+	} else if (papers.length > 0) {
 		return (
 			<div className="orm-reference-map">
 				{papers.map((paper, index) => {
