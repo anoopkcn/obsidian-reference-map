@@ -228,3 +228,6 @@ body {
 	border: none;
 	padding: 0;
 }
+.orm-loading{
+	text-align: center;
+}

@@ -18,6 +18,8 @@ export const RootPaperCard = (props: {
 	const [isButtonShown, setIsButtonShown] = useState(
 		props.settings.hideButtonsOnHover ? false : true
 	);
+	const [isLoading, setIsLoading] = useState(false);
+
 	useEffect(() => {
 		if (props.rootPaper) {
 			getCitations();
@@ -38,29 +40,22 @@ export const RootPaperCard = (props: {
 	};
 
 	const getReferences = async () => {
+		setIsLoading(true);
 		const references = await props.viewManager.getReferences(
 			props.rootPaper.paperId
 		);
 		if (references) setReferences(removeNullReferences(references));
+		setIsLoading(false);
 	};
 
 	const getCitations = async () => {
+		setIsLoading(true);
 		const citations = await props.viewManager.getCitations(
 			props.rootPaper.paperId
 		);
 		if (citations) setCitations(removeNullReferences(citations));
+		setIsLoading(false);
 	};
-
-	// const rootPaper: SemanticPaper = props.rootPaper;
-	// const references = props.references
-	// 	? removeNullReferences(props.references)
-	// 	: [];
-	// const citations = props.citations
-	// 	? removeNullReferences(props.citations)
-	// 	: [];
-
-	// const search_parameters = Object.keys(Object.assign({}, ...references));
-	// console.log(search_parameters);
 
 	return (
 		<div
@@ -82,18 +77,24 @@ export const RootPaperCard = (props: {
 				/>
 			)}
 			{showReferences && (
-				<PaperList
-					settings={props.settings}
-					papers={references}
-					type={"References"}
-				/>
+				<>
+					{isLoading && <div className="orm-loading">...</div>}
+					<PaperList
+						settings={props.settings}
+						papers={references}
+						type={"References"}
+					/>
+				</>
 			)}
 			{showCitations && (
-				<PaperList
-					settings={props.settings}
-					papers={citations}
-					type={"Citations"}
-				/>
+				<>
+					{isLoading && <div className="orm-loading">...</div>}
+					<PaperList
+						settings={props.settings}
+						papers={citations}
+						type={"Citations"}
+					/>
+				</>
 			)}
 		</div>
 	);
