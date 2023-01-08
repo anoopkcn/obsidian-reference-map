@@ -1,15 +1,43 @@
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
+import { removeNullReferences } from "src/utils";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
-	papers: SemanticPaper[];
 	view: MarkdownView | null;
 	viewManager: ViewManager;
+	frontMatterString: string;
+	fileNameString: string;
 }) => {
+	const [papers, setPapers] = useState<SemanticPaper[]>([]);
+
+	useEffect(() => {
+		if (props.view) processPapers(props.view);
+	}, [props.view?.file, props.frontMatterString, props.fileNameString]);
+
+	const processPapers = async (currentView: MarkdownView) => {
+		let rootPapers: SemanticPaper[] = [];
+		rootPapers = await props.viewManager.getRootPapers(currentView.file);
+		if (props.settings.searchTitle && props.fileNameString) {
+			const titleSearchPapers = await props.viewManager.searchRootPapers(
+				props.fileNameString,
+				[0, props.settings.searchLimit]
+			);
+			rootPapers = rootPapers.concat(titleSearchPapers);
+		}
+		if (props.settings.searchFrontMatter && props.frontMatterString) {
+			const frontMatterPapers = await props.viewManager.searchRootPapers(
+				props.frontMatterString,
+				[0, props.settings.searchFrontMatterLimit]
+			);
+			rootPapers = rootPapers.concat(frontMatterPapers);
+		}
+		if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+	};
+
 	if (!props.view) {
 		return (
 			<div className="orm-no-content">
@@ -20,30 +48,30 @@ export const ReferenceMapList = (props: {
 				</div>
 			</div>
 		);
-	} else if (props.papers.length <= 0) {
+	} else if (papers.length !== 0) {
+		return (
+			<div className="orm-reference-map">
+				{papers.map((paper, index) => {
+					return (
+						<RootPaperCard
+							settings={props.settings}
+							key={paper.paperId + index + props.view?.file.name}
+							rootPaper={paper}
+							viewManager={props.viewManager}
+						/>
+					);
+				})}
+			</div>
+		);
+	} else {
 		return (
 			<div className="orm-no-content">
 				<div>
 					Reference Map View
 					<br />
-					...
+					No References Found
 				</div>
 			</div>
 		);
 	}
-
-	const paperList = props.papers.map((paper, index) => {
-		return (
-			<RootPaperCard
-				// file name in the key is to force a re-render when the file changes ..
-				//.. or rerender if paper id is present in multiple files
-				settings={props.settings}
-				key={paper.paperId + index + props.view?.file.name}
-				rootPaper={paper}
-				viewManager={props.viewManager}
-			/>
-		);
-	});
-
-	return <div className="orm-reference-map">{paperList}</div>;
 };

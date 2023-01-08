@@ -4,7 +4,6 @@ import { t } from "./lang/helpers";
 import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { SemanticPaper } from "./types";
 import { ReferenceMapList } from "./components/ReferenceMapList";
 import { extractKeywords } from "./utils";
 import { EXCLUDE_FILE_NAMES } from "./constants";
@@ -73,92 +72,44 @@ export class ReferenceMapView extends ItemView {
 
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-		let rootPapers: SemanticPaper[] = [];
-		let query = "";
-		let frontMatter: Record<string, string> = {};
-		const isActiveView = activeView && activeView.file;
-		if (isActiveView) {
-			try {
-				rootPapers = await this.viewManager.getRootPapers(
+		let frontMatterString = "";
+		let fileNameString = "";
+		if (activeView) {
+			if (this.plugin.settings.searchFrontMatter) {
+				const fileCache = app.metadataCache.getFileCache(
 					activeView.file
 				);
-			} catch (error) {
-				console.error(
-					"Error in Reference Map View: processReferences",
-					error
-				);
+				if (fileCache?.frontmatter) {
+					const keywords =
+						fileCache?.frontmatter?.[
+							this.plugin.settings.searchFrontMatterKey
+						];
+					if (keywords)
+						frontMatterString = extractKeywords(keywords)
+							.unique()
+							.join("+");
+				}
 			}
 			if (
 				this.plugin.settings.searchTitle &&
 				!EXCLUDE_FILE_NAMES.some(
 					(name) =>
-						activeView.file?.basename.toString().toLowerCase() ===
+						activeView.file.basename.toString().toLowerCase() ===
 						name.toLowerCase()
 				)
 			) {
-				try {
-					query = extractKeywords(activeView.file?.basename).join(
-						"+"
-					);
-					if (query) {
-						const titlePapers =
-							await this.viewManager.searchRootPapers(query, [
-								0,
-								this.plugin.settings.searchLimit,
-							]);
-						rootPapers = rootPapers.concat(titlePapers);
-					}
-				} catch (error) {
-					console.error(
-						"Error in Reference Map View: processReferences",
-						error
-					);
-				}
-			}
-			if (this.plugin.settings.searchFrontMatter) {
-				try {
-					await app.fileManager.processFrontMatter(
-						activeView.file,
-						(frontMatterObj) => {
-							if (
-								frontMatterObj &&
-								Object.keys(frontMatterObj).length > 0
-							) {
-								frontMatter = frontMatterObj;
-							}
-						}
-					);
-					if (frontMatter) {
-						const frontMatterString =
-							frontMatter[
-								this.plugin.settings
-									.searchFrontMatterKey as keyof typeof frontMatter
-							];
-						if (frontMatterString) {
-							query =
-								extractKeywords(frontMatterString).join("+");
-						}
-						const frontMatterPapers =
-							await this.viewManager.searchRootPapers(query, [
-								0,
-								this.plugin.settings.searchFrontMatterLimit,
-							]);
-						rootPapers = rootPapers.concat(frontMatterPapers);
-					}
-				} catch (error) {
-					console.error(
-						"Error in Reference Map View: processReferences",
-						error
-					);
-				}
+				fileNameString = extractKeywords(activeView.file.basename)
+					.unique()
+					.join("+");
 			}
 		}
 		this.rootEl.render(
 			<ReferenceMapList
 				settings={this.plugin.settings}
-				papers={rootPapers}
 				view={activeView}
 				viewManager={this.viewManager}
+				frontMatterString={frontMatterString}
+				fileNameString={fileNameString}
 			/>
 		);
 	};

@@ -22,13 +22,13 @@ export const RootPaperCard = (props: {
 		if (props.rootPaper) {
 			getCitations();
 		}
-	}, [showCitations]);
+	}, []);
 
 	useEffect(() => {
 		if (props.rootPaper) {
 			getReferences();
 		}
-	}, [showReferences]);
+	}, []);
 
 	const handleHoverButtons = (isShow: boolean) => {
 		if (props.settings.hideButtonsOnHover) {

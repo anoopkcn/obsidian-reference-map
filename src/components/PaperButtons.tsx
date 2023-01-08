@@ -34,6 +34,12 @@ export const PaperButtons = ({
 	const bibTex = paper.citationStyles?.bibtex
 		? paper.citationStyles.bibtex
 		: "No BibTex available";
+	const referenceCount = paper.referenceCount
+		? paper.referenceCount.toString()
+		: "0";
+	const citationCount = paper.citationCount
+		? paper.citationCount.toString()
+		: "0";
 	const influentialCount = paper.influentialCitationCount
 		? paper.influentialCitationCount.toString()
 		: "0";
@@ -91,7 +97,7 @@ export const PaperButtons = ({
 					}
 					onClick={() => handleShowReferencesClick()}
 				>
-					{paper.referenceCount.toString()}
+					{referenceCount}
 				</div>
 				<div
 					className="orm-citations"
@@ -106,19 +112,15 @@ export const PaperButtons = ({
 					}
 					onClick={() => handleShowCitationsClick()}
 				>
-					{paper.citationCount.toString()}
+					{citationCount}
 				</div>
 			</>
 		);
 	} else {
 		citingCited = (
 			<>
-				<div className="orm-references-2">
-					{paper.referenceCount.toString()}
-				</div>
-				<div className="orm-citations-2">
-					{paper.citationCount.toString()}
-				</div>
+				<div className="orm-references-2">{referenceCount}</div>
+				<div className="orm-citations-2">{citationCount}</div>
 			</>
 		);
 	}

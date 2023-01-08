@@ -46,7 +46,7 @@ export const getPaperMetadata = async (
 }
 
 export const postPaperMetadata = async (paperIds: Set<string>): Promise<SemanticPaper[]> => {
-    console.log("POST IS CALLED")
+    console.log("POST IS CALLED",)
     const fields = `?fields=${SEMANTIC_FIELDS.join(',')}`
     // add json body to request
     const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
