@@ -126,14 +126,12 @@ body {
 
 /* Paper Heading */
 .orm-paper-heading {
-	/* position: relative; */
 	margin-bottom: 0.5rem;
 }
 
 .orm-paper-title {
 	font-size: var(--orm-paper-title-font-size);
 	font-weight: var(--orm-paper-title-font-weight);
-	/* display: inline-block; */
 	cursor: pointer;
 	padding-bottom: 0.25rem;
 }
