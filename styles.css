@@ -231,3 +231,9 @@ body {
 .orm-loading{
 	text-align: center;
 }
+.orm-loading-puff{
+	display: block;
+	text-align: center;
+	width: 100%;
+	height: 20px;
+}

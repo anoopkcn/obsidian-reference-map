@@ -5,6 +5,7 @@ import { PaperList } from "./PaperList";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
 import { ViewManager } from "src/viewManager";
+import { LoadingPuff } from "./LoadingPuff";
 
 export const RootPaperCard = (props: {
 	settings: ReferenceMapSettings;
@@ -18,16 +19,12 @@ export const RootPaperCard = (props: {
 	const [isButtonShown, setIsButtonShown] = useState(
 		props.settings.hideButtonsOnHover ? false : true
 	);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isReferenceLoading, setIsReferenceLoading] = useState(false);
+	const [isCitationLoading, setIsCitationLoading] = useState(false);
 
 	useEffect(() => {
 		if (props.rootPaper) {
 			getCitations();
-		}
-	}, []);
-
-	useEffect(() => {
-		if (props.rootPaper) {
 			getReferences();
 		}
 	}, []);
@@ -40,21 +37,21 @@ export const RootPaperCard = (props: {
 	};
 
 	const getReferences = async () => {
-		setIsLoading(true);
+		setIsReferenceLoading(true);
 		const references = await props.viewManager.getReferences(
 			props.rootPaper.paperId
 		);
 		if (references) setReferences(removeNullReferences(references));
-		setIsLoading(false);
+		setIsReferenceLoading(false);
 	};
 
 	const getCitations = async () => {
-		setIsLoading(true);
+		setIsCitationLoading(true);
 		const citations = await props.viewManager.getCitations(
 			props.rootPaper.paperId
 		);
 		if (citations) setCitations(removeNullReferences(citations));
-		setIsLoading(false);
+		setIsCitationLoading(false);
 	};
 
 	return (
@@ -78,7 +75,11 @@ export const RootPaperCard = (props: {
 			)}
 			{showReferences && (
 				<>
-					{isLoading && <div className="orm-loading">...</div>}
+					{isReferenceLoading && (
+						<div className="orm-loading">
+							<LoadingPuff />
+						</div>
+					)}
 					<PaperList
 						settings={props.settings}
 						papers={references}
@@ -88,7 +89,11 @@ export const RootPaperCard = (props: {
 			)}
 			{showCitations && (
 				<>
-					{isLoading && <div className="orm-loading">...</div>}
+					{isCitationLoading && (
+						<div className="orm-loading">
+							<LoadingPuff />
+						</div>
+					)}
 					<PaperList
 						settings={props.settings}
 						papers={citations}

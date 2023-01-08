@@ -4,6 +4,7 @@ import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
 import { removeNullReferences } from "src/utils";
+import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
@@ -63,8 +64,7 @@ export const ReferenceMapList = (props: {
 			<div className="orm-no-content">
 				<div>
 					Reference Map View
-					<br />
-					Loading...
+					<LoadingPuff />
 				</div>
 			</div>
 		);
