@@ -2,13 +2,13 @@ import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
+import { ViewManager } from "src/viewManager";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
 	papers: SemanticPaper[];
-	references: SemanticPaper[][];
-	citations: SemanticPaper[][];
 	view: MarkdownView | null;
+	viewManager: ViewManager;
 }) => {
 	if (!props.view) {
 		return (
@@ -40,8 +40,7 @@ export const ReferenceMapList = (props: {
 				settings={props.settings}
 				key={paper.paperId + index + props.view?.file.name}
 				rootPaper={paper}
-				references={props.references[index]}
-				citations={props.citations[index]}
+				viewManager={props.viewManager}
 			/>
 		);
 	});

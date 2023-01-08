@@ -6,7 +6,7 @@ import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { SemanticPaper } from "./types";
 import { ReferenceMapList } from "./components/ReferenceMapList";
-import { extractKeywords, removeNullReferences } from "./utils";
+import { extractKeywords } from "./utils";
 import { EXCLUDE_FILE_NAMES } from "./constants";
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
@@ -74,8 +74,6 @@ export class ReferenceMapView extends ItemView {
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let rootPapers: SemanticPaper[] = [];
-		let references: SemanticPaper[][] = [];
-		let citations: SemanticPaper[][] = [];
 		let query = "";
 		let frontMatter: Record<string, string> = {};
 		const isActiveView = activeView && activeView.file;
@@ -155,49 +153,13 @@ export class ReferenceMapView extends ItemView {
 				}
 			}
 		}
-		if (rootPapers.length > 0) {
-			rootPapers = removeNullReferences(rootPapers);
-			try {
-				// for each paper in rootPapers, get the references and push them to references
-				references = await Promise.all(
-					rootPapers.map(async (paper) => {
-						return await this.viewManager.getReferences(
-							paper.paperId
-						);
-					})
-				);
-				// console.log(references);
-			} catch (error) {
-				console.error(
-					"Error in Reference Map View: processReferences",
-					error
-				);
-			}
-			try {
-				citations = await Promise.all(
-					rootPapers.map(async (paper) => {
-						return await this.viewManager.getCitations(
-							paper.paperId
-						);
-					})
-				);
-			} catch (error) {
-				console.error(
-					"Error in Reference Map View: processReferences",
-					error
-				);
-			}
-		}
 		this.rootEl.render(
-			<React.StrictMode>
-				<ReferenceMapList
-					settings={this.plugin.settings}
-					papers={rootPapers}
-					references={references}
-					citations={citations}
-					view={activeView}
-				/>
-			</React.StrictMode>
+			<ReferenceMapList
+				settings={this.plugin.settings}
+				papers={rootPapers}
+				view={activeView}
+				viewManager={this.viewManager}
+			/>
 		);
 	};
 }

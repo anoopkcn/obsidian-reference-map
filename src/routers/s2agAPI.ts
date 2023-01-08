@@ -14,6 +14,7 @@ export const getPaperMetadata = async (
     const offset = offlimit[0]
     const limit = offlimit[1]
 
+    console.log("GET IS CALLED")
 
     if (refType === 'references') { fields = `${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citedPaper' }
     else if (refType === 'citations') { fields = `${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citingPaper' }
@@ -45,6 +46,7 @@ export const getPaperMetadata = async (
 }
 
 export const postPaperMetadata = async (paperIds: Set<string>): Promise<SemanticPaper[]> => {
+    console.log("POST IS CALLED")
     const fields = `?fields=${SEMANTIC_FIELDS.join(',')}`
     // add json body to request
     const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
