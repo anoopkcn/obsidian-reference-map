@@ -29,6 +29,14 @@ export default class ReferenceMap extends Plugin {
 				this.activateView();
 			},
 		});
+		this.addCommand({
+			id: 'refresh-reference-map-sidebar-view',
+			name: 'Refresh Reference Map view',
+			callback: () => {
+				this.refresh();
+			}
+		});
+
 		const ribbonIconEl = this.addRibbonIcon(
 			'ReferenceMapIconScroll',
 			'Reference Map',
