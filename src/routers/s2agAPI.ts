@@ -1,3 +1,4 @@
+import { requestUrl } from "obsidian";
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "src/constants";
 import { SemanticPaper } from "src/types";
 
@@ -27,39 +28,46 @@ export const getPaperMetadata = async (
     if (unknownRef) fields += '&include_unknown_references=true'
 
     const url = `${SEMANTICSCHOLAR_API_URL}/paper/${fields}`
-    const papermetadata: SemanticPaper[] = await fetch(url)
-        .then(async response => {
-            const data = await response.json()
+    const papermetadata: SemanticPaper[] = await requestUrl(url).then(
+        (response) => {
             if (response.status != 200) {
-                console.log(`Error ${response.status}`)
+                console.log(`Error ${response.status}`) //TODO: better error handling
                 return []
-            } else if (data.data) {
-                if (refType === 'search') return data.data
-                return data.data.map((e: Record<string, unknown>) => e[cite])
+            } else if (response.json.data) {
+                if (refType === 'search') return response.json.data
+                return response.json.data.map((e: Record<string, unknown>) => e[cite])
             } else {
-                return [data]
+                return [response.json]
             }
-        })
+        }
+    )
     return papermetadata
 }
 
 export const postPaperMetadata = async (paperIds: Set<string>): Promise<SemanticPaper[]> => {
     const fields = `?fields=${SEMANTIC_FIELDS.join(',')}`
-    const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
     // add json body to request
-    const requestOptions = {
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
+    const papermetadata: SemanticPaper[] = await requestUrl({
+        url: url,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ ids: Array.from(paperIds) })
-    }
-    const papermetadata: SemanticPaper[] = await fetch(url, requestOptions)
-        .then(async response => {
-            const data = await response.json()
+    }).then(
+        (response) => {
             if (response.status != 200) {
-                console.log(`Error ${response.status}`) //TODO: better error handling
+                // console.log(`Error ${response.status}`) 
+                //TODO: better error handling
                 return []
+            } else if (response.json.data) {
+                return response.json.data
+            } else {
+                return response.json
             }
-            return data
-        })
+        }
+    )
     return papermetadata
+
 }
