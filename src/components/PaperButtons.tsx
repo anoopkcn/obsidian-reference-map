@@ -29,7 +29,7 @@ export const PaperButtons = ({
 	let authors = "Unknown Authors";
 	if (paper.authors.length > 0)
 		authors = paper.authors.map((author) => author.name).join(", ");
-	const year = paper.year ? paper.year : "Unknown Year";
+	const year = paper.year ? paper.year.toString() : "Unknown Year";
 	const abstract = paper.abstract ? paper.abstract : "No abstract available";
 	const bibTex = paper.citationStyles?.bibtex
 		? paper.citationStyles.bibtex
@@ -52,14 +52,14 @@ export const PaperButtons = ({
 	const paperURL = paper.url ? paper.url : "Unknown URL";
 	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
 
-	let copyToClipboard = "";
-	if (settings.copyTitle) copyToClipboard += `${paperTitle}\n`;
-	if (settings.copyAuthors) copyToClipboard += `${authors}\n`;
-	if (settings.copyYear) copyToClipboard += `${year}\n`;
-	if (settings.copyAbstract) copyToClipboard += `${abstract}\n`;
-	if (settings.copyUrl) copyToClipboard += `${paperURL}\n`;
-	if (settings.copyOpenAccessPdf) copyToClipboard += `${openAccessPdfUrl}\n`;
-	if (settings.copyPaperDOI) copyToClipboard += `${doi}\n`;
+	const copyMetadata = settings.metadataCopyTemplate
+		.replaceAll("{{title}}", paperTitle)
+		.replaceAll("{{authors}}", authors)
+		.replaceAll("{{year}}", year)
+		.replaceAll("{{abstract}}", abstract)
+		.replaceAll("{{url}}", paperURL)
+		.replaceAll("{{pdf}}", openAccessPdfUrl)
+		.replaceAll("{{doi}}", doi);
 
 	let citingCited = null;
 	if (
@@ -137,12 +137,11 @@ export const PaperButtons = ({
 			<div
 				className="orm-copy-metadata"
 				onClick={() => {
-					copyElToClipboard(copyToClipboard);
+					copyElToClipboard(copyMetadata);
 				}}
 			>
 				<FiPaperclip size={15} />
 			</div>
-
 			{paper.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${openAccessPdfUrl}`}>

@@ -12,14 +12,9 @@ export interface ReferenceMapSettings {
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;
-    copyTitle: boolean;
-    copyPaperDOI: boolean;
-    copyAuthors: boolean;
-    copyYear: boolean;
-    copyAbstract: boolean;
-    copyUrl: boolean;
-    copyJournal: boolean;
-    copyOpenAccessPdf: boolean;
+    metadataCopy: boolean;
+    metadataCopyTemplate: string;
+    noteFileNameTemplate: string;
 }
 
 

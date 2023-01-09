@@ -1,5 +1,25 @@
 import { ReferenceMapSettings } from "./types"
 
+export const METADATA_COPY_TEMPLATE = `{{title}}
+{{authors}}
+{{year}}
+{{abstract}}
+{{url}}
+{{pdf}}
+{{doi}}
+`
+
+export const NOTE_FILE_NAME_TEMPLATE = `{{title}}-{{author}} {{year}}}}`
+export const NOTE_FILE_PATH = ''
+export const NOTE_FILE_TEMPLATE = `{{title}}
+{{authors}}
+{{year}}
+{{abstract}}
+{{url}}
+{{pdf}}
+{{doi}}
+`
+
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
     influentialCount: false,
@@ -14,14 +34,9 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
-    copyTitle: true,
-    copyPaperDOI: false,
-    copyAuthors: true,
-    copyYear: true,
-    copyAbstract: true,
-    copyUrl: false,
-    copyJournal: false,
-    copyOpenAccessPdf: false,
+    metadataCopy: true,
+    metadataCopyTemplate: METADATA_COPY_TEMPLATE,
+    noteFileNameTemplate: NOTE_FILE_NAME_TEMPLATE
 }
 
 export const SORTING_METADATA = [
