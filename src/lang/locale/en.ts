@@ -8,43 +8,43 @@ export default {
         "If you prefer to apply changes also to the current view, you can press this button",
     HIDE_SHOW_ABSTRACT: "Hide and Show Additional Details",
     HIDE_SHOW_ABSTRACT_DESC: "Hide and show the abstract and all author names of a references in the respective card<br>" +
-        "<b>Toggle OFF:</b> Abstract will be hidden<br>" +
-        "<b>Toggle ON:</b> Abstract and all author names will be visible",
+        "<b>Toggle ON:</b> Abstract and all author names will be visible <br>" +
+        "<b>Toggle OFF:</b> Abstract will be hidden",
     HIDE_SHOW_BUTTONS_ON_HOVER: "Hide and Show Buttons on Hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
         "Hide and show the buttons of references on hover<br>"
-        + "<b> Toggle OFF: </b> Buttons will always be visible<br>"
-        + "<b> Toggle ON: </b> Buttons will be visible on hover",
+        + "<b> Toggle ON: </b> Buttons will be visible on hover<br>"
+        + "<b> Toggle OFF: </b> Buttons will always be visible",
     HIDE_SHOW_INFLUENTIAL_COUNT: "Hide and Show Influential Citation Count",
     HIDE_SHOW_INFLUENTIAL_COUNT_DESC:
         "Hide and show the influential citation count of references<br>"
-        + "<b> Toggle OFF: </b> Influential count will be hidden<br>"
-        + "<b> Toggle ON: </b> Influential count will be visible",
+        + "<b> Toggle ON: </b> Influential count will be visible<br>"
+        + "<b> Toggle OFF: </b> Influential count will be hidden",
     SEARCH_TITLE: "Search References Using File Name",
     SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs<br>" +
-        "<b>Toggle OFF:</b> Search using file name disabled<br>" +
-        "<b>Toggle ON:</b> Search using file name is enabled",
+        "<b>Toggle ON:</b> Search using file name is enabled<br>" +
+        "<b>Toggle OFF:</b> Search using file name disabled",
     SEARCH_LIMIT: "Search References Limit",
     SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled. ",
     SEARCH_FRONT_MATTER: "Search References Using Frontmatter",
     SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs<br>" +
-        "<b>Toggle OFF:</b> Disable search using front matter<br>" +
-        "<b>Toggle ON:</b> Enable search using front matter",
+        "<b>Toggle ON:</b> Enable search using front matter<br>" +
+        "<b>Toggle OFF:</b> Disable search using front matter",
     SEARCH_FRONT_MATTER_LIMIT: "Search Frontmatter Limit",
     SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
     SEARCH_CITEKEY: "Get References Using Citekey",
     SEARCH_CITEKEY_DESC: "Find references also using the citekey included in the markdown file in addition to reference IDs<br>" +
-        "<b>Toggle OFF:</b> Disable citekey detection<br>" +
-        "<b>Toggle ON:</b> Enable citekey detection",
+        "<b>Toggle ON:</b> Enable citekey detection<br>" +
+        "<b>Toggle OFF:</b> Disable citekey detection",
     SEARCH_CITEKEY_PATH: "Citekey CSL JSON file",
     SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Path must be relative to the vault root",
     ENABLE_SORTING: "Sorting References and Citations",
     ENABLE_SORTING_DESC: "Enable or Disable sorting of references in the map. <br>" +
         "This options applies to citations and references listed in each card<br>" +
-        "<b>Toggle OFF:</b> Default sorting, newest to oldest reference<br>" +
-        "<b>Toggle ON:</b> Sorting enabled",
+        "<b>Toggle ON:</b> Sorting enabled<br>" +
+        "<b>Toggle OFF:</b> Default sorting, newest to oldest reference",
     SORT_BY: "Sort By",
     SORT_BY_DESC: "Sort references and citations by the selected value",
     SORT_BY_YEAR: "Year",
