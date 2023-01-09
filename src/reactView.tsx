@@ -1,12 +1,14 @@
-import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, Notice, WorkspaceLeaf } from "obsidian";
+import * as fs from "fs";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapList } from "./components/ReferenceMapList";
-import { extractKeywords } from "./utils";
+import { extractKeywords, resolvePath } from "./utils";
 import { EXCLUDE_FILE_NAMES } from "./constants";
+import { CslJson } from "./types";
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
@@ -74,6 +76,7 @@ export class ReferenceMapView extends ItemView {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let frontMatterString = "";
 		let fileNameString = "";
+		let citeKeyData: CslJson[] | null = null;
 		if (activeView) {
 			if (this.plugin.settings.searchFrontMatter) {
 				const fileCache = app.metadataCache.getFileCache(
@@ -102,6 +105,19 @@ export class ReferenceMapView extends ItemView {
 					.unique()
 					.join("+");
 			}
+			if (this.plugin.settings.searchCiteKey) {
+				const jsonPath = resolvePath(
+					this.plugin.settings.searchCiteKeyPath
+				);
+				if (!fs.existsSync(jsonPath)) {
+					new Notice(
+						"No BetterBibTeX JSON file found at " + jsonPath
+					);
+					//Create the full path to the json file
+				}
+				const rawdata = fs.readFileSync(jsonPath);
+				citeKeyData = JSON.parse(rawdata.toString());
+			}
 		}
 		this.rootEl.render(
 			<ReferenceMapList
@@ -110,6 +126,7 @@ export class ReferenceMapView extends ItemView {
 				viewManager={this.viewManager}
 				frontMatterString={frontMatterString}
 				fileNameString={fileNameString}
+				citeKeyData={citeKeyData}
 			/>
 		);
 	};

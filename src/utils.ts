@@ -94,6 +94,20 @@ export const getPaperIds = (content: string): Set<string> => {
     return output;
 }
 
+export const getCitekeys = (content: string): Set<string> => {
+    const output = new Set<string>();
+    // const citekeyRegex = /@[^{]+{([^,]+),/g;
+    const citekeyRegex = /@(\w+)/gi;
+    // explain the regex 
+    const matches = content.matchAll(citekeyRegex);
+    if (matches) {
+        for (const match of matches) {
+            output.add(match[1]);
+        }
+    }
+    return output;
+}
+
 export function copyElToClipboard(el: string) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('electron').clipboard.writeText(el);

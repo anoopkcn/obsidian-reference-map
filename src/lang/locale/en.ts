@@ -34,6 +34,12 @@ export default {
     SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
+    SEARCH_CITEKEY: "Get References Using Citekey",
+    SEARCH_CITEKEY_DESC: "Find references also using the citekey included in the markdown file in addition to reference IDs<br>" +
+        "<b>Toggle OFF:</b> Disable citekey detection<br>" +
+        "<b>Toggle ON:</b> Enable citekey detection",
+    SEARCH_CITEKEY_PATH: "Citekey CSL JSON file",
+    SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Path must be relative to the vault root",
     ENABLE_SORTING: "Sorting References and Citations",
     ENABLE_SORTING_DESC: "Enable or Disable sorting of references in the map. <br>" +
         "This options applies to citations and references listed in each card<br>" +

@@ -1,9 +1,9 @@
-import { ReferenceMapSettings, SemanticPaper } from "src/types";
+import { CslJson, ReferenceMapSettings, SemanticPaper } from "src/types";
 import React, { useEffect, useState } from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { removeNullReferences } from "src/utils";
+import { getCitekeys, getPaperIds, removeNullReferences } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
@@ -12,6 +12,7 @@ export const ReferenceMapList = (props: {
 	viewManager: ViewManager;
 	frontMatterString: string;
 	fileNameString: string;
+	citeKeyData: CslJson[] | null;
 }) => {
 	const [papers, setPapers] = useState<SemanticPaper[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +27,12 @@ export const ReferenceMapList = (props: {
 
 	const processPapers = async (currentView: MarkdownView) => {
 		let rootPapers: SemanticPaper[] = [];
-		rootPapers = await props.viewManager.getRootPapers(currentView.file);
+		const fileContent = await app.vault.cachedRead(currentView.file);
+		const paperIds = getPaperIds(fileContent);
+		rootPapers = await props.viewManager.getRootPapers(
+			currentView.file,
+			paperIds
+		);
 		if (props.settings.searchTitle && props.fileNameString) {
 			const titleSearchPapers = await props.viewManager.searchRootPapers(
 				props.fileNameString,
@@ -40,6 +46,26 @@ export const ReferenceMapList = (props: {
 				[0, props.settings.searchFrontMatterLimit]
 			);
 			rootPapers = rootPapers.concat(frontMatterPapers);
+		}
+		if (props.settings.searchCiteKey && props.citeKeyData) {
+			const citeKeys = getCitekeys(fileContent);
+			if (citeKeys.size > 0) {
+				// get DOI form citekeyData corresponding to each item in citeKeys
+				const doiList = [];
+				for (const citeKey of citeKeys) {
+					const doi = props.citeKeyData.find(
+						(item) => item.id === citeKey
+					)?.DOI;
+					if (doi) doiList.push(doi);
+				}
+				if (doiList.length > 0) {
+					const citeKeyPapers = await props.viewManager.getRootPapers(
+						currentView.file,
+						new Set(doiList)
+					);
+					rootPapers = rootPapers.concat(citeKeyPapers);
+				}
+			}
 		}
 		if (rootPapers.length > 0) {
 			setPapers(removeNullReferences(rootPapers));

@@ -2,7 +2,7 @@ import { TFile } from 'obsidian';
 import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
-import { areSetsEqual, getPaperIds } from './utils';
+import { areSetsEqual } from './utils';
 import { getPaperMetadata, postPaperMetadata } from './routers/s2agAPI';
 
 export interface DocCache {
@@ -41,9 +41,7 @@ export class ViewManager {
     }
 
 
-    getRootPapers = async (file: TFile): Promise<SemanticPaper[]> => {
-        const fileContent = await app.vault.cachedRead(file);
-        const paperIds = getPaperIds(fileContent)
+    getRootPapers = async (file: TFile, paperIds: Set<string>): Promise<SemanticPaper[]> => {
         if (paperIds.size === 0) {
             return [];
         }

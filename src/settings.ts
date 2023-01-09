@@ -136,6 +136,31 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         }
 
         new Setting(containerEl)
+            .setName(t('SEARCH_CITEKEY'))
+            .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.searchCiteKey)
+                .onChange(async (value) => {
+                    this.plugin.settings.searchCiteKey = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+        if (this.plugin.settings.searchCiteKey) {
+            new Setting(containerEl)
+                .setName(t('SEARCH_CITEKEY_PATH'))
+                .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
+                .addText(text => text
+                    .setValue(this.plugin.settings.searchCiteKeyPath)
+                    .onChange(async (value) => {
+                        this.plugin.settings.searchCiteKeyPath = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
+
+        new Setting(containerEl)
             .setName(t('ENABLE_SORTING'))
             .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
             .addToggle(toggle => toggle

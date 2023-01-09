@@ -9,6 +9,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     searchFrontMatter: false,
     searchFrontMatterKey: 'keywords',
     searchFrontMatterLimit: 3,
+    searchCiteKey: false,
+    searchCiteKeyPath: 'My Library.json',
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
