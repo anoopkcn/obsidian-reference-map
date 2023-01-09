@@ -36,7 +36,7 @@ Each reference card in the view will show the following information:
 | Influential citation count | [Number of influential citations](https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b) |  |
 
 ### Static Reference List
-Reference IDs(DOI, corpusID, URL, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
+Reference IDs(DOI, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
 | Syntax| Descrtipion | Example |
@@ -48,7 +48,7 @@ The following types of IDs are supported:
 `PMID:<id>`| PubMed/Medline|`PMID:19872477`
 `PMCID:<id>`| PubMed Central|`PMCID:2323736`
 `URL:<url>`| URL from sites|`URL:https://arxiv.org/abs/2106.15928v1`
-`@<citekey>`| [Zotero](https://www.zotero.org/) citekey|`@smith2019attention`
+`@<citekey>`| [Zotero](https://www.zotero.org/) citekey*|`@smith2019attention`
 
 *Enable this feature from the settings. Note that one has to provide a BiBTeX CSL JSON file to enable this feature. Onece enabled the plugin can recogonize the pandoc citation format.
  
