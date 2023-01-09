@@ -75,21 +75,7 @@ export interface Author {
 export interface CslJson {
     id: string;
     DOI: string | null;
-    citationKey: string;
     abstract?: string | null;
-    containerTitle?: string | null;
-    ISSN?: string | null;
-    issue?: string | null;
-    page?: string | null;
     title: string;
-    type: string;
-    volume?: string | null;
-    titleShort?: string | null;
     URL?: string | null;
-    number?: string | null;
-    publisher?: string | null;
-    ISBN?: string | null;
-    PMID?: string | null;
-    language?: string | null;
-    note?: string | null;
 }
