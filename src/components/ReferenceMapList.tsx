@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCitekeys, getPaperIds, removeNullReferences } from "src/utils";
+import { getCiteKeys, getPaperIds, removeNullReferences } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
@@ -48,9 +48,9 @@ export const ReferenceMapList = (props: {
 			rootPapers = rootPapers.concat(frontMatterPapers);
 		}
 		if (props.settings.searchCiteKey && props.citeKeyData) {
-			const citeKeys = getCitekeys(fileContent);
+			const citeKeys = getCiteKeys(fileContent);
 			if (citeKeys.size > 0) {
-				// get DOI form citekeyData corresponding to each item in citeKeys
+				// get DOI form CiteKeyData corresponding to each item in citeKeys
 				const doiList = [];
 				for (const citeKey of citeKeys) {
 					const doi = props.citeKeyData.find(
