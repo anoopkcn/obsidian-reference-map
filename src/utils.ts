@@ -37,49 +37,52 @@ export const resolvePath = function (rawPath: string): string {
 export const getPaperIds = (content: string): Set<string> => {
     const modContent = content.replace("](", " ")
     const output = new Set<string>();
-    const arxivRegex = /arXiv.\s?(\d{4}\.\d{4,5})/i
-    const arXivMatches = modContent.match(arxivRegex)
-    const corpusRegex = /CorpusId.\s?(\d{4,})/i
-    const corpusMatches = modContent.match(corpusRegex)
-    const magRegex = /MAG.\s?(\d{4,})/i
-    const magMatches = modContent.match(magRegex)
-    const pmidRegex = /PMID.\s?(\d{4,})/i
-    const pmidMatches = modContent.match(pmidRegex)
-    const pmcidRegex = /PMCID.\s?(\d{4,})/i
-    const pmcidMatches = modContent.match(pmcidRegex)
-    const urlRegex = /URL.\s?(https:.[^\s]+)/i
-    const urlMatches = modContent.match(urlRegex)
+
+    const arxivRegex = /arXiv.\s*(\d{4}\.\d{4,5})/ig
+    const arXivMatches = modContent.matchAll(arxivRegex)
+    const corpusRegex = /CorpusId.\s*(\d{4,})/ig
+    const corpusMatches = modContent.matchAll(corpusRegex)
+    const magRegex = /MAG.\s*(\d{4,})/ig
+    const magMatches = modContent.matchAll(magRegex)
+    const pmidRegex = /PMID.\s*(\d{4,})/ig
+    const pmidMatches = modContent.matchAll(pmidRegex)
+    const pmcidRegex = /PMCID.\s*(\d{4,})/ig
+    const pmcidMatches = modContent.matchAll(pmcidRegex)
+    const urlRegex = /URL.\s*(https:.[^\s]+)/ig
+    const urlMatches = modContent.matchAll(urlRegex)
     const doi_matches = modContent.match(doiRegex());
 
+
     if (arXivMatches) {
-        arXivMatches.slice(1).forEach(match => {
-            output.add(`arXiv:${match}`)
-        })
+        for (const match of arXivMatches) {
+            output.add(`arXiv:${match[1]}`)
+        }
     }
     if (corpusMatches) {
-        corpusMatches.slice(1).forEach(match => {
-            output.add(`CorpusId:${match}`)
-        })
+        for (const match of corpusMatches) {
+            output.add(`CorpusId:${match[1]}`)
+        }
     }
     if (magMatches) {
-        magMatches.slice(1).forEach(match => {
-            output.add(`MAG:${match}`)
-        })
+        for (const match of magMatches) {
+            output.add(`MAG:${match[1]}`)
+        }
     }
     if (pmidMatches) {
-        pmidMatches.slice(1).forEach(match => {
-            output.add(`PMID:${match}`)
-        })
+        for (const match of pmidMatches) {
+            output.add(`PMID:${match[1]}`)
+        }
     }
+
     if (pmcidMatches) {
-        pmcidMatches.slice(1).forEach(match => {
-            output.add(`PMCID:${match}`)
-        })
+        for (const match of pmcidMatches) {
+            output.add(`PMCID:${match[1]}`)
+        }
     }
     if (urlMatches) {
-        urlMatches.slice(1).forEach(match => {
-            output.add(`URL:${match}`)
-        })
+        for (const match of urlMatches) {
+            output.add(`URL:${match[1]}`)
+        }
     }
     if (doi_matches) {
         for (const match of doi_matches) {
