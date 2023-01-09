@@ -12,7 +12,7 @@ export interface ReferenceMapSettings {
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;
-    metadataCopy: boolean;
+    formatMetadataCopy: boolean;
     metadataCopyTemplate: string;
     noteFileNameTemplate: string;
 }

@@ -198,6 +198,30 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
+        new Setting(containerEl)
+            .setName(t('FORMAT_METADATA_COPY'))
+            .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.formatMetadataCopy)
+                .onChange(async (value) => {
+                    this.plugin.settings.formatMetadataCopy = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+        if (this.plugin.settings.formatMetadataCopy) {
+            new Setting(containerEl)
+                .setName(t('FORMAT_METADATA_COPY_TEMPLATE'))
+                .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_TEMPLATE_DESC')))
+                .addTextArea(text => text
+                    .setValue(this.plugin.settings.metadataCopyTemplate)
+                    .onChange(async (value) => {
+                        this.plugin.settings.metadataCopyTemplate = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
         containerEl.createEl('hr');
         containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') });
         containerEl.createEl('p', { text: fragWithHTML(t('SEE_DOCUMENTATION_DESC')) });

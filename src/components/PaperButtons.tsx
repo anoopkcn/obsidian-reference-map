@@ -1,6 +1,7 @@
 import React from "react";
 import { FiPaperclip, FiClipboard } from "react-icons/fi";
 import { SiOpenaccess } from "react-icons/si";
+import { METADATA_COPY_TEMPLATE } from "src/constants";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
 
@@ -51,8 +52,11 @@ export const PaperButtons = ({
 	}
 	const paperURL = paper.url ? paper.url : "Unknown URL";
 	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
+	const metadataTemplate = settings.formatMetadataCopy
+		? settings.metadataCopyTemplate
+		: METADATA_COPY_TEMPLATE;
 
-	const copyMetadata = settings.metadataCopyTemplate
+	const copyMetadata = metadataTemplate
 		.replaceAll("{{title}}", paperTitle)
 		.replaceAll("{{authors}}", authors)
 		.replaceAll("{{year}}", year)
