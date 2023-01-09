@@ -39,7 +39,7 @@ Each reference card in the view will show the following information:
 Reference IDs(DOI, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
-| Syntax| Descrtipion | Example |
+| ID Syntax | Descrtipion | Example |
 | --- | --- | --- |
 `DOI:<doi>`| A [Digital Object Identifier](http://doi.org/). |`DOI:10.18653/v1/N18-3011` or `10.18653/v1/N18-3011v1`
 `CorpusId:<id>`| Semantic Scholar numerical ID|`CorpusId:215416146`
