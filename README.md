@@ -48,6 +48,10 @@ The following types of IDs are supported:
 `PMID:<id>`| PubMed/Medline|`PMID:19872477`
 `PMCID:<id>`| PubMed Central|`PMCID:2323736`
 `URL:<url>`| URL from sites|`URL:https://arxiv.org/abs/2106.15928v1`
+`@<citekey>`| [Zotero](https://www.zotero.org/) citekey|`@smith2019attention`
+
+*Enable this feature from the settings. Note that one has to provide a BiBTex CSL JSON file to enable this feature. Onece enabled the plugin can recogonize the pandoc citation format.
+ 
 
 ### Dynamic Reference List
 The Reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords. Check out the settings tab to configure the plugin behaviour.
