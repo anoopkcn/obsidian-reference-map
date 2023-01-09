@@ -18,7 +18,7 @@ export const ReferenceMapList = (props: {
 
 	useEffect(() => {
 		if (props.view) processPapers(props.view);
-	}, [props.view?.file, props.frontMatterString, props.fileNameString]);
+	}, [props.view?.data, props.frontMatterString, props.fileNameString]);
 
 	useEffect(() => {
 		setIsLoading(true);
