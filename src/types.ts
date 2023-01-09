@@ -14,7 +14,8 @@ export interface ReferenceMapSettings {
     sortOrder: string;
     formatMetadataCopy: boolean;
     metadataCopyTemplate: string;
-    noteFileNameTemplate: string;
+    formatFileName: boolean;
+    fileNameTemplate: string;
 }
 
 

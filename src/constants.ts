@@ -6,16 +6,7 @@ export const METADATA_COPY_TEMPLATE = `{{title}}
 {{abstract}}
 `
 
-export const NOTE_FILE_NAME_TEMPLATE = `{{title}}-{{author}} {{year}}}}`
-export const NOTE_FILE_PATH = ''
-export const NOTE_FILE_TEMPLATE = `{{title}}
-{{authors}}
-{{year}}
-{{abstract}}
-{{url}}
-{{pdf}}
-{{doi}}
-`
+export const NOTE_FILE_NAME_TEMPLATE = `[[{{title}}-{{author}} {{year}}}}]]`
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
@@ -33,7 +24,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     sortOrder: 'desc',
     formatMetadataCopy: true,
     metadataCopyTemplate: METADATA_COPY_TEMPLATE,
-    noteFileNameTemplate: NOTE_FILE_NAME_TEMPLATE
+    formatFileName: false,
+    fileNameTemplate: NOTE_FILE_NAME_TEMPLATE
 }
 
 export const SORTING_METADATA = [

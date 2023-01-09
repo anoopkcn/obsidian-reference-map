@@ -222,6 +222,31 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
+        new Setting(containerEl)
+            .setName(t('FORMAT_REFERENCES_FILENAME'))
+            .setDesc(fragWithHTML(t('FORMAT_REFERENCES_FILENAME_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.formatFileName)
+                .onChange(async (value) => {
+                    this.plugin.settings.formatFileName = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }
+                ));
+
+        if (this.plugin.settings.formatFileName) {
+            new Setting(containerEl)
+                .setName(t('FILENAME_TEMPLATE'))
+                .setDesc(fragWithHTML(t('FILENAME_TEMPLATE_DESC')))
+                .addTextArea(text => text
+                    .setValue(this.plugin.settings.fileNameTemplate)
+                    .onChange(async (value) => {
+                        this.plugin.settings.fileNameTemplate = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
         containerEl.createEl('hr');
         containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') });
         containerEl.createEl('p', { text: fragWithHTML(t('SEE_DOCUMENTATION_DESC')) });

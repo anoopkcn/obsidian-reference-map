@@ -59,6 +59,10 @@ export default {
     FORMAT_METADATA_COPY_DESC: "Format the copy to clicpboard metadata of the selected reference",
     FORMAT_METADATA_COPY_TEMPLATE: "Copy to clipboard Metadata Template",
     FORMAT_METADATA_COPY_TEMPLATE_DESC: "Template to format the copy to clipboard metadata of the selected reference. Valid keys are <code>{{title}}, {{authors}}, {{year}}, {{abstract}}, {{url}} {{pdf}}, {{doi}}</code>",
+    FORMAT_REFERENCES_FILENAME: "Copy to Clipboard References List Format",
+    FORMAT_REFERENCES_FILENAME_DESC: "Format the copy to clipboard references list of the selected reference",
+    FILENAME_TEMPLATE: "Filename Template",
+    FILENAME_TEMPLATE_DESC: "Template to format the copy to clipboard references list. Valid keys are <code>{{title}}, {{authors}}, {{year}}, {{url}}, {{pdf}}, {{doi}}</code>",
     SEE_DOCUMENTATION: "See Documentation",
     SEE_DOCUMENTATION_DESC: "For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map'>obsidian-reference-map</a> <code>README.md</code> file",
 };
