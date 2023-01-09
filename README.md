@@ -50,7 +50,7 @@ The following types of IDs are supported:
 `URL:<url>`| URL from sites|`URL:https://arxiv.org/abs/2106.15928v1`
 `@<citekey>`| [Zotero](https://www.zotero.org/) citekey*|`@smith2019attention`
 
-*Enable this feature from the settings. Note that one has to provide a BiBTeX CSL JSON file to enable this feature. Onece enabled the plugin can recogonize the pandoc citation format.
+*Enable this feature from the settings. Note that, one has to provide a `BiBTeX CSL JSON` file to enable this feature. Once enabled, the plugin can recogonize the pandoc citation format.
  
 
 ### Dynamic Reference List
