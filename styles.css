@@ -196,6 +196,7 @@ body {
 
 .orm-paper-buttons > .orm-copy-metadata-one,
 .orm-copy-metadata-two,
+.orm-copy-metadata-three,
 .orm-references,
 .orm-citations {
 	cursor: pointer;
@@ -203,6 +204,7 @@ body {
 
 .orm-paper-buttons > .orm-copy-metadata-one:hover,
 .orm-copy-metadata-two:hover,
+.orm-copy-metadata-three:hover,
 .orm-references:hover,
 .orm-citations:hover {
 	color: var(--orm-paper-buttons-hover-color);

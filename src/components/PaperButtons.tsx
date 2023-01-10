@@ -85,9 +85,15 @@ export const PaperButtons = ({
 		doi: doi,
 	};
 
-	const copyMetadataOne = templateReplace(metadataTemplateOne, metaData);
-	const copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData);
-	const copyMetadataThree = templateReplace(metadataTemplateThree, metaData);
+	let copyMetadataOne = "";
+	let copyMetadataTwo = "";
+	let copyMetadataThree = "";
+	if (settings.formatMetadataCopyOne)
+		copyMetadataOne = templateReplace(metadataTemplateOne, metaData);
+	if (settings.formatMetadataCopyTwo)
+		copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData);
+	if (settings.formatMetadataCopyThree)
+		copyMetadataThree = templateReplace(metadataTemplateThree, metaData);
 
 	let citingCited = null;
 	if (
@@ -155,30 +161,36 @@ export const PaperButtons = ({
 
 	return (
 		<div className="orm-paper-buttons">
-			<div
-				className="orm-copy-metadata-one"
-				onClick={() => {
-					copyElToClipboard(copyMetadataOne);
-				}}
-			>
-				<FiClipboard size={16} />
-			</div>
-			<div
-				className="orm-copy-metadata-two"
-				onClick={() => {
-					copyElToClipboard(copyMetadataTwo);
-				}}
-			>
-				<FiPaperclip size={15} />
-			</div>
-			<div
-				className="orm-copy-metadata-three"
-				onClick={() => {
-					copyElToClipboard(copyMetadataThree);
-				}}
-			>
-				<BsClipboardData size={15} />
-			</div>
+			{settings.formatMetadataCopyOne && (
+				<div
+					className="orm-copy-metadata-one"
+					onClick={() => {
+						copyElToClipboard(copyMetadataOne);
+					}}
+				>
+					<FiClipboard size={16} />
+				</div>
+			)}
+			{settings.formatMetadataCopyTwo && (
+				<div
+					className="orm-copy-metadata-two"
+					onClick={() => {
+						copyElToClipboard(copyMetadataTwo);
+					}}
+				>
+					<FiPaperclip size={15} />
+				</div>
+			)}
+			{settings.formatMetadataCopyThree && (
+				<div
+					className="orm-copy-metadata-three"
+					onClick={() => {
+						copyElToClipboard(copyMetadataThree);
+					}}
+				>
+					<BsClipboardData size={15} />
+				</div>
+			)}
 			{paper.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${openAccessPdfUrl}`}>

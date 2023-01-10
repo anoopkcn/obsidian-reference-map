@@ -222,6 +222,16 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                         this.plugin.saveSettings();
                     }
                     ));
+            new Setting(containerEl)
+                .setName(t('METADATA_COPY_ONE_BATCH'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_ONE_BATCH_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.metadataCopyOneBatch)
+                    .onChange(async (value) => {
+                        this.plugin.settings.metadataCopyOneBatch = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
         }
 
         new Setting(containerEl)
@@ -244,6 +254,16 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.metadataCopyTemplateTwo)
                     .onChange(async (value) => {
                         this.plugin.settings.metadataCopyTemplateTwo = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+            new Setting(containerEl)
+                .setName(t('METADATA_COPY_TWO_BATCH'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_TWO_BATCH_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.metadataCopyTwoBatch)
+                    .onChange(async (value) => {
+                        this.plugin.settings.metadataCopyTwoBatch = value;
                         this.plugin.saveSettings();
                     }
                     ));
@@ -270,6 +290,16 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.metadataCopyTemplateThree)
                     .onChange(async (value) => {
                         this.plugin.settings.metadataCopyTemplateThree = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+            new Setting(containerEl)
+                .setName(t('METADATA_COPY_THREE_BATCH'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_THREE_BATCH_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.metadataCopyThreeBatch)
+                    .onChange(async (value) => {
+                        this.plugin.settings.metadataCopyThreeBatch = value;
                         this.plugin.saveSettings();
                     }
                     ));

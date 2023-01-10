@@ -33,7 +33,10 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     formatMetadataCopyThree: true,
     metadataCopyTemplateOne: METADATA_COPY_TEMPLATE_ONE,
     metadataCopyTemplateTwo: METADATA_COPY_TEMPLATE_TWO,
-    metadataCopyTemplateThree: METADATA_COPY_TEMPLATE_THREE
+    metadataCopyTemplateThree: METADATA_COPY_TEMPLATE_THREE,
+    metadataCopyOneBatch: false,
+    metadataCopyTwoBatch: false,
+    metadataCopyThreeBatch: true,
 }
 
 export const SORTING_METADATA = [

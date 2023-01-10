@@ -18,6 +18,9 @@ export interface ReferenceMapSettings {
     metadataCopyTemplateOne: string;
     metadataCopyTemplateTwo: string;
     metadataCopyTemplateThree: string;
+    metadataCopyOneBatch: boolean;
+    metadataCopyTwoBatch: boolean;
+    metadataCopyThreeBatch: boolean;
 }
 
 
