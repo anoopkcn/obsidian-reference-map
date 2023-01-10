@@ -18,24 +18,27 @@ When published, it will be available in Obsidian's Community Plugin Tab via: Set
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
 ## Usage
-![ORM-demo](./images/orm-demo.png)
+![ORM-demo](./images/orm-demo-0.7.5.png)
 
 ### Reference Map View
 Reference Map View contains Reference Cards.
 
 Each reference card in the view will show the following information:
-| Section | Description | On Click |
-| --- | --- | --- |
-| Title | Title of the paper | Open the paper in [Semantic Scholar](https://www.semanticscholar.org/) |
-| Authors | Authors of the paper | Open the author's details in [Semantic Scholar](https://www.semanticscholar.org/) |
-| Year | Year of publication | |
-| Abstract | Abstract of the paper |  |
-| BibTex | BibTex of the paper | Copy the BibTex to the clipboard |
-| Metadata | Metadata of the paper | Copy the metadata to the clipboard |
-| PDF | Open Access PDF of the paper | Open the [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF of the paper if it is present for a reference |
-| Reference count | Number of references | Open a searchable list of all cited papers (References) |
-| Citation count | Number of citations | Open a searchable list of all citing papers (Citations) |
-| Influential citation count | [Number of influential citations](https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b) |  |
+|Button| Section | Description | On Click |
+|---| --- | --- | --- |
+|text| Title | Title of the paper | Open the paper in [Semantic Scholar](https://www.semanticscholar.org/) |
+|text| Authors | Authors of the paper | Open the author's details in [Semantic Scholar](https://www.semanticscholar.org/) |
+|-| Year | Year of publication | |
+|-| Abstract | Abstract of the paper |  |
+|(1)| Metadata copy | Default=`bibtex` of the paper | Copy the `<bibtex>` to the clipboard (If Batch copy is enabled it will copy `<bibtex>` for all the cited paper) |
+|(2)| Metadata copy | Default=Formatted `metadata` details | Copy the `<metadata>` to the clipboard (If Batch copy is enabled it will copy `<metadata>` for all the cited paper) |
+|(3)| Metadata copy | Default=Reference title as `wikilink` | Copy the `<wikilink>` to the clipboard (If Batch copy is enabled it will copy `<wikilink>` for all the cited paper) |
+|(4)| PDF | Open Access PDF of the paper | Open the [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF of the paper if it is present for a reference |
+|(5)| Reference count | Number of references | Open a searchable list of all cited papers (References) |
+|(6)| Citation count | Number of citations | Open a searchable list of all citing papers (Citations) |
+|-| Influential citation count | [Number of influential citations](https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b) |  |
+
+*You can customize the content of metadata copy buttons in the settings*
 
 ### Static Reference List
 Reference IDs(DOI, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
