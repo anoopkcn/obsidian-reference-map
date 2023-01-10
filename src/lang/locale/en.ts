@@ -58,15 +58,15 @@ export default {
     SORT_ORDER_ASC: "Ascending",
     SORT_ORDER_DESCE: "Descending",
     // metadata copy
-    FORMAT_METADATA_COPY_ONE: "Metadata One",
+    FORMAT_METADATA_COPY_ONE: "Metadata One Button",
     FORMAT_METADATA_COPY_ONE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
-    FORMAT_METADATA_COPY_TWO: "Metadata Two",
+    FORMAT_METADATA_COPY_TWO: "Metadata Two Button",
     FORMAT_METADATA_COPY_TWO_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Two button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
-    FORMAT_METADATA_COPY_THREE: "Metadata Three",
+    FORMAT_METADATA_COPY_THREE: "Metadata Three Button",
     FORMAT_METADATA_COPY_THREE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Three button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
@@ -78,14 +78,17 @@ export default {
     METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
     METADATA_COPY_ONE_BATCH: "Metadata One Batch Copy",
     METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
+        "<b>Note that this option only applies to index card button</b><br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
     METADATA_COPY_TWO_BATCH: "Metadata Two Batch Copy",
     METADATA_COPY_TWO_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
+        "<b>Note that this option only applies to index card button</b><br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
     METADATA_COPY_THREE_BATCH: "Metadata Three Batch Copy",
     METADATA_COPY_THREE_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
+        "<b>Note that this option only applies to index card button</b><br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
 };
