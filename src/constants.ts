@@ -30,7 +30,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     sortOrder: 'desc',
     formatMetadataCopyOne: true,
     formatMetadataCopyTwo: true,
-    formatMetadataCopyThree: true,
+    formatMetadataCopyThree: false,
     metadataCopyTemplateOne: METADATA_COPY_TEMPLATE_ONE,
     metadataCopyTemplateTwo: METADATA_COPY_TEMPLATE_TWO,
     metadataCopyTemplateThree: METADATA_COPY_TEMPLATE_THREE,
