@@ -1,7 +1,8 @@
 import React from "react";
 import { FiPaperclip, FiClipboard } from "react-icons/fi";
 import { SiOpenaccess } from "react-icons/si";
-import { METADATA_COPY_TEMPLATE } from "src/constants";
+import { BsClipboardData } from "react-icons/bs";
+import { METADATA_COPY_TEMPLATE_TWO } from "src/constants";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { copyElToClipboard } from "src/utils";
 
@@ -28,8 +29,12 @@ export const PaperButtons = ({
 }: Props) => {
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
 	let authors = "Unknown Authors";
+	let author = "Unknown Authors";
 	if (paper.authors.length > 0)
-		authors = paper.authors.map((author) => author.name).join(", ");
+		author = paper.authors[0].name
+			? paper.authors[0].name
+			: "Unknown Author";
+	authors = paper.authors.map((author) => author.name).join(", ");
 	const year = paper.year ? paper.year.toString() : "Unknown Year";
 	const abstract = paper.abstract ? paper.abstract : "No abstract available";
 	const bibTex = paper.citationStyles?.bibtex
@@ -52,17 +57,18 @@ export const PaperButtons = ({
 	}
 	const paperURL = paper.url ? paper.url : "Unknown URL";
 	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
-	const metadataTemplate = settings.formatMetadataCopy
-		? settings.metadataCopyTemplate
-		: METADATA_COPY_TEMPLATE;
+	const metadataTemplateOne = settings.formatMetadataCopyOne
+		? settings.metadataCopyTemplateTwo
+		: METADATA_COPY_TEMPLATE_TWO;
 
-	const copyMetadata = metadataTemplate
+	const copyMetadataOne = metadataTemplateOne
 		.replaceAll("{{title}}", paperTitle)
+		.replaceAll("{{author}}", author)
 		.replaceAll("{{authors}}", authors)
 		.replaceAll("{{year}}", year)
 		.replaceAll("{{abstract}}", abstract)
 		.replaceAll("{{url}}", paperURL)
-		.replaceAll("{{pdf}}", openAccessPdfUrl)
+		.replaceAll("{{pdfurl}}", openAccessPdfUrl)
 		.replaceAll("{{doi}}", doi);
 
 	let citingCited = null;
@@ -128,10 +134,11 @@ export const PaperButtons = ({
 			</>
 		);
 	}
+
 	return (
 		<div className="orm-paper-buttons">
 			<div
-				className="orm-copy-bibtex"
+				className="orm-copy-metadata-one"
 				onClick={() => {
 					copyElToClipboard(bibTex);
 				}}
@@ -139,12 +146,15 @@ export const PaperButtons = ({
 				<FiClipboard size={16} />
 			</div>
 			<div
-				className="orm-copy-metadata"
+				className="orm-copy-metadata-two"
 				onClick={() => {
-					copyElToClipboard(copyMetadata);
+					copyElToClipboard(copyMetadataOne);
 				}}
 			>
 				<FiPaperclip size={15} />
+			</div>
+			<div className="orm-copy-metadata-three">
+				<BsClipboardData size={15} />
 			</div>
 			{paper.isOpenAccess ? (
 				<div className="orm-openaccess">

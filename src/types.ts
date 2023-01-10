@@ -12,10 +12,12 @@ export interface ReferenceMapSettings {
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;
-    formatMetadataCopy: boolean;
-    metadataCopyTemplate: string;
-    formatFileName: boolean;
-    fileNameTemplate: string;
+    formatMetadataCopyOne: boolean;
+    formatMetadataCopyTwo: boolean;
+    formatMetadataCopyThree: boolean;
+    metadataCopyTemplateOne: string;
+    metadataCopyTemplateTwo: string;
+    metadataCopyTemplateThree: string;
 }
 
 

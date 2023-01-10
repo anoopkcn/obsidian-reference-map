@@ -66,13 +66,15 @@ export const PaperList = (props: {
 	});
 	return (
 		<div className="orm-paper-list">
-			<div className="orm-search-form">
-				<input
-					type="search"
-					className="orm-search-input"
-					placeholder={props.type}
-					onChange={(e) => setQuery(e.target.value)}
-				/>
+			<div className="orm-paper-list-buttons">
+				<div className="orm-search-form">
+					<input
+						type="search"
+						className="orm-search-input"
+						placeholder={props.type}
+						onChange={(e) => setQuery(e.target.value)}
+					/>
+				</div>
 			</div>
 			{paperList}
 		</div>

@@ -171,7 +171,7 @@ body {
 .orm-paper-buttons {
 	width: 100%;
 	display: flex;
-    justify-content: space-between;
+	justify-content: space-between;
 }
 
 .orm-paper-buttons > div {
@@ -194,15 +194,15 @@ body {
 	opacity: 0.3;
 }
 
-.orm-paper-buttons > .orm-copy-bibtex,
-.orm-copy-metadata,
+.orm-paper-buttons > .orm-copy-metadata-one,
+.orm-copy-metadata-two,
 .orm-references,
 .orm-citations {
 	cursor: pointer;
 }
 
-.orm-paper-buttons > .orm-copy-bibtex:hover,
-.orm-copy-metadata:hover,
+.orm-paper-buttons > .orm-copy-metadata-one:hover,
+.orm-copy-metadata-two:hover,
 .orm-references:hover,
 .orm-citations:hover {
 	color: var(--orm-paper-buttons-hover-color);
@@ -223,15 +223,27 @@ body {
 	text-align: center;
 }
 
+.orm-paper-list-buttons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.orm-search-form {
+	width: 100%;
+}
+
 .orm-search-input {
 	width: 100%;
 	border: none;
 	padding: 0;
 }
-.orm-loading{
+
+.orm-loading {
 	text-align: center;
 }
-.orm-loading-puff{
+
+.orm-loading-puff {
 	display: block;
 	text-align: center;
 	width: 100%;

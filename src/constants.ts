@@ -1,12 +1,18 @@
 import { ReferenceMapSettings } from "./types"
 
-export const METADATA_COPY_TEMPLATE = `{{title}}
-{{authors}}
-{{year}}
-{{abstract}}
-`
+// There are cusomizable metadata template 
+// METADTA_COPY_TEMPLATE_ONE     correspond to button one
+// METADTA_COPY_TEMPLATE_TWO     correspond to button two
+// METADATA_COPY_TEMPLATE_THREE  correspond to button three
 
-export const NOTE_FILE_NAME_TEMPLATE = `[[{{title}}-{{author}} {{year}}}}]]`
+export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
+
+export const METADATA_COPY_TEMPLATE_TWO = `Title: {{title}}
+Authors: {{authors}}
+Year: {{year}}
+Abstract: {{abstract}}
+`
+export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}}}]]`
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
@@ -22,10 +28,12 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
-    formatMetadataCopy: true,
-    metadataCopyTemplate: METADATA_COPY_TEMPLATE,
-    formatFileName: false,
-    fileNameTemplate: NOTE_FILE_NAME_TEMPLATE
+    formatMetadataCopyOne: true,
+    formatMetadataCopyTwo: true,
+    formatMetadataCopyThree: true,
+    metadataCopyTemplateOne: METADATA_COPY_TEMPLATE_ONE,
+    metadataCopyTemplateTwo: METADATA_COPY_TEMPLATE_TWO,
+    metadataCopyTemplateThree: METADATA_COPY_TEMPLATE_THREE
 }
 
 export const SORTING_METADATA = [

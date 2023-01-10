@@ -198,50 +198,78 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
+        containerEl.createEl('h2', { text: 'Metadata Format' });
+
         new Setting(containerEl)
-            .setName(t('FORMAT_METADATA_COPY'))
-            .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_DESC')))
+            .setName(t('FORMAT_METADATA_COPY_ONE'))
+            .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_ONE_DESC')))
             .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.formatMetadataCopy)
+                .setValue(this.plugin.settings.formatMetadataCopyOne)
                 .onChange(async (value) => {
-                    this.plugin.settings.formatMetadataCopy = value;
+                    this.plugin.settings.formatMetadataCopyOne = value;
                     this.plugin.saveSettings();
                     this.display();
                 }));
 
-        if (this.plugin.settings.formatMetadataCopy) {
+        if (this.plugin.settings.formatMetadataCopyOne) {
             new Setting(containerEl)
-                .setName(t('FORMAT_METADATA_COPY_TEMPLATE'))
-                .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_TEMPLATE_DESC')))
+                .setName(t('METADATA_COPY_TEMPLATE_ONE'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
                 .addTextArea(text => text
-                    .setValue(this.plugin.settings.metadataCopyTemplate)
+                    .setValue(this.plugin.settings.metadataCopyTemplateOne)
                     .onChange(async (value) => {
-                        this.plugin.settings.metadataCopyTemplate = value;
+                        this.plugin.settings.metadataCopyTemplateOne = value;
                         this.plugin.saveSettings();
                     }
                     ));
         }
 
         new Setting(containerEl)
-            .setName(t('FORMAT_REFERENCES_FILENAME'))
-            .setDesc(fragWithHTML(t('FORMAT_REFERENCES_FILENAME_DESC')))
+            .setName(t('FORMAT_METADATA_COPY_TWO'))
+            .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_TWO_DESC')))
             .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.formatFileName)
+                .setValue(this.plugin.settings.formatMetadataCopyTwo)
                 .onChange(async (value) => {
-                    this.plugin.settings.formatFileName = value;
+                    this.plugin.settings.formatMetadataCopyTwo = value;
                     this.plugin.saveSettings();
                     this.display();
                 }
                 ));
 
-        if (this.plugin.settings.formatFileName) {
+        if (this.plugin.settings.formatMetadataCopyTwo) {
             new Setting(containerEl)
-                .setName(t('FILENAME_TEMPLATE'))
-                .setDesc(fragWithHTML(t('FILENAME_TEMPLATE_DESC')))
+                .setName(t('METADATA_COPY_TEMPLATE_TWO'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
                 .addTextArea(text => text
-                    .setValue(this.plugin.settings.fileNameTemplate)
+                    .setValue(this.plugin.settings.metadataCopyTemplateTwo)
                     .onChange(async (value) => {
-                        this.plugin.settings.fileNameTemplate = value;
+                        this.plugin.settings.metadataCopyTemplateTwo = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
+
+        new Setting(containerEl)
+            .setName(t('FORMAT_METADATA_COPY_THREE'))
+            .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_THREE_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.formatMetadataCopyThree)
+                .onChange(async (value) => {
+                    this.plugin.settings.formatMetadataCopyThree = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }
+                ));
+
+        if (this.plugin.settings.formatMetadataCopyThree) {
+            new Setting(containerEl)
+                .setName(t('METADATA_COPY_TEMPLATE_THREE'))
+                .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_THREE_DESC')))
+                .addTextArea(text => text
+                    .setValue(this.plugin.settings.metadataCopyTemplateThree)
+                    .onChange(async (value) => {
+                        this.plugin.settings.metadataCopyTemplateThree = value;
                         this.plugin.saveSettings();
                     }
                     ));
