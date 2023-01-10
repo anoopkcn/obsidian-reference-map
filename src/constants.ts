@@ -13,7 +13,7 @@ Journal: {{journal}}
 Year: {{year}}
 Abstract: {{abstract}}
 `
-export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}}}]]`
+export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
