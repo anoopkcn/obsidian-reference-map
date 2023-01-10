@@ -4,10 +4,11 @@ import { SiOpenaccess } from "react-icons/si";
 import { BsClipboardData } from "react-icons/bs";
 import {
 	METADATA_COPY_TEMPLATE_ONE,
+	METADATA_COPY_TEMPLATE_THREE,
 	METADATA_COPY_TEMPLATE_TWO,
 } from "src/constants";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
-import { copyElToClipboard, templateReplace } from "src/utils";
+import { copyElToClipboard, makeMetaData, templateReplace } from "src/utils";
 
 type Props = {
 	settings: ReferenceMapSettings;
@@ -18,6 +19,10 @@ type Props = {
 	showCitations?: boolean;
 	setIsButtonShown?: React.Dispatch<React.SetStateAction<boolean>>;
 	isButtonShown?: boolean;
+	batchCopyMetadataOne?: string;
+	batchCopyMetadataTwo?: string;
+	batchCopyMetadataThree?: string;
+
 };
 
 export const PaperButtons = ({
@@ -29,38 +34,10 @@ export const PaperButtons = ({
 	showCitations = false,
 	setIsButtonShown = undefined,
 	isButtonShown = false,
+	batchCopyMetadataOne = "",
+	batchCopyMetadataTwo = "",
+	batchCopyMetadataThree = "",
 }: Props) => {
-	const paperTitle = paper.title ? paper.title : "Unknown Title";
-	let authors = "Unknown Authors";
-	let author = "Unknown Author";
-	if (paper.authors.length > 0)
-		author = paper.authors[0].name
-			? paper.authors[0].name
-			: "Unknown Author";
-	authors = paper.authors.map((author) => author.name).join(", ");
-	const year = paper.year ? paper.year.toString() : "Unknown Year";
-	const abstract = paper.abstract ? paper.abstract : "No abstract available";
-	const bibTex = paper.citationStyles?.bibtex
-		? paper.citationStyles.bibtex
-		: "No BibTex available";
-	const referenceCount = paper.referenceCount
-		? paper.referenceCount.toString()
-		: "0";
-	const citationCount = paper.citationCount
-		? paper.citationCount.toString()
-		: "0";
-	const influentialCount = paper.influentialCitationCount
-		? paper.influentialCitationCount.toString()
-		: "0";
-	let openAccessPdfUrl = "";
-	if (paper.isOpenAccess) {
-		openAccessPdfUrl = paper.openAccessPdf?.url
-			? paper.openAccessPdf.url
-			: "";
-	}
-	const paperURL = paper.url ? paper.url : "Unknown URL";
-	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
-
 	const metadataTemplateOne = settings.formatMetadataCopyOne
 		? settings.metadataCopyTemplateOne
 		: METADATA_COPY_TEMPLATE_ONE;
@@ -71,29 +48,27 @@ export const PaperButtons = ({
 
 	const metadataTemplateThree = settings.formatMetadataCopyThree
 		? settings.metadataCopyTemplateThree
-		: METADATA_COPY_TEMPLATE_TWO;
+		: METADATA_COPY_TEMPLATE_THREE;
 
-	const metaData = {
-		bibtex: bibTex,
-		title: paperTitle,
-		author: author,
-		authors: authors,
-		year: year,
-		abstract: abstract,
-		url: paperURL,
-		pdfurl: openAccessPdfUrl,
-		doi: doi,
-	};
-
+	const metaData = makeMetaData(paper);
 	let copyMetadataOne = "";
 	let copyMetadataTwo = "";
 	let copyMetadataThree = "";
-	if (settings.formatMetadataCopyOne)
-		copyMetadataOne = templateReplace(metadataTemplateOne, metaData);
-	if (settings.formatMetadataCopyTwo)
-		copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData);
-	if (settings.formatMetadataCopyThree)
-		copyMetadataThree = templateReplace(metadataTemplateThree, metaData);
+	if (settings.formatMetadataCopyOne) {
+		(settings.metadataCopyOneBatch && batchCopyMetadataOne)
+			? copyMetadataOne = batchCopyMetadataOne
+			: copyMetadataOne = templateReplace(metadataTemplateOne, metaData)
+	}
+	if (settings.formatMetadataCopyTwo) {
+		(settings.metadataCopyTwoBatch && batchCopyMetadataTwo)
+			? copyMetadataTwo = batchCopyMetadataTwo
+			: copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData)
+	}
+	if (settings.formatMetadataCopyThree) {
+		(settings.metadataCopyThreeBatch && batchCopyMetadataThree)
+			? copyMetadataThree = batchCopyMetadataThree
+			: copyMetadataThree = templateReplace(metadataTemplateThree, metaData)
+	}
 
 	let citingCited = null;
 	if (
@@ -123,38 +98,40 @@ export const PaperButtons = ({
 					style={
 						showReferences
 							? {
-									fontWeight: "bold",
-									color: "var(--text-accent)",
-									// eslint-disable-next-line no-mixed-spaces-and-tabs
-							  }
+								fontWeight: "bold",
+								color: "var(--text-accent)",
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
+							}
 							: {}
 					}
 					onClick={() => handleShowReferencesClick()}
 				>
-					{referenceCount}
+					{metaData.referenceCount}
 				</div>
 				<div
 					className="orm-citations"
 					style={
 						showCitations
 							? {
-									fontWeight: "bold",
-									color: "var(--text-accent)",
-									// eslint-disable-next-line no-mixed-spaces-and-tabs
-							  }
+								fontWeight: "bold",
+								color: "var(--text-accent)",
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
+							}
 							: {}
 					}
 					onClick={() => handleShowCitationsClick()}
 				>
-					{citationCount}
+					{metaData.citationCount}
 				</div>
 			</>
 		);
 	} else {
 		citingCited = (
 			<>
-				<div className="orm-references-2">{referenceCount}</div>
-				<div className="orm-citations-2">{citationCount}</div>
+				<div className="orm-references-2">
+					{metaData.referenceCount}
+				</div>
+				<div className="orm-citations-2">{metaData.citationCount}</div>
 			</>
 		);
 	}
@@ -193,7 +170,7 @@ export const PaperButtons = ({
 			)}
 			{paper.isOpenAccess ? (
 				<div className="orm-openaccess">
-					<a href={`${openAccessPdfUrl}`}>
+					<a href={`${metaData.pdfurl}`}>
 						<SiOpenaccess size={15} />
 					</a>
 				</div>
@@ -204,7 +181,9 @@ export const PaperButtons = ({
 			)}
 			{citingCited}
 			{settings.influentialCount && (
-				<div className="orm-influential">{influentialCount}</div>
+				<div className="orm-influential">
+					{metaData.influentialCount}
+				</div>
 			)}
 		</div>
 	);

@@ -149,3 +149,50 @@ export const templateReplace = (template: string, data: MetaData) => {
         .replaceAll("{{pdfurl}}", data.pdfurl)
         .replaceAll("{{doi}}", data.doi);
 }
+
+export const makeMetaData = (paper: SemanticPaper): MetaData => {
+    const paperTitle = paper.title ? paper.title : "Unknown Title";
+    let authors = "Unknown Authors";
+    let author = "Unknown Author";
+    if (paper.authors.length > 0)
+        author = paper.authors[0].name
+            ? paper.authors[0].name
+            : "Unknown Author";
+    authors = paper.authors.map((author) => author.name).join(", ");
+    const year = paper.year ? paper.year.toString() : "Unknown Year";
+    const abstract = paper.abstract ? paper.abstract : "No abstract available";
+    const bibTex = paper.citationStyles?.bibtex
+        ? paper.citationStyles.bibtex
+        : "No BibTex available";
+    const referenceCount = paper.referenceCount
+        ? paper.referenceCount.toString()
+        : "0";
+    const citationCount = paper.citationCount
+        ? paper.citationCount.toString()
+        : "0";
+    const influentialCount = paper.influentialCitationCount
+        ? paper.influentialCitationCount.toString()
+        : "0";
+    let openAccessPdfUrl = "";
+    if (paper.isOpenAccess) {
+        openAccessPdfUrl = paper.openAccessPdf?.url
+            ? paper.openAccessPdf.url
+            : "";
+    }
+    const paperURL = paper.url ? paper.url : "Unknown URL";
+    const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
+    return {
+        bibtex: bibTex,
+        title: paperTitle,
+        author: author,
+        authors: authors,
+        year: year,
+        abstract: abstract,
+        url: paperURL,
+        pdfurl: openAccessPdfUrl,
+        doi: doi,
+        referenceCount: referenceCount,
+        citationCount: citationCount,
+        influentialCount: influentialCount
+    };
+}

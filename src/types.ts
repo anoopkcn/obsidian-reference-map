@@ -91,4 +91,7 @@ export interface MetaData {
     url: string,
     pdfurl: string,
     doi: string,
+    referenceCount: string,
+    citationCount: string,
+    influentialCount: string
 }

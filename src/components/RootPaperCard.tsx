@@ -1,11 +1,12 @@
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import React, { useEffect, useState } from "react";
-import { removeNullReferences } from "src/utils";
+import { makeMetaData, removeNullReferences, templateReplace } from "src/utils";
 import { PaperList } from "./PaperList";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
 import { ViewManager } from "src/viewManager";
 import { LoadingPuff } from "./LoadingPuff";
+import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO } from "src/constants";
 
 export const RootPaperCard = (props: {
 	settings: ReferenceMapSettings;
@@ -54,6 +55,44 @@ export const RootPaperCard = (props: {
 		setIsCitationLoading(false);
 	};
 
+	const metadataTemplateOne = props.settings.formatMetadataCopyOne
+		? props.settings.metadataCopyTemplateOne
+		: METADATA_COPY_TEMPLATE_ONE;
+
+	const metadataTemplateTwo = props.settings.formatMetadataCopyTwo
+		? props.settings.metadataCopyTemplateTwo
+		: METADATA_COPY_TEMPLATE_TWO;
+
+	const metadataTemplateThree = props.settings.formatMetadataCopyThree
+		? props.settings.metadataCopyTemplateThree
+		: METADATA_COPY_TEMPLATE_THREE;
+
+	let batchCopyMetadataOne = "";
+	let batchCopyMetadataTwo = "";
+	let batchCopyMetadataThree = "";
+	if (references && props.settings.metadataCopyOneBatch) {
+		references.forEach((paper) => {
+			const metaData = makeMetaData(paper);
+			batchCopyMetadataOne +=
+				templateReplace(metadataTemplateOne, metaData) + "\n";
+		});
+	}
+	if (references && props.settings.metadataCopyTwoBatch) {
+		references.forEach((paper) => {
+			const metaData = makeMetaData(paper);
+			batchCopyMetadataTwo +=
+				templateReplace(metadataTemplateTwo, metaData) + "\n";
+		});
+	}
+
+	if (references && props.settings.metadataCopyThreeBatch) {
+		references.forEach((paper) => {
+			const metaData = makeMetaData(paper);
+			batchCopyMetadataThree +=
+				templateReplace(metadataTemplateThree, metaData) + "\n";
+		});
+	}
+
 	return (
 		<div
 			className="orm-root-paper"
@@ -71,15 +110,18 @@ export const RootPaperCard = (props: {
 					showCitations={showCitations}
 					setIsButtonShown={setIsButtonShown}
 					isButtonShown={isButtonShown}
+					batchCopyMetadataTwo={batchCopyMetadataTwo}
+					batchCopyMetadataOne={batchCopyMetadataOne}
+					batchCopyMetadataThree={batchCopyMetadataThree}
 				/>
+			)}
+			{(isCitationLoading || isReferenceLoading) && (
+				<div className="orm-loading">
+					<LoadingPuff />
+				</div>
 			)}
 			{showReferences && (
 				<>
-					{isReferenceLoading && (
-						<div className="orm-loading">
-							<LoadingPuff />
-						</div>
-					)}
 					<PaperList
 						settings={props.settings}
 						papers={references}
@@ -89,11 +131,6 @@ export const RootPaperCard = (props: {
 			)}
 			{showCitations && (
 				<>
-					{isCitationLoading && (
-						<div className="orm-loading">
-							<LoadingPuff />
-						</div>
-					)}
 					<PaperList
 						settings={props.settings}
 						papers={citations}
