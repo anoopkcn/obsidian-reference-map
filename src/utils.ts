@@ -1,7 +1,7 @@
 import { FileSystemAdapter } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
-import { SemanticPaper } from "./types";
+import { MetaData, SemanticPaper } from "./types";
 import { COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
@@ -137,3 +137,15 @@ export function extractKeywords(text: string) {
     return result;
 }
 
+export const templateReplace = (template: string, data: MetaData) => {
+    return template
+        .replaceAll("{{bibtex}}", data.bibtex)
+        .replaceAll("{{title}}", data.title)
+        .replaceAll("{{author}}", data.author)
+        .replaceAll("{{authors}}", data.authors)
+        .replaceAll("{{year}}", data.year)
+        .replaceAll("{{abstract}}", data.abstract)
+        .replaceAll("{{url}}", data.url)
+        .replaceAll("{{pdfurl}}", data.pdfurl)
+        .replaceAll("{{doi}}", data.doi);
+}

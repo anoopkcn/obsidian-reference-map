@@ -2,9 +2,12 @@ import React from "react";
 import { FiPaperclip, FiClipboard } from "react-icons/fi";
 import { SiOpenaccess } from "react-icons/si";
 import { BsClipboardData } from "react-icons/bs";
-import { METADATA_COPY_TEMPLATE_TWO } from "src/constants";
+import {
+	METADATA_COPY_TEMPLATE_ONE,
+	METADATA_COPY_TEMPLATE_TWO,
+} from "src/constants";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
-import { copyElToClipboard } from "src/utils";
+import { copyElToClipboard, templateReplace } from "src/utils";
 
 type Props = {
 	settings: ReferenceMapSettings;
@@ -29,7 +32,7 @@ export const PaperButtons = ({
 }: Props) => {
 	const paperTitle = paper.title ? paper.title : "Unknown Title";
 	let authors = "Unknown Authors";
-	let author = "Unknown Authors";
+	let author = "Unknown Author";
 	if (paper.authors.length > 0)
 		author = paper.authors[0].name
 			? paper.authors[0].name
@@ -57,19 +60,34 @@ export const PaperButtons = ({
 	}
 	const paperURL = paper.url ? paper.url : "Unknown URL";
 	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : "Unknown DOI";
+
 	const metadataTemplateOne = settings.formatMetadataCopyOne
+		? settings.metadataCopyTemplateOne
+		: METADATA_COPY_TEMPLATE_ONE;
+
+	const metadataTemplateTwo = settings.formatMetadataCopyTwo
 		? settings.metadataCopyTemplateTwo
 		: METADATA_COPY_TEMPLATE_TWO;
 
-	const copyMetadataOne = metadataTemplateOne
-		.replaceAll("{{title}}", paperTitle)
-		.replaceAll("{{author}}", author)
-		.replaceAll("{{authors}}", authors)
-		.replaceAll("{{year}}", year)
-		.replaceAll("{{abstract}}", abstract)
-		.replaceAll("{{url}}", paperURL)
-		.replaceAll("{{pdfurl}}", openAccessPdfUrl)
-		.replaceAll("{{doi}}", doi);
+	const metadataTemplateThree = settings.formatMetadataCopyThree
+		? settings.metadataCopyTemplateThree
+		: METADATA_COPY_TEMPLATE_TWO;
+
+	const metaData = {
+		bibtex: bibTex,
+		title: paperTitle,
+		author: author,
+		authors: authors,
+		year: year,
+		abstract: abstract,
+		url: paperURL,
+		pdfurl: openAccessPdfUrl,
+		doi: doi,
+	};
+
+	const copyMetadataOne = templateReplace(metadataTemplateOne, metaData);
+	const copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData);
+	const copyMetadataThree = templateReplace(metadataTemplateThree, metaData);
 
 	let citingCited = null;
 	if (
@@ -140,7 +158,7 @@ export const PaperButtons = ({
 			<div
 				className="orm-copy-metadata-one"
 				onClick={() => {
-					copyElToClipboard(bibTex);
+					copyElToClipboard(copyMetadataOne);
 				}}
 			>
 				<FiClipboard size={16} />
@@ -148,12 +166,17 @@ export const PaperButtons = ({
 			<div
 				className="orm-copy-metadata-two"
 				onClick={() => {
-					copyElToClipboard(copyMetadataOne);
+					copyElToClipboard(copyMetadataTwo);
 				}}
 			>
 				<FiPaperclip size={15} />
 			</div>
-			<div className="orm-copy-metadata-three">
+			<div
+				className="orm-copy-metadata-three"
+				onClick={() => {
+					copyElToClipboard(copyMetadataThree);
+				}}
+			>
 				<BsClipboardData size={15} />
 			</div>
 			{paper.isOpenAccess ? (

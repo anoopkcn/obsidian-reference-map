@@ -77,3 +77,15 @@ export interface CslJson {
     title: string;
     URL?: string | null;
 }
+
+export interface MetaData {
+    bibtex: string,
+    title: string,
+    author: string,
+    authors: string,
+    year: string,
+    abstract: string,
+    url: string,
+    pdfurl: string,
+    doi: string,
+}
