@@ -87,6 +87,7 @@ export interface MetaData {
     author: string,
     authors: string,
     year: string,
+    journal: string,
     abstract: string,
     url: string,
     pdfurl: string,

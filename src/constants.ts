@@ -9,6 +9,7 @@ export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
 export const METADATA_COPY_TEMPLATE_TWO = `Title: {{title}}
 Authors: {{authors}}
+Journal: {{journal}}
 Year: {{year}}
 Abstract: {{abstract}}
 `

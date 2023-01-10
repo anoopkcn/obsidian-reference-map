@@ -137,19 +137,6 @@ export function extractKeywords(text: string) {
     return result;
 }
 
-export const templateReplace = (template: string, data: MetaData) => {
-    return template
-        .replaceAll("{{bibtex}}", data.bibtex)
-        .replaceAll("{{title}}", data.title)
-        .replaceAll("{{author}}", data.author)
-        .replaceAll("{{authors}}", data.authors)
-        .replaceAll("{{year}}", data.year)
-        .replaceAll("{{abstract}}", data.abstract)
-        .replaceAll("{{url}}", data.url)
-        .replaceAll("{{pdfurl}}", data.pdfurl)
-        .replaceAll("{{doi}}", data.doi);
-}
-
 export const makeMetaData = (paper: SemanticPaper): MetaData => {
     const paperTitle = paper.title ? paper.title : "Unknown Title";
     let authors = "Unknown Authors";
@@ -160,6 +147,7 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
             : "Unknown Author";
     authors = paper.authors.map((author) => author.name).join(", ");
     const year = paper.year ? paper.year.toString() : "Unknown Year";
+    const journal = paper.journal ? `${paper.journal.name}, ${paper.journal.pages}, ${paper.journal.volume}` : "Unknown Journal";
     const abstract = paper.abstract ? paper.abstract : "No abstract available";
     const bibTex = paper.citationStyles?.bibtex
         ? paper.citationStyles.bibtex
@@ -187,6 +175,7 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
         author: author,
         authors: authors,
         year: year,
+        journal: journal,
         abstract: abstract,
         url: paperURL,
         pdfurl: openAccessPdfUrl,
@@ -195,4 +184,18 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
         citationCount: citationCount,
         influentialCount: influentialCount
     };
+}
+
+export const templateReplace = (template: string, data: MetaData) => {
+    return template
+        .replaceAll("{{bibtex}}", data.bibtex)
+        .replaceAll("{{title}}", data.title)
+        .replaceAll("{{author}}", data.author)
+        .replaceAll("{{authors}}", data.authors)
+        .replaceAll("{{year}}", data.year)
+        .replaceAll("{{journal}}", data.journal)
+        .replaceAll("{{abstract}}", data.abstract)
+        .replaceAll("{{url}}", data.url)
+        .replaceAll("{{pdfurl}}", data.pdfurl)
+        .replaceAll("{{doi}}", data.doi);
 }

@@ -71,11 +71,11 @@ export default {
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
     METADATA_COPY_TEMPLATE_ONE: "Metadata One Template",
-    METADATA_COPY_TEMPLATE_ONE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
+    METADATA_COPY_TEMPLATE_ONE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
     METADATA_COPY_TEMPLATE_TWO: "Metadata Two Template",
-    METADATA_COPY_TEMPLATE_TWO_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
+    METADATA_COPY_TEMPLATE_TWO_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
     METADATA_COPY_TEMPLATE_THREE: "Metadata Three Template",
-    METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
+    METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>",
     METADATA_COPY_ONE_BATCH: "Metadata One Batch Copy",
     METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
         "<b>Note that this option only applies to index card button</b><br>" +
