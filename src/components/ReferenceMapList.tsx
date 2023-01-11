@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { RootPaperCard } from "./RootPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCiteKeys, getPaperIds, removeNullReferences } from "src/utils";
+import { getCiteKeyIds, getCiteKeys, getPaperIds, removeNullReferences } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
@@ -29,10 +29,23 @@ export const ReferenceMapList = (props: {
 		let rootPapers: SemanticPaper[] = [];
 		const fileContent = await app.vault.cachedRead(currentView.file);
 		const paperIds = getPaperIds(fileContent);
-		rootPapers = await props.viewManager.getRootPapers(
-			currentView.file,
-			paperIds
-		);
+		paperIds.forEach(async (paperId) => {
+			const paper = await props.viewManager.getIndexPaper(paperId);
+			if (paper) rootPapers.push(paper);
+			setPapers(removeNullReferences(rootPapers));
+		});
+
+		if (props.settings.searchCiteKey && props.citeKeyData) {
+			const citeKeys = getCiteKeys(fileContent);
+			const citeKeyIds = getCiteKeyIds(citeKeys, props.citeKeyData);
+			if (citeKeyIds) {
+				citeKeyIds.forEach(async (citeKeyId) => {
+					const paper = await props.viewManager.getIndexPaper(citeKeyId);
+					if (paper) rootPapers.push(paper);
+					setPapers(removeNullReferences(rootPapers));
+				});
+			}
+		}
 		if (props.settings.searchTitle && props.fileNameString) {
 			const titleSearchPapers = await props.viewManager.searchRootPapers(
 				props.fileNameString,
@@ -47,27 +60,7 @@ export const ReferenceMapList = (props: {
 			);
 			rootPapers = rootPapers.concat(frontMatterPapers);
 		}
-		if (props.settings.searchCiteKey && props.citeKeyData) {
-			const citeKeys = getCiteKeys(fileContent);
-			if (citeKeys.size > 0) {
-				// get DOI form CiteKeyData corresponding to each item in citeKeys
-				const doiList = [];
-				for (const citeKey of citeKeys) {
-					const doi = props.citeKeyData.find(
-						(item) => item.id === citeKey
-					)?.DOI;
-					if (doi) doiList.push(doi);
-				}
-				if (doiList.length > 0) {
-					const citekeyIds = new Set(doiList)
-					const citeKeyPapers = await props.viewManager.pandocGetRootPapers(
-						currentView.file, citekeyIds
 
-					);
-					rootPapers = rootPapers.concat(citeKeyPapers);
-				}
-			}
-		}
 		if (rootPapers.length > 0) {
 			setPapers(removeNullReferences(rootPapers));
 		} else {

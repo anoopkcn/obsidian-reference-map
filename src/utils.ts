@@ -1,7 +1,7 @@
 import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
-import { MetaData, SemanticPaper } from "./types";
+import { CslJson, MetaData, SemanticPaper } from "./types";
 import { COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
@@ -199,4 +199,22 @@ export const templateReplace = (template: string, data: MetaData) => {
         .replaceAll("{{url}}", data.url)
         .replaceAll("{{pdfurl}}", data.pdfurl)
         .replaceAll("{{doi}}", data.doi);
+}
+
+export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => {
+    if (citeKeys.size > 0) {
+        // get DOI form CiteKeyData corresponding to each item in citeKeys
+        const doiList = [];
+        for (const citeKey of citeKeys) {
+            const doi = citeKeyData.find(
+                (item) => item.id === citeKey
+            )?.DOI;
+            if (doi) doiList.push(doi);
+        }
+        if (doiList.length > 0) {
+            const citeKeyIds = new Set(doiList)
+            return citeKeyIds;
+        }
+    }
+    return null
 }

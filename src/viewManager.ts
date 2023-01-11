@@ -14,6 +14,7 @@ export class ViewManager {
     plugin: ReferenceMap;
     cache: LRUCache<TFile, DocCache>;
     pandocCache: LRUCache<TFile, DocCache>;
+    indexCache: LRUCache<string, SemanticPaper>;
     refCache: LRUCache<string, SemanticPaper[]>;
     citeCache: LRUCache<string, SemanticPaper[]>;
     searchCache: LRUCache<string, SemanticPaper[]>;
@@ -22,9 +23,25 @@ export class ViewManager {
         this.plugin = plugin;
         this.cache = new LRUCache({ max: 20 });
         this.pandocCache = new LRUCache({ max: 20 });
+        this.indexCache = new LRUCache({ max: 20 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });
         this.searchCache = new LRUCache({ max: 20 });
+    }
+
+    getIndexPaper = async (paperId: string): Promise<SemanticPaper | null> => {
+        const cachedPaper = this.indexCache.has(paperId) ? this.indexCache.get(paperId) : null;
+        if (!cachedPaper) {
+            try {
+                const paper = await getPaperMetadata(paperId);
+                this.indexCache.set(paperId, paper[0]);
+                return paper[0];
+            } catch (e) {
+                console.log('Reference Map: S2AG API Index Card request error', e);
+                return null
+            }
+        }
+        return cachedPaper;
     }
 
     // Get papers of to keyword search
