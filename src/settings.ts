@@ -198,7 +198,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
-        containerEl.createEl('h2', { text: 'Metadata Format' });
+        containerEl.createEl('h2', { text: 'Buttons Settings' });
 
         new Setting(containerEl)
             .setName(t('FORMAT_METADATA_COPY_ONE'))
