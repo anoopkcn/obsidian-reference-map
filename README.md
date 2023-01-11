@@ -34,7 +34,7 @@ Each Index/Reference card in the view will show the following information:
 || Abstract | Abstract of the paper (Default=OFF) | -  |
 |text| Authors | Authors of the paper | Open the author's details in [Semantic Scholar](https://www.semanticscholar.org/) |
 || Year | Year of publication | -  |
-|text| citekey | pandoc citekey | Open reference in the Zotero Library (Default=OFF) 
+|text| citekey | Pandoc citekey (Default=OFF)  | Open reference in the Zotero Library
 |(1)| Metadata copy | User defined format of metadata. Default=`bibtex` of the paper | Copy the `<bibtex>` to the clipboard (If Batch copy is enabled it will copy `<bibtex>` for all the cited paper) |
 |(2)| Metadata copy | User defined format of metadata Default=Formatted `metadata` details | Copy the `<metadata>` to the clipboard (If Batch copy is enabled it will copy `<metadata>` for all the cited paper) |
 |(3)| Metadata copy | User defined format of metadata. Default=Reference title as `wikilink` (Default=OFF)  | Copy the `<wikilink>` to the clipboard (If Batch copy is enabled it will copy `<wikilink>` for all the cited paper) |
