@@ -66,7 +66,11 @@ export const ReferenceMapList = (props: {
 			});
 		}
 
-		if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+		if (rootPapers.length > 0) {
+			setPapers(removeNullReferences(rootPapers));
+		} else {
+			setPapers([]);
+		}
 
 		setIsLoading(false);
 	};
