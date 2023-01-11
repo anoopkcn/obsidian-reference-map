@@ -65,7 +65,7 @@ The following types of IDs are supported:
 `CorpusId:<id>` | Semantic Scholar numerical ID|`CorpusId:215416146`
 
 
-*Enable this feature from the settings. Note that, one has to provide a `Better BibTex CSL JSON` or `Bibtex CSL JSON` or `CSL JSON` file to enable this feature. Once enabled, the plugin can recognize the Pandoc citation format.
+*Enable this feature from the settings. Note that, one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Zotero default but don't automatically update) file to enable this feature. Once enabled, the plugin can recognize the Pandoc citation format.
  
 
 ### Dynamic Reference List
