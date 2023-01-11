@@ -18,7 +18,7 @@ export const PaperHeading = (props: {
 	if (props.paper.paper.authors[0]) {
 		authorID = props.paper.paper.authors[0].authorId;
 	}
-	const isCitekey = props.paper.id.includes('@')
+	const isCitekey = props.paper?.id?.includes('@')
 	const showCitekey = props.settings.linkCiteKey && isCitekey
 	return (
 		<>

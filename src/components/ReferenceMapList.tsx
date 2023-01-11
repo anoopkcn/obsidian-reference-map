@@ -33,7 +33,7 @@ export const ReferenceMapList = (props: {
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
 			if (paper) rootPapers.push({ id: paperId, paper: paper });
-			setPapers(removeNullReferences(rootPapers));
+			if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 		});
 
 		if (props.settings.searchCiteKey && props.citeKeyData) {
@@ -43,7 +43,7 @@ export const ReferenceMapList = (props: {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
 					if (paper) rootPapers.push({ id: item.citeKey, paper: paper });
-					setPapers(removeNullReferences(rootPapers));
+					if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 				});
 			}
 		}
@@ -66,7 +66,7 @@ export const ReferenceMapList = (props: {
 			});
 		}
 
-		// setPapers(removeNullReferences(rootPapers));
+		if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 
 		setIsLoading(false);
 	};

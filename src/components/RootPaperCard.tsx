@@ -24,7 +24,7 @@ export const RootPaperCard = (props: {
 	const [isCitationLoading, setIsCitationLoading] = useState(false);
 
 	useEffect(() => {
-		if (props.rootPaper) {
+		if (props.rootPaper.paper) {
 			getCitations();
 			getReferences();
 		}

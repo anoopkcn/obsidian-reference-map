@@ -59,7 +59,7 @@ export const PaperList = (props: {
 		return (
 			<PaperCard
 				key={paper.paperId + index}
-				paper={paper}
+				paper={{ id: paper.paperId, paper: paper }}
 				settings={props.settings}
 			/>
 		);
