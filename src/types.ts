@@ -9,6 +9,7 @@ export interface ReferenceMapSettings {
     searchFrontMatterLimit: number;
     searchCiteKey: boolean;
     searchCiteKeyPath: string;
+    linkCiteKey: boolean;
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;

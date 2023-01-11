@@ -40,6 +40,24 @@ settings:
 		max: 900
 		step: 100
 	-
+		id: orm-paper-citekey-font-size
+		title: Reference paper citekey font size
+		type: variable-number-slider
+		default: 12
+		format: px
+		min: 8
+		max: 24
+		step: 1
+	-
+		id: orm-paper-citekey-font-weight
+		title: Reference paper citekey font weight
+		type: variable-number-slider
+		default: 400
+		format: px
+		min: 100
+		max: 900
+		step: 100
+	-
 		id: orm-paper-title-link-color
 		title: Reference paper title link color
 		type: variable-color
@@ -60,6 +78,18 @@ settings:
 	-
 		id: orm-paper-author-link-hover-color
 		title: Reference paper author link hover color
+		type: variable-color
+		format: hex
+		default: var(--text-accent)
+	- 
+		id: orm-paper-citekey-link-color
+		title: Reference paper citekey link color
+		type: variable-color
+		format: hex
+		default: var(--text-muted)
+	- 
+		id: orm-paper-citekey-link-hover-color
+		title: Reference paper citekey link hover color
 		type: variable-color
 		format: hex
 		default: var(--text-accent)
@@ -90,10 +120,14 @@ body {
 	--orm-paper-author-font-weight: 400;
 	--orm-paper-abstract-font-size: small;
 	--orm-paper-abstract-font-weight: 400;
+	--orm-paper-citekey-font-size: small;
+	--orm-paper-citekey-font-weight: 400;
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
 	--orm-paper-author-link-hover-color: var(--text-accent);
+	--orm-paper-citekey-link-color: var(--text-muted);
+	--orm-paper-citekey-link-hover-color: var(--text-accent);
 	--orm-paper-abstract-color: var(--text-muted);
 	--orm-paper-buttons-color: var(--icon-color);
 	--orm-paper-buttons-hover-color: var(--text-accent);
@@ -167,6 +201,24 @@ body {
 .orm-paper-authors a:hover {
 	color: var(--orm-paper-author-link-hover-color);
 }
+
+.orm-paper-link-citekey{
+	font-size: var(--orm-paper-citekey-font-size);
+	font-weight: var(--orm-paper-citekey-font-weight);
+	display: block;
+	padding-top:0.25rem;
+	word-break: break-all;
+}
+
+.orm-paper-link-citekey a {
+	color: var(--orm-paper-citekey-link-color);
+	text-decoration: none;
+}
+
+.orm-paper-link-citekey a:hover {
+	color: var(--orm-paper-citekey-link-hover-color);
+}
+
 
 .orm-paper-buttons {
 	width: 100%;
