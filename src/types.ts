@@ -96,3 +96,13 @@ export interface MetaData {
     citationCount: string,
     influentialCount: string
 }
+
+export interface IndexPaper {
+    id: string;
+    paper: SemanticPaper;
+}
+
+export interface CiteKey {
+    citeKey: string;
+    paperId: string;
+}    

@@ -1,6 +1,6 @@
-import { ReferenceMapSettings, SemanticPaper } from "src/types";
+import { IndexPaper, ReferenceMapSettings, SemanticPaper } from "src/types";
 import React, { useEffect, useState } from "react";
-import { makeMetaData, removeNullReferences, templateReplace } from "src/utils";
+import { makeMetaData, templateReplace } from "src/utils";
 import { PaperList } from "./PaperList";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
@@ -10,7 +10,7 @@ import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY
 
 export const RootPaperCard = (props: {
 	settings: ReferenceMapSettings;
-	rootPaper: SemanticPaper;
+	rootPaper: IndexPaper;
 	viewManager: ViewManager;
 }) => {
 	const [references, setReferences] = useState<SemanticPaper[]>([]);
@@ -40,18 +40,18 @@ export const RootPaperCard = (props: {
 	const getReferences = async () => {
 		setIsReferenceLoading(true);
 		const references = await props.viewManager.getReferences(
-			props.rootPaper.paperId
+			props.rootPaper.paper.paperId
 		);
-		if (references) setReferences(removeNullReferences(references));
+		if (references) setReferences(references)
 		setIsReferenceLoading(false);
 	};
 
 	const getCitations = async () => {
 		setIsCitationLoading(true);
 		const citations = await props.viewManager.getCitations(
-			props.rootPaper.paperId
+			props.rootPaper.paper.paperId
 		);
-		if (citations) setCitations(removeNullReferences(citations));
+		if (citations) setCitations(citations)
 		setIsCitationLoading(false);
 	};
 
@@ -99,11 +99,11 @@ export const RootPaperCard = (props: {
 			onMouseEnter={() => handleHoverButtons(true)}
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
-			<PaperHeading paper={props.rootPaper} settings={props.settings} />
+			<PaperHeading paper={props.rootPaper.paper} settings={props.settings} />
 			{isButtonShown && (
 				<PaperButtons
 					settings={props.settings}
-					paper={props.rootPaper}
+					paper={props.rootPaper.paper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
 					setShowCitations={setShowCitations}

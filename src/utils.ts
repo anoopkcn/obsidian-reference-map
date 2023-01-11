@@ -1,7 +1,7 @@
 import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
-import { CslJson, MetaData, SemanticPaper } from "./types";
+import { CiteKey, CslJson, IndexPaper, MetaData, SemanticPaper } from "./types";
 import { COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
@@ -114,9 +114,9 @@ export function copyElToClipboard(el: string) {
     new Notice('Copied to clipboard');
 }
 
-export function removeNullReferences(references: SemanticPaper[]) {
+export function removeNullReferences(references: IndexPaper[]) {
     const result = references.filter((element) => {
-        if (element.paperId !== null) {
+        if (element.paper.paperId !== null) {
             return true;
         }
         return false;
@@ -202,19 +202,15 @@ export const templateReplace = (template: string, data: MetaData) => {
 }
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => {
+    const citeKeysMap: CiteKey[] = [];
     if (citeKeys.size > 0) {
         // get DOI form CiteKeyData corresponding to each item in citeKeys
-        const doiList = [];
         for (const citeKey of citeKeys) {
             const doi = citeKeyData.find(
                 (item) => item.id === citeKey
             )?.DOI;
-            if (doi) doiList.push(doi);
-        }
-        if (doiList.length > 0) {
-            const citeKeyIds = new Set(doiList)
-            return citeKeyIds;
+            if (doi) citeKeysMap.push({ citeKey: citeKey, paperId: doi });
         }
     }
-    return null
+    return citeKeysMap
 }
