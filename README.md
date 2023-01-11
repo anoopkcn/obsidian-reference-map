@@ -35,8 +35,9 @@ Each Index/Reference card in the view will show the following information:
 || Year | Year of publication | -  |
 || Abstract | Abstract of the paper (Default=OFF) | -  |
 |(1)| Metadata copy | User defined format of metadata. Default=`bibtex` of the paper | Copy the `<bibtex>` to the clipboard (If Batch copy is enabled it will copy `<bibtex>` for all the cited paper) |
-|(2)| Metadata copy | User defined format of metadat Default=Formatted `metadata` details | Copy the `<metadata>` to the clipboard (If Batch copy is enabled it will copy `<metadata>` for all the cited paper) |
-|(3)| Metadata copy | User defined format of metadat Default=Reference title as `wikilink` (Default=OFF)  | Copy the `<wikilink>` to the clipboard (If Batch copy is enabled it will copy `<wikilink>` for all the cited paper) |
+|(2)| Metadata copy | User defined format of metadata Default=Formatted `metadata` details | Copy the `<metadata>` to the clipboard (If Batch copy is enabled it will copy `<metadata>` for all the cited paper) |
+|(3)| Metadata copy | User defined format of metadata
+ Default=Reference title as `wikilink` (Default=OFF)  | Copy the `<wikilink>` to the clipboard (If Batch copy is enabled it will copy `<wikilink>` for all the cited paper) |
 |(4)| PDF | Open Access PDF of the paper | Open the [Open Access](https://de.wikipedia.org/wiki/Open_Access) PDF of the paper if it is present for a reference |
 |(5)| Reference count | Number of references | Open a searchable list of all cited papers (References) |
 |(6)| Citation count | Number of citations | Open a searchable list of all citing papers (Citations) |
