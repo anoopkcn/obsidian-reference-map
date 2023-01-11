@@ -97,12 +97,12 @@ export const getPaperIds = (content: string): Set<string> => {
 export const getCiteKeys = (content: string): Set<string> => {
     const output = new Set<string>();
     // const citekeyRegex = /@[^{]+{([^,]+),/g;
-    const citekeyRegex = /@(\w+)/gi;
+    const citekeyRegex = /@([^\s]+)/gi;
     // explain the regex 
     const matches = content.matchAll(citekeyRegex);
     if (matches) {
         for (const match of matches) {
-            output.add(match[1]);
+            output.add(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
         }
     }
     return output;
