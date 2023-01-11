@@ -1,5 +1,5 @@
 // English
-const clipboard = `<svg
+const clipBoard = `<svg
 xmlns="http://www.w3.org/2000/svg"
 width="16px"
 height="16px"
@@ -14,7 +14,7 @@ stroke-linejoin="round"
 <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
 </svg>
 `
-const papeclip = `<svg
+const papeClip = `<svg
 xmlns="http://www.w3.org/2000/svg"
 width="16px"
 height="16px"
@@ -92,11 +92,11 @@ export default {
     SORT_ORDER_ASC: "Ascending",
     SORT_ORDER_DESCE: "Descending",
     // metadata copy
-    FORMAT_METADATA_COPY_ONE: `${clipboard} Metadata One Button`,
+    FORMAT_METADATA_COPY_ONE: `${clipBoard} Metadata One Button`,
     FORMAT_METADATA_COPY_ONE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
-    FORMAT_METADATA_COPY_TWO: `${papeclip} Metadata Two Button`,
+    FORMAT_METADATA_COPY_TWO: `${papeClip} Metadata Two Button`,
     FORMAT_METADATA_COPY_TWO_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Two button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
@@ -104,25 +104,25 @@ export default {
     FORMAT_METADATA_COPY_THREE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Three button</b> is pressed<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
-    METADATA_COPY_TEMPLATE_ONE: `${clipboard} Metadata One Template`,
-    METADATA_COPY_TEMPLATE_ONE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
-    METADATA_COPY_TEMPLATE_TWO: `${papeclip} Metadata Two Template`,
-    METADATA_COPY_TEMPLATE_TWO_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+    METADATA_COPY_TEMPLATE_ONE: `${clipBoard} Metadata One Template`,
+    METADATA_COPY_TEMPLATE_ONE_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
+        "Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+    METADATA_COPY_TEMPLATE_TWO: `${papeClip} Metadata Two Template`,
+    METADATA_COPY_TEMPLATE_TWO_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
+        "Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
     METADATA_COPY_TEMPLATE_THREE: `${clipboardData} Metadata Three Template`,
-    METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard. Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
-    METADATA_COPY_ONE_BATCH: `${clipboard} Metadata One Batch Copy`,
-    METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
-        "<b>Note that this option only applies to index card button</b><br>" +
+    METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
+        "Valid variables are <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+    METADATA_COPY_ONE_BATCH: `${clipBoard} Metadata One Batch`,
+    METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
-    METADATA_COPY_TWO_BATCH: `${papeclip} Metadata Two Batch Copy`,
-    METADATA_COPY_TWO_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
-        "<b>Note that this option only applies to index card button</b><br>" +
+    METADATA_COPY_TWO_BATCH: `${papeClip} Metadata Two Batch`,
+    METADATA_COPY_TWO_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
-    METADATA_COPY_THREE_BATCH: `${clipboardData} Metadata Three Batch Copy`,
-    METADATA_COPY_THREE_BATCH_DESC: "Copy metadata for all the recerences(cited papers) to the clipboard. <br>" +
-        "<b>Note that this option only applies to index card button</b><br>" +
+    METADATA_COPY_THREE_BATCH: `${clipboardData} Metadata Three Batch`,
+    METADATA_COPY_THREE_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the index reference",
 };

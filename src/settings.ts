@@ -215,13 +215,15 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
-                .addTextArea(text => text
+                .addTextArea(text => {
+                    text
                     .setValue(this.plugin.settings.metadataCopyTemplateOne)
                     .onChange(async (value) => {
                         this.plugin.settings.metadataCopyTemplateOne = value;
                         this.plugin.saveSettings();
                     }
-                    ));
+                    )
+                });
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_ONE_BATCH')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_ONE_BATCH_DESC')))
@@ -250,13 +252,15 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
-                .addTextArea(text => text
-                    .setValue(this.plugin.settings.metadataCopyTemplateTwo)
+                .addTextArea(text => {
+                    text.inputEl.rows = 7;
+                    text.setValue(this.plugin.settings.metadataCopyTemplateTwo)
                     .onChange(async (value) => {
                         this.plugin.settings.metadataCopyTemplateTwo = value;
                         this.plugin.saveSettings();
                     }
-                    ));
+                    )
+                });
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_TWO_BATCH')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TWO_BATCH_DESC')))
