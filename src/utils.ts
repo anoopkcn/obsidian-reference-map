@@ -1,4 +1,4 @@
-import { FileSystemAdapter } from "obsidian";
+import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
 import { MetaData, SemanticPaper } from "./types";
@@ -111,6 +111,7 @@ export const getCiteKeys = (content: string): Set<string> => {
 export function copyElToClipboard(el: string) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('electron').clipboard.writeText(el);
+    new Notice('Copied to clipboard');
 }
 
 export function removeNullReferences(references: SemanticPaper[]) {
