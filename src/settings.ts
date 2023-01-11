@@ -201,7 +201,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', { text: 'Buttons Settings' });
 
         new Setting(containerEl)
-            .setName(t('FORMAT_METADATA_COPY_ONE'))
+            .setName(fragWithHTML(t('FORMAT_METADATA_COPY_ONE')))
             .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_ONE_DESC')))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.formatMetadataCopyOne)
@@ -213,7 +213,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.formatMetadataCopyOne) {
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_TEMPLATE_ONE'))
+                .setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
                 .addTextArea(text => text
                     .setValue(this.plugin.settings.metadataCopyTemplateOne)
@@ -223,7 +223,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     }
                     ));
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_ONE_BATCH'))
+                .setName(fragWithHTML(t('METADATA_COPY_ONE_BATCH')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_ONE_BATCH_DESC')))
                 .addToggle(toggle => toggle
                     .setValue(this.plugin.settings.metadataCopyOneBatch)
@@ -235,7 +235,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         }
 
         new Setting(containerEl)
-            .setName(t('FORMAT_METADATA_COPY_TWO'))
+            .setName(fragWithHTML(t('FORMAT_METADATA_COPY_TWO')))
             .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_TWO_DESC')))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.formatMetadataCopyTwo)
@@ -248,7 +248,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.formatMetadataCopyTwo) {
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_TEMPLATE_TWO'))
+                .setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
                 .addTextArea(text => text
                     .setValue(this.plugin.settings.metadataCopyTemplateTwo)
@@ -258,7 +258,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     }
                     ));
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_TWO_BATCH'))
+                .setName(fragWithHTML(t('METADATA_COPY_TWO_BATCH')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TWO_BATCH_DESC')))
                 .addToggle(toggle => toggle
                     .setValue(this.plugin.settings.metadataCopyTwoBatch)
@@ -271,7 +271,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName(t('FORMAT_METADATA_COPY_THREE'))
+            .setName(fragWithHTML(t('FORMAT_METADATA_COPY_THREE')))
             .setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_THREE_DESC')))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.formatMetadataCopyThree)
@@ -284,7 +284,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.formatMetadataCopyThree) {
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_TEMPLATE_THREE'))
+                .setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_THREE')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_THREE_DESC')))
                 .addTextArea(text => text
                     .setValue(this.plugin.settings.metadataCopyTemplateThree)
@@ -294,7 +294,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     }
                     ));
             new Setting(containerEl)
-                .setName(t('METADATA_COPY_THREE_BATCH'))
+                .setName(fragWithHTML(t('METADATA_COPY_THREE_BATCH')))
                 .setDesc(fragWithHTML(t('METADATA_COPY_THREE_BATCH_DESC')))
                 .addToggle(toggle => toggle
                     .setValue(this.plugin.settings.metadataCopyThreeBatch)
