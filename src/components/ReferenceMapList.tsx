@@ -59,9 +59,10 @@ export const ReferenceMapList = (props: {
 					if (doi) doiList.push(doi);
 				}
 				if (doiList.length > 0) {
-					const citeKeyPapers = await props.viewManager.getRootPapers(
-						currentView.file,
-						new Set(doiList)
+					const citekeyIds = new Set(doiList)
+					const citeKeyPapers = await props.viewManager.pandocGetRootPapers(
+						currentView.file, citekeyIds
+
 					);
 					rootPapers = rootPapers.concat(citeKeyPapers);
 				}
@@ -101,7 +102,7 @@ export const ReferenceMapList = (props: {
 					return (
 						<RootPaperCard
 							settings={props.settings}
-							key={paper.paperId + index + props.view?.file.name}
+							key={paper.paperId + index + props.view?.file.basename}
 							rootPaper={paper}
 							viewManager={props.viewManager}
 						/>
