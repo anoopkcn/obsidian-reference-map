@@ -14,8 +14,6 @@ export const getPaperMetadata = async (
     const offset = offlimit[0]
     const limit = offlimit[1]
 
-    console.log("API call")
-
     if (refType === 'references') { fields = `${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citedPaper' }
     else if (refType === 'citations') { fields = `${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`; cite = 'citingPaper' }
     else if (refType === "search") {
