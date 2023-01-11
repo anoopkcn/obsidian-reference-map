@@ -42,18 +42,18 @@ export default {
     REFRESH_VIEW: "Refresh Map",
     REFRESH_VIEW_DESC: "Settings changes will not affect the current view.<br>" +
         "If you prefer to apply changes also to the current view, you can press this button",
-    HIDE_SHOW_ABSTRACT: "Hide and Show Additional Details",
-    HIDE_SHOW_ABSTRACT_DESC: "Hide and show the abstract and all author names of a references in the respective card<br>" +
+    HIDE_SHOW_ABSTRACT: "Hide or Show Additional Details",
+    HIDE_SHOW_ABSTRACT_DESC: "Hide or show the abstract and all author names of a references in the respective card<br>" +
         "<b>Toggle ON:</b> Abstract and all author names will be visible <br>" +
         "<b>Toggle OFF:</b> Abstract will be hidden",
-    HIDE_SHOW_BUTTONS_ON_HOVER: "Hide and Show Buttons on Hover",
+    HIDE_SHOW_BUTTONS_ON_HOVER: "Hide or Show Buttons on Hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
-        "Hide and show the buttons of references on hover<br>"
+        "Hide or show the buttons of references on hover<br>"
         + "<b> Toggle ON: </b> Buttons will be visible on hover<br>"
         + "<b> Toggle OFF: </b> Buttons will always be visible",
-    HIDE_SHOW_INFLUENTIAL_COUNT: "Hide and Show Influential Citation Count",
+    HIDE_SHOW_INFLUENTIAL_COUNT: "Hide or Show Influential Citation Count",
     HIDE_SHOW_INFLUENTIAL_COUNT_DESC:
-        "Hide and show the influential citation count of references<br>"
+        "Hide or show the influential citation count of references<br>"
         + "<b> Toggle ON: </b> Influential count will be visible<br>"
         + "<b> Toggle OFF: </b> Influential count will be hidden",
     SEARCH_TITLE: "Search References Using File Name",
@@ -76,6 +76,10 @@ export default {
         "<b>Toggle OFF:</b> Disable citekey detection",
     SEARCH_CITEKEY_PATH: "Citekey CSL JSON file",
     SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Path must be relative to the vault root",
+    CITEKEY_ZOTERO_LINK: "Hide or Show Zotero Link",
+    CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the citekey link to open reference in Zotero.<br>" +
+        "<b>Toggle ON:</b> Show link in the index card<br>" +
+        "<b>Toggle OFF:</b> Hide link in the index card",
     ENABLE_SORTING: "Sorting References and Citations",
     ENABLE_SORTING_DESC: "Enable or Disable sorting of references in the map. <br>" +
         "This options applies to citations and references listed in each card<br>" +

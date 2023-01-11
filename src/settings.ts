@@ -156,6 +156,16 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                         this.plugin.saveSettings();
                     }
                     ));
+            new Setting(containerEl)
+                .setName(t('CITEKEY_ZOTERO_LINK'))
+                .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.linkCiteKey)
+                    .onChange(async (value) => {
+                        this.plugin.settings.linkCiteKey = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
         }
 
 
@@ -217,12 +227,12 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
                 .addTextArea(text => {
                     text
-                    .setValue(this.plugin.settings.metadataCopyTemplateOne)
-                    .onChange(async (value) => {
-                        this.plugin.settings.metadataCopyTemplateOne = value;
-                        this.plugin.saveSettings();
-                    }
-                    )
+                        .setValue(this.plugin.settings.metadataCopyTemplateOne)
+                        .onChange(async (value) => {
+                            this.plugin.settings.metadataCopyTemplateOne = value;
+                            this.plugin.saveSettings();
+                        }
+                        )
                 });
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_ONE_BATCH')))
@@ -255,11 +265,11 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .addTextArea(text => {
                     text.inputEl.rows = 7;
                     text.setValue(this.plugin.settings.metadataCopyTemplateTwo)
-                    .onChange(async (value) => {
-                        this.plugin.settings.metadataCopyTemplateTwo = value;
-                        this.plugin.saveSettings();
-                    }
-                    )
+                        .onChange(async (value) => {
+                            this.plugin.settings.metadataCopyTemplateTwo = value;
+                            this.plugin.saveSettings();
+                        }
+                        )
                 });
             new Setting(containerEl)
                 .setName(fragWithHTML(t('METADATA_COPY_TWO_BATCH')))

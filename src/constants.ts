@@ -26,7 +26,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     searchFrontMatterLimit: 3,
     searchCiteKey: false,
     searchCiteKeyPath: 'My Library.json',
-    linkCiteKey: true,
+    linkCiteKey: false,
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
