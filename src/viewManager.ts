@@ -23,7 +23,7 @@ export class ViewManager {
         this.plugin = plugin;
         this.cache = new LRUCache({ max: 20 });
         this.pandocCache = new LRUCache({ max: 20 });
-        this.indexCache = new LRUCache({ max: 20 });
+        this.indexCache = new LRUCache({ max: 200 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });
         this.searchCache = new LRUCache({ max: 20 });
