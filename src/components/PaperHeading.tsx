@@ -7,8 +7,8 @@ export const PaperHeading = (props: {
 	settings: ReferenceMapSettings;
 }) => {
 	const paperTitle = props.paper.paper?.title ? props.paper.paper?.title : "Unknown Title";
-	const firstAuthor = props.paper.paper.authors[0]
-		? props.paper.paper.authors[0].name
+	const firstAuthor = props.paper.paper?.authors[0]
+		? props.paper.paper?.authors[0].name
 		: "Unknown Author";
 	let authors = "";
 	if (props.paper.paper?.authors.length > 0)
@@ -30,7 +30,7 @@ export const PaperHeading = (props: {
 				</div>
 				{props.settings.showDetails && (
 					<span className="orm-paper-abstract">
-						{" " + props.paper.paper.abstract + " "}
+						{" " + props.paper.paper?.abstract + " "}
 					</span>
 				)}
 				{props.settings.showDetails && (
