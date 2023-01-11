@@ -142,11 +142,11 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
     const paperTitle = paper.title ? paper.title : "Unknown Title";
     let authors = "Unknown Authors";
     let author = "Unknown Author";
-    if (paper.authors.length > 0)
+    if (paper.authors?.length > 0)
         author = paper.authors[0].name
             ? paper.authors[0].name
             : "Unknown Author";
-    authors = paper.authors.map((author) => author.name).join(", ");
+    authors = paper.authors?.map((author) => author.name).join(", ");
     const year = paper.year ? paper.year.toString() : "Unknown Year";
     const journal = paper.journal ? `${paper.journal.name}, ${paper.journal.pages}, ${paper.journal.volume}` : "Unknown Journal";
     const abstract = paper.abstract ? paper.abstract : "No abstract available";
