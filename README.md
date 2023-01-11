@@ -52,7 +52,7 @@ Each Index/Reference card in the view will show the following information:
 Reference IDs (DOI, arxiv, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
-| ID Syntax | Descrtipion | Example |
+| ID Syntax | Description | Example |
 | --- | --- | --- |
 `DOI:<doi>` | A [Digital Object Identifier](http://doi.org/). |`DOI:10.18653/v1/N18-3011` or `10.18653/v1/N18-3011v1`
 `@<citekey>`| [Zotero](https://www.zotero.org/) citekey* |`@smith2019attention`
@@ -64,7 +64,7 @@ The following types of IDs are supported:
 `CorpusId:<id>` | Semantic Scholar numerical ID|`CorpusId:215416146`
 
 
-*Enable this feature from the settings. Note that, one has to provide a `Better BibTex CSL JSON` or `Bibtex CSL JSON` or `CSL JSON` file to enable this feature. Once enabled, the plugin can recogonize the pandoc citation format.
+*Enable this feature from the settings. Note that, one has to provide a `Better BibTex CSL JSON` or `Bibtex CSL JSON` or `CSL JSON` file to enable this feature. Once enabled, the plugin can recognize the Pandoc citation format.
  
 
 ### Dynamic Reference List
