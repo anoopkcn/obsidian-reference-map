@@ -42,7 +42,7 @@ Each Index/Reference card in the view will show the following information:
 |(6)| Citation count | Number of citations | Open a searchable list of all citing papers (Citations) |
 || Influential citation count  | [Number of influential citations](https://www.semanticscholar.org/paper/Identifying-Meaningful-Citations-Valenzuela-Ha/1c7be3fc28296a97607d426f9168ad4836407e4b) (Default=OFF) | - |
 
-*You can customize the content of metadata copy buttons(1,2,3) in the settings, possible variables for the metadata template are listed in the settings description*
+*You can customize the content of metadata buttons(1,2,3) according to your workflow, possible variables for the metadata template for the buttons copy/create contents are listed in the settings tab*
 
 *Batch operations are exclusive to Index Cards*
 
