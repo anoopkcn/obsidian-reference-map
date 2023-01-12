@@ -42,10 +42,14 @@ export default {
     REFRESH_VIEW: "Refresh Map",
     REFRESH_VIEW_DESC: "Settings changes will not affect the current view.<br>" +
         "If you prefer to apply changes also to the current view, you can press this button",
-    HIDE_SHOW_ABSTRACT: "Hide or Show Additional Details",
-    HIDE_SHOW_ABSTRACT_DESC: "Hide or show the abstract and all author names of a references in the respective card<br>" +
-        "<b>Toggle ON:</b> Abstract and all author names will be visible <br>" +
+    HIDE_SHOW_ABSTRACT: "Hide or Show Abstract",
+    HIDE_SHOW_ABSTRACT_DESC: "Hide or show the abstract of a references in the respective card<br>" +
+        "<b>Toggle ON:</b> Abstract will be visible <br>" +
         "<b>Toggle OFF:</b> Abstract will be hidden",
+    HIDE_SHOW_AUTHORS: "Hide or Show All Authors",
+    HIDE_SHOW_AUTHORS_DESC: "Hide or show the authors of a references in the respective card<br>" +
+        "<b>Toggle ON:</b> All author names will be visible <br>" +
+        "<b>Toggle OFF:</b> First author will be shown",
     HIDE_SHOW_BUTTONS_ON_HOVER: "Hide or Show Buttons on Hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
         "Hide or show the buttons of references on hover<br>"

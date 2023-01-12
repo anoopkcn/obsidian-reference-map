@@ -28,19 +28,19 @@ export const PaperHeading = (props: {
 						{" " + paperTitle + " "}
 					</a>
 				</div>
-				{props.settings.showDetails && (
+				{props.settings.showAbstract && (
 					<span className="orm-paper-abstract">
 						{" " + props.paper.paper?.abstract + " "}
 					</span>
 				)}
-				{props.settings.showDetails && (
+				{props.settings.showAuthors && (
 					<span className="orm-paper-authors">
 						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
 							{authors + ", " + year}
 						</a>
 					</span>
 				)}
-				{!props.settings.showDetails && (
+				{!props.settings.showAuthors && (
 					<span className="orm-paper-authors">
 						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
 							{firstAuthor + ", " + year}

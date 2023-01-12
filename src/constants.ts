@@ -18,7 +18,8 @@ export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     hideButtonsOnHover: false,
     influentialCount: false,
-    showDetails: false,
+    showAbstract: false,
+    showAuthors: false,
     searchTitle: false,
     searchLimit: 3,
     searchFrontMatter: false,

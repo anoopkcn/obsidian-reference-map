@@ -33,9 +33,18 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             .setName(t('HIDE_SHOW_ABSTRACT'))
             .setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
             .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.showDetails)
+                .setValue(this.plugin.settings.showAbstract)
                 .onChange(async (value) => {
-                    this.plugin.settings.showDetails = value;
+                    this.plugin.settings.showAbstract = value;
+                    this.plugin.saveSettings();
+                }));
+        new Setting(containerEl)
+            .setName(t('HIDE_SHOW_AUTHORS'))
+            .setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.showAuthors)
+                .onChange(async (value) => {
+                    this.plugin.settings.showAuthors = value;
                     this.plugin.saveSettings();
                 }));
 
