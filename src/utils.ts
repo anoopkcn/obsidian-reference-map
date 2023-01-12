@@ -2,7 +2,7 @@ import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
 import { CiteKey, CslJson, IndexPaper, MetaData, SemanticPaper } from "./types";
-import { COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
+import { BIBTEX_STANDARD_TYPES, COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -213,4 +213,21 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => 
         }
     }
     return citeKeysMap
+}
+
+export const standardizeBibtex = (bibtex: string) => {
+    const bibRegex = /(^@\[.*\])/gm
+    //get words from group one
+    const matches = bibtex.matchAll(bibRegex);
+    if (matches) {
+        for (const match of matches) {
+            const possibleTypes = match[1].replace(/[@\\[\]'\s+]/g, '').split(',')
+            //check if any of the possible types are in the BIBTEX_STANDARD_TYPES
+            // if so return one type else type is 'misc'
+            const type = possibleTypes.find((type) => BIBTEX_STANDARD_TYPES.includes(type.toLowerCase())) || 'misc'
+            return bibtex.replace(match[1], `@${type.toLowerCase()}`)
+        }
+    }
+    return ''
+
 }

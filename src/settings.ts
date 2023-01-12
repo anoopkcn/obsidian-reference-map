@@ -216,6 +216,18 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     }
                     ));
         }
+        new Setting(containerEl)
+            .setName(t('STANDARDIZE_BIBTEX'))
+            .setDesc(fragWithHTML(t('STANDARDIZE_BIBTEX_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.standardizeBibtex)
+                .onChange(async (value) => {
+                    this.plugin.settings.standardizeBibtex = value;
+                    this.plugin.saveSettings();
+                }
+                ));
+
+
 
         containerEl.createEl('h2', { text: 'Buttons Settings' });
 

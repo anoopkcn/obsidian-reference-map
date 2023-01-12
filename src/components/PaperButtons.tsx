@@ -8,7 +8,7 @@ import {
 	METADATA_COPY_TEMPLATE_TWO,
 } from "src/constants";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
-import { copyElToClipboard, makeMetaData, templateReplace } from "src/utils";
+import { copyElToClipboard, makeMetaData, standardizeBibtex, templateReplace } from "src/utils";
 
 type Props = {
 	settings: ReferenceMapSettings;
@@ -51,6 +51,7 @@ export const PaperButtons = ({
 		: METADATA_COPY_TEMPLATE_THREE;
 
 	const metaData = makeMetaData(paper);
+	settings.standardizeBibtex ? metaData.bibtex = standardizeBibtex(metaData.bibtex) : metaData.bibtex
 	let copyMetadataOne = "";
 	let copyMetadataTwo = "";
 	let copyMetadataThree = "";

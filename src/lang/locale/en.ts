@@ -99,6 +99,10 @@ export default {
     SORT_ORDER_DESC: "Sort references and citations in the selected order",
     SORT_ORDER_ASC: "Ascending",
     SORT_ORDER_DESCE: "Descending",
+    STANDARDIZE_BIBTEX: "Standardize BibTeX",
+    STANDARDIZE_BIBTEX_DESC: "Standardize BibTeX of references in the map. This will format the BibTeX according to one of 14 possible entry types<br>" +
+        "<b>Toggle ON:</b> Standardize BibTeX keys<br>" +
+        "<b>Toggle OFF:</b> Do not standardize BibTeX keys",
     // metadata copy
     FORMAT_METADATA_COPY_ONE: `${clipBoard} Metadata One Button`,
     FORMAT_METADATA_COPY_ONE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed<br>" +
