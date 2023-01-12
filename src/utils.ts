@@ -216,7 +216,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => 
 }
 
 export const standardizeBibtex = (bibtex: string) => {
-    const bibRegex = /(^@\[.*\])/gm
+    const bibRegex = /(^@\[.*\]|@None)/gm
     //get words from group one
     const matches = bibtex.matchAll(bibRegex);
     if (matches) {
@@ -224,7 +224,8 @@ export const standardizeBibtex = (bibtex: string) => {
             const possibleTypes = match[1].replace(/[@\\[\]'\s+]/g, '').split(',')
             //check if any of the possible types are in the BIBTEX_STANDARD_TYPES
             // if so return one type else type is 'misc'
-            const type = possibleTypes.find((type) => BIBTEX_STANDARD_TYPES.includes(type.toLowerCase())) || 'misc'
+            let type = possibleTypes.find((item) => BIBTEX_STANDARD_TYPES.includes(item.toLowerCase())) || 'misc'
+            if (type === 'JournalArticle') type = 'article'
             return bibtex.replace(match[1], `@${type.toLowerCase()}`)
         }
     }

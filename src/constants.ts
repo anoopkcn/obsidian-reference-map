@@ -88,4 +88,4 @@ export const NUMBERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 export const EXCLUDE_FILE_NAMES = ["LICENSE", "README", "TEST", "UNTITLED"]
 
-export const BIBTEX_STANDARD_TYPES = ['article', 'book', 'booklet', 'inbook', 'incollection', 'inproceedings', 'conference', 'manual', 'mastersthesis', 'phdthesis', 'misc', 'proceedings', 'tech', 'report', 'unpublished']
+export const BIBTEX_STANDARD_TYPES = ['article', 'journalarticle', 'book', 'booklet', 'inbook', 'incollection', 'inproceedings', 'conference', 'manual', 'mastersthesis', 'phdthesis', 'misc', 'proceedings', 'techreport', 'unpublished']
