@@ -66,6 +66,8 @@ The following types of IDs are supported:
 
 
 *Enable this feature from the settings. Note that, one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file to enable this feature. Once enabled, the plugin can recognize the Pandoc citation format.
+
+**Note**: CiteKeys should not contain spaces, `[`, `(` and `*`. Also make sure in zotero library DOI field is not empty for a reference. 
  
 
 ### Dynamic Reference List
