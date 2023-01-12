@@ -29,7 +29,7 @@ export class ViewManager {
         this.searchCache = new LRUCache({ max: 20 });
     }
 
-    getIndexPaper = async (paperId: string): Promise<SemanticPaper> => {
+    getIndexPaper = async (paperId: string): Promise<SemanticPaper | null> => {
         const cachedPaper = this.indexCache.has(paperId) ? this.indexCache.get(paperId) : null;
         if (!cachedPaper) {
             try {
@@ -38,7 +38,7 @@ export class ViewManager {
                 return paper[0];
             } catch (e) {
                 console.log('Reference Map: S2AG API Index Card request error', e);
-                return {} as SemanticPaper;
+                return null;
             }
         }
         return cachedPaper;

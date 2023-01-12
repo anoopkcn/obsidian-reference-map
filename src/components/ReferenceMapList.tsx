@@ -32,7 +32,7 @@ export const ReferenceMapList = (props: {
 		const paperIds = getPaperIds(fileContent);
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
-			if (paper) rootPapers.push({ id: paperId, paper: paper });
+			if (paper !== null) rootPapers.push({ id: paperId, paper: paper });
 			if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 		});
 
@@ -42,7 +42,7 @@ export const ReferenceMapList = (props: {
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
-					if (paper) rootPapers.push({ id: item.citeKey, paper: paper });
+					if (paper !== null) rootPapers.push({ id: item.citeKey, paper: paper });
 					if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 				});
 			}
