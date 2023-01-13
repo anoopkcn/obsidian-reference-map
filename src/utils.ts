@@ -209,7 +209,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => 
             const doi = citeKeyData.find(
                 (item) => item.id === citeKey
             )?.DOI;
-            if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: doi });
+            if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: doi.replace(/\s+/g, '') });
         }
     }
     return citeKeysMap
