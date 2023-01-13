@@ -128,13 +128,13 @@ export default {
     METADATA_COPY_ONE_BATCH: `${clipBoard} Metadata One Batch`,
     METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
-        "<b>Toggle OFF:</b> Copy metadata for the index reference",
+        "<b>Toggle OFF:</b> Copy metadata for the individual index/reference card",
     METADATA_COPY_TWO_BATCH: `${papeClip} Metadata Two Batch`,
     METADATA_COPY_TWO_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
-        "<b>Toggle OFF:</b> Copy metadata for the index reference",
+        "<b>Toggle OFF:</b> Copy metadata for the individual index/reference card",
     METADATA_COPY_THREE_BATCH: `${clipboardData} Metadata Three Batch`,
     METADATA_COPY_THREE_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard. <b>This option only applies to index card button</b>. Reference card buttons behaviour is unchanged.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
-        "<b>Toggle OFF:</b> Copy metadata for the index reference",
+        "<b>Toggle OFF:</b> Copy metadata for the individual index/reference card",
 };
