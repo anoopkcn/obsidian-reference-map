@@ -21,8 +21,8 @@ export class ViewManager {
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
-        this.cache = new LRUCache({ max: 20 });
-        this.pandocCache = new LRUCache({ max: 20 });
+        this.cache = new LRUCache({ max: 20 });  // Deprecated
+        this.pandocCache = new LRUCache({ max: 20 }); // Deprecated
         this.indexCache = new LRUCache({ max: 200 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });

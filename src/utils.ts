@@ -190,11 +190,11 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
 export const templateReplace = (template: string, data: MetaData) => {
     return template
         .replaceAll("{{bibtex}}", data.bibtex)
-        .replaceAll("{{title}}", data.title)
-        .replaceAll("{{author}}", data.author)
-        .replaceAll("{{authors}}", data.authors)
-        .replaceAll("{{year}}", data.year)
-        .replaceAll("{{journal}}", data.journal)
+        .replaceAll("{{title}}", data.title.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{author}}", data.author.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{authors}}", data.authors.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{year}}", data.year.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{journal}}", data.journal.replace(/[:\\\\/]/g, ''))
         .replaceAll("{{abstract}}", data.abstract)
         .replaceAll("{{url}}", data.url)
         .replaceAll("{{pdfurl}}", data.pdfurl)
