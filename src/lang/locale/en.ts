@@ -74,19 +74,19 @@ export default {
     SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
-    SEARCH_CITEKEY: "Get References Using Citekey",
-    SEARCH_CITEKEY_DESC: "Find references also using the citekey included in the markdown file in addition to reference IDs<br>" +
+    SEARCH_CITEKEY: "Get References Using <code>CiteKey</code>",
+    SEARCH_CITEKEY_DESC: "Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs<br>" +
         "<b>Toggle ON:</b> Enable citekey detection<br>" +
         "<b>Toggle OFF:</b> Disable citekey detection",
-    SEARCH_CITEKEY_PATH: "Citekey CSL JSON file",
-    SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Path must be relative to the vault root",
-    CITEKEY_ZOTERO_LINK: "Hide or Show Zotero Link",
-    CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the citekey link to open reference in Zotero.<br>" +
+    SEARCH_CITEKEY_PATH: "CSL JSON File Path",
+    SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Usually exported from reference manager such as Zotero. <br>" +
+        "Path must be relative to the vaults root",
+    CITEKEY_ZOTERO_LINK: "Hide or Show Open in Zotero Link",
+    CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
         "<b>Toggle ON:</b> Show link in the index card<br>" +
         "<b>Toggle OFF:</b> Hide link in the index card",
     ENABLE_SORTING: "Sorting References and Citations",
-    ENABLE_SORTING_DESC: "Enable or Disable sorting of references in the map. <br>" +
-        "This options applies to citations and references listed in each card<br>" +
+    ENABLE_SORTING_DESC: "Enable or Disable sorting of citing and cited papers in the reference cards. <br>" +
         "<b>Toggle ON:</b> Sorting enabled<br>" +
         "<b>Toggle OFF:</b> Default sorting, newest to oldest reference",
     SORT_BY: "Sort By",

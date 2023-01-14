@@ -144,7 +144,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         }
 
         new Setting(containerEl)
-            .setName(t('SEARCH_CITEKEY'))
+            .setName(fragWithHTML(t('SEARCH_CITEKEY')))
             .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.searchCiteKey)
@@ -156,7 +156,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.searchCiteKey) {
             new Setting(containerEl)
-                .setName(t('SEARCH_CITEKEY_PATH'))
+                .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
                 .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
                 .addText(text => text
                     .setValue(this.plugin.settings.searchCiteKeyPath)
