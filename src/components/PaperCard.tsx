@@ -24,7 +24,7 @@ export const PaperCard = (props: {
 		>
 			<PaperHeading paper={paper} settings={props.settings} />
 			{isButtonShown && (
-				<PaperButtons settings={props.settings} paper={paper.paper} />
+				<PaperButtons settings={props.settings} paper={paper} />
 			)}
 		</div>
 	);

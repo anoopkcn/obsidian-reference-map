@@ -103,7 +103,7 @@ export const RootPaperCard = (props: {
 			{isButtonShown && (
 				<PaperButtons
 					settings={props.settings}
-					paper={props.rootPaper.paper}
+					paper={props.rootPaper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
 					setShowCitations={setShowCitations}

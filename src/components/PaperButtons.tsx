@@ -7,12 +7,12 @@ import {
 	METADATA_COPY_TEMPLATE_THREE,
 	METADATA_COPY_TEMPLATE_TWO,
 } from "src/constants";
-import { ReferenceMapSettings, SemanticPaper } from "src/types";
+import { IndexPaper, ReferenceMapSettings } from "src/types";
 import { copyElToClipboard, makeMetaData, standardizeBibtex, templateReplace } from "src/utils";
 
 type Props = {
 	settings: ReferenceMapSettings;
-	paper: SemanticPaper;
+	paper: IndexPaper;
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>;
 	showReferences?: boolean;
 	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,7 +50,7 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE;
 
-	const metaData = makeMetaData(paper);
+	const metaData = makeMetaData(paper.paper);
 	settings.standardizeBibtex ? metaData.bibtex = standardizeBibtex(metaData.bibtex) : metaData.bibtex
 	let copyMetadataOne = "";
 	let copyMetadataTwo = "";
@@ -58,17 +58,17 @@ export const PaperButtons = ({
 	if (settings.formatMetadataCopyOne) {
 		(settings.metadataCopyOneBatch && batchCopyMetadataOne)
 			? copyMetadataOne = batchCopyMetadataOne
-			: copyMetadataOne = templateReplace(metadataTemplateOne, metaData)
+			: copyMetadataOne = templateReplace(metadataTemplateOne, metaData, paper.id)
 	}
 	if (settings.formatMetadataCopyTwo) {
 		(settings.metadataCopyTwoBatch && batchCopyMetadataTwo)
 			? copyMetadataTwo = batchCopyMetadataTwo
-			: copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData)
+			: copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData, paper.id)
 	}
 	if (settings.formatMetadataCopyThree) {
 		(settings.metadataCopyThreeBatch && batchCopyMetadataThree)
 			? copyMetadataThree = batchCopyMetadataThree
-			: copyMetadataThree = templateReplace(metadataTemplateThree, metaData)
+			: copyMetadataThree = templateReplace(metadataTemplateThree, metaData, paper.id)
 	}
 
 	let citingCited = null;
@@ -169,7 +169,7 @@ export const PaperButtons = ({
 					<BsClipboardData size={15} />
 				</div>
 			)}
-			{paper.isOpenAccess ? (
+			{paper.paper?.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${metaData.pdfurl}`}>
 						<SiOpenaccess size={15} />

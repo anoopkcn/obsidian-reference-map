@@ -187,8 +187,9 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
     };
 }
 
-export const templateReplace = (template: string, data: MetaData) => {
+export const templateReplace = (template: string, data: MetaData, id = '') => {
     return template
+        .replaceAll("{{id}}", id)
         .replaceAll("{{bibtex}}", data.bibtex)
         .replaceAll("{{title}}", data.title.replace(/[:\\\\/]/g, ''))
         .replaceAll("{{author}}", data.author.replace(/[:\\\\/]/g, ''))
