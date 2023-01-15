@@ -1,9 +1,7 @@
-import { TFile } from 'obsidian';
 import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
-import { areSetsEqual } from './utils';
-import { getPaperMetadata, postPaperMetadata } from './routers/s2agAPI';
+import { getPaperMetadata } from './routers/s2agAPI';
 
 export interface DocCache {
     paperIds: Set<string>;
@@ -12,8 +10,6 @@ export interface DocCache {
 
 export class ViewManager {
     plugin: ReferenceMap;
-    cache: LRUCache<TFile, DocCache>;
-    pandocCache: LRUCache<TFile, DocCache>;
     indexCache: LRUCache<string, SemanticPaper>;
     refCache: LRUCache<string, SemanticPaper[]>;
     citeCache: LRUCache<string, SemanticPaper[]>;
@@ -21,13 +17,20 @@ export class ViewManager {
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
-        this.cache = new LRUCache({ max: 20 });  // Deprecated
-        this.pandocCache = new LRUCache({ max: 20 }); // Deprecated
         this.indexCache = new LRUCache({ max: 200 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });
         this.searchCache = new LRUCache({ max: 20 });
     }
+
+    clearCache = () => {
+        // Clear all caches when the user unmounts the view
+        this.indexCache.clear();
+        this.refCache.clear();
+        this.citeCache.clear();
+        this.searchCache.clear();
+    }
+
 
     getIndexPaper = async (paperId: string): Promise<SemanticPaper | null> => {
         const cachedPaper = this.indexCache.has(paperId) ? this.indexCache.get(paperId) : null;
@@ -60,51 +63,6 @@ export class ViewManager {
         return cachedSearch;
     }
 
-
-    // Get papers of a paper id
-    getRootPapers = async (file: TFile, paperIds: Set<string>): Promise<SemanticPaper[]> => {
-        if (paperIds.size === 0) {
-            return [];
-        }
-        // Get the cached document if it exists
-        const cachedDoc = this.cache.has(file) ? this.cache.get(file) : null;
-        // If the cached document doesn't exist or the paperIds are different, fetch the new document
-        if (!cachedDoc || !areSetsEqual(cachedDoc.paperIds, paperIds)) {
-            try {
-                // const paper = await getPaperMetadata(paperIds.values().next().value);
-                const rootPapers = await postPaperMetadata(paperIds);
-                this.cache.set(file, { paperIds, rootPapers });
-                return rootPapers;
-            } catch (e) {
-                console.log('Reference Map: S2AG API  GET rootPaper request error', e);
-                return [];
-            }
-        }
-        return cachedDoc.rootPapers;
-
-    }
-
-    // Get papers of a pandoc citekey id
-    pandocGetRootPapers = async (file: TFile, paperIds: Set<string>): Promise<SemanticPaper[]> => {
-        if (paperIds.size === 0) {
-            return [];
-        }
-        // Get the cached document if it exists
-        const cachedDoc = this.pandocCache.has(file) ? this.pandocCache.get(file) : null;
-        // If the cached document doesn't exist or the paperIds are different, fetch the new document
-        if (!cachedDoc || !areSetsEqual(cachedDoc.paperIds, paperIds)) {
-            try {
-                const rootPapers = await postPaperMetadata(paperIds);
-                this.pandocCache.set(file, { paperIds, rootPapers });
-                return rootPapers;
-            } catch (e) {
-                console.log('Reference Map: S2AG API  GET rootPaper request error', e);
-                return [];
-            }
-        }
-        return cachedDoc.rootPapers;
-
-    }
 
     // Get references of an index card paper
     getReferences = async (paperId: string): Promise<SemanticPaper[]> => {

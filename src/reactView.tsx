@@ -68,7 +68,7 @@ export class ReferenceMapView extends ItemView {
 
 	async onClose() {
 		this.rootEl.unmount();
-		this.viewManager.cache.clear();
+		this.viewManager.clearCache();
 		return super.onClose();
 	}
 
@@ -85,7 +85,7 @@ export class ReferenceMapView extends ItemView {
 				if (fileCache?.frontmatter) {
 					const keywords =
 						fileCache?.frontmatter?.[
-							this.plugin.settings.searchFrontMatterKey
+						this.plugin.settings.searchFrontMatterKey
 						];
 					if (keywords)
 						frontMatterString = extractKeywords(keywords)
