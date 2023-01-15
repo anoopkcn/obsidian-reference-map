@@ -1,6 +1,6 @@
 import { CslJson, IndexPaper, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState } from "react";
-import { RootPaperCard } from "./RootPaperCard";
+import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
 import { getCiteKeyIds, getCiteKeys, getPaperIds, removeNullReferences } from "src/utils";
@@ -99,7 +99,7 @@ export const ReferenceMapList = (props: {
 			<div className="orm-reference-map">
 				{papers.map((paper, index) => {
 					return (
-						<RootPaperCard
+						<IndexPaperCard
 							settings={props.settings}
 							key={paper.paper.paperId + index + props.view?.file.basename}
 							rootPaper={paper}

@@ -8,7 +8,7 @@ import { ViewManager } from "src/viewManager";
 import { LoadingPuff } from "./LoadingPuff";
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO } from "src/constants";
 
-export const RootPaperCard = (props: {
+export const IndexPaperCard = (props: {
 	settings: ReferenceMapSettings;
 	rootPaper: IndexPaper;
 	viewManager: ViewManager;
