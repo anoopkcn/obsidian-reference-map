@@ -35,7 +35,7 @@ export const resolvePath = function (rawPath: string): string {
 
 // Given a markdown file contents regex match the DOI's from the file 
 export const getPaperIds = (content: string): Set<string> => {
-    const modContent = content.replace("](", " ")
+    const modContent = content.replaceAll("](", " ")
     const output = new Set<string>();
 
     const arxivRegex = /arXiv.\s*(\d{4}\.\d{4,5})/ig
@@ -46,7 +46,7 @@ export const getPaperIds = (content: string): Set<string> => {
     const magMatches = modContent.matchAll(magRegex)
     const pmidRegex = /PMID.\s*(\d{4,})/ig
     const pmidMatches = modContent.matchAll(pmidRegex)
-    const pmcidRegex = /PMCID.\s*(\d{4,})/ig
+    const pmcidRegex = /PMCID.\s*([a-zA-Z]*\d{4,})/ig
     const pmcidMatches = modContent.matchAll(pmcidRegex)
     const urlRegex = /URL.\s*(https:.[^\s]+)/ig
     const urlMatches = modContent.matchAll(urlRegex)
@@ -77,6 +77,7 @@ export const getPaperIds = (content: string): Set<string> => {
     if (pmcidMatches) {
         for (const match of pmcidMatches) {
             output.add(`PMCID:${match[1]}`)
+            console.log(match[1])
         }
     }
     if (urlMatches) {
