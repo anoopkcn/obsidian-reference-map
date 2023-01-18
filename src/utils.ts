@@ -11,6 +11,10 @@ export const errorlog = (data: Record<string, unknown>) => {
     console.error({ plugin: "Zotero Annotations", ...data });
 };
 
+export const isEmpty = (obj: SemanticPaper): boolean => {
+    return Object.keys(obj).length === 0
+}
+
 export function areSetsEqual<T>(as: Set<T>, bs: Set<T>) {
     if (as.size !== bs.size) return false;
     return Array.from(as).every(element => {
@@ -51,7 +55,6 @@ export const getPaperIds = (content: string): Set<string> => {
     const urlRegex = /URL.\s*(https:.[^\s]+)/ig
     const urlMatches = modContent.matchAll(urlRegex)
     const doi_matches = modContent.match(doiRegex());
-
 
     if (arXivMatches) {
         for (const match of arXivMatches) {

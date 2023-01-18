@@ -1,6 +1,6 @@
 import { IndexPaper, ReferenceMapSettings, SemanticPaper } from "src/types";
 import React, { useEffect, useState } from "react";
-import { makeMetaData, templateReplace } from "src/utils";
+import { isEmpty, makeMetaData, templateReplace } from "src/utils";
 import { PaperList } from "./PaperList";
 import { PaperHeading } from "./PaperHeading";
 import { PaperButtons } from "./PaperButtons";
@@ -24,7 +24,7 @@ export const IndexPaperCard = (props: {
 	const [isCitationLoading, setIsCitationLoading] = useState(false);
 
 	useEffect(() => {
-		if (props.rootPaper.paper) {
+		if (!isEmpty(props.rootPaper.paper)) {
 			getCitations();
 			getReferences();
 		}
