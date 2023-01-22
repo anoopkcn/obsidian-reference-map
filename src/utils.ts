@@ -103,7 +103,7 @@ export const getCiteKeys = (content: string): Set<string> => {
     // const citekeyRegex = /@[^{]+{([^,]+),/g;
     const citekeyRegex = /@([^\s]+)/gi;
     // explain the regex 
-    const matches = content.replace(/[\])*`]+/, ' ').matchAll(citekeyRegex);
+    const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex);
     if (matches) {
         for (const match of matches) {
             output.add(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
