@@ -37,13 +37,12 @@ export default class ReferenceMap extends Plugin {
 			}
 		});
 
-		const ribbonIconEl = this.addRibbonIcon(
+		this.addRibbonIcon(
 			'ReferenceMapIconScroll',
 			'Reference Map',
 			async (evt: MouseEvent) => {
 				this.activateView()
 			});
-		ribbonIconEl.addClass('reference-map-ribbon-class');
 	}
 
 
