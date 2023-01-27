@@ -5,9 +5,7 @@ Reference and citation map for literature review and discovery.
 - [Obsidian](https://obsidian.md/) with community plugins enabled
 
 ## Installation
-The plugin is not yet available in the community plugin section in Obsidian. **So you have to install it manually.**
-
-When published, it will be available in Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
+The plugin available in the Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
 
 ### Manual Installation
 1. Download the latest release from [here](https://github.com/anoopkcn/obsidian-reference-map/releases) and unzip it.
@@ -28,6 +26,7 @@ Reference Map View contains Index cards and Reference Cards.
 **Reference Cards** show a searchable and sortable list of cited and citing papers of a reference contained in the index card. 
 
 Each Index/Reference card in the view will show the following information:
+
 |Button| Section | Description | On Click |
 |---| --- | --- | --- |
 |text| Title | Title of the paper | Open the paper in [Semantic Scholar](https://www.semanticscholar.org/) |
@@ -53,6 +52,7 @@ Each Index/Reference card in the view will show the following information:
 Reference IDs (DOI, arxiv, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
 The following types of IDs are supported:
+
 | ID Syntax | Description | Example |
 | --- | --- | --- |
 `DOI:<doi>` | A [Digital Object Identifier](http://doi.org/). |`DOI:10.18653/v1/N18-3011` or `10.18653/v1/N18-3011v1`
