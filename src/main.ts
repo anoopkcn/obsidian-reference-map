@@ -38,7 +38,7 @@ export default class ReferenceMap extends Plugin {
 
 		this.addCommand({
 			id: 'refresh-reference-map-sidebar-view',
-			name: 'Refresh view',
+			name: 'Refresh View',
 			callback: () => {
 				this.refresh();
 			}
