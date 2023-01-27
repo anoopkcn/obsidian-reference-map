@@ -5,7 +5,7 @@ Reference and citation map for literature review and discovery.
 - [Obsidian](https://obsidian.md/) with community plugins enabled
 
 ## Installation
-The plugin available in the Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
+The plugin is available in the Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
 
 ### Manual Installation
 1. Download the latest release from [here](https://github.com/anoopkcn/obsidian-reference-map/releases) and unzip it.
