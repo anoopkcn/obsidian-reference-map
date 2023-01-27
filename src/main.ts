@@ -64,7 +64,7 @@ export default class ReferenceMap extends Plugin {
 	ensureLeafExists(active = false): void {
 		const { workspace } = this.app;
 
-		const preferredSidebar: Direction = Direction.Right;
+		const preferredSidebar = Direction.Right;
 
 		let leaf: WorkspaceLeaf;
 		const existingPluginLeaves = workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
