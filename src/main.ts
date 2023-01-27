@@ -5,6 +5,11 @@ import { addIcons } from './ui/icons';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView';
 import { DEFAULT_SETTINGS } from './constants';
 
+enum Direction {
+	Left = 'left',
+	Right = 'right',
+}
+
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings;
 
@@ -21,14 +26,16 @@ export default class ReferenceMap extends Plugin {
 
 		this.addCommand({
 			id: 'show-reference-map-sidebar-view',
-			name: 'Open view',
-			checkCallback: (checking: boolean) => {
-				if (checking) {
-					return this.view === null;
-				}
-				this.activateView();
+			name: 'Show View',
+			callback: () => {
+				this.ensureLeafExists(true);
 			},
 		});
+
+		this.app.workspace.onLayoutReady(() => {
+			this.ensureLeafExists(false);
+		});
+
 		this.addCommand({
 			id: 'refresh-reference-map-sidebar-view',
 			name: 'Refresh Reference Map view',
@@ -41,7 +48,8 @@ export default class ReferenceMap extends Plugin {
 			'ReferenceMapIconScroll',
 			'Reference Map',
 			async (evt: MouseEvent) => {
-				this.activateView()
+				this.ensureLeafExists(true);
+				// this.activateView()
 			});
 	}
 
@@ -51,6 +59,28 @@ export default class ReferenceMap extends Plugin {
 		// this.app.workspace
 		// 	.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
 		// 	.forEach((leaf) => leaf.detach());
+	}
+
+	ensureLeafExists(active = false): void {
+		const { workspace } = this.app;
+
+		const preferredSidebar: Direction = Direction.Right;
+
+		let leaf: WorkspaceLeaf;
+		const existingPluginLeaves = workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
+
+		if (existingPluginLeaves.length > 0) {
+			leaf = existingPluginLeaves[0];
+		}
+		else {
+			leaf = preferredSidebar as Direction === Direction.Left ? workspace.getLeftLeaf(false) : workspace.getRightLeaf(false);
+			workspace.revealLeaf(leaf);
+			leaf.setViewState({ type: REFERENCE_MAP_VIEW_TYPE });
+		}
+
+		if (active) {
+			workspace.setActiveLeaf(leaf);
+		}
 	}
 
 	// Create the reference map 
