@@ -3,7 +3,7 @@ import { clipBoard, clipboardData, papeClip } from "src/ui/icons";
 // English
 export default {
     SEE_DOCUMENTATION: "See Documentation",
-    SEE_DOCUMENTATION_DESC: "For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map'>obsidian-reference-map</a> <code>README.md</code> file",
+    SEE_DOCUMENTATION_DESC: "For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map'>reference-map</a> <code>README.md</code> file",
     GENERAL_SETTINGS: "General Settings",
     REFERENCE_MAP: "Reference Map",
     NO_REFERENCES_IN_FILE: "No reference ID's are found in the active document",

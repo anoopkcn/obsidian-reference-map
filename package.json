@@ -1,5 +1,5 @@
 {
-	"name": "obsidian-reference-map",
+	"name": "reference-map",
 	"version": "0.9.0",
 	"description": "Reference and citation map for literature review and discovery",
 	"main": "main.js",
