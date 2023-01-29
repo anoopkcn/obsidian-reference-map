@@ -40,7 +40,7 @@ export class ViewManager {
                 this.indexCache.set(paperId, paper[0]);
                 return paper[0];
             } catch (e) {
-                if (this.plugin.settings.debugMode) console.log('Reference Map: S2AG API Index Card request error', e);
+                if (this.plugin.settings.debugMode) console.log('ORM: S2AG API Index Card request error', e);
                 return null;
             }
         }
@@ -56,7 +56,7 @@ export class ViewManager {
                 this.searchCache.set(query, rootPapers);
                 return rootPapers;
             } catch (e) {
-                if (this.plugin.settings.debugMode) console.log('Reference Map: S2AG API SEARCH request error', e);
+                if (this.plugin.settings.debugMode) console.log('ORM: S2AG API SEARCH request error', e);
                 return [];
             }
         }
@@ -73,7 +73,7 @@ export class ViewManager {
                 this.refCache.set(paperId, references);
                 return references;
             } catch (e) {
-                if (this.plugin.settings.debugMode) console.log('Reference Map: S2AG API GET references request error', e);
+                if (this.plugin.settings.debugMode) console.log('ORM: S2AG API GET references request error', e);
                 return [];
             }
         }
@@ -89,7 +89,7 @@ export class ViewManager {
                 this.citeCache.set(paperId, citations);
                 return citations;
             } catch (e) {
-                if (this.plugin.settings.debugMode) console.log('Reference Map: S2AG API  GET citations request error', e);
+                if (this.plugin.settings.debugMode) console.log('ORM: S2AG API  GET citations request error', e);
                 return [];
             }
         }

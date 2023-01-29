@@ -113,6 +113,11 @@ export class ReferenceMapView extends ItemView {
 					new Notice(
 						"No BetterBibTeX JSON file found at " + jsonPath
 					);
+					if (this.plugin.settings.debugMode) {
+						console.log(
+							"ORM: No BetterBibTeX JSON file found at " + jsonPath
+						);
+					}
 					//Create the full path to the json file
 				}
 				const rawdata = fs.readFileSync(jsonPath);
