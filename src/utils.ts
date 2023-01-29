@@ -153,8 +153,8 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
     authors = paper.authors?.map((author) => author.name).join(", ");
     const year = paper.year ? paper.year.toString().trim() : "Unknown Year";
     const journal = paper.journal ? `${paper.journal.name}`.trim() : "Unknown Journal";
-    const volume = paper.journal?.volume ? paper.journal?.volume.trim() : "";
-    const pages = paper.journal?.pages ? paper.journal?.pages.trim() : "";
+    const volume = paper.journal?.volume ? paper.journal?.volume.trim() : "Unknown Volume";
+    const pages = paper.journal?.pages ? paper.journal?.pages.trim() : "Unknown Pages";
     const abstract = paper.abstract ? paper.abstract.trim() : "No abstract available";
     const bibTex = paper.citationStyles?.bibtex
         ? paper.citationStyles.bibtex
