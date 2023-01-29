@@ -25,6 +25,7 @@ export interface ReferenceMapSettings {
     metadataCopyOneBatch: boolean;
     metadataCopyTwoBatch: boolean;
     metadataCopyThreeBatch: boolean;
+    debugMode: boolean;
 }
 
 

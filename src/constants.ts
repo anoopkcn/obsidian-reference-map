@@ -42,6 +42,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     metadataCopyOneBatch: false,
     metadataCopyTwoBatch: false,
     metadataCopyThreeBatch: true,
+    debugMode: false,
 }
 
 export const SORTING_METADATA = [

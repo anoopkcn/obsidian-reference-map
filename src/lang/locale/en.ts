@@ -113,4 +113,9 @@ export default {
         "<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>" +
         "<b>Toggle ON:</b> Copy metadata for all references <br>" +
         "<b>Toggle OFF:</b> Copy metadata for the individual index/reference card",
+    // Debug settings
+    DEBUG_MODE: "Debug Mode",
+    DEBUG_MODE_DESC: "Enable debug mode to see more information in the console.<br>" +
+        "<b>Toggle ON:</b> Enable debug mode <br>" +
+        "<b>Toggle OFF:</b> Disable debug mode",
 };

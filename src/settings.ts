@@ -350,6 +350,20 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     ));
         }
 
+        containerEl.createEl('h2', { text: 'Debug Settings' });
+
+        new Setting(containerEl)
+            .setName(fragWithHTML(t('DEBUG_MODE')))
+            .setDesc(fragWithHTML(t('DEBUG_MODE_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.debugMode)
+                .onChange(async (value) => {
+                    this.plugin.settings.debugMode = value;
+                    this.plugin.saveSettings();
+                }
+                ));
+
+
         containerEl.createEl('hr');
         containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') });
         containerEl.createEl('p', { text: fragWithHTML(t('SEE_DOCUMENTATION_DESC')) });
