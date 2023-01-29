@@ -98,6 +98,16 @@ export const getPaperIds = (content: string): Set<string> => {
     return output;
 }
 
+export const sanitizeDOI = (dirtyDOI: string) => {
+    const doi_matches = dirtyDOI.match(doiRegex());
+    if (doi_matches) {
+        for (const match of doi_matches) {
+            return match.replace(/\)+$|\]+$|\*+$|_+$|`+$/, '').replace(/\s+/g, '');
+        }
+    }
+    return dirtyDOI.replace(/\s+/g, '')
+}
+
 export const getCiteKeys = (content: string): Set<string> => {
     const output = new Set<string>();
     // const citekeyRegex = /@[^{]+{([^,]+),/g;
@@ -227,7 +237,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => 
             const doi = citeKeyData.find(
                 (item) => item.id === citeKey
             )?.DOI;
-            if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: doi.replace(/\s+/g, '') });
+            if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(doi) });
         }
     }
     return citeKeysMap
