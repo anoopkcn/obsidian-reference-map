@@ -212,6 +212,13 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll("{{doi}}", data.doi);
 }
 
+export const setCiteKeyId = (paperId: string, citeKeyData: CslJson[]) => {
+    const citeKey = citeKeyData.find((item) =>
+        item.DOI === paperId || item.DOI === `https://doi.org/${paperId}`
+    )?.id;
+    return citeKey ? '@' + citeKey : paperId;
+}
+
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => {
     const citeKeysMap: CiteKey[] = [];
     if (citeKeys.size > 0) {

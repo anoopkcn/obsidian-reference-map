@@ -11,6 +11,7 @@ export interface ReferenceMapSettings {
     searchCiteKey: boolean;
     searchCiteKeyPath: string;
     linkCiteKey: boolean;
+    findZoteroCiteKeyFromID: boolean;
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;

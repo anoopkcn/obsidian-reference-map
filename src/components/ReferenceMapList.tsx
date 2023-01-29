@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCiteKeyIds, getCiteKeys, getPaperIds, removeNullReferences } from "src/utils";
+import { getCiteKeyIds, getCiteKeys, getPaperIds, removeNullReferences, setCiteKeyId } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 
@@ -32,7 +32,12 @@ export const ReferenceMapList = (props: {
 		const paperIds = getPaperIds(fileContent);
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
-			if (paper !== null) rootPapers.push({ id: paperId, paper: paper });
+			let paperCiteId = paperId
+			if (props.settings.searchCiteKey && props.citeKeyData && props.settings.findZoteroCiteKeyFromID) {
+				paperCiteId = setCiteKeyId(paperId, props.citeKeyData)
+
+			}
+			if (paper !== null) rootPapers.push({ id: paperCiteId, paper: paper });
 			if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
 		});
 

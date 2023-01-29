@@ -175,6 +175,16 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                         this.plugin.saveSettings();
                     }
                     ));
+            new Setting(containerEl)
+                .setName(t('FIND_ZOTERO_CITEKEY_FROM_ID'))
+                .setDesc(fragWithHTML(t('FIND_ZOTERO_CITEKEY_FROM_ID_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.findZoteroCiteKeyFromID)
+                    .onChange(async (value) => {
+                        this.plugin.settings.findZoteroCiteKeyFromID = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
         }
 
 

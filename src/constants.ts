@@ -28,6 +28,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     searchCiteKey: false,
     searchCiteKeyPath: 'My Library.json',
     linkCiteKey: false,
+    findZoteroCiteKeyFromID: false,
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
