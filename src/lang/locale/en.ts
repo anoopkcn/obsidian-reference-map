@@ -57,7 +57,7 @@ export default {
     FIND_ZOTERO_CITEKEY_FROM_ID_DESC: "Attempt to find citekey from ID. Check to see in the CSL JSON library if an entry with provided ID exists.<br>" +
         " If so the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>" +
         "<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>" +
-        "<b>Toggle OFF:</b> Do not lookup for citekey from ID",
+        "<b>Toggle OFF:</b> Do not lookup citekey from ID",
     ENABLE_SORTING: "Sorting References and Citations",
     ENABLE_SORTING_DESC: "Enable or Disable sorting of citing and cited papers in the reference cards. <br>" +
         "<b>Toggle ON:</b> Sorting enabled<br>" +
