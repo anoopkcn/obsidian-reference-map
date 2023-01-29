@@ -1,5 +1,7 @@
+![ORM-Header-logo](./images/reference-map.png)
+
 # Reference Map
-Reference and citation map for literature review and discovery. 
+Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you to manage and discover your references and citations. It provides a sidebar view to manage cited and citing references of your bibliography. It can be used to create a reference map for a paper or a project.
 
 ## Requirements
 - [Obsidian](https://obsidian.md/) with community plugins enabled
@@ -96,4 +98,4 @@ If you want to configure the style of the view you can use the [Obsidian-style-s
 
 The settings tab contains options to configure the behaviour of the plugin.
 
-### Please feel free to open an issue if you find any bugs or have any suggestions.
+**Please feel free to open an issue if you find any bugs or have any suggestions at [GitHub Issues Page](https://github.com/anoopkcn/obsidian-reference-map/issues)**
