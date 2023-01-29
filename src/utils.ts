@@ -152,7 +152,9 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
             : "Unknown Author";
     authors = paper.authors?.map((author) => author.name).join(", ");
     const year = paper.year ? paper.year.toString() : "Unknown Year";
-    const journal = paper.journal ? `${paper.journal.name}, ${paper.journal.pages}, ${paper.journal.volume}` : "Unknown Journal";
+    const journal = paper.journal ? `${paper.journal.name}` : "Unknown Journal";
+    const volume = paper.journal?.volume ? paper.journal?.volume : "";
+    const pages = paper.journal?.pages ? paper.journal?.pages : "";
     const abstract = paper.abstract ? paper.abstract : "No abstract available";
     const bibTex = paper.citationStyles?.bibtex
         ? paper.citationStyles.bibtex
@@ -181,6 +183,8 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
         authors: authors,
         year: year,
         journal: journal,
+        volume: volume,
+        pages: pages,
         abstract: abstract,
         url: paperURL,
         pdfurl: openAccessPdfUrl,
@@ -200,6 +204,8 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll("{{authors}}", data.authors.replace(/[:\\\\/]/g, ''))
         .replaceAll("{{year}}", data.year.replace(/[:\\\\/]/g, ''))
         .replaceAll("{{journal}}", data.journal.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{volume}}", data.volume.replace(/[:\\\\/]/g, ''))
+        .replaceAll("{{pages}}", data.pages.replace(/[:\\\\/]/g, ''))
         .replaceAll("{{abstract}}", data.abstract)
         .replaceAll("{{url}}", data.url)
         .replaceAll("{{pdfurl}}", data.pdfurl)

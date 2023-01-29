@@ -91,6 +91,8 @@ export interface MetaData {
     authors: string,
     year: string,
     journal: string,
+    volume: string,
+    pages: string,
     abstract: string,
     url: string,
     pdfurl: string,
