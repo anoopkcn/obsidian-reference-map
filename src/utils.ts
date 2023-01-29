@@ -143,19 +143,19 @@ export function extractKeywords(text: string) {
 }
 
 export const makeMetaData = (paper: SemanticPaper): MetaData => {
-    const paperTitle = paper.title ? paper.title : "Unknown Title";
+    const paperTitle = paper.title ? paper.title.trim() : "Unknown Title";
     let authors = "Unknown Authors";
     let author = "Unknown Author";
     if (paper.authors?.length > 0)
         author = paper.authors[0].name
-            ? paper.authors[0].name
+            ? paper.authors[0].name.trim()
             : "Unknown Author";
     authors = paper.authors?.map((author) => author.name).join(", ");
-    const year = paper.year ? paper.year.toString() : "Unknown Year";
-    const journal = paper.journal ? `${paper.journal.name}` : "Unknown Journal";
-    const volume = paper.journal?.volume ? paper.journal?.volume : "";
-    const pages = paper.journal?.pages ? paper.journal?.pages : "";
-    const abstract = paper.abstract ? paper.abstract : "No abstract available";
+    const year = paper.year ? paper.year.toString().trim() : "Unknown Year";
+    const journal = paper.journal ? `${paper.journal.name}`.trim() : "Unknown Journal";
+    const volume = paper.journal?.volume ? paper.journal?.volume.trim() : "";
+    const pages = paper.journal?.pages ? paper.journal?.pages.trim() : "";
+    const abstract = paper.abstract ? paper.abstract.trim() : "No abstract available";
     const bibTex = paper.citationStyles?.bibtex
         ? paper.citationStyles.bibtex
         : "No BibTex available";
