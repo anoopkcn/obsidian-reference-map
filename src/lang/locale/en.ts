@@ -86,13 +86,13 @@ export default {
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
     METADATA_COPY_TEMPLATE_ONE: `${clipBoard} Metadata One Template`,
     METADATA_COPY_TEMPLATE_ONE_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
-        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
     METADATA_COPY_TEMPLATE_TWO: `${papeClip} Metadata Two Template`,
     METADATA_COPY_TEMPLATE_TWO_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
-        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
     METADATA_COPY_TEMPLATE_THREE: `${clipboardData} Metadata Three Template`,
     METADATA_COPY_TEMPLATE_THREE_DESC: "Template of the metadata to be copied to the clipboard.<br>" +
-        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
+        "Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>",
     METADATA_COPY_ONE_BATCH: `${clipBoard} Metadata One Batch`,
     METADATA_COPY_ONE_BATCH_DESC: "Copy metadata for all the references(cited papers) to the clipboard.<br>" +
         "<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>" +
