@@ -18,6 +18,8 @@ The plugin is available in the Obsidian's Community Plugin Tab via: Settings →
 You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugin to install the latest release.
 
 ## Usage
+This `README.md` file contains the basic description of the plugin for a detailed guide please **refer to the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page**.
+
 ![ORM-demo](./images/orm-demo-0.7.5.png)
 
 ### Reference Map View
