@@ -58,7 +58,7 @@ The following types of IDs are supported:
 | ID Syntax | Description | Example |
 | --- | --- | --- |
 `DOI:<doi>` | A [Digital Object Identifier](http://doi.org/). |`DOI:10.18653/v1/N18-3011` or `10.18653/v1/N18-3011v1`
-`@<citekey>`| [Zotero](https://www.zotero.org/) citekey* |`@smith2019attention`
+`@<citekey>`| [Zotero](https://www.zotero.org/) citekey(Default=OFF)* |`@smith2019attention`
 `ARXIV:<id>`| [arXiv.org](https://arxiv.org/)|`ARXIV:2106.15928`
 `MAG:<id>` | Microsoft Academic Graph|`MAG:112218234`
 `PMID:<id>`| PubMed/Medline|`PMID:19872477`
