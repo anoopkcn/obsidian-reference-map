@@ -198,11 +198,11 @@ body {
 	color: var(--orm-paper-author-link-hover-color);
 }
 
-.orm-paper-link-citekey{
+.orm-paper-link-citekey {
 	font-size: var(--orm-paper-citekey-font-size);
 	font-weight: var(--orm-paper-citekey-font-weight);
 	display: block;
-	padding-top:0.25rem;
+	padding-top: 0.25rem;
 	word-break: break-all;
 }
 
@@ -223,7 +223,7 @@ body {
 	margin-top: 0.5rem;
 }
 
-.orm-paper-buttons > div {
+.orm-paper-buttons>div {
 	font-size: small;
 	text-align: left;
 	min-width: 16%;
@@ -231,11 +231,11 @@ body {
 	color: var(--orm-paper-buttons-color);
 }
 
-.orm-paper-buttons > .orm-openaccess a {
+.orm-paper-buttons>.orm-openaccess a {
 	color: var(--orm-paper-buttons-color);
 }
 
-.orm-paper-buttons > .orm-openaccess a:hover {
+.orm-paper-buttons>.orm-openaccess a:hover {
 	color: var(--orm-paper-buttons-hover-color);
 }
 
@@ -243,7 +243,7 @@ body {
 	opacity: 0.3;
 }
 
-.orm-paper-buttons > .orm-copy-metadata-one,
+.orm-paper-buttons>.orm-copy-metadata-one,
 .orm-copy-metadata-two,
 .orm-copy-metadata-three,
 .orm-references,
@@ -251,7 +251,7 @@ body {
 	cursor: pointer;
 }
 
-.orm-paper-buttons > .orm-copy-metadata-one:hover,
+.orm-paper-buttons>.orm-copy-metadata-one:hover,
 .orm-copy-metadata-two:hover,
 .orm-copy-metadata-three:hover,
 .orm-references:hover,
@@ -299,4 +299,27 @@ body {
 	text-align: center;
 	width: 100%;
 	height: 20px;
+}
+
+/** Settings Dialog **/
+.d-none {
+	display: none;
+}
+
+.orm-PathLoading,
+.orm-PathError,
+.orm-PathSuccess {
+	font-size: 14px;
+}
+
+.orm-PathLoading {
+	color: var(--text-muted);
+}
+
+.orm-PathError {
+	color: var(--text-error);
+}
+
+.orm-PathSuccess {
+	color: var(--text-accent);
 }

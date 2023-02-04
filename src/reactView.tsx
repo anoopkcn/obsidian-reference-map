@@ -1,4 +1,4 @@
-import { ItemView, MarkdownView, Notice, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
 import * as fs from "fs";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
@@ -22,6 +22,7 @@ export class ReferenceMapView extends ItemView {
 		this.plugin = plugin;
 		this.viewManager = new ViewManager(plugin);
 		this.rootEl = createRoot(this.containerEl.children[1]);
+		this.plugin.library = false;
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
@@ -68,22 +69,28 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
-			const jsonPath = resolvePath(
-				this.plugin.settings.searchCiteKeyPath
-			);
-			if (!fs.existsSync(jsonPath)) {
-				new Notice(
-					"No library file found at " + jsonPath
+			try {
+				const jsonPath = resolvePath(
+					this.plugin.settings.searchCiteKeyPath
 				);
+				if (!fs.existsSync(jsonPath)) {
+					if (this.plugin.settings.debugMode) {
+						console.log(
+							"ORM: No library file found at " + jsonPath
+						);
+					}
+				}
+				const rawdata = fs.readFileSync(jsonPath);
+				const libraryData = JSON.parse(rawdata.toString());
+				if (libraryData && Object.keys(libraryData).length > 0) {
+					this.plugin.library = true
+					return libraryData
+				}
+			} catch (e) {
 				if (this.plugin.settings.debugMode) {
-					console.log(
-						"ORM: No library file found at " + jsonPath
-					);
+					console.log("ORM: Error loading library file.")
 				}
 			}
-			const rawdata = fs.readFileSync(jsonPath);
-			const libraryData = JSON.parse(rawdata.toString());
-			if (libraryData && Object.keys(libraryData).length > 0) return libraryData
 		}
 		return null
 	}

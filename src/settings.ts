@@ -1,10 +1,14 @@
-import { PluginSettingTab, Setting } from "obsidian";
+import { FileSystemAdapter, PluginSettingTab, Setting } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
-import { fragWithHTML } from "./utils";
+import { fragWithHTML, resolvePath } from "./utils";
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
     plugin: ReferenceMap;
+
+    citationPathLoadingEl: HTMLElement;
+    citationPathErrorEl: HTMLElement;
+    citationPathSuccessEl: HTMLElement;
 
     constructor(plugin: ReferenceMap) {
         super(app, plugin);
@@ -158,13 +162,36 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
             new Setting(containerEl)
                 .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
                 .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
-                .addText(text => text
+                .addText((text) => {
+                    text
                     .setValue(this.plugin.settings.searchCiteKeyPath)
                     .onChange(async (value) => {
-                        this.plugin.settings.searchCiteKeyPath = value;
-                        this.plugin.saveSettings();
+                        this.checkCitationExportPath(value).then(
+                            (success) => {
+                                if (success) {
+                                    this.showCitationExportPathSuccess()
+                                    this.plugin.settings.searchCiteKeyPath = value;
+                                    this.plugin.saveSettings();
+                                }
+                            }
+                        )
                     }
-                    ));
+                    )
+                });
+
+            this.citationPathLoadingEl = containerEl.createEl('p', {
+                cls: 'orm-PathLoading d-none',
+                text: 'Loading citation database...',
+            });
+            this.citationPathErrorEl = containerEl.createEl('p', {
+                cls: 'orm-PathError d-none',
+                text: 'The citation export file cannot be found. Please check the path above.',
+            });
+            this.citationPathSuccessEl = containerEl.createEl('p', {
+                cls: 'orm-PathSuccess d-none',
+                text: 'Successfully Loaded Library Containing References.',
+            });
+
             new Setting(containerEl)
                 .setName(t('CITEKEY_ZOTERO_LINK'))
                 .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
@@ -368,5 +395,34 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') });
         containerEl.createEl('p', { text: fragWithHTML(t('SEE_DOCUMENTATION_DESC')) });
 
+    }
+    async checkCitationExportPath(filePath: string): Promise<boolean> {
+        this.citationPathLoadingEl.addClass('d-none');
+        if (filePath.endsWith('.json')) {
+            try {
+                await FileSystemAdapter.readLocalFile(
+                    resolvePath(filePath),
+                );
+                this.citationPathErrorEl.addClass('d-none');
+            } catch (e) {
+                this.citationPathSuccessEl.addClass('d-none');
+                this.citationPathErrorEl.removeClass('d-none');
+                return false;
+            }
+        } else {
+            this.citationPathSuccessEl.addClass('d-none');
+            this.citationPathErrorEl.removeClass('d-none');
+            return false;
+        }
+        return true;
+    }
+
+    showCitationExportPathSuccess(): void {
+        if (!this.plugin.library) return;
+
+        this.citationPathSuccessEl.setText(
+            `Successfully Loaded Library Containing References.`,
+        );
+        this.citationPathSuccessEl.removeClass('d-none');
     }
 }

@@ -12,6 +12,7 @@ enum Direction {
 
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings;
+	library: boolean;
 
 	async onload() {
 		await this.loadSettings();
