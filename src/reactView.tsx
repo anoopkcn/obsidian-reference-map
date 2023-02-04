@@ -5,10 +5,11 @@ import { t } from "./lang/helpers";
 import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
+import * as BibTeXParser from '@retorquere/bibtex-parser';
 import { ReferenceMapList } from "./components/ReferenceMapList";
 import { extractKeywords, resolvePath } from "./utils";
 import { EXCLUDE_FILE_NAMES } from "./constants";
-import { CslJson } from "./types";
+import { citeKeyLibrary } from "./types";
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
@@ -22,7 +23,7 @@ export class ReferenceMapView extends ItemView {
 		this.plugin = plugin;
 		this.viewManager = new ViewManager(plugin);
 		this.rootEl = createRoot(this.containerEl.children[1]);
-		this.plugin.library = false;
+		this.plugin.library = { active: false, adapter: '' };
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
@@ -69,26 +70,52 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
+			let rawdata;
 			try {
-				const jsonPath = resolvePath(
+				const libraryPath = resolvePath(
 					this.plugin.settings.searchCiteKeyPath
 				);
-				if (!fs.existsSync(jsonPath)) {
+				if (!fs.existsSync(libraryPath)) {
 					if (this.plugin.settings.debugMode) {
 						console.log(
-							"ORM: No library file found at " + jsonPath
+							"ORM: No library file found at " + libraryPath
 						);
 					}
 				}
-				const rawdata = fs.readFileSync(jsonPath);
-				const libraryData = JSON.parse(rawdata.toString());
-				if (libraryData && Object.keys(libraryData).length > 0) {
-					this.plugin.library = true
-					return libraryData
-				}
+				rawdata = fs.readFileSync(libraryPath).toString();
 			} catch (e) {
 				if (this.plugin.settings.debugMode) {
 					console.log("ORM: Error loading library file.")
+				}
+				return null
+			}
+			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
+				const libraryData = JSON.parse(rawdata);
+				console.log(libraryData)
+				if (libraryData && Object.keys(libraryData).length > 0) {
+					this.plugin.library = { active: true, adapter: 'cls-json' }
+					return libraryData
+				}
+			}
+			if (this.plugin.settings.searchCiteKeyPath.endsWith(".bib")) {
+				const options: BibTeXParser.ParserOptions = {
+					errorHandler: (err) => {
+						if (this.plugin.settings.debugMode) {
+							console.warn(
+								'ORM: Non-fatal error loading BibTeX entry:',
+								err,
+							);
+						}
+					},
+				};
+				try {
+					const parsed = BibTeXParser.parse(rawdata, options) as BibTeXParser.Bibliography;
+					this.plugin.library = { active: true, adapter: 'bibtex' }
+					return parsed.entries
+				} catch (e) {
+					if (this.plugin.settings.debugMode) {
+						console.log("ORM: Error loading library file.")
+					}
 				}
 			}
 		}
@@ -101,7 +128,7 @@ export class ReferenceMapView extends ItemView {
 		let frontMatterString = "";
 		let fileNameString = "";
 		// Loading library everytime is not ideal, but it's the only way to get the latest data
-		const citeKeyData: CslJson[] | null = await this.loadLibrary()
+		const citeKeyData: citeKeyLibrary[] | null = await this.loadLibrary()
 		if (activeView) {
 			if (this.plugin.settings.searchFrontMatter) {
 				const fileCache = app.metadataCache.getFileCache(
@@ -139,6 +166,7 @@ export class ReferenceMapView extends ItemView {
 				frontMatterString={frontMatterString}
 				fileNameString={fileNameString}
 				citeKeyData={citeKeyData}
+				adapter={this.plugin.library.adapter}
 			/>
 		);
 	};

@@ -78,12 +78,18 @@ export interface Author {
 }
 
 
-export interface CslJson {
-    id: string;
-    DOI: string | null;
+export interface citeKeyLibrary {
+    key?: string;
+    id?: string;
+    DOI?: string | null;
+    fields?: BibFields;
     abstract?: string | null;
-    title: string;
+    title?: string | null;
     URL?: string | null;
+}
+
+export interface BibFields {
+    doi?: string[];
 }
 
 export interface MetaData {

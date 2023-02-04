@@ -398,7 +398,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
     }
     async checkCitationExportPath(filePath: string): Promise<boolean> {
         this.citationPathLoadingEl.addClass('d-none');
-        if (filePath.endsWith('.json')) {
+        if (filePath.endsWith('.json') || filePath.endsWith('.bib')) {
             try {
                 await FileSystemAdapter.readLocalFile(
                     resolvePath(filePath),
@@ -418,7 +418,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
     }
 
     showCitationExportPathSuccess(): void {
-        if (!this.plugin.library) return;
+        if (!this.plugin.library.active) return;
 
         this.citationPathSuccessEl.setText(
             `Successfully Loaded Library Containing References.`,

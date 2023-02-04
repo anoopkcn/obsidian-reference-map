@@ -1,4 +1,4 @@
-import { CslJson, IndexPaper, ReferenceMapSettings } from "src/types";
+import { citeKeyLibrary, IndexPaper, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView } from "obsidian";
@@ -13,7 +13,8 @@ export const ReferenceMapList = (props: {
 	viewManager: ViewManager;
 	frontMatterString: string;
 	fileNameString: string;
-	citeKeyData: CslJson[] | null;
+	citeKeyData: citeKeyLibrary[] | null;
+	adapter: string;
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ export const ReferenceMapList = (props: {
 
 		if (props.settings.searchCiteKey && props.citeKeyData) {
 			const citeKeys = getCiteKeys(fileContent);
-			const citeKeyMap = getCiteKeyIds(citeKeys, props.citeKeyData);
+			const citeKeyMap = getCiteKeyIds(citeKeys, props.citeKeyData, props.adapter);
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);

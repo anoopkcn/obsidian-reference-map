@@ -1,7 +1,7 @@
 import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
-import { CiteKey, CslJson, IndexPaper, MetaData, SemanticPaper } from "./types";
+import { CiteKey, citeKeyLibrary, IndexPaper, MetaData, SemanticPaper } from "./types";
 import { BIBTEX_STANDARD_TYPES, COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
@@ -222,22 +222,30 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll("{{doi}}", data.doi);
 }
 
-export const setCiteKeyId = (paperId: string, citeKeyData: CslJson[]) => {
+export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[]) => {
     const citeKey = citeKeyData.find((item) =>
         item.DOI === paperId || item.DOI === `https://doi.org/${paperId}`
     )?.id;
     return citeKey ? '@' + citeKey : paperId;
 }
 
-export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: CslJson[]) => {
+export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {
     const citeKeysMap: CiteKey[] = [];
+    if (adapter === '') return citeKeysMap;
     if (citeKeys.size > 0) {
         // get DOI form CiteKeyData corresponding to each item in citeKeys
         for (const citeKey of citeKeys) {
-            const doi = citeKeyData.find(
-                (item) => item.id === citeKey
-            )?.DOI;
-            if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(doi) });
+            if (adapter === 'csl-json') {
+                const doi = citeKeyData.find(
+                    (item) => item.id === citeKey
+                )?.DOI;
+                if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(doi) });
+            } else if (adapter === 'bibtex') {
+                const doi = citeKeyData.find(
+                    (item) => item.key === citeKey
+                )?.fields?.doi?.[0]
+                if (doi) citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(doi) });
+            }
         }
     }
     return citeKeysMap
