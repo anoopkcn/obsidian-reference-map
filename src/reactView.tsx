@@ -60,23 +60,41 @@ export class ReferenceMapView extends ItemView {
 		return "ReferenceMapIconScroll";
 	}
 
-	// async onOpen() {
-	//     const container = this.containerEl.children[1];
-	//     container.empty();
-	//     container.createEl("span", { text: "Reference map" });
-	// }
-
 	async onClose() {
 		this.rootEl.unmount();
 		this.viewManager.clearCache();
 		return super.onClose();
 	}
 
+	loadLibrary = async () => {
+		if (this.plugin.settings.searchCiteKey) {
+			const jsonPath = resolvePath(
+				this.plugin.settings.searchCiteKeyPath
+			);
+			if (!fs.existsSync(jsonPath)) {
+				new Notice(
+					"No library file found at " + jsonPath
+				);
+				if (this.plugin.settings.debugMode) {
+					console.log(
+						"ORM: No library file found at " + jsonPath
+					);
+				}
+			}
+			const rawdata = fs.readFileSync(jsonPath);
+			const libraryData = JSON.parse(rawdata.toString());
+			if (libraryData && Object.keys(libraryData).length > 0) return libraryData
+		}
+		return null
+	}
+
+
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let frontMatterString = "";
 		let fileNameString = "";
-		let citeKeyData: CslJson[] | null = null;
+		// Loading library everytime is not ideal, but it's the only way to get the latest data
+		const citeKeyData: CslJson[] | null = await this.loadLibrary()
 		if (activeView) {
 			if (this.plugin.settings.searchFrontMatter) {
 				const fileCache = app.metadataCache.getFileCache(
@@ -104,24 +122,6 @@ export class ReferenceMapView extends ItemView {
 				fileNameString = extractKeywords(activeView.file.basename)
 					.unique()
 					.join("+");
-			}
-			if (this.plugin.settings.searchCiteKey) {
-				const jsonPath = resolvePath(
-					this.plugin.settings.searchCiteKeyPath
-				);
-				if (!fs.existsSync(jsonPath)) {
-					new Notice(
-						"No BetterBibTeX JSON file found at " + jsonPath
-					);
-					if (this.plugin.settings.debugMode) {
-						console.log(
-							"ORM: No BetterBibTeX JSON file found at " + jsonPath
-						);
-					}
-					//Create the full path to the json file
-				}
-				const rawdata = fs.readFileSync(jsonPath);
-				citeKeyData = JSON.parse(rawdata.toString());
 			}
 		}
 		this.rootEl.render(
