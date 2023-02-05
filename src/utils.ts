@@ -222,11 +222,20 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll("{{doi}}", data.doi);
 }
 
-export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[]) => {
-    const citeKey = citeKeyData.find((item) =>
-        item.DOI === paperId || item.DOI === `https://doi.org/${paperId}`
-    )?.id;
-    return citeKey ? '@' + citeKey : paperId;
+export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], adapter = '') => {
+    if (adapter === '') return paperId;
+    if (adapter === 'csl-json') {
+        const citeKey = citeKeyData.find((item) =>
+            item.DOI === paperId || item.DOI === `https://doi.org/${paperId}`
+        )?.id;
+        return citeKey ? '@' + citeKey : paperId;
+    } else if (adapter === 'bibtex') {
+        const citeKey = citeKeyData.find((item) =>
+            item.fields?.doi?.[0] === paperId || item.fields?.doi?.[0] === `https://doi.org/${paperId}`
+        )?.key;
+        return citeKey ? '@' + citeKey : paperId;
+    }
+
 }
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {

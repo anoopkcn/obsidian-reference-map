@@ -46,15 +46,15 @@ export default {
     SEARCH_CITEKEY_DESC: "Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs<br>" +
         "<b>Toggle ON:</b> Enable citekey detection<br>" +
         "<b>Toggle OFF:</b> Disable citekey detection",
-    SEARCH_CITEKEY_PATH: "CSL JSON File Path",
-    SEARCH_CITEKEY_PATH_DESC: "Name of your CSL JSON file. Usually exported from reference manager such as Zotero. <br>" +
+    SEARCH_CITEKEY_PATH: "Library File Path",
+    SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or Bibtex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero. <br>" +
         "Path must be relative to the vaults root",
     CITEKEY_ZOTERO_LINK: "Hide or Show Open in Zotero Link",
     CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
         "<b>Toggle ON:</b> Show link in the index card<br>" +
         "<b>Toggle OFF:</b> Hide link in the index card",
     FIND_ZOTERO_CITEKEY_FROM_ID: "Find CiteKey from ID",
-    FIND_ZOTERO_CITEKEY_FROM_ID_DESC: "Attempt to find citekey from ID. Check to see in the CSL JSON library if an entry with provided ID exists.<br>" +
+    FIND_ZOTERO_CITEKEY_FROM_ID_DESC: "Attempt to find citekey from ID. Check to see in the library if an entry with provided ID exists.<br>" +
         " If so the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>" +
         "<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>" +
         "<b>Toggle OFF:</b> Do not lookup citekey from ID",

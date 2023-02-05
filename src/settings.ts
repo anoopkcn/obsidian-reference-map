@@ -148,74 +148,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
         }
 
         new Setting(containerEl)
-            .setName(fragWithHTML(t('SEARCH_CITEKEY')))
-            .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.searchCiteKey)
-                .onChange(async (value) => {
-                    this.plugin.settings.searchCiteKey = value;
-                    this.plugin.saveSettings();
-                    this.display();
-                }));
-
-        if (this.plugin.settings.searchCiteKey) {
-            new Setting(containerEl)
-                .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
-                .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
-                .addText((text) => {
-                    text
-                    .setValue(this.plugin.settings.searchCiteKeyPath)
-                    .onChange(async (value) => {
-                        this.checkCitationExportPath(value).then(
-                            (success) => {
-                                if (success) {
-                                    this.showCitationExportPathSuccess()
-                                    this.plugin.settings.searchCiteKeyPath = value;
-                                    this.plugin.saveSettings();
-                                }
-                            }
-                        )
-                    }
-                    )
-                });
-
-            this.citationPathLoadingEl = containerEl.createEl('p', {
-                cls: 'orm-PathLoading d-none',
-                text: 'Loading citation database...',
-            });
-            this.citationPathErrorEl = containerEl.createEl('p', {
-                cls: 'orm-PathError d-none',
-                text: 'The citation export file cannot be found. Please check the path above.',
-            });
-            this.citationPathSuccessEl = containerEl.createEl('p', {
-                cls: 'orm-PathSuccess d-none',
-                text: 'Successfully Loaded Library Containing References.',
-            });
-
-            new Setting(containerEl)
-                .setName(t('CITEKEY_ZOTERO_LINK'))
-                .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
-                .addToggle(toggle => toggle
-                    .setValue(this.plugin.settings.linkCiteKey)
-                    .onChange(async (value) => {
-                        this.plugin.settings.linkCiteKey = value;
-                        this.plugin.saveSettings();
-                    }
-                    ));
-            new Setting(containerEl)
-                .setName(t('FIND_ZOTERO_CITEKEY_FROM_ID'))
-                .setDesc(fragWithHTML(t('FIND_ZOTERO_CITEKEY_FROM_ID_DESC')))
-                .addToggle(toggle => toggle
-                    .setValue(this.plugin.settings.findZoteroCiteKeyFromID)
-                    .onChange(async (value) => {
-                        this.plugin.settings.findZoteroCiteKeyFromID = value;
-                        this.plugin.saveSettings();
-                    }
-                    ));
-        }
-
-
-        new Setting(containerEl)
             .setName(t('ENABLE_SORTING'))
             .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
             .addToggle(toggle => toggle
@@ -253,6 +185,77 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     }
                     ));
         }
+
+        new Setting(containerEl)
+            .setName(fragWithHTML(t('SEARCH_CITEKEY')))
+            .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.searchCiteKey)
+                .onChange(async (value) => {
+                    this.plugin.settings.searchCiteKey = value;
+                    this.plugin.saveSettings();
+                    this.display();
+                }));
+
+
+        if (this.plugin.settings.searchCiteKey) {
+            new Setting(containerEl)
+                .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
+                .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
+                .addText((text) => {
+                    text
+                        .setValue(this.plugin.settings.searchCiteKeyPath)
+                        .onChange(async (value) => {
+                            this.checkCitationExportPath(value).then(
+                                (success) => {
+                                    if (success) {
+                                        this.showCitationExportPathSuccess()
+                                        this.plugin.settings.searchCiteKeyPath = value;
+                                        this.plugin.saveSettings();
+                                    }
+                                }
+                            )
+                        }
+                        )
+                });
+
+            this.citationPathLoadingEl = containerEl.createEl('p', {
+                cls: 'orm-PathLoading d-none',
+                text: 'Loading citation database...',
+            });
+            this.citationPathErrorEl = containerEl.createEl('p', {
+                cls: 'orm-PathError d-none',
+                text: 'The citation export file cannot be found. Please check the path above.',
+            });
+            this.citationPathSuccessEl = containerEl.createEl('p', {
+                cls: 'orm-PathSuccess d-none',
+                text: 'Successfully Loaded Library Containing References.',
+            });
+
+            new Setting(containerEl)
+                .setName(t('CITEKEY_ZOTERO_LINK'))
+                .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.linkCiteKey)
+                    .onChange(async (value) => {
+                        this.plugin.settings.linkCiteKey = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+            new Setting(containerEl)
+                .setName(t('FIND_ZOTERO_CITEKEY_FROM_ID'))
+                .setDesc(fragWithHTML(t('FIND_ZOTERO_CITEKEY_FROM_ID_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.findZoteroCiteKeyFromID)
+                    .onChange(async (value) => {
+                        this.plugin.settings.findZoteroCiteKeyFromID = value;
+                        this.plugin.saveSettings();
+                    }
+                    ));
+        }
+
+        containerEl.createEl('h2', { text: 'Buttons Settings' });
+
         new Setting(containerEl)
             .setName(t('STANDARDIZE_BIBTEX'))
             .setDesc(fragWithHTML(t('STANDARDIZE_BIBTEX_DESC')))
@@ -263,10 +266,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     this.plugin.saveSettings();
                 }
                 ));
-
-
-
-        containerEl.createEl('h2', { text: 'Buttons Settings' });
 
         new Setting(containerEl)
             .setName(fragWithHTML(t('FORMAT_METADATA_COPY_ONE')))

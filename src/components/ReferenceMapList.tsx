@@ -35,7 +35,7 @@ export const ReferenceMapList = (props: {
 			const paper = await props.viewManager.getIndexPaper(paperId);
 			let paperCiteId = paperId
 			if (props.settings.searchCiteKey && props.citeKeyData && props.settings.findZoteroCiteKeyFromID) {
-				paperCiteId = setCiteKeyId(paperId, props.citeKeyData)
+				paperCiteId = setCiteKeyId(paperId, props.citeKeyData, props.adapter)
 
 			}
 			if (paper !== null) rootPapers.push({ id: paperCiteId, paper: paper });
