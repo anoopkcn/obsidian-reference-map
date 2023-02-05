@@ -113,7 +113,7 @@ export default class ReferenceMap extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	//refresh view on setting schange 
+	//refresh view on settings change 
 	refresh = () => {
 		this.activateView()
 	}

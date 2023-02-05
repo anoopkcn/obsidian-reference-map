@@ -2,7 +2,7 @@ import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
 import { CiteKey, citeKeyLibrary, IndexPaper, MetaData, SemanticPaper } from "./types";
-import { BIBTEX_STANDARD_TYPES, COMMONWORDS, NUMBERS, PUNCTUATION } from "./constants";
+import { BIBTEX_STANDARD_TYPES, COMMON_WORDS, NUMBERS, PUNCTUATION } from "./constants";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -143,7 +143,7 @@ export function extractKeywords(text: string) {
     const regex = new RegExp(`[${PUNCTUATION.join('')}]`, "gmi")
     const keywords = text.replace(regex, " ").replace(/\s\s+/g, ' ').split(" ");
     const result = keywords.filter((element) => {
-        if (!COMMONWORDS.includes(element) && !PUNCTUATION.includes(element) && !NUMBERS.includes(element)) {
+        if (!COMMON_WORDS.includes(element) && !PUNCTUATION.includes(element) && !NUMBERS.includes(element)) {
             return true;
         }
         return false;

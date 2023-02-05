@@ -70,7 +70,7 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
-			let rawdata;
+			let rawData;
 			try {
 				const libraryPath = resolvePath(
 					this.plugin.settings.searchCiteKeyPath
@@ -82,7 +82,7 @@ export class ReferenceMapView extends ItemView {
 						);
 					}
 				}
-				rawdata = fs.readFileSync(libraryPath).toString();
+				rawData = fs.readFileSync(libraryPath).toString();
 			} catch (e) {
 				if (this.plugin.settings.debugMode) {
 					console.log("ORM: Error loading library file.")
@@ -91,7 +91,7 @@ export class ReferenceMapView extends ItemView {
 			}
 			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
 				try {
-					const libraryData = JSON.parse(rawdata);
+					const libraryData = JSON.parse(rawData);
 					this.plugin.library = { active: true, adapter: 'csl-json' }
 					return libraryData
 				} catch (e) {
@@ -112,7 +112,7 @@ export class ReferenceMapView extends ItemView {
 					},
 				};
 				try {
-					const parsed = BibTeXParser.parse(rawdata, options) as BibTeXParser.Bibliography;
+					const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
 					this.plugin.library = { active: true, adapter: 'bibtex' }
 					return parsed.entries
 				} catch (e) {
@@ -130,7 +130,7 @@ export class ReferenceMapView extends ItemView {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let frontMatterString = "";
 		let fileNameString = "";
-		// Loading library everytime is not ideal, but it's the only way to get the latest data
+		// Loading library every time is not ideal, but it's the only way to get the latest data
 		const citeKeyData: citeKeyLibrary[] | null = await this.loadLibrary()
 		if (activeView) {
 			if (this.plugin.settings.searchFrontMatter) {
