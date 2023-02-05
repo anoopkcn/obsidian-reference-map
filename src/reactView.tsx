@@ -75,7 +75,7 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
-			console.log("ORM: Loading library file...")
+			if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
 			let rawData;
 			try {
 				const libraryPath = resolvePath(
