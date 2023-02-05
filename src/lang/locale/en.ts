@@ -47,7 +47,7 @@ export default {
         "<b>Toggle ON:</b> Enable citekey detection<br>" +
         "<b>Toggle OFF:</b> Disable citekey detection",
     SEARCH_CITEKEY_PATH: "Library File Path",
-    SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or Bibtex file with <code>.bib</code> extension. Usually exported from reference manager such as  or BibDesk. <br>" +
+    SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or Bibtex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk. <br>" +
         "Path must be relative to the vaults root",
     CITEKEY_ZOTERO_LINK: "Hide or Show Open in Zotero Link",
     CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
