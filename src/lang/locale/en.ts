@@ -49,7 +49,7 @@ export default {
     SEARCH_CITEKEY_PATH: "Library File Path",
     SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk. <br>" +
         "Path must be relative to the vaults root",
-    CITEKEY_ZOTERO_LINK: "Hide or Show Open in Zotero Link",
+    CITEKEY_ZOTERO_LINK: "Hide or Show Link to Show Reference in Zotero",
     CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
         "<b>Toggle ON:</b> Show link in the index card<br>" +
         "<b>Toggle OFF:</b> Hide link in the index card",
