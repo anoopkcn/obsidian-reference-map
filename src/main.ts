@@ -1,4 +1,4 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian';
+import { Notice, Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { Library, ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
@@ -115,6 +115,12 @@ export default class ReferenceMap extends Plugin {
 
 	//refresh view on settings change 
 	refresh = () => {
-		this.activateView()
+		const existingPluginLeaves = this.app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
+		if (existingPluginLeaves.length > 0) {
+			this.ensureLeafExists(true);
+			this.activateView()
+		} else {
+			new Notice('No Reference Map view is active to refresh');
+		}
 	}
 }
