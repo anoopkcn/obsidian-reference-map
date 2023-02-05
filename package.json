@@ -1,6 +1,6 @@
 {
 	"name": "reference-map",
-	"version": "0.9.2",
+	"version": "0.9.3",
 	"description": "Reference and citation map for literature review and discovery",
 	"main": "main.js",
 	"scripts": {
