@@ -90,11 +90,14 @@ export class ReferenceMapView extends ItemView {
 				return null
 			}
 			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
-				const libraryData = JSON.parse(rawdata);
-				console.log(libraryData)
-				if (libraryData && Object.keys(libraryData).length > 0) {
-					this.plugin.library = { active: true, adapter: 'cls-json' }
+				try {
+					const libraryData = JSON.parse(rawdata);
+					this.plugin.library = { active: true, adapter: 'csl-json' }
 					return libraryData
+				} catch (e) {
+					if (this.plugin.settings.debugMode) {
+						console.log("ORM: Error loading library file.")
+					}
 				}
 			}
 			if (this.plugin.settings.searchCiteKeyPath.endsWith(".bib")) {

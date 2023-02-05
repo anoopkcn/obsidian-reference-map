@@ -241,7 +241,6 @@ export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], ada
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {
     const citeKeysMap: CiteKey[] = [];
-    if (adapter === '') return citeKeysMap;
     if (citeKeys.size > 0) {
         // get DOI form CiteKeyData corresponding to each item in citeKeys
         for (const citeKey of citeKeys) {
