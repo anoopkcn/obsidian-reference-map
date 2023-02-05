@@ -23,7 +23,7 @@ export class ReferenceMapView extends ItemView {
 		this.plugin = plugin;
 		this.viewManager = new ViewManager(plugin);
 		this.rootEl = createRoot(this.containerEl.children[1]);
-		this.plugin.library = { active: false, adapter: '' };
+		this.plugin.library = { active: false, adapter: '', libraryData: null };
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
@@ -62,6 +62,11 @@ export class ReferenceMapView extends ItemView {
 		return "ReferenceMapIconScroll";
 	}
 
+	async onOpen() {
+		await this.loadLibrary();
+		this.processReferences();
+	}
+
 	async onClose() {
 		this.rootEl.unmount();
 		this.viewManager.clearCache();
@@ -70,6 +75,7 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
+			console.log("ORM: Loading library file...")
 			let rawData;
 			try {
 				const libraryPath = resolvePath(
@@ -92,7 +98,7 @@ export class ReferenceMapView extends ItemView {
 			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
 				try {
 					const libraryData = JSON.parse(rawData);
-					this.plugin.library = { active: true, adapter: 'csl-json' }
+					this.plugin.library = { active: true, adapter: 'csl-json', libraryData: libraryData }
 					return libraryData
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
@@ -113,7 +119,7 @@ export class ReferenceMapView extends ItemView {
 				};
 				try {
 					const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
-					this.plugin.library = { active: true, adapter: 'bibtex' }
+					this.plugin.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries }
 					return parsed.entries
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
@@ -131,7 +137,7 @@ export class ReferenceMapView extends ItemView {
 		let frontMatterString = "";
 		let fileNameString = "";
 		// Loading library every time is not ideal, but it's the only way to get the latest data
-		const citeKeyData: citeKeyLibrary[] | null = await this.loadLibrary()
+		const citeKeyData: citeKeyLibrary[] | null = this.plugin.library.libraryData
 		if (activeView) {
 			if (this.plugin.settings.searchFrontMatter) {
 				const fileCache = app.metadataCache.getFileCache(

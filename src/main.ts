@@ -1,6 +1,6 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
-import { ReferenceMapSettings } from './types';
+import { Library, ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView';
 import { DEFAULT_SETTINGS } from './constants';
@@ -12,7 +12,7 @@ enum Direction {
 
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings;
-	library: { active: boolean, adapter: string };
+	library: Library;
 
 	async onload() {
 		await this.loadSettings();

@@ -119,3 +119,9 @@ export interface CiteKey {
     citeKey: string;
     paperId: string;
 }    
+
+export interface Library {
+    active: boolean;
+    adapter: string;
+    libraryData: citeKeyLibrary[] | null
+}
