@@ -12,14 +12,14 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
+1. Open '....'
+2. Type '....'
 3. Scroll down to '....'
 4. See error
 
 **Console output**
 Go to Reference Map Settings and turn on **Debug Mode**.
-Please open the Obsidian developer console (view->Toggle Developer Tools). Click anywhere in the console and force reload Obsidian by typing <kbd>Ctrl</kbd>+<kbd>R</kbd> on Windows or <kbd>Cmd</kbd>+<kbd>R</kbd> on MacOS. Then reproduce the issue you're describing. Please include any relevant error messages that appear in the console in your report here.
+Please open the Obsidian developer console (view->Toggle Developer Tools). Then reproduce the issue you're describing. Please include any relevant error messages that appear in the console in your report here. Reference Map logs will start with the prefix `ORM: `.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
