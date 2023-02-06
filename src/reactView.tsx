@@ -91,7 +91,7 @@ export class ReferenceMapView extends ItemView {
 				rawData = fs.readFileSync(libraryPath).toString();
 			} catch (e) {
 				if (this.plugin.settings.debugMode) {
-					console.log("ORM: Error loading library file.")
+					console.warn("ORM: Non-fatal error loading library file.")
 				}
 				return null
 			}
@@ -102,7 +102,7 @@ export class ReferenceMapView extends ItemView {
 					return libraryData
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
-						console.log("ORM: Error loading library file.")
+						console.warn("ORM: Non-fatal error loading library file.")
 					}
 				}
 			}
@@ -112,7 +112,7 @@ export class ReferenceMapView extends ItemView {
 						if (this.plugin.settings.debugMode) {
 							console.warn(
 								'ORM: Non-fatal error loading BibTeX entry:',
-								err,
+								// err,
 							);
 						}
 					},
@@ -123,7 +123,7 @@ export class ReferenceMapView extends ItemView {
 					return parsed.entries
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
-						console.log("ORM: Error loading library file.")
+						console.warn("ORM: Non-fatal error loading library file.")
 					}
 				}
 			}
