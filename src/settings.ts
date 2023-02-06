@@ -28,7 +28,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     .onClick(() => {
                         this.plugin.saveSettings();
                         // Force refresh
-                        this.plugin.refresh();
+                        this.plugin.view?.refresh();
                         this.display();
                     });
             });

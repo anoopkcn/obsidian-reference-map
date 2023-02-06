@@ -73,6 +73,13 @@ export class ReferenceMapView extends ItemView {
 		return super.onClose();
 	}
 
+	async refresh() {
+		this.viewManager.clearCache();
+		this.plugin.ensureLeafExists(true)
+		await this.loadLibrary();
+		this.processReferences();
+	}
+
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey) {
 			if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")

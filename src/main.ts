@@ -1,4 +1,4 @@
-import { Notice, Plugin, WorkspaceLeaf } from 'obsidian';
+import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { ReferenceMapSettingTab } from './settings';
 import { Library, ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
@@ -41,7 +41,7 @@ export default class ReferenceMap extends Plugin {
 			id: 'refresh-reference-map-sidebar-view',
 			name: 'Refresh View',
 			callback: () => {
-				this.refresh();
+				this.view?.refresh();
 			}
 		});
 
@@ -90,7 +90,7 @@ export default class ReferenceMap extends Plugin {
 
 		await this.app.workspace.getRightLeaf(false).setViewState({
 			type: REFERENCE_MAP_VIEW_TYPE,
-			active: true,
+			active: false,
 		});
 
 		this.app.workspace.revealLeaf(
@@ -111,16 +111,5 @@ export default class ReferenceMap extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-
-	//refresh view on settings change 
-	refresh = () => {
-		const existingPluginLeaves = this.app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
-		if (existingPluginLeaves.length > 0) {
-			this.ensureLeafExists(true);
-			this.activateView()
-		} else {
-			new Notice('No Reference Map view is active to refresh');
-		}
 	}
 }
