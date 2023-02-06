@@ -87,9 +87,9 @@ export const ReferenceMapList = (props: {
 				<div>
 					Reference Map View
 					<div className="orm-no-content-subtext">
-						No Active Markdown File
+						No Active Markdown File.
 						<br />
-						Click on a file to view its references
+						Click on a file to view its references.
 					</div>
 				</div>
 			</div>
@@ -124,7 +124,7 @@ export const ReferenceMapList = (props: {
 				<div>
 					Reference Map View
 					<div className="orm-no-content-subtext">
-					No Valid References Found
+						No Valid References Found.
 					</div>
 				</div>
 			</div>

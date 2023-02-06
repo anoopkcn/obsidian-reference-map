@@ -144,9 +144,12 @@ body {
 	opacity: 0.5;
 }
 .orm-no-content-subtext {
+	border: 1px solid var(--orm-paper-line-color);
 	padding: 0.5rem;
 	font-size: var(--font-ui-small);
+	font-weight: var(--font-medium);
 	color: var(--text-faint);
+	margin-top: 0.5rem;
 }
 
 /* ReferenceMapList */
