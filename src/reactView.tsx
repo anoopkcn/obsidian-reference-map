@@ -75,9 +75,12 @@ export class ReferenceMapView extends ItemView {
 
 	async refresh() {
 		this.viewManager.clearCache();
-		this.plugin.ensureLeafExists(true)
-		await this.loadLibrary();
-		this.processReferences();
+		const existingPluginLeaves = app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE);
+		if (existingPluginLeaves.length > 0) {
+			this.plugin.ensureLeafExists(true);
+			await this.loadLibrary();
+			this.processReferences();
+		}
 	}
 
 	loadLibrary = async () => {
