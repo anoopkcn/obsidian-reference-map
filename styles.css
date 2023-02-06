@@ -143,6 +143,11 @@ body {
 	text-align: center;
 	opacity: 0.5;
 }
+.orm-no-content-subtext {
+	padding: 0.5rem;
+	font-size: var(--nav-item-size);
+	color: var(--text-faint);
+}
 
 /* ReferenceMapList */
 .orm-reference-map {
