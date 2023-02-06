@@ -58,6 +58,15 @@ settings:
 		max: 900
 		step: 100
 	-
+		id: orm-paper-line-thickness
+		title: Reference paper line thickness
+		type: variable-number-slider
+		default: 1
+		format: px
+		min: 1
+		max: 4
+		step: 1
+	-
 		id: orm-paper-title-link-color
 		title: Reference paper title link color
 		type: variable-color
@@ -122,6 +131,7 @@ body {
 	--orm-paper-abstract-font-weight: 400;
 	--orm-paper-citekey-font-size: small;
 	--orm-paper-citekey-font-weight: 400;
+	--orm-paper-line-thickness: 1px;
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
@@ -143,8 +153,9 @@ body {
 	text-align: center;
 	opacity: 0.5;
 }
+
 .orm-no-content-subtext {
-	border: 1px solid var(--orm-paper-line-color);
+	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	padding: 0.5rem;
 	font-size: var(--font-ui-small);
 	font-weight: var(--font-medium);
@@ -159,7 +170,7 @@ body {
 
 /* RootPaperCard */
 .orm-root-paper {
-	border: 1px solid var(--orm-paper-line-color);
+	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	border-radius: 0.25rem;
 	padding: 0.5rem;
 	margin-bottom: 0.5rem;
@@ -273,7 +284,7 @@ body {
 }
 
 .orm-paper-list .orm-paper-heading {
-	border-top: 1px solid var(--orm-paper-line-color);
+	border-top: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	padding-top: 0.5rem;
 	margin-top: 0.5rem;
 }
