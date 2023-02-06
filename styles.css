@@ -145,7 +145,7 @@ body {
 }
 .orm-no-content-subtext {
 	padding: 0.5rem;
-	font-size: var(--nav-item-size);
+	font-size: var(--font-ui-small);
 	color: var(--text-faint);
 }
 
