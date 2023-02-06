@@ -6,7 +6,7 @@ labels: bug
 assignees: ''
 
 ---
-<!-- This is a general guideline you don't have to follow the template.
+<!-- This is a general guideline. You don't have to follow the template.
 But this would avoid additional questions from the developers-->
 
 **Describe the bug**
@@ -15,7 +15,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 
-How you encountered the bug.
+Describe how you encountered the bug.
 
 OR
 
@@ -28,7 +28,7 @@ Steps to reproduce the behavior:
 **Console output**
 
 If applicable, please include the console output.
-Go to Reference Map Settings and turn on **Debug Mode**.
+Go to Reference Map Settings and turn on **Debug Mode**. Then Refresh the Reference Map in the settings(button at the top of settings page).
 Please open the Obsidian developer console (view->Toggle Developer Tools). Then reproduce the issue you're describing. Please include any relevant error messages that appear in the console in your report here. Reference Map logs will start with the prefix `ORM: `.
 
 **Expected behavior**
