@@ -225,12 +225,12 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
 export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], adapter = ''): string => {
     if (adapter === 'csl-json') {
         const citeKey = citeKeyData.find((item) =>
-            item?.DOI === paperId || item?.DOI === `https://doi.org/${paperId}`
+            item?.DOI?.toLowerCase() === paperId.toLowerCase() || item?.DOI?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}`
         )?.id;
         return citeKey ? '@' + citeKey : paperId;
     } else if (adapter === 'bibtex') {
         const citeKey = citeKeyData.find((item) =>
-            item.fields?.doi?.[0] === paperId || item.fields?.doi?.[0] === `https://doi.org/${paperId}`
+            item.fields?.doi?.[0]?.toLowerCase() === paperId.toLowerCase() || item.fields?.doi?.[0]?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}`
         )?.key;
         return citeKey ? '@' + citeKey : paperId;
     } else {
