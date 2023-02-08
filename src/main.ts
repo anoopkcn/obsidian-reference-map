@@ -34,6 +34,15 @@ export default class ReferenceMap extends Plugin {
 				this.ensureLeafExists(true);
 			},
 		});
+		this.addCommand({
+			id: 'reload-reference-map-library',
+			name: 'Reload View',
+			callback: () => {
+				if (this.view) {
+					this.view.softReload();
+				}
+			},
+		});
 
 		this.app.workspace.onLayoutReady(() => {
 			this.ensureLeafExists(false);

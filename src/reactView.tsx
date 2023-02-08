@@ -77,7 +77,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	loadLibrary = async () => {
-		if (this.plugin.settings.searchCiteKey) {
+		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
 			if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
 			let rawData;
 			try {
@@ -131,6 +131,11 @@ export class ReferenceMapView extends ItemView {
 			}
 		}
 		return null
+	}
+
+	async softReload() {
+		await this.loadLibrary();
+		this.processReferences();
 	}
 
 
