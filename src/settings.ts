@@ -405,7 +405,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
     }
 
     showCitationExportPathSuccess(): void {
-        if (!this.plugin.library.active) return;
+        if (!this.plugin.view?.library.active) return;
 
         this.citationPathSuccessEl.setText(
             `Successfully Loaded Library Containing References.`,

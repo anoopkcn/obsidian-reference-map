@@ -6,7 +6,12 @@ import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapList } from "./components/ReferenceMapList";
 import { extractKeywords } from "./utils";
-import { EXCLUDE_FILE_NAMES } from "./constants";
+import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from "./constants";
+import * as fs from "fs";
+import * as BibTeXParser from '@retorquere/bibtex-parser';
+import { resolvePath } from './utils';
+import { Library } from "./types";
+
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
 export class ReferenceMapView extends ItemView {
@@ -14,12 +19,14 @@ export class ReferenceMapView extends ItemView {
 	viewManager: ViewManager;
 	activeMarkdownLeaf: MarkdownView;
 	rootEl: Root;
+	library: Library;
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf);
 		this.plugin = plugin;
 		this.viewManager = new ViewManager(plugin);
 		this.rootEl = createRoot(this.containerEl.children[1]);
+		this.library = DEFAULT_LIBRARY
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
@@ -59,6 +66,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onOpen() {
+		await this.loadLibrary();
 		this.processReferences();
 	}
 
@@ -67,6 +75,64 @@ export class ReferenceMapView extends ItemView {
 		this.viewManager.clearCache();
 		return super.onClose();
 	}
+
+	loadLibrary = async () => {
+		if (this.plugin.settings.searchCiteKey) {
+			if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
+			let rawData;
+			try {
+				const libraryPath = resolvePath(
+					this.plugin.settings.searchCiteKeyPath
+				);
+				if (!fs.existsSync(libraryPath)) {
+					if (this.plugin.settings.debugMode) {
+						console.log(
+							"ORM: No library file found at " + libraryPath
+						);
+					}
+				}
+				rawData = fs.readFileSync(libraryPath).toString();
+			} catch (e) {
+				if (this.plugin.settings.debugMode) {
+					console.warn("ORM: Non-fatal error loading library file.")
+				}
+				return null
+			}
+			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
+				try {
+					const libraryData = JSON.parse(rawData);
+					this.library = { active: true, adapter: 'csl-json', libraryData: libraryData }
+					return libraryData
+				} catch (e) {
+					if (this.plugin.settings.debugMode) {
+						console.warn("ORM: Non-fatal error loading library file.")
+					}
+				}
+			}
+			if (this.plugin.settings.searchCiteKeyPath.endsWith(".bib")) {
+				const options: BibTeXParser.ParserOptions = {
+					errorHandler: () => {
+						if (this.plugin.settings.debugMode) {
+							console.warn(
+								'ORM: Non-fatal error loading BibTeX entry:',
+							);
+						}
+					},
+				};
+				try {
+					const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
+					this.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries }
+					return parsed.entries
+				} catch (e) {
+					if (this.plugin.settings.debugMode) {
+						console.warn("ORM: Non-fatal error loading library file.")
+					}
+				}
+			}
+		}
+		return null
+	}
+
 
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
@@ -108,7 +174,7 @@ export class ReferenceMapView extends ItemView {
 				viewManager={this.viewManager}
 				frontMatterString={frontMatterString}
 				fileNameString={fileNameString}
-				library={this.plugin.library}
+				library={this.library}
 			/>
 		);
 	};
