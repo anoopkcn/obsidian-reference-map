@@ -36,7 +36,7 @@ export default class ReferenceMap extends Plugin {
 		});
 		this.addCommand({
 			id: 'reload-reference-map-library',
-			name: 'Reload View',
+			name: 'Refresh View',
 			callback: () => {
 				if (this.view) {
 					this.view.softReload();
