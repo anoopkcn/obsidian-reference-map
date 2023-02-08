@@ -39,7 +39,7 @@ export default class ReferenceMap extends Plugin {
 			name: 'Refresh View',
 			callback: () => {
 				if (this.view) {
-					this.view.softReload();
+					this.view.reload('soft');
 				}
 			},
 		});

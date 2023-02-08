@@ -133,11 +133,18 @@ export class ReferenceMapView extends ItemView {
 		return null
 	}
 
-	async softReload() {
-		await this.loadLibrary();
-		this.processReferences();
+	async reload(reloadType: "hard" | "soft" | "view") {
+		if (reloadType === "hard") {
+			this.viewManager.clearCache()
+			await this.loadLibrary()
+			this.processReferences()
+		} else if (reloadType === "soft") {
+			await this.loadLibrary()
+			this.processReferences()
+		} else if (reloadType === "view") {
+			this.processReferences()
+		}
 	}
-
 
 	processReferences = async () => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);

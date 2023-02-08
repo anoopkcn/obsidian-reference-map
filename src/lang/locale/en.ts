@@ -116,6 +116,8 @@ export default {
     // Debug settings
     DEBUG_MODE: "Debug Mode",
     DEBUG_MODE_DESC: "Enable debug mode to see more information in the console.<br>" +
+        "This is useful for debugging and reporting issues.<br>" +
+        "Enabling this will also reset all the reference data caches of Reference map.<br>" +
         "<b>Toggle ON:</b> Enable debug mode <br>" +
         "<b>Toggle OFF:</b> Disable debug mode",
 };
