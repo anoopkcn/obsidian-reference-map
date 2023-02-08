@@ -45,6 +45,12 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     debugMode: false,
 }
 
+export const DEFAULT_LIBRARY = {
+    active: false, 
+    adapter: '', 
+    libraryData: null
+}
+
 export const SORTING_METADATA = [
     'year',
     'citationCount',

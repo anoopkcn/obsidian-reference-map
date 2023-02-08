@@ -1,9 +1,12 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
+import * as fs from "fs";
+import * as BibTeXParser from '@retorquere/bibtex-parser';
 import { ReferenceMapSettingTab } from './settings';
 import { Library, ReferenceMapSettings } from './types';
 import { addIcons } from './ui/icons';
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView';
 import { DEFAULT_SETTINGS } from './constants';
+import { resolvePath } from './utils';
 
 enum Direction {
 	Left = 'left',
@@ -15,8 +18,12 @@ export default class ReferenceMap extends Plugin {
 	library: Library;
 
 	async onload() {
-		await this.loadSettings();
+		this.loadSettings().then(() => this.init())
+	}
+
+	async init(): Promise<void> {
 		addIcons();
+		this.loadLibrary()
 
 		this.addSettingTab(new ReferenceMapSettingTab(this));
 
@@ -37,21 +44,69 @@ export default class ReferenceMap extends Plugin {
 			this.ensureLeafExists(false);
 		});
 
-		this.addCommand({
-			id: 'refresh-reference-map-sidebar-view',
-			name: 'Refresh View',
-			callback: () => {
-				this.view?.refresh();
-			}
-		});
-
 		this.addRibbonIcon(
 			'ReferenceMapIconScroll',
 			'Reference Map',
 			async (evt: MouseEvent) => {
 				this.ensureLeafExists(true);
-				// this.activateView()
 			});
+	}
+
+	loadLibrary = async () => {
+		if (this.settings.searchCiteKey) {
+			if (this.settings.debugMode) console.log("ORM: Loading library file")
+			let rawData;
+			try {
+				const libraryPath = resolvePath(
+					this.settings.searchCiteKeyPath
+				);
+				if (!fs.existsSync(libraryPath)) {
+					if (this.settings.debugMode) {
+						console.log(
+							"ORM: No library file found at " + libraryPath
+						);
+					}
+				}
+				rawData = fs.readFileSync(libraryPath).toString();
+			} catch (e) {
+				if (this.settings.debugMode) {
+					console.warn("ORM: Non-fatal error loading library file.")
+				}
+				return null
+			}
+			if (this.settings.searchCiteKeyPath.endsWith(".json")) {
+				try {
+					const libraryData = JSON.parse(rawData);
+					this.library = { active: true, adapter: 'csl-json', libraryData: libraryData }
+					return libraryData
+				} catch (e) {
+					if (this.settings.debugMode) {
+						console.warn("ORM: Non-fatal error loading library file.")
+					}
+				}
+			}
+			if (this.settings.searchCiteKeyPath.endsWith(".bib")) {
+				const options: BibTeXParser.ParserOptions = {
+					errorHandler: () => {
+						if (this.settings.debugMode) {
+							console.warn(
+								'ORM: Non-fatal error loading BibTeX entry:',
+							);
+						}
+					},
+				};
+				try {
+					const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
+					this.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries }
+					return parsed.entries
+				} catch (e) {
+					if (this.settings.debugMode) {
+						console.warn("ORM: Non-fatal error loading library file.")
+					}
+				}
+			}
+		}
+		return null
 	}
 
 
