@@ -109,7 +109,7 @@ export const sanitizeDOI = (dirtyDOI: string) => {
 }
 
 export const getCiteKeys = (content: string): Set<string> => {
-    const output = new Set<string>();
+    const output: string[] = [];
     // const citekeyRegex = /@[^{]+{([^,]+),/g;
     const citekeyRegex = /@([^\s]+)/gi;
     const citekeyRegex2 = /\[+([^\s].*)\]+/ig
@@ -117,19 +117,19 @@ export const getCiteKeys = (content: string): Set<string> => {
     const matches2 = content.matchAll(citekeyRegex2);
     if (matches) {
         for (const match of matches) {
-            output.add(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
+            output.push(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
         }
     }
     if (matches2) {
         for (const match of matches2) {
             const trial = match[1].split(' ')
             trial.forEach(item => {
-                output.add(item.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
+                output.push(item.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
             })
         }
     }
 
-    return output;
+    return new Set(output.sort());
 }
 
 export function copyElToClipboard(el: string) {
