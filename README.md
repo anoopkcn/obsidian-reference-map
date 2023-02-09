@@ -71,7 +71,7 @@ The following types of IDs are supported:
 `CorpusId:<id>` | Semantic Scholar numerical ID|`CorpusId:215416146`
 
 
-*To enable CiteKey support(for Zotero or for other reference managers), one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file. Once enabled in the settings, the plugin can recognize the Pandoc citation format.
+*To enable CiteKey support(for Zotero or for other reference managers), one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file or `BibTeX` file with `.bib` extension. Once enabled in the settings, the plugin can recognize the Pandoc citation format.
 
 **Note**: CiteKey's should NOT contain `spaces`, `[`, `(` or `*`. Also make sure in Zotero library DOI field contains a valid ID. 
  
