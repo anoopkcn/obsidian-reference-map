@@ -34,6 +34,8 @@ export const IndexPaperCard = (props: {
 		if (props.settings.hideButtonsOnHover) {
 			if (showReferences || showCitations) return;
 			setIsButtonShown(isShow);
+		} else {
+			setIsButtonShown(true);
 		}
 	};
 
