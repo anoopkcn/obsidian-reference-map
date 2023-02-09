@@ -63,7 +63,9 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                 .setValue(this.plugin.settings.hideButtonsOnHover)
                 .onChange(async (value) => {
                     this.plugin.settings.hideButtonsOnHover = value;
-                    this.plugin.saveSettings()
+                    this.plugin.saveSettings().then(() => {
+                        if (this.plugin.view) this.plugin.view.reload('view')
+                    });
                 }));
 
         new Setting(containerEl)
