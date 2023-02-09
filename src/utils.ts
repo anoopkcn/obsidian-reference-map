@@ -40,7 +40,7 @@ export const resolvePath = function (rawPath: string): string {
 // Given a markdown file contents regex match the DOI's from the file 
 export const getPaperIds = (content: string): Set<string> => {
     const modContent = content.replaceAll("](", " ")
-    const output = new Set<string>();
+    const output: string[] = []
 
     const arxivRegex = /arXiv.\s*(\d{4}\.\d{4,5})/ig
     const arXivMatches = modContent.matchAll(arxivRegex)
@@ -58,44 +58,42 @@ export const getPaperIds = (content: string): Set<string> => {
 
     if (arXivMatches) {
         for (const match of arXivMatches) {
-            output.add(`arXiv:${match[1]}`)
+            output.push(`arXiv:${match[1]}`)
         }
     }
     if (corpusMatches) {
         for (const match of corpusMatches) {
-            output.add(`CorpusId:${match[1]}`)
+            output.push(`CorpusId:${match[1]}`)
         }
     }
     if (magMatches) {
         for (const match of magMatches) {
-            output.add(`MAG:${match[1]}`)
+            output.push(`MAG:${match[1]}`)
         }
     }
     if (pmidMatches) {
         for (const match of pmidMatches) {
-            output.add(`PMID:${match[1]}`)
+            output.push(`PMID:${match[1]}`)
         }
     }
 
     if (pmcidMatches) {
         for (const match of pmcidMatches) {
-            output.add(`PMCID:${match[1]}`)
+            output.push(`PMCID:${match[1]}`)
             console.log(match[1])
         }
     }
     if (urlMatches) {
         for (const match of urlMatches) {
-            output.add(`URL:${match[1]}`)
+            output.push(`URL:${match[1]}`)
         }
     }
     if (doi_matches) {
         for (const match of doi_matches) {
-            if (!output.has(match)) {
-                output.add(match.replace(/\)+$|\]+$|\*+$|_+$|`+$/, ''));
-            }
+            output.push(match.replace(/\)+$|\]+$|\*+$|_+$|`+$/, ''));
         }
     }
-    return output;
+    return new Set(output.sort());
 }
 
 export const sanitizeDOI = (dirtyDOI: string) => {
