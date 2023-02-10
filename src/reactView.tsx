@@ -79,17 +79,23 @@ export class ReferenceMapView extends ItemView {
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
 			const libraryPath = resolvePath(this.plugin.settings.searchCiteKeyPath);
-			const stats = fs.statSync(libraryPath)
-			const mtime = stats.mtime.valueOf()
 			let rawData;
+			let mtime = 0;
+			try {
+				const stats = fs.statSync(libraryPath)
+				mtime = stats.mtimeMs
+			} catch (e) {
+				if (this.plugin.settings.debugMode) {
+					console.warn("ORM: Something went wrong when checking the library stats.")
+				}
+				return null
+			}
 			if (mtime !== this.library.mtime) {
-				if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
+				if (this.plugin.settings.debugMode) console.log(`ORM: Loading library from '${this.plugin.settings.searchCiteKeyPath}'`)
 				try {
 					if (!fs.existsSync(libraryPath)) {
 						if (this.plugin.settings.debugMode) {
-							console.log(
-								"ORM: No library file found at " + libraryPath
-							);
+							console.log(`ORM: No library file found at ${libraryPath}`);
 						}
 					}
 					rawData = fs.readFileSync(libraryPath).toString();
@@ -114,9 +120,7 @@ export class ReferenceMapView extends ItemView {
 					const options: BibTeXParser.ParserOptions = {
 						errorHandler: () => {
 							if (this.plugin.settings.debugMode) {
-								console.warn(
-									'ORM: Warnings associated with loading the BibTeX entry:',
-								);
+								console.warn('ORM: Warnings associated with loading the BibTeX entry.')
 							}
 						},
 					};
@@ -138,6 +142,7 @@ export class ReferenceMapView extends ItemView {
 	async reload(reloadType: "hard" | "soft" | "view") {
 		if (reloadType === "hard") {
 			this.viewManager.clearCache()
+			this.library.mtime = 0
 			await this.loadLibrary()
 			this.processReferences()
 		} else if (reloadType === "soft") {
