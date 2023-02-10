@@ -124,4 +124,5 @@ export interface Library {
     active: boolean;
     adapter: string;
     libraryData: citeKeyLibrary[] | null
+    mtime: number;
 }

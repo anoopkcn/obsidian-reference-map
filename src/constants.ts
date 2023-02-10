@@ -48,7 +48,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 export const DEFAULT_LIBRARY = {
     active: false, 
     adapter: '', 
-    libraryData: null
+    libraryData: null,
+    mtime: 0
 }
 
 export const SORTING_METADATA = [

@@ -78,54 +78,56 @@ export class ReferenceMapView extends ItemView {
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
-			if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
+			const libraryPath = resolvePath(this.plugin.settings.searchCiteKeyPath);
+			const stats = fs.statSync(libraryPath)
+			const mtime = stats.mtime.valueOf()
 			let rawData;
-			try {
-				const libraryPath = resolvePath(
-					this.plugin.settings.searchCiteKeyPath
-				);
-				if (!fs.existsSync(libraryPath)) {
-					if (this.plugin.settings.debugMode) {
-						console.log(
-							"ORM: No library file found at " + libraryPath
-						);
-					}
-				}
-				rawData = fs.readFileSync(libraryPath).toString();
-			} catch (e) {
-				if (this.plugin.settings.debugMode) {
-					console.warn("ORM: Warnings associated with loading the library file.")
-				}
-				return null
-			}
-			if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
+			if (mtime !== this.library.mtime) {
+				if (this.plugin.settings.debugMode) console.log("ORM: Loading library file")
 				try {
-					const libraryData = JSON.parse(rawData);
-					this.library = { active: true, adapter: 'csl-json', libraryData: libraryData }
-					return libraryData
-				} catch (e) {
-					if (this.plugin.settings.debugMode) {
-						console.warn("ORM: Warnings associated with loading the library file.")
-					}
-				}
-			}
-			if (this.plugin.settings.searchCiteKeyPath.endsWith(".bib")) {
-				const options: BibTeXParser.ParserOptions = {
-					errorHandler: () => {
+					if (!fs.existsSync(libraryPath)) {
 						if (this.plugin.settings.debugMode) {
-							console.warn(
-								'ORM: Warnings associated with loading the BibTeX entry:',
+							console.log(
+								"ORM: No library file found at " + libraryPath
 							);
 						}
-					},
-				};
-				try {
-					const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
-					this.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries }
-					return parsed.entries
+					}
+					rawData = fs.readFileSync(libraryPath).toString();
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
 						console.warn("ORM: Warnings associated with loading the library file.")
+					}
+					return null
+				}
+				if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
+					try {
+						const libraryData = JSON.parse(rawData);
+						this.library = { active: true, adapter: 'csl-json', libraryData: libraryData, mtime: mtime }
+						return libraryData
+					} catch (e) {
+						if (this.plugin.settings.debugMode) {
+							console.warn("ORM: Warnings associated with loading the library file.")
+						}
+					}
+				}
+				if (this.plugin.settings.searchCiteKeyPath.endsWith(".bib")) {
+					const options: BibTeXParser.ParserOptions = {
+						errorHandler: () => {
+							if (this.plugin.settings.debugMode) {
+								console.warn(
+									'ORM: Warnings associated with loading the BibTeX entry:',
+								);
+							}
+						},
+					};
+					try {
+						const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
+						this.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries, mtime: mtime }
+						return parsed.entries
+					} catch (e) {
+						if (this.plugin.settings.debugMode) {
+							console.warn("ORM: Warnings associated with loading the library file.")
+						}
 					}
 				}
 			}
@@ -147,6 +149,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	processReferences = async () => {
+		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) this.loadLibrary();
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let frontMatterString = "";
 		let fileNameString = "";
