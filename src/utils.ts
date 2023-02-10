@@ -2,7 +2,7 @@ import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
 import { CiteKey, citeKeyLibrary, IndexPaper, MetaData, SemanticPaper } from "./types";
-import { BIBTEX_STANDARD_TYPES, COMMON_WORDS, NUMBERS, PUNCTUATION } from "./constants";
+import { BIBTEX_STANDARD_TYPES, COMMON_WORDS, NUMBERS, PUNCTUATION, SEARCH_PARAMETERS } from "./constants";
 
 export const fragWithHTML = (html: string) =>
     createFragment((frag) => (frag.createDiv().innerHTML = html));
@@ -285,3 +285,40 @@ export const standardizeBibtex = (bibtex: string) => {
     return ''
 
 }
+
+export const search = (data: SemanticPaper[], query: string) => {
+    return data.filter((item: SemanticPaper) =>
+        SEARCH_PARAMETERS.some((parameter) => {
+            if (parameter === "authors") {
+                return item.authors.some((author) =>
+                    author.name?.toLowerCase().includes(query.toLowerCase())
+                );
+            } else {
+                return item[parameter as keyof typeof item]
+                    ?.toString()
+                    .toLowerCase()
+                    .includes(query.toLowerCase());
+            }
+        })
+    );
+};
+
+export const sort = (
+    data: SemanticPaper[],
+    sortProperty: string,
+    sortOrder: string
+) => {
+    return data.sort((a, b) => {
+        if (sortOrder === "asc") {
+            return a[sortProperty as keyof typeof a] >
+                b[sortProperty as keyof typeof b]
+                ? 1
+                : -1;
+        } else {
+            return a[sortProperty as keyof typeof a] <
+                b[sortProperty as keyof typeof b]
+                ? 1
+                : -1;
+        }
+    });
+};

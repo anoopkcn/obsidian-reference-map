@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ReferenceMapSettings, SemanticPaper } from "src/types";
 import { PaperCard } from "./PaperCard";
-import { SEARCH_PARAMETERS } from "src/constants";
+import { search, sort } from "src/utils";
 
 export const PaperList = (props: {
 	papers: SemanticPaper[];
@@ -9,43 +9,6 @@ export const PaperList = (props: {
 	type: string;
 }) => {
 	const [query, setQuery] = useState("");
-
-	const search = (data: SemanticPaper[]) => {
-		return data.filter((item: SemanticPaper) =>
-			SEARCH_PARAMETERS.some((parameter) => {
-				if (parameter === "authors") {
-					return item.authors.some((author) =>
-						author.name?.toLowerCase().includes(query.toLowerCase())
-					);
-				} else {
-					return item[parameter as keyof typeof item]
-						?.toString()
-						.toLowerCase()
-						.includes(query.toLowerCase());
-				}
-			})
-		);
-	};
-
-	const sort = (
-		data: SemanticPaper[],
-		sortProperty: string,
-		sortOrder: string
-	) => {
-		return data.sort((a, b) => {
-			if (sortOrder === "asc") {
-				return a[sortProperty as keyof typeof a] >
-					b[sortProperty as keyof typeof b]
-					? 1
-					: -1;
-			} else {
-				return a[sortProperty as keyof typeof a] <
-					b[sortProperty as keyof typeof b]
-					? 1
-					: -1;
-			}
-		});
-	};
 
 	let papers = props.papers;
 	if (props.settings.enableSorting)
@@ -55,7 +18,7 @@ export const PaperList = (props: {
 			props.settings.sortOrder
 		);
 
-	const paperList = search(papers).map((paper, index) => {
+	const paperList = search(papers, query).map((paper, index) => {
 		return (
 			<PaperCard
 				key={paper.paperId + index}
