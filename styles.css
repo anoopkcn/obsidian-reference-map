@@ -156,6 +156,7 @@ body {
 
 .orm-no-content-subtext {
 	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
+	border-radius: 0.25rem;
 	padding: 0.5rem;
 	font-size: var(--font-ui-small);
 	font-weight: var(--font-medium);
