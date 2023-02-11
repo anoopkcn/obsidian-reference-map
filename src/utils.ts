@@ -322,3 +322,23 @@ export const sort = (
         }
     });
 };
+
+export const iSort = (
+    data: IndexPaper[],
+    sortProperty: string,
+    sortOrder: string
+) => {
+    return data.sort((a, b) => {
+        if (sortOrder === "asc") {
+            return a.paper[sortProperty as keyof typeof a.paper] >
+                b.paper[sortProperty as keyof typeof b.paper]
+                ? 1
+                : -1;
+        } else {
+            return a.paper[sortProperty as keyof typeof a.paper] <
+                b.paper[sortProperty as keyof typeof b.paper]
+                ? 1
+                : -1;
+        }
+    });
+};

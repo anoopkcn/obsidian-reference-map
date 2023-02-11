@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     enableSorting: false,
     sortBy: 'year',
     sortOrder: 'desc',
+    sortIndexCards: false,
     standardizeBibtex: false,
     formatMetadataCopyOne: true,
     formatMetadataCopyTwo: true,

@@ -72,6 +72,10 @@ export default {
     SORT_ORDER_DESC: "Sort references and citations in the selected order",
     SORT_ORDER_ASC: "Ascending",
     SORT_ORDER_DESCE: "Descending",
+    ENABLE_SORTING_INDEX_CARDS: "Sorting Index Cards",
+    ENABLE_SORTING_INDEX_CARDS_DESC: "Enable or Disable sorting of index cards based on the rule specified. <br>" +
+        "<b>Toggle ON:</b> Sorting Index cards enabled<br>" +
+        "<b>Toggle OFF:</b> Default sorting, as it is retrieved from database",
     STANDARDIZE_BIBTEX: "Standardize BibTeX",
     STANDARDIZE_BIBTEX_DESC: "Standardize BibTeX of references in the map. This will format the BibTeX according to one of 14 possible entry types<br>" +
         "<b>Toggle ON:</b> Standardize BibTeX keys<br>" +

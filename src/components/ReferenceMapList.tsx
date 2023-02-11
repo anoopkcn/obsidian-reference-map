@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCiteKeyIds, getCiteKeys, getPaperIds, removeNullReferences, setCiteKeyId } from "src/utils";
+import { getCiteKeyIds, getCiteKeys, getPaperIds, iSort, removeNullReferences, setCiteKeyId } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 
@@ -109,9 +109,13 @@ export const ReferenceMapList = (props: {
 			</div>
 		);
 	} else if (papers.length > 0) {
+		let sortPapers = papers
+		if (props.settings.enableSorting && props.settings.sortIndexCards) {
+			sortPapers = iSort(papers, props.settings.sortBy, props.settings.sortOrder)
+		}
 		return (
 			<div className="orm-reference-map">
-				{papers.map((paper, index) => {
+				{sortPapers.map((paper, index) => {
 					return (
 						<IndexPaperCard
 							settings={props.settings}

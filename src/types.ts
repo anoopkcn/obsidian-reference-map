@@ -15,6 +15,7 @@ export interface ReferenceMapSettings {
     enableSorting: boolean;
     sortBy: string;
     sortOrder: string;
+    sortIndexCards: boolean;
     standardizeBibtex: boolean;
     formatMetadataCopyOne: boolean;
     formatMetadataCopyTwo: boolean;

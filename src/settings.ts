@@ -196,6 +196,18 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                         });
                     }
                     ));
+            new Setting(containerEl)
+                .setName(t('ENABLE_SORTING_INDEX_CARDS'))
+                .setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.sortIndexCards)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortIndexCards = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                        this.display();
+                    }));
         }
 
         new Setting(containerEl)
