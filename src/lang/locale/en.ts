@@ -28,19 +28,19 @@ export default {
         "Hide or show the influential citation count of references.<br>"
         + "<b> Toggle ON: </b> Influential count will be visible<br>"
         + "<b> Toggle OFF: </b> Influential count will be hidden",
-    SEARCH_TITLE: "Search References Using File Name",
+    SEARCH_TITLE: "Get References Using File Name",
     SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs.<br>" +
-        "<b>Toggle ON:</b> Search using file name is enabled<br>" +
-        "<b>Toggle OFF:</b> Search using file name disabled",
-    SEARCH_LIMIT: "Search References Limit",
-    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled.",
-    SEARCH_FRONT_MATTER: "Search References Using Frontmatter",
+        "<b>Toggle ON:</b> Get using file name is enabled<br>" +
+        "<b>Toggle OFF:</b> Get using file name disabled",
+    SEARCH_LIMIT: "Get Limit",
+    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Get References</b> is enabled.",
+    SEARCH_FRONT_MATTER: "Get References Using Frontmatter",
     SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs.<br>" +
         "<b>Toggle ON:</b> Enable search using front matter<br>" +
         "<b>Toggle OFF:</b> Disable search using front matter",
-    SEARCH_FRONT_MATTER_LIMIT: "Search Frontmatter Limit",
-    SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled.",
-    SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
+    SEARCH_FRONT_MATTER_LIMIT: "Get Limit",
+    SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Get Frontmatter</b> is enabled.",
+    SEARCH_FRONT_MATTER_KEY: "Key in the Frontmatter",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
     SEARCH_CITEKEY: "Get References Using <code>CiteKey</code>",
     SEARCH_CITEKEY_DESC: "Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs.<br>" +
@@ -49,8 +49,8 @@ export default {
     SEARCH_CITEKEY_PATH: "Library File Path",
     SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>" +
         "Path must be relative to the vaults root",
-    CITEKEY_ZOTERO_LINK: "Hide or Show Link to Show Reference in Zotero",
-    CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
+    CITEKEY_ZOTERO_LINK: "Hide or Show Link to Zotero Library",
+    CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to show reference in Zotero library.<br>" +
         "<b>Toggle ON:</b> Show link in the index card<br>" +
         "<b>Toggle OFF:</b> Hide link in the index card",
     FIND_ZOTERO_CITEKEY_FROM_ID: "Find CiteKey from ID",
