@@ -85,7 +85,9 @@ export const getPaperIds = (content: string): Set<string> => {
     }
     if (urlMatches) {
         for (const match of urlMatches) {
-            output.push(`URL:${match[1]}`)
+            if (VALID_S2AG_API_URLS.some(item => match[1].includes(item))) {
+                output.push(`URL:${match[1]}`)
+            }
         }
     }
     if (doi_matches) {
