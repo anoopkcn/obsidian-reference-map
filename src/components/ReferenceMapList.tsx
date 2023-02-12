@@ -110,8 +110,8 @@ export const ReferenceMapList = (props: {
 		);
 	} else if (papers.length > 0) {
 		let sortPapers = papers
-		if (props.settings.enableSorting && props.settings.sortIndexCards) {
-			sortPapers = iSort(papers, props.settings.sortBy, props.settings.sortOrder)
+		if (props.settings.enableIndexSorting) {
+			sortPapers = iSort(papers, props.settings.sortByIndex, props.settings.sortOrderIndex)
 		}
 		return (
 			<div className="orm-reference-map">

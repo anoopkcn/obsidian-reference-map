@@ -11,43 +11,43 @@ export default {
     REFRESH_VIEW_DESC: "Settings changes will not affect the current view.<br>" +
         "If you prefer to apply changes also to the current view, you can press this button",
     HIDE_SHOW_ABSTRACT: "Hide or Show Abstract",
-    HIDE_SHOW_ABSTRACT_DESC: "Hide or show the abstract of a references in the respective card<br>" +
+    HIDE_SHOW_ABSTRACT_DESC: "Hide or show the abstract of a references in the respective card.<br>" +
         "<b>Toggle ON:</b> Abstract will be visible <br>" +
         "<b>Toggle OFF:</b> Abstract will be hidden",
     HIDE_SHOW_AUTHORS: "Hide or Show All Authors",
-    HIDE_SHOW_AUTHORS_DESC: "Hide or show the authors of a references in the respective card<br>" +
+    HIDE_SHOW_AUTHORS_DESC: "Hide or show the authors of a references in the respective card.<br>" +
         "<b>Toggle ON:</b> All author names will be visible <br>" +
         "<b>Toggle OFF:</b> First author will be shown",
     HIDE_SHOW_BUTTONS_ON_HOVER: "Hide or Show Buttons on Hover",
     HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
-        "Hide or show the buttons of references on hover<br>"
+        "Hide or show the buttons under index/reference cards on hover.<br>"
         + "<b> Toggle ON: </b> Buttons will be visible on hover<br>"
         + "<b> Toggle OFF: </b> Buttons will always be visible",
     HIDE_SHOW_INFLUENTIAL_COUNT: "Hide or Show Influential Citation Count",
     HIDE_SHOW_INFLUENTIAL_COUNT_DESC:
-        "Hide or show the influential citation count of references<br>"
+        "Hide or show the influential citation count of references.<br>"
         + "<b> Toggle ON: </b> Influential count will be visible<br>"
         + "<b> Toggle OFF: </b> Influential count will be hidden",
     SEARCH_TITLE: "Search References Using File Name",
-    SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs<br>" +
+    SEARCH_TITLE_DESC: "Find references also using the markdown note file name in addition to reference IDs.<br>" +
         "<b>Toggle ON:</b> Search using file name is enabled<br>" +
         "<b>Toggle OFF:</b> Search using file name disabled",
     SEARCH_LIMIT: "Search References Limit",
-    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled. ",
+    SEARCH_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search References</b> is enabled.",
     SEARCH_FRONT_MATTER: "Search References Using Frontmatter",
-    SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs<br>" +
+    SEARCH_FRONT_MATTER_DESC: "Find references also using the front matter of the markdown note file in addition to reference IDs.<br>" +
         "<b>Toggle ON:</b> Enable search using front matter<br>" +
         "<b>Toggle OFF:</b> Disable search using front matter",
     SEARCH_FRONT_MATTER_LIMIT: "Search Frontmatter Limit",
-    SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled. ",
+    SEARCH_FRONT_MATTER_LIMIT_DESC: "Limit of the number of references shown in the map when <b>Search Frontmatter</b> is enabled.",
     SEARCH_FRONT_MATTER_KEY: "Search Frontmatter Key",
     SEARCH_FRONT_MATTER_KEY_DESC: "The values of the key specified here will be used to search for references.",
     SEARCH_CITEKEY: "Get References Using <code>CiteKey</code>",
-    SEARCH_CITEKEY_DESC: "Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs<br>" +
+    SEARCH_CITEKEY_DESC: "Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs.<br>" +
         "<b>Toggle ON:</b> Enable citekey detection<br>" +
         "<b>Toggle OFF:</b> Disable citekey detection",
     SEARCH_CITEKEY_PATH: "Library File Path",
-    SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk. <br>" +
+    SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>" +
         "Path must be relative to the vaults root",
     CITEKEY_ZOTERO_LINK: "Hide or Show Link to Show Reference in Zotero",
     CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to open reference in Zotero.<br>" +
@@ -58,39 +58,39 @@ export default {
         " If so the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>" +
         "<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>" +
         "<b>Toggle OFF:</b> Do not lookup citekey from ID",
-    ENABLE_SORTING: "Sorting References and Citations",
-    ENABLE_SORTING_DESC: "Enable or Disable sorting of citing and cited papers in the reference cards. <br>" +
+    ENABLE_SORTING_REFERENCE_CARDS: "Sort Reference Cards",
+    ENABLE_SORTING_REFERENCE_CARDS_DESC: "Enable or Disable sorting of reference cards. <br>" +
         "<b>Toggle ON:</b> Sorting enabled<br>" +
         "<b>Toggle OFF:</b> Default sorting, newest to oldest reference",
+    ENABLE_SORTING_INDEX_CARDS: "Sort Index Cards",
+    ENABLE_SORTING_INDEX_CARDS_DESC: "Enable or Disable sorting of index cards.<br>" +
+        "<b>Toggle ON:</b> Enable sorting of the Index cards<br>" +
+        "<b>Toggle OFF:</b> Default, as it is retrieved from database",
     SORT_BY: "Sort By",
-    SORT_BY_DESC: "Sort references and citations by the selected value",
+    // SORT_BY_DESC: "Sort references and citations by the selected value",
     SORT_BY_YEAR: "Year",
     SORT_BY_CITATION_COUNT: "Citation Count",
     SORT_BY_REFERENCE_COUNT: "Reference Count",
     SORT_BY_INFLUENTIAL_CITATION_COUNT: "Influential Citation Count",
     SORT_ORDER: "Sort Order",
-    SORT_ORDER_DESC: "Sort references and citations in the selected order",
+    // SORT_ORDER_DESC: "Sort references and citations in the selected order",
     SORT_ORDER_ASC: "Ascending",
     SORT_ORDER_DESCE: "Descending",
-    ENABLE_SORTING_INDEX_CARDS: "Apply Sort to Index Cards",
-    ENABLE_SORTING_INDEX_CARDS_DESC: "Enable or Disable sorting of index cards based on the rule specified. <br>" +
-        "<b>Toggle ON:</b> Enable sorting of the Index cards<br>" +
-        "<b>Toggle OFF:</b> Default, as it is retrieved from database",
     STANDARDIZE_BIBTEX: "Standardize BibTeX",
-    STANDARDIZE_BIBTEX_DESC: "Standardize BibTeX of references in the map. This will format the BibTeX according to one of 14 possible entry types<br>" +
+    STANDARDIZE_BIBTEX_DESC: "Standardize BibTeX of references in the map. This will format the BibTeX according to one of 14 possible entry types.<br>" +
         "<b>Toggle ON:</b> Standardize BibTeX keys<br>" +
         "<b>Toggle OFF:</b> Do not standardize BibTeX keys",
     // metadata copy
     FORMAT_METADATA_COPY_ONE: `${clipBoard} Metadata One Button`,
-    FORMAT_METADATA_COPY_ONE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed<br>" +
+    FORMAT_METADATA_COPY_ONE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed.<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
     FORMAT_METADATA_COPY_TWO: `${papeClip} Metadata Two Button`,
-    FORMAT_METADATA_COPY_TWO_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Two button</b> is pressed<br>" +
+    FORMAT_METADATA_COPY_TWO_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Two button</b> is pressed.<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
     FORMAT_METADATA_COPY_THREE: `${clipboardData} Metadata Three Button`,
-    FORMAT_METADATA_COPY_THREE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Three button</b> is pressed<br>" +
+    FORMAT_METADATA_COPY_THREE_DESC: "Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Three button</b> is pressed.<br>" +
         "<b>Toggle ON:</b> Copy to clipboard button is shown <br>" +
         "<b>Toggle OFF:</b> Copy to clipboard button is hidden",
     METADATA_COPY_TEMPLATE_ONE: `${clipBoard} Metadata One Template`,
@@ -119,8 +119,7 @@ export default {
         "<b>Toggle OFF:</b> Copy metadata for the individual index/reference card",
     // Debug settings
     DEBUG_MODE: "Debug Mode",
-    DEBUG_MODE_DESC: "Enable debug mode to see more information in the console.<br>" +
-        "This is useful for debugging and reporting issues.<br>" +
+    DEBUG_MODE_DESC: "Enable debug mode to see more information in the console. This is useful for debugging and <b>reporting issues</b>.<br>" +
         "Enabling this will also reset all the reference data caches of Reference map.<br>" +
         "<b>Toggle ON:</b> Enable debug mode <br>" +
         "<b>Toggle OFF:</b> Disable debug mode",

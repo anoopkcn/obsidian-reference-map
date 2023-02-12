@@ -11,11 +11,11 @@ export const PaperList = (props: {
 	const [query, setQuery] = useState("");
 
 	let papers = props.papers;
-	if (props.settings.enableSorting)
+	if (props.settings.enableReferenceSorting)
 		papers = sort(
 			props.papers,
-			props.settings.sortBy,
-			props.settings.sortOrder
+			props.settings.sortByReference,
+			props.settings.sortOrderReference
 		);
 
 	const paperList = search(papers, query).map((paper, index) => {

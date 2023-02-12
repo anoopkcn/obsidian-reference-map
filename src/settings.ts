@@ -68,6 +68,179 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     });
                 }));
 
+        containerEl.createEl('h2', { text: 'Sort Settings' });
+        new Setting(containerEl)
+            .setName(t('ENABLE_SORTING_INDEX_CARDS'))
+            .setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.enableIndexSorting)
+                .onChange(async (value) => {
+                    this.plugin.settings.enableIndexSorting = value;
+                    this.plugin.saveSettings().then(() => {
+                        if (this.plugin.view) this.plugin.view.reload('view')
+                    });
+                    this.display();
+                }));
+
+
+        if (this.plugin.settings.enableIndexSorting) {
+            new Setting(containerEl)
+                .setName(t('SORT_BY'))
+                // .setDesc(fragWithHTML(t('SORT_BY_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('year', t('SORT_BY_YEAR'))
+                    .addOption('citationCount', t('SORT_BY_CITATION_COUNT'))
+                    .addOption('referenceCount', t('SORT_BY_REFERENCE_COUNT'))
+                    .addOption('influentialCitationCount', t('SORT_BY_INFLUENTIAL_CITATION_COUNT'))
+                    .setValue(this.plugin.settings.sortByIndex)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortByIndex = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }));
+            new Setting(containerEl)
+                .setName(t('SORT_ORDER'))
+                // .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('desc', t('SORT_ORDER_DESCE'))
+                    .addOption('asc', t('SORT_ORDER_ASC'))
+                    .setValue(this.plugin.settings.sortOrderIndex)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortOrderIndex = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }
+                ));
+        }
+
+
+        new Setting(containerEl)
+            .setName(t('ENABLE_SORTING_REFERENCE_CARDS'))
+            .setDesc(fragWithHTML(t('ENABLE_SORTING_REFERENCE_CARDS_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.enableReferenceSorting)
+                .onChange(async (value) => {
+                    this.plugin.settings.enableReferenceSorting = value;
+                    this.plugin.saveSettings().then(() => {
+                        if (this.plugin.view) this.plugin.view.reload('view')
+                    });
+                    this.display();
+                }));
+
+        if (this.plugin.settings.enableReferenceSorting) {
+            new Setting(containerEl)
+                .setName(t('SORT_BY'))
+                // .setDesc(fragWithHTML(t('SORT_BY_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('year', t('SORT_BY_YEAR'))
+                    .addOption('citationCount', t('SORT_BY_CITATION_COUNT'))
+                    .addOption('referenceCount', t('SORT_BY_REFERENCE_COUNT'))
+                    .addOption('influentialCitationCount', t('SORT_BY_INFLUENTIAL_CITATION_COUNT'))
+                    .setValue(this.plugin.settings.sortByReference)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortByReference = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }));
+            new Setting(containerEl)
+                .setName(t('SORT_ORDER'))
+                // .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
+                .addDropdown(dropdown => dropdown
+                    .addOption('desc', t('SORT_ORDER_DESCE'))
+                    .addOption('asc', t('SORT_ORDER_ASC'))
+                    .setValue(this.plugin.settings.sortOrderReference)
+                    .onChange(async (value) => {
+                        this.plugin.settings.sortOrderReference = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }
+                ));
+        }
+
+
+        containerEl.createEl('h2', { text: 'Static List Settings' });
+        new Setting(containerEl)
+            .setName(fragWithHTML(t('SEARCH_CITEKEY')))
+            .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.searchCiteKey)
+                .onChange(async (value) => {
+                    this.plugin.settings.searchCiteKey = value;
+                    this.plugin.saveSettings().then(() => {
+                        if (this.plugin.view) this.plugin.view.reload('soft')
+                    });
+                    this.display();
+                }));
+
+
+        if (this.plugin.settings.searchCiteKey) {
+            new Setting(containerEl)
+                .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
+                .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
+                .addText((text) => {
+                    text
+                        .setValue(this.plugin.settings.searchCiteKeyPath)
+                        .onChange(async (value) => {
+                            this.checkCitationExportPath(value).then(
+                                (success) => {
+                                    if (success) {
+                                        this.showCitationExportPathSuccess()
+                                        this.plugin.settings.searchCiteKeyPath = value;
+                                        this.plugin.saveSettings().then(() => {
+                                            if (this.plugin.view) this.plugin.view.reload('soft')
+                                        });
+                                    }
+                                }
+                            )
+                        }
+                        )
+                });
+
+            this.citationPathLoadingEl = containerEl.createEl('p', {
+                cls: 'orm-PathLoading d-none',
+                text: 'Loading citation database...',
+            });
+            this.citationPathErrorEl = containerEl.createEl('p', {
+                cls: 'orm-PathError d-none',
+                text: 'The citation export file cannot be found. Please check the path above.',
+            });
+            this.citationPathSuccessEl = containerEl.createEl('p', {
+                cls: 'orm-PathSuccess d-none',
+                text: 'Successfully Loaded Library Containing References.',
+            });
+
+            new Setting(containerEl)
+                .setName(t('CITEKEY_ZOTERO_LINK'))
+                .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.linkCiteKey)
+                    .onChange(async (value) => {
+                        this.plugin.settings.linkCiteKey = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }
+                    ));
+            new Setting(containerEl)
+                .setName(t('FIND_ZOTERO_CITEKEY_FROM_ID'))
+                .setDesc(fragWithHTML(t('FIND_ZOTERO_CITEKEY_FROM_ID_DESC')))
+                .addToggle(toggle => toggle
+                    .setValue(this.plugin.settings.findZoteroCiteKeyFromID)
+                    .onChange(async (value) => {
+                        this.plugin.settings.findZoteroCiteKeyFromID = value;
+                        this.plugin.saveSettings().then(() => {
+                            if (this.plugin.view) this.plugin.view.reload('view')
+                        });
+                    }
+                    ));
+        }
+
+        containerEl.createEl('h2', { text: 'Dynamic List Settings' });
+
         new Setting(containerEl)
             .setName(t('SEARCH_TITLE'))
             .setDesc(fragWithHTML(t('SEARCH_TITLE_DESC')))
@@ -151,139 +324,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
                     el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`;
                 }
                 );
-        }
-
-        new Setting(containerEl)
-            .setName(t('ENABLE_SORTING'))
-            .setDesc(fragWithHTML(t('ENABLE_SORTING_DESC')))
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.enableSorting)
-                .onChange(async (value) => {
-                    this.plugin.settings.enableSorting = value;
-                    this.plugin.saveSettings().then(() => {
-                        if (this.plugin.view) this.plugin.view.reload('view')
-                    });
-                    this.display();
-                }));
-
-        if (this.plugin.settings.enableSorting) {
-            new Setting(containerEl)
-                .setName(t('SORT_BY'))
-                .setDesc(fragWithHTML(t('SORT_BY_DESC')))
-                .addDropdown(dropdown => dropdown
-                    .addOption('year', t('SORT_BY_YEAR'))
-                    .addOption('citationCount', t('SORT_BY_CITATION_COUNT'))
-                    .addOption('referenceCount', t('SORT_BY_REFERENCE_COUNT'))
-                    .addOption('influentialCitationCount', t('SORT_BY_INFLUENTIAL_CITATION_COUNT'))
-                    .setValue(this.plugin.settings.sortBy)
-                    .onChange(async (value) => {
-                        this.plugin.settings.sortBy = value;
-                        this.plugin.saveSettings().then(() => {
-                            if (this.plugin.view) this.plugin.view.reload('view')
-                        });
-                    }));
-            new Setting(containerEl)
-                .setName(t('SORT_ORDER'))
-                .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
-                .addDropdown(dropdown => dropdown
-                    .addOption('desc', t('SORT_ORDER_DESCE'))
-                    .addOption('asc', t('SORT_ORDER_ASC'))
-                    .setValue(this.plugin.settings.sortOrder)
-                    .onChange(async (value) => {
-                        this.plugin.settings.sortOrder = value;
-                        this.plugin.saveSettings().then(() => {
-                            if (this.plugin.view) this.plugin.view.reload('view')
-                        });
-                    }
-                    ));
-            new Setting(containerEl)
-                .setName(t('ENABLE_SORTING_INDEX_CARDS'))
-                .setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
-                .addToggle(toggle => toggle
-                    .setValue(this.plugin.settings.sortIndexCards)
-                    .onChange(async (value) => {
-                        this.plugin.settings.sortIndexCards = value;
-                        this.plugin.saveSettings().then(() => {
-                            if (this.plugin.view) this.plugin.view.reload('view')
-                        });
-                        this.display();
-                    }));
-        }
-
-        new Setting(containerEl)
-            .setName(fragWithHTML(t('SEARCH_CITEKEY')))
-            .setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.searchCiteKey)
-                .onChange(async (value) => {
-                    this.plugin.settings.searchCiteKey = value;
-                    this.plugin.saveSettings().then(() => {
-                        if (this.plugin.view) this.plugin.view.reload('soft')
-                    });
-                    this.display();
-                }));
-
-
-        if (this.plugin.settings.searchCiteKey) {
-            new Setting(containerEl)
-                .setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
-                .setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
-                .addText((text) => {
-                    text
-                        .setValue(this.plugin.settings.searchCiteKeyPath)
-                        .onChange(async (value) => {
-                            this.checkCitationExportPath(value).then(
-                                (success) => {
-                                    if (success) {
-                                        this.showCitationExportPathSuccess()
-                                        this.plugin.settings.searchCiteKeyPath = value;
-                                        this.plugin.saveSettings().then(() => {
-                                            if (this.plugin.view) this.plugin.view.reload('soft')
-                                        });
-                                    }
-                                }
-                            )
-                        }
-                        )
-                });
-
-            this.citationPathLoadingEl = containerEl.createEl('p', {
-                cls: 'orm-PathLoading d-none',
-                text: 'Loading citation database...',
-            });
-            this.citationPathErrorEl = containerEl.createEl('p', {
-                cls: 'orm-PathError d-none',
-                text: 'The citation export file cannot be found. Please check the path above.',
-            });
-            this.citationPathSuccessEl = containerEl.createEl('p', {
-                cls: 'orm-PathSuccess d-none',
-                text: 'Successfully Loaded Library Containing References.',
-            });
-
-            new Setting(containerEl)
-                .setName(t('CITEKEY_ZOTERO_LINK'))
-                .setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
-                .addToggle(toggle => toggle
-                    .setValue(this.plugin.settings.linkCiteKey)
-                    .onChange(async (value) => {
-                        this.plugin.settings.linkCiteKey = value;
-                        this.plugin.saveSettings().then(() => {
-                            if (this.plugin.view) this.plugin.view.reload('view')
-                        });
-                    }
-                    ));
-            new Setting(containerEl)
-                .setName(t('FIND_ZOTERO_CITEKEY_FROM_ID'))
-                .setDesc(fragWithHTML(t('FIND_ZOTERO_CITEKEY_FROM_ID_DESC')))
-                .addToggle(toggle => toggle
-                    .setValue(this.plugin.settings.findZoteroCiteKeyFromID)
-                    .onChange(async (value) => {
-                        this.plugin.settings.findZoteroCiteKeyFromID = value;
-                        this.plugin.saveSettings().then(() => {
-                            if (this.plugin.view) this.plugin.view.reload('view')
-                        });
-                    }
-                    ));
         }
 
         containerEl.createEl('h2', { text: 'Buttons Settings' });

@@ -12,10 +12,12 @@ export interface ReferenceMapSettings {
     searchCiteKeyPath: string;
     linkCiteKey: boolean;
     findZoteroCiteKeyFromID: boolean;
-    enableSorting: boolean;
-    sortBy: string;
-    sortOrder: string;
-    sortIndexCards: boolean;
+    enableReferenceSorting: boolean;
+    sortByReference: string;
+    sortOrderReference: string;
+    enableIndexSorting: boolean;
+    sortByIndex: string;
+    sortOrderIndex: string;
     standardizeBibtex: boolean;
     formatMetadataCopyOne: boolean;
     formatMetadataCopyTwo: boolean;
