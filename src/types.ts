@@ -93,6 +93,7 @@ export interface citeKeyLibrary {
 
 export interface BibFields {
     doi?: string[];
+    url?: string[];
 }
 
 export interface MetaData {
