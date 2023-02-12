@@ -42,17 +42,17 @@ export const getPaperIds = (content: string): Set<string> => {
     const modContent = content.replaceAll("](", " ")
     const output: string[] = []
 
-    const arxivRegex = /arXiv.\s*(\d{4}\.\d{4,5})/ig
+    const arxivRegex = /arXiv:\s*(\d{4}\.\d{4,5})/ig
     const arXivMatches = modContent.matchAll(arxivRegex)
-    const corpusRegex = /CorpusId.\s*(\d{4,})/ig
+    const corpusRegex = /CorpusId:\s*(\d{4,})/ig
     const corpusMatches = modContent.matchAll(corpusRegex)
-    const magRegex = /MAG.\s*(\d{4,})/ig
+    const magRegex = /MAG:\s*(\d{4,})/ig
     const magMatches = modContent.matchAll(magRegex)
-    const pmidRegex = /PMID.\s*(\d{4,})/ig
+    const pmidRegex = /PMID:\s*(\d{4,})/ig
     const pmidMatches = modContent.matchAll(pmidRegex)
-    const pmcidRegex = /PMCID.\s*([a-zA-Z]*\d{4,})/ig
+    const pmcidRegex = /PMCID:\s*([a-zA-Z]*\d{4,})/ig
     const pmcidMatches = modContent.matchAll(pmcidRegex)
-    const urlRegex = /URL.\s*(http[s]?:.[^\s]+)/ig
+    const urlRegex = /URL:\s*(http[s]?:.[^\s]+)/ig
     const urlMatches = modContent.matchAll(urlRegex)
     const doi_matches = modContent.match(doiRegex());
 
@@ -108,24 +108,34 @@ export const sanitizeDOI = (dirtyDOI: string) => {
     return dirtyDOI.replace(/\s+/g, '')
 }
 
-export const getCiteKeys = (content: string): Set<string> => {
+export const getCiteKeys = (content: string, findCiteKeyFromLinksWithoutPrefix: boolean): Set<string> => {
     const output: string[] = [];
     // const citekeyRegex = /@[^{]+{([^,]+),/g;
     const citekeyRegex = /@([^\s]+)/gi;
-    const citekeyRegex2 = /\[+([^\s].*)\]+/ig
     const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex);
-    const matches2 = content.matchAll(citekeyRegex2);
     if (matches) {
         for (const match of matches) {
             output.push(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
         }
     }
+
+    if (findCiteKeyFromLinksWithoutPrefix) {
+        const citekeyRegex2 = /\[\[([^\s].*)\]\]/ig // Wiki Link
+        const matches2 = content.matchAll(citekeyRegex2);
     if (matches2) {
         for (const match of matches2) {
-            const trial = match[1].split(' ')
-            trial.forEach(item => {
-                output.push(item.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
-            })
+                const trial = match[1].trim().split(' ')[0]
+                output.push(trial.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
+            }
+        }
+
+        const citekeyRegex3 = /\[^\^([^\s].*)\]\(/ig // Markdown Link
+        const matches3 = content.matchAll(citekeyRegex3);
+        if (matches3) {
+            for (const match of matches3) {
+                const trial = match[1].trim().split(' ')[0]
+                output.push(trial.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
+            }
         }
     }
 

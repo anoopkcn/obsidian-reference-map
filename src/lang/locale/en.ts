@@ -49,6 +49,10 @@ export default {
     SEARCH_CITEKEY_PATH: "Library File Path",
     SEARCH_CITEKEY_PATH_DESC: "Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>" +
         "Path must be relative to the vaults root",
+    FIND_CITEKEY_WITHOUT_PREFIX: "Find CiteKey in Links Without <code>@</code>",
+    FIND_CITEKEY_WITHOUT_PREFIX_DESC: "Find citekey without <code>@</code> prefix in WikiLinks and Markdown Links. This does NOT disable citekey detection with <code>@</code> prefix. Enabling this option might cause problems if you have more than 200 citekey's in your markdown file.<br>" +
+        "<b>Toggle ON:</b> Find citekey without <code>@</code> prefix<br>" +
+        "<b>Toggle OFF:</b> Do not find citekey without <code>@</code> prefix",
     CITEKEY_ZOTERO_LINK: "Hide or Show Link to Zotero Library",
     CITEKEY_ZOTERO_LINK_DESC: "Hide or Show the <code>@citekey</code> link in the index cards to show reference in Zotero library.<br>" +
         "<b>Toggle ON:</b> Show link in the index card<br>" +
