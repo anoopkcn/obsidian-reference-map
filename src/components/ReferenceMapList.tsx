@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCiteKeyIds, getCiteKeys, getPaperIds, iSort, removeNullReferences, setCiteKeyId } from "src/utils";
+import { getCiteKeyIds, getCiteKeys, getPaperIds, iSearch, iSort, removeNullReferences, setCiteKeyId } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
-
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
@@ -17,6 +16,7 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [query, setQuery] = useState("");
 
 	useEffect(() => {
 		if (props.view) processPapers(props.view);
@@ -31,6 +31,20 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		setIsLoading(true);
 	}, [props.view?.file.basename]);
+
+	const Search = (isSearchList: boolean) => {
+		const searchFieldName = isSearchList ? 'orm-search-input orm-index-search' : 'orm-search-input orm-index-no-search'
+		return (
+			<div className="orm-search-form index-search" >
+				<input
+					type="search"
+					className={searchFieldName}
+					placeholder="Reference Map"
+					onChange={(e) => setQuery(e.target.value)}
+				/>
+			</div>
+		)
+	}
 
 	const processPapers = async (currentView: MarkdownView) => {
 		const rootPapers: IndexPaper[] = [];
@@ -78,7 +92,11 @@ export const ReferenceMapList = (props: {
 		}
 
 		if (rootPapers.length > 0) {
+			if (props.settings.enableIndexSorting) {
+				setPapers(iSort(removeNullReferences(rootPapers), props.settings.sortByIndex, props.settings.sortOrderIndex))
+			} else {
 			setPapers(removeNullReferences(rootPapers));
+			}
 		} else {
 			setPapers([]);
 		}
@@ -90,7 +108,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				<div>
-					Reference Map View
+					{Search(false)}
 					<div className="orm-no-content-subtext">
 						No Active Markdown File.
 						<br />
@@ -103,19 +121,16 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				<div>
-					Reference Map View
+					{Search(false)}
 					<LoadingPuff />
 				</div>
 			</div>
 		);
 	} else if (papers.length > 0) {
-		let sortPapers = papers
-		if (props.settings.enableIndexSorting) {
-			sortPapers = iSort(papers, props.settings.sortByIndex, props.settings.sortOrderIndex)
-		}
 		return (
 			<div className="orm-reference-map">
-				{sortPapers.map((paper, index) => {
+				{Search(true)}
+				{iSearch(papers, query).map((paper, index) => {
 					return (
 						<IndexPaperCard
 							settings={props.settings}
@@ -131,7 +146,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				<div>
-					Reference Map View
+					{Search(false)}
 					<div className="orm-no-content-subtext">
 						No Valid References Found.
 					</div>

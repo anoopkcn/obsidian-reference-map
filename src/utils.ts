@@ -332,6 +332,23 @@ export const sort = (
     });
 };
 
+export const iSearch = (data: IndexPaper[], query: string) => {
+    return data.filter((item: IndexPaper) =>
+        SEARCH_PARAMETERS.some((parameter) => {
+            if (parameter === "authors") {
+                return item.paper.authors.some((author) =>
+                    author.name?.toLowerCase().includes(query.toLowerCase())
+                );
+            } else {
+                return item.paper[parameter as keyof typeof item.paper]
+                    ?.toString()
+                    .toLowerCase()
+                    .includes(query.toLowerCase());
+            }
+        })
+    );
+};
+
 export const iSort = (
     data: IndexPaper[],
     sortProperty: string,

@@ -310,6 +310,18 @@ body {
 	padding: 0;
 }
 
+.orm-search-input::placeholder {
+	text-align: center;
+ }
+
+.orm-index-search{
+	margin-bottom: 0.5rem;
+}
+
+.orm-index-no-search{
+    pointer-events: none;
+}
+
 .orm-loading {
 	text-align: center;
 }
@@ -348,7 +360,6 @@ body {
 
 .orm-settings-description {
 	font-size: var(--font-ui-small);
-	/* color: var(--text-faint); */
 	border: 1px solid var(--background-modifier-border);
 	border-radius: 0.25rem;
 	padding: 0.5rem;
