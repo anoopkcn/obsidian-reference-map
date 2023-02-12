@@ -47,29 +47,31 @@ export const ReferenceMapList = (props: {
 	}
 
 	const processPapers = async (currentView: MarkdownView) => {
-		const rootPapers: IndexPaper[] = [];
+		const indexCardList: IndexPaper[] = [];
 		const fileContent = await app.vault.cachedRead(currentView.file);
 		const paperIds = getPaperIds(fileContent);
-		paperIds.forEach(async (paperId) => {
+		const getListWithID = [...paperIds].map(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
 			let paperCiteId = paperId
 			if (props.settings.searchCiteKey && props.library.libraryData && props.settings.findZoteroCiteKeyFromID) {
 				paperCiteId = setCiteKeyId(paperId, props.library.libraryData, props.library.adapter)
 
 			}
-			if (paper !== null) rootPapers.push({ id: paperCiteId, paper: paper });
-			if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+			if (paper !== null) indexCardList.push({ id: paperCiteId, paper: paper });
+			return Promise.resolve(indexCardList);
 		});
+		await Promise.allSettled(getListWithID);
 
 		if (props.settings.searchCiteKey && props.library.libraryData) {
 			const citeKeys = getCiteKeys(fileContent);
 			const citeKeyMap = getCiteKeyIds(citeKeys, props.library.libraryData, props.library.adapter);
 			if (citeKeyMap) {
-				citeKeyMap.forEach(async (item) => {
+				const getListWithCiteKey = [...citeKeyMap].map(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
-					if (paper !== null) rootPapers.push({ id: item.citeKey, paper: paper });
-					if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+					if (paper !== null) indexCardList.push({ id: item.citeKey, paper: paper });
+					return Promise.resolve(indexCardList);
 				});
+				await Promise.allSettled(getListWithCiteKey);
 			}
 		}
 		if (props.settings.searchTitle && props.fileNameString) {
@@ -78,7 +80,7 @@ export const ReferenceMapList = (props: {
 				[0, props.settings.searchLimit]
 			);
 			titleSearchPapers.forEach((paper) => {
-				rootPapers.push({ id: paper.paperId, paper: paper });
+				indexCardList.push({ id: paper.paperId, paper: paper });
 			});
 		}
 		if (props.settings.searchFrontMatter && props.frontMatterString) {
@@ -87,25 +89,23 @@ export const ReferenceMapList = (props: {
 				[0, props.settings.searchFrontMatterLimit]
 			);
 			frontMatterPapers.forEach((paper) => {
-				rootPapers.push({ id: paper.paperId, paper: paper });
+				indexCardList.push({ id: paper.paperId, paper: paper });
 			});
 		}
 
-		if (rootPapers.length > 0) {
-			setPapers(rootPapers)
+		if (indexCardList.length > 0) {
+			setPapers(removeNullReferences(indexCardList))
 		} else {
 			setPapers([]);
 		}
-
 		setIsLoading(false);
 	};
 
 	const postProcessPapers = (rootPapers: IndexPaper[]) => {
-		let listItems = removeNullReferences(rootPapers);
 		if (props.settings.enableIndexSorting) {
-			listItems = iSort(listItems, props.settings.sortByIndex, props.settings.sortOrderIndex);
+			return iSort(rootPapers, props.settings.sortByIndex, props.settings.sortOrderIndex);
 		}
-		return listItems;
+		return rootPapers;
 	};
 
 	if (!props.view) {
