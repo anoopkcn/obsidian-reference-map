@@ -92,16 +92,20 @@ export const ReferenceMapList = (props: {
 		}
 
 		if (rootPapers.length > 0) {
-			if (props.settings.enableIndexSorting) {
-				setPapers(iSort(removeNullReferences(rootPapers), props.settings.sortByIndex, props.settings.sortOrderIndex))
-			} else {
-			setPapers(removeNullReferences(rootPapers));
-			}
+			setPapers(rootPapers)
 		} else {
 			setPapers([]);
 		}
 
 		setIsLoading(false);
+	};
+
+	const postProcessPapers = (rootPapers: IndexPaper[]) => {
+		let listItems = removeNullReferences(rootPapers);
+		if (props.settings.enableIndexSorting) {
+			listItems = iSort(listItems, props.settings.sortByIndex, props.settings.sortOrderIndex);
+		}
+		return listItems;
 	};
 
 	if (!props.view) {
@@ -130,7 +134,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-reference-map">
 				{Search(true)}
-				{iSearch(papers, query).map((paper, index) => {
+				{iSearch(postProcessPapers(papers), query).map((paper, index) => {
 					return (
 						<IndexPaperCard
 							settings={props.settings}

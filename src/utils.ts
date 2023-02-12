@@ -255,7 +255,7 @@ export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], ada
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {
     const citeKeysMap: CiteKey[] = [];
     if (citeKeys.size > 0) {
-        // get DOI form CiteKeyData corresponding to each item in citeKeys
+        // Get DOI from CiteKeyData corresponding to each item in citeKeys
         for (const citeKey of citeKeys) {
             if (adapter === 'csl-json') {
                 const entry = citeKeyData.find((item) => item.id === citeKey)
@@ -279,7 +279,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary
 
 export const standardizeBibtex = (bibtex: string) => {
     const bibRegex = /(^@\[.*\]|@None)/gm
-    //get words from group one
+    // Get words from group one
     const matches = bibtex.matchAll(bibRegex);
     if (matches) {
         for (const match of matches) {
