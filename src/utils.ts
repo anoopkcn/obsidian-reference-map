@@ -235,20 +235,19 @@ export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], ada
         const citeKey = citeKeyData.find((item) =>
             item?.DOI?.toLowerCase() === paperId.toLowerCase() ||
             item?.DOI?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}` ||
-            item?.URL?.toLowerCase() === paperId.toLowerCase().replace('URL:', '')
+            item?.URL?.toLowerCase() === paperId.replace('URL:', '').toLowerCase()
         )?.id;
         return citeKey ? '@' + citeKey : paperId;
     } else if (adapter === 'bibtex') {
         const citeKey = citeKeyData.find((item) =>
             item.fields?.doi?.[0]?.toLowerCase() === paperId.toLowerCase() ||
             item.fields?.doi?.[0]?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}` ||
-            item.fields?.url?.[0]?.toLowerCase() === paperId.toLowerCase().replace('URL:', '')
+            item.fields?.url?.[0]?.toLowerCase() === paperId.replace('URL:', '').toLowerCase()
         )?.key;
         return citeKey ? '@' + citeKey : paperId;
     } else {
         return paperId
     }
-
 }
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {
