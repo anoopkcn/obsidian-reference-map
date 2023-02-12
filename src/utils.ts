@@ -52,7 +52,7 @@ export const getPaperIds = (content: string): Set<string> => {
     const pmidMatches = modContent.matchAll(pmidRegex)
     const pmcidRegex = /PMCID.\s*([a-zA-Z]*\d{4,})/ig
     const pmcidMatches = modContent.matchAll(pmcidRegex)
-    const urlRegex = /URL.\s*(https:.[^\s]+)/ig
+    const urlRegex = /URL.\s*(http[s]?:.[^\s]+)/ig
     const urlMatches = modContent.matchAll(urlRegex)
     const doi_matches = modContent.match(doiRegex());
 
