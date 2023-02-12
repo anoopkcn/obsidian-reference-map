@@ -50,7 +50,6 @@ export const ReferenceMapList = (props: {
 		const rootPapers: IndexPaper[] = [];
 		const fileContent = await app.vault.cachedRead(currentView.file);
 		const paperIds = getPaperIds(fileContent);
-		console.log('paperIds', paperIds)
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
 			let paperCiteId = paperId
@@ -64,7 +63,6 @@ export const ReferenceMapList = (props: {
 
 		if (props.settings.searchCiteKey && props.library.libraryData) {
 			const citeKeys = getCiteKeys(fileContent, props.settings.findCiteKeyFromLinksWithoutPrefix);
-			console.log('citeKeys', citeKeys)
 			const citeKeyMap = getCiteKeyIds(citeKeys, props.library.libraryData, props.library.adapter);
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
