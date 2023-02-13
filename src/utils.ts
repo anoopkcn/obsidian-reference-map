@@ -108,14 +108,17 @@ export const sanitizeDOI = (dirtyDOI: string) => {
     return dirtyDOI.replace(/\s+/g, '')
 }
 
+export const sanitizeCiteKey = (dirtyCiteKey: string) => {
+    return dirtyCiteKey.replace(/^@+|\)+$|\]+$|\*+$|_+$|`+$|'+$|"+$/, '').replace(/\s+/g, '');
+}
+
 export const getCiteKeys = (content: string, findCiteKeyFromLinksWithoutPrefix: boolean): Set<string> => {
     const output: string[] = [];
-    // const citekeyRegex = /@[^{]+{([^,]+),/g;
-    const citekeyRegex = /@([^\s]+)/gi;
+    const citekeyRegex = /@([^\s]+)/gi; // citekey with @ prefix
     const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex);
     if (matches) {
         for (const match of matches) {
-            output.push(match[1].replace(/\)+$|\]+$|\*+$|`+$/, ''));
+            output.push(sanitizeCiteKey(match[1]));
         }
     }
 
@@ -125,7 +128,7 @@ export const getCiteKeys = (content: string, findCiteKeyFromLinksWithoutPrefix: 
     if (matches2) {
         for (const match of matches2) {
                 const trial = match[1].trim().split(' ')[0]
-                output.push(trial.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
+            output.push(sanitizeCiteKey(trial));
             }
         }
 
@@ -134,11 +137,11 @@ export const getCiteKeys = (content: string, findCiteKeyFromLinksWithoutPrefix: 
         if (matches3) {
             for (const match of matches3) {
                 const trial = match[1].trim().split(' ')[0]
-                output.push(trial.replace(/^@+|\)+$|\]+$|\*+$|`+$/gmi, ''));
+                output.push(sanitizeCiteKey(trial));
             }
         }
     }
-
+    console.log(output)
     return new Set(output.sort());
 }
 
