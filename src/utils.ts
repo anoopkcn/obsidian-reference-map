@@ -141,7 +141,6 @@ export const getCiteKeys = (content: string, findCiteKeyFromLinksWithoutPrefix: 
             }
         }
     }
-    console.log(output)
     return new Set(output.sort());
 }
 
