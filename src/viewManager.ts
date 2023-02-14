@@ -10,14 +10,14 @@ export interface DocCache {
 
 export class ViewManager {
     plugin: ReferenceMap;
-    indexCache: LRUCache<string, SemanticPaper | null>;
+    indexCache: LRUCache<string, SemanticPaper | number | null>;
     refCache: LRUCache<string, SemanticPaper[]>;
     citeCache: LRUCache<string, SemanticPaper[]>;
     searchCache: LRUCache<string, SemanticPaper[]>;
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin;
-        this.indexCache = new LRUCache({ max: 200 });
+        this.indexCache = new LRUCache({ max: 250 });
         this.refCache = new LRUCache({ max: 20 });
         this.citeCache = new LRUCache({ max: 20 });
         this.searchCache = new LRUCache({ max: 20 });
@@ -32,7 +32,7 @@ export class ViewManager {
     }
 
 
-    getIndexPaper = async (paperId: string): Promise<SemanticPaper | null> => {
+    getIndexPaper = async (paperId: string): Promise<SemanticPaper | number | null> => {
         const cachedPaper = this.indexCache.has(paperId) ? this.indexCache.get(paperId) : null;
         const debugMode = this.plugin.settings.debugMode;
         if (!cachedPaper) {
@@ -42,6 +42,8 @@ export class ViewManager {
                 return paper;
             } catch (e) {
                 if (debugMode) console.log('ORM: S2AG API Index Card request error', e);
+                // Cache the 404 status(no entry found) to avoid repeated requests
+                if (e.status === 404) this.indexCache.set(paperId, e.status);
                 return null;
             }
         }

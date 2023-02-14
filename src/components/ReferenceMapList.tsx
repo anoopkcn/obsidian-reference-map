@@ -56,7 +56,7 @@ export const ReferenceMapList = (props: {
 			let paperCiteId = paperId
 			if (isLibrary && props.settings.findZoteroCiteKeyFromID)
 				paperCiteId = setCiteKeyId(paperId, props.library);
-			if (paper !== null) indexCards.push({ id: paperCiteId, paper: paper });
+			if (paper !== null && typeof paper !== "number") indexCards.push({ id: paperCiteId, paper: paper });
 			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
 		});
 
@@ -66,7 +66,7 @@ export const ReferenceMapList = (props: {
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
-					if (paper !== null) indexCards.push({ id: item.citeKey, paper: paper });
+					if (paper !== null && typeof paper !== "number") indexCards.push({ id: item.citeKey, paper: paper });
 					if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
 				});
 			}
