@@ -50,20 +50,19 @@ export const ReferenceMapList = (props: {
 		const indexCards: IndexPaper[] = [];
 		const fileContent = await app.vault.cachedRead(currentView);
 		const paperIds = getPaperIds(fileContent);
+		const isLibrary = props.settings.searchCiteKey && props.library.libraryData
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
 			let paperCiteId = paperId
-			if (props.settings.searchCiteKey && props.library.libraryData && props.settings.findZoteroCiteKeyFromID) {
-				paperCiteId = setCiteKeyId(paperId, props.library.libraryData, props.library.adapter)
-
-			}
+			if (isLibrary && props.settings.findZoteroCiteKeyFromID)
+				paperCiteId = setCiteKeyId(paperId, props.library);
 			if (paper !== null) indexCards.push({ id: paperCiteId, paper: paper });
 			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
 		});
 
-		if (props.settings.searchCiteKey && props.library.libraryData) {
+		if (isLibrary) {
 			const citeKeys = getCiteKeys(fileContent, props.settings.findCiteKeyFromLinksWithoutPrefix);
-			const citeKeyMap = getCiteKeyIds(citeKeys, props.library.libraryData, props.library.adapter);
+			const citeKeyMap = getCiteKeyIds(citeKeys, props.library);
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
@@ -74,8 +73,7 @@ export const ReferenceMapList = (props: {
 		}
 		if (props.settings.searchTitle && props.fileNameString) {
 			const titleSearchPapers = await props.viewManager.searchRootPapers(
-				props.fileNameString,
-				[0, props.settings.searchLimit]
+				props.fileNameString, [0, props.settings.searchLimit]
 			);
 			titleSearchPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });
@@ -83,8 +81,7 @@ export const ReferenceMapList = (props: {
 		}
 		if (props.settings.searchFrontMatter && props.frontMatterString) {
 			const frontMatterPapers = await props.viewManager.searchRootPapers(
-				props.frontMatterString,
-				[0, props.settings.searchFrontMatterLimit]
+				props.frontMatterString, [0, props.settings.searchFrontMatterLimit]
 			);
 			frontMatterPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });

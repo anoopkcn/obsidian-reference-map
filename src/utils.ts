@@ -1,7 +1,7 @@
 import { FileSystemAdapter, Notice } from "obsidian";
 import path from "path";
 import doiRegex from "doi-regex";
-import { CiteKey, citeKeyLibrary, IndexPaper, MetaData, SemanticPaper } from "./types";
+import { CiteKey, IndexPaper, Library, MetaData, SemanticPaper } from "./types";
 import { BIBTEX_STANDARD_TYPES, COMMON_WORDS, NUMBERS, PUNCTUATION, SEARCH_PARAMETERS, VALID_S2AG_API_URLS } from "./constants";
 
 export const fragWithHTML = (html: string) =>
@@ -244,16 +244,16 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll("{{doi}}", data.doi);
 }
 
-export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], adapter = ''): string => {
-    if (adapter === 'csl-json') {
-        const citeKey = citeKeyData.find((item) =>
+export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
+    if (citeLibrary.adapter === 'csl-json') {
+        const citeKey = citeLibrary.libraryData?.find((item) =>
             item?.DOI?.toLowerCase() === paperId.toLowerCase() ||
             item?.DOI?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}` ||
             item?.URL?.toLowerCase() === paperId.replace('URL:', '').toLowerCase()
         )?.id;
         return citeKey ? '@' + citeKey : paperId;
-    } else if (adapter === 'bibtex') {
-        const citeKey = citeKeyData.find((item) =>
+    } else if (citeLibrary.adapter === 'bibtex') {
+        const citeKey = citeLibrary.libraryData?.find((item) =>
             item.fields?.doi?.[0]?.toLowerCase() === paperId.toLowerCase() ||
             item.fields?.doi?.[0]?.toLowerCase() === `https://doi.org/${paperId.toLowerCase()}` ||
             item.fields?.url?.[0]?.toLowerCase() === paperId.replace('URL:', '').toLowerCase()
@@ -264,20 +264,20 @@ export const setCiteKeyId = (paperId: string, citeKeyData: citeKeyLibrary[], ada
     }
 }
 
-export const getCiteKeyIds = (citeKeys: Set<string>, citeKeyData: citeKeyLibrary[], adapter = '') => {
+export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
     const citeKeysMap: CiteKey[] = [];
     if (citeKeys.size > 0) {
         // Get DOI from CiteKeyData corresponding to each item in citeKeys
         for (const citeKey of citeKeys) {
-            if (adapter === 'csl-json') {
-                const entry = citeKeyData.find((item) => item.id === citeKey)
+            if (citeLibrary.adapter === 'csl-json') {
+                const entry = citeLibrary.libraryData?.find((item) => item.id === citeKey)
                 if (entry?.DOI) {
                     citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(entry?.DOI) })
                 } else if (VALID_S2AG_API_URLS.some(item => entry?.URL?.includes(item))) {
                     citeKeysMap.push({ citeKey: '@' + citeKey, paperId: `URL:${entry?.URL}` })
                 }
-            } else if (adapter === 'bibtex') {
-                const entry = citeKeyData.find((item) => item.key === citeKey)
+            } else if (citeLibrary.adapter === 'bibtex') {
+                const entry = citeLibrary.libraryData?.find((item) => item.key === citeKey)
                 if (entry?.fields?.doi?.[0]) {
                     citeKeysMap.push({ citeKey: '@' + citeKey, paperId: sanitizeDOI(entry?.fields?.doi?.[0]) })
                 } else if (VALID_S2AG_API_URLS.some(item => entry?.fields?.url?.[0]?.includes(item))) {
