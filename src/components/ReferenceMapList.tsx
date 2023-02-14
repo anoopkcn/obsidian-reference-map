@@ -1,7 +1,7 @@
 import { IndexPaper, Library, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
-import { MarkdownView } from "obsidian";
+import { MarkdownView, TFile } from "obsidian";
 import { ViewManager } from "src/viewManager";
 import { getCiteKeyIds, getCiteKeys, getPaperIds, iSearch, iSort, removeNullReferences, setCiteKeyId } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
@@ -19,7 +19,7 @@ export const ReferenceMapList = (props: {
 	const [query, setQuery] = useState("");
 
 	useEffect(() => {
-		if (props.view) processPapers(props.view);
+		if (props.view) processPapers(props.view.file);
 	}, [
 		props.settings,
 		props.view?.data,
@@ -33,12 +33,12 @@ export const ReferenceMapList = (props: {
 	}, [props.view?.file.basename]);
 
 	const Search = (isSearchList: boolean) => {
-		const searchFieldName = isSearchList ? 'orm-search-input orm-index-search' : 'orm-search-input orm-index-no-search'
+		const searchFieldName = isSearchList ? 'orm-index-search' : 'orm-index-no-search'
 		return (
 			<div className="orm-search-form index-search" >
 				<input
 					type="search"
-					className={searchFieldName}
+					className={`orm-search-input ${searchFieldName}`}
 					placeholder="Reference Map"
 					onChange={(e) => setQuery(e.target.value)}
 				/>
@@ -46,9 +46,9 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
-	const processPapers = async (currentView: MarkdownView) => {
-		const rootPapers: IndexPaper[] = [];
-		const fileContent = await app.vault.cachedRead(currentView.file);
+	const processPapers = async (currentView: TFile) => {
+		const indexCards: IndexPaper[] = [];
+		const fileContent = await app.vault.cachedRead(currentView);
 		const paperIds = getPaperIds(fileContent);
 		paperIds.forEach(async (paperId) => {
 			const paper = await props.viewManager.getIndexPaper(paperId);
@@ -57,8 +57,8 @@ export const ReferenceMapList = (props: {
 				paperCiteId = setCiteKeyId(paperId, props.library.libraryData, props.library.adapter)
 
 			}
-			if (paper !== null) rootPapers.push({ id: paperCiteId, paper: paper });
-			if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+			if (paper !== null) indexCards.push({ id: paperCiteId, paper: paper });
+			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
 		});
 
 		if (props.settings.searchCiteKey && props.library.libraryData) {
@@ -67,8 +67,8 @@ export const ReferenceMapList = (props: {
 			if (citeKeyMap) {
 				citeKeyMap.forEach(async (item) => {
 					const paper = await props.viewManager.getIndexPaper(item.paperId);
-					if (paper !== null) rootPapers.push({ id: item.citeKey, paper: paper });
-					if (rootPapers.length > 0) setPapers(removeNullReferences(rootPapers));
+					if (paper !== null) indexCards.push({ id: item.citeKey, paper: paper });
+					if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
 				});
 			}
 		}
@@ -78,7 +78,7 @@ export const ReferenceMapList = (props: {
 				[0, props.settings.searchLimit]
 			);
 			titleSearchPapers.forEach((paper) => {
-				rootPapers.push({ id: paper.paperId, paper: paper });
+				indexCards.push({ id: paper.paperId, paper: paper });
 			});
 		}
 		if (props.settings.searchFrontMatter && props.frontMatterString) {
@@ -87,21 +87,16 @@ export const ReferenceMapList = (props: {
 				[0, props.settings.searchFrontMatterLimit]
 			);
 			frontMatterPapers.forEach((paper) => {
-				rootPapers.push({ id: paper.paperId, paper: paper });
+				indexCards.push({ id: paper.paperId, paper: paper });
 			});
 		}
 
-		if (rootPapers.length > 0) {
-			setPapers(rootPapers)
-		} else {
-			setPapers([]);
-		}
-
+		(indexCards.length > 0) ? setPapers(indexCards) : setPapers([]);
 		setIsLoading(false);
 	};
 
-	const postProcessPapers = (rootPapers: IndexPaper[]) => {
-		let listItems = removeNullReferences(rootPapers);
+	const postProcessPapers = (indexCards: IndexPaper[]) => {
+		let listItems = removeNullReferences(indexCards);
 		if (props.settings.enableIndexSorting) {
 			listItems = iSort(listItems, props.settings.sortByIndex, props.settings.sortOrderIndex);
 		}
