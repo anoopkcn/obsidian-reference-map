@@ -72,16 +72,16 @@ export const ReferenceMapList = (props: {
 			}
 		}
 		if (props.settings.searchTitle && props.fileNameString) {
-			const titleSearchPapers = await props.viewManager.searchRootPapers(
-				props.fileNameString, [0, props.settings.searchLimit]
+			const titleSearchPapers = await props.viewManager.searchIndexPapers(
+				props.fileNameString, props.settings.searchLimit
 			);
 			titleSearchPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });
 			});
 		}
 		if (props.settings.searchFrontMatter && props.frontMatterString) {
-			const frontMatterPapers = await props.viewManager.searchRootPapers(
-				props.frontMatterString, [0, props.settings.searchFrontMatterLimit]
+			const frontMatterPapers = await props.viewManager.searchIndexPapers(
+				props.frontMatterString, props.settings.searchFrontMatterLimit
 			);
 			frontMatterPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });

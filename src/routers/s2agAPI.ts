@@ -2,6 +2,64 @@ import { requestUrl } from "obsidian";
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from "src/constants";
 import { SemanticPaper } from "src/types";
 
+export const getIndexItem = async (paperId: string, debugMode = false): Promise<SemanticPaper | null> => {
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(',')}`
+    const paperMetadata: SemanticPaper | null = await requestUrl(url).then(
+        (response) => {
+            if (response.status != 200) {
+                if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
+                return null
+            }
+            return response.json as SemanticPaper
+        }
+    )
+    return paperMetadata
+}
+
+export const getReferenceItems = async (paperId: string, debugMode = false): Promise<SemanticPaper[]> => {
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`
+    const references: SemanticPaper[] = await requestUrl(url).then(
+        (response) => {
+            if (response.status != 200) {
+                if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
+                return []
+            }
+            return response.json.data.map((e: Record<string, unknown>) => e['citedPaper'])
+        }
+    )
+    return references
+}
+
+export const getCitationItems = async (paperId: string, debugMode = false): Promise<SemanticPaper[]> => {
+    const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`
+    const citations: SemanticPaper[] = await requestUrl(url).then(
+        (response) => {
+            if (response.status != 200) {
+                if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
+                return []
+            }
+            return response.json.data.map((e: Record<string, unknown>) => e['citingPaper'])
+        }
+    )
+    return citations
+}
+
+export const getSearchItems = async (query: string, limit: number, debugMode = false): Promise<SemanticPaper[]> => {
+    let url = `${SEMANTICSCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')}`
+    if (limit != 0) url += `&offset=0&limit=${limit}`
+    const search: SemanticPaper[] = await requestUrl(url).then(
+        (response) => {
+            if (response.status != 200) {
+                if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
+                return []
+            }
+            return response.json.data
+        }
+    )
+    return search
+}
+
+
 export const getPaperMetadata = async (
     paperId = '',
     refType = 'paper',
