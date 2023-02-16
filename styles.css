@@ -178,6 +178,10 @@ body {
 	position: relative;
 }
 
+.orm-active-index{
+	border: var(--orm-paper-line-thickness) solid var(--orm-paper-buttons-hover-color);
+}
+
 /* Paper Heading */
 .orm-paper-title {
 	font-size: var(--orm-paper-title-font-size);

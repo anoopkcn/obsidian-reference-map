@@ -9,6 +9,7 @@ import { LoadingPuff } from "./LoadingPuff";
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO } from "src/constants";
 
 export const IndexPaperCard = (props: {
+	className?: string;
 	settings: ReferenceMapSettings;
 	rootPaper: IndexPaper;
 	viewManager: ViewManager;
@@ -99,7 +100,7 @@ export const IndexPaperCard = (props: {
 
 	return (
 		<div
-			className="orm-root-paper"
+			className={`orm-root-paper ${props.className}`}
 			onMouseEnter={() => handleHoverButtons(true)}
 			onMouseLeave={() => handleHoverButtons(false)}
 		>

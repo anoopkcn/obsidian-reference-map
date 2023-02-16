@@ -1,5 +1,5 @@
 import { IndexPaper, Library, ReferenceMapSettings } from "src/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView, TFile } from "obsidian";
 import { ViewManager } from "src/viewManager";
@@ -13,13 +13,18 @@ export const ReferenceMapList = (props: {
 	frontMatterString: string;
 	fileNameString: string;
 	library: Library;
+	selection: string;
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [query, setQuery] = useState("");
+	const [activeIndexCard, setActiveIndexCard] = useState(props.selection)
+	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
-		if (props.view) processPapers(props.view.file);
+		if (props.view) {
+			processPapers(props.view.file)
+		}
 	}, [
 		props.settings,
 		props.view?.data,
@@ -31,6 +36,11 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		setIsLoading(true);
 	}, [props.view?.file.basename]);
+
+	useEffect(() => {
+		setActiveIndexCard(props.selection)
+		if (activeRef.current !== null) activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
+	}, [props.selection])
 
 	const Search = (isSearchList: boolean) => {
 		const searchFieldName = isSearchList ? 'orm-index-search' : 'orm-index-no-search'
@@ -127,13 +137,21 @@ export const ReferenceMapList = (props: {
 			<div className="orm-reference-map">
 				{Search(true)}
 				{iSearch(postProcessPapers(papers), query).map((paper, index) => {
+					const activeIndexCardClass = (
+						paper.id === activeIndexCard ||
+						paper.id === '@' + activeIndexCard ||
+						'https://doi.org/' + paper.id === activeIndexCard
+					) ? 'orm-active-index' : '';
+					const ref = activeIndexCardClass ? activeRef : null
 					return (
-						<IndexPaperCard
-							settings={props.settings}
-							key={paper.paper.paperId + index + props.view?.file.basename}
-							rootPaper={paper}
-							viewManager={props.viewManager}
-						/>
+						<div key={paper.paper.paperId + index + props.view?.file.basename} ref={ref}>
+							<IndexPaperCard
+								className={activeIndexCardClass}
+								settings={props.settings}
+								rootPaper={paper}
+								viewManager={props.viewManager}
+							/>
+						</div>
 					);
 				})}
 			</div>

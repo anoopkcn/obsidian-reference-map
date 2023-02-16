@@ -1,4 +1,4 @@
-import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, WorkspaceLeaf, debounce } from "obsidian";
 import ReferenceMap from "./main";
 import { t } from "./lang/helpers";
 import { ViewManager } from "./viewManager";
@@ -49,6 +49,9 @@ export class ReferenceMapView extends ItemView {
 				}
 			})
 		);
+		this.registerDomEvent(document, "pointerup", (evt) => {
+			this.handlePointerUp();
+		});
 
 		this.processReferences();
 	}
@@ -75,6 +78,22 @@ export class ReferenceMapView extends ItemView {
 		this.viewManager.clearCache();
 		return super.onClose();
 	}
+	handlePointerUp = debounce(() => {
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+		let selection = ''
+		if (activeView && activeView.file) {
+			const editor = activeView.editor;
+			if (activeView.getMode() === 'source') {
+				selection = editor.getSelection();
+			} else {
+				const textSelection = window.getSelection()?.toString().trim()
+				if (textSelection !== undefined && textSelection !== null && textSelection !== '')
+					selection = textSelection
+			}
+			if (selection)
+				this.processReferences(selection)
+		}
+	}, 300, true);
 
 	loadLibrary = async () => {
 		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
@@ -153,7 +172,7 @@ export class ReferenceMapView extends ItemView {
 		}
 	}
 
-	processReferences = async () => {
+	processReferences = async (selection = '') => {
 		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) this.loadLibrary();
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let frontMatterString = "";
@@ -195,6 +214,7 @@ export class ReferenceMapView extends ItemView {
 				frontMatterString={frontMatterString}
 				fileNameString={fileNameString}
 				library={this.library}
+				selection={selection}
 			/>
 		);
 	};
