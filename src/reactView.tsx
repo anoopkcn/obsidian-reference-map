@@ -78,6 +78,7 @@ export class ReferenceMapView extends ItemView {
 		this.viewManager.clearCache();
 		return super.onClose();
 	}
+
 	handlePointerUp = debounce(() => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let selection = ''
