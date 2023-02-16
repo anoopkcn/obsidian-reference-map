@@ -54,9 +54,9 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
-	const processPapers = async (currentView: TFile) => {
+	const processPapers = async (currentMarkdownFile: TFile) => {
 		const indexCards: IndexPaper[] = [];
-		const fileContent = await app.vault.cachedRead(currentView);
+		const fileContent = await app.vault.cachedRead(currentMarkdownFile);
 		const paperIds = getPaperIds(fileContent);
 		const isLibrary = props.settings.searchCiteKey && props.library.libraryData
 		paperIds.forEach(async (paperId) => {
