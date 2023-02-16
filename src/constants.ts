@@ -33,7 +33,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
     enableReferenceSorting: false,
     sortByReference: 'year',
     sortOrderReference: 'desc',
-    enableIndexSorting: false,
+    enableIndexSorting: true,
     sortByIndex: 'year',
     sortOrderIndex: 'desc',
     standardizeBibtex: false,
