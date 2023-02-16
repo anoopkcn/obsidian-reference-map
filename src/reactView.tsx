@@ -84,11 +84,11 @@ export class ReferenceMapView extends ItemView {
 		if (activeView && activeView.file) {
 			const editor = activeView.editor;
 			if (activeView.getMode() === 'source') {
-				selection = editor.getSelection();
+				selection = editor.getSelection().trim();
 			} else {
-				const textSelection = window.getSelection()?.toString().trim()
+				const textSelection = window.getSelection()?.toString()
 				if (textSelection !== undefined && textSelection !== null && textSelection !== '')
-					selection = textSelection
+					selection = textSelection.trim()
 			}
 			if (selection)
 				this.processReferences(selection)
