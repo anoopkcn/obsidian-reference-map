@@ -49,8 +49,13 @@ export class ReferenceMapView extends ItemView {
 				}
 			})
 		);
+
 		this.registerDomEvent(document, "pointerup", (evt) => {
-			this.handlePointerUp();
+			this.idSelectionHandle();
+		});
+
+		this.registerDomEvent(document, "keyup", (evt) => {
+			this.idSelectionHandle();
 		});
 
 		this.processReferences();
@@ -79,7 +84,7 @@ export class ReferenceMapView extends ItemView {
 		return super.onClose();
 	}
 
-	handlePointerUp = debounce(() => {
+	idSelectionHandle = debounce(() => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let selection = ''
 		if (activeView && activeView.file) {
