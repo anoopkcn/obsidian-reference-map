@@ -18,7 +18,6 @@ export const ReferenceMapList = (props: {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [query, setQuery] = useState("");
-	const [activeIndexCard, setActiveIndexCard] = useState(props.selection)
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -38,7 +37,6 @@ export const ReferenceMapList = (props: {
 	}, [props.view?.file.basename]);
 
 	useEffect(() => {
-		setActiveIndexCard(props.selection)
 		if (activeRef.current !== null) activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
 	}, [props.selection])
 
@@ -138,9 +136,9 @@ export const ReferenceMapList = (props: {
 				{Search(true)}
 				{iSearch(postProcessPapers(papers), query).map((paper, index) => {
 					const activeIndexCardClass = (
-						paper.id === activeIndexCard ||
-						paper.id === '@' + activeIndexCard ||
-						'https://doi.org/' + paper.id === activeIndexCard
+						paper.id === props.selection ||
+						paper.id === '@' + props.selection ||
+						'https://doi.org/' + paper.id === props.selection
 					) ? 'orm-active-index' : '';
 					const ref = activeIndexCardClass ? activeRef : null
 					return (
