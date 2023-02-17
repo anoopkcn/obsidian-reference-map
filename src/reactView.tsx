@@ -84,6 +84,20 @@ export class ReferenceMapView extends ItemView {
 		return super.onClose();
 	}
 
+	async reload(reloadType: "hard" | "soft" | "view") {
+		if (reloadType === "hard") {
+			this.viewManager.clearCache()
+			this.library.mtime = 0
+			await this.loadLibrary()
+			this.processReferences()
+		} else if (reloadType === "soft") {
+			await this.loadLibrary()
+			this.processReferences()
+		} else if (reloadType === "view") {
+			this.processReferences()
+		}
+	}
+
 	idSelectionHandle = debounce(() => {
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
 		let selection = ''
@@ -162,20 +176,6 @@ export class ReferenceMapView extends ItemView {
 			}
 		}
 		return null
-	}
-
-	async reload(reloadType: "hard" | "soft" | "view") {
-		if (reloadType === "hard") {
-			this.viewManager.clearCache()
-			this.library.mtime = 0
-			await this.loadLibrary()
-			this.processReferences()
-		} else if (reloadType === "soft") {
-			await this.loadLibrary()
-			this.processReferences()
-		} else if (reloadType === "view") {
-			this.processReferences()
-		}
 	}
 
 	processReferences = async (selection = '') => {
