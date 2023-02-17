@@ -1,8 +1,4 @@
-[![MIT license](https://img.shields.io/github/license/anoopkcn/obsidian-reference-map)](LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/anoopkcn/obsidian-reference-map/total?color=purple)](https://github.com/anoopkcn/obsidian-reference-map/releases)
-[![GitHub version](https://img.shields.io/github/manifest-json/v/anoopkcn/obsidian-reference-map)](https://github.com/anoopkcn/obsidian-reference-map/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/anoopkcn/obsidian-reference-map/release.yml)](https://github.com/anoopkcn/obsidian-reference-map/actions)
-![Release Date](https://img.shields.io/github/release-date/anoopkcn/obsidian-reference-map?color=blue)
+[![MIT license](https://img.shields.io/github/license/anoopkcn/obsidian-reference-map)](LICENSE) [![Downloads](https://img.shields.io/github/downloads/anoopkcn/obsidian-reference-map/total?color=purple)](https://github.com/anoopkcn/obsidian-reference-map/releases) [![GitHub version](https://img.shields.io/github/manifest-json/v/anoopkcn/obsidian-reference-map)](https://github.com/anoopkcn/obsidian-reference-map/releases) [![Build Status](https://img.shields.io/github/actions/workflow/status/anoopkcn/obsidian-reference-map/release.yml)](https://github.com/anoopkcn/obsidian-reference-map/actions) ![Release Date](https://img.shields.io/github/release-date/anoopkcn/obsidian-reference-map?color=blue)
 
 ![ORM-Header-logo](./images/reference-map.png)
 
