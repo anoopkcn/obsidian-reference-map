@@ -44,7 +44,7 @@ export class ViewManager {
                 if (debugMode) console.log('ORM: S2AG API Index Card request error', e);
                 // Cache the 404 status(no entry found) to avoid repeated requests
                 if (e.status === 404) this.indexCache.set(paperId, e.status);
-                return null;
+                return e.status;
             }
         }
         return cachedPaper;
