@@ -1,4 +1,4 @@
-import { IndexPaper, Library, ReferenceMapSettings } from "src/types";
+import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState, useRef } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { MarkdownView, TFile } from "obsidian";
@@ -40,6 +40,56 @@ export const ReferenceMapList = (props: {
 		if (activeRef.current !== null) activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
 	}, [props.selection])
 
+	const processPapers = async (currentMarkdownFile: TFile) => {
+		const indexCards: IndexPaper[] = [];
+		let citeKeyMap: CiteKey[] = [];
+		const fileContent = await app.vault.cachedRead(currentMarkdownFile);
+		const paperIds = getPaperIds(fileContent);
+		const isLibrary = props.settings.searchCiteKey && props.library.libraryData
+		if (isLibrary) {
+			const citeKeys = getCiteKeys(fileContent, props.settings.findCiteKeyFromLinksWithoutPrefix);
+			citeKeyMap = getCiteKeyIds(citeKeys, props.library);
+		}
+
+		paperIds.forEach(async (paperId) => {
+			const paper = await props.viewManager.getIndexPaper(paperId);
+			let paperCiteId = paperId
+			if (isLibrary && props.settings.findZoteroCiteKeyFromID)
+				paperCiteId = setCiteKeyId(paperId, props.library);
+			if (paper !== null && typeof paper !== "number") indexCards.push({ id: paperCiteId, paper: paper });
+			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
+		});
+
+		if (citeKeyMap) {
+			citeKeyMap.forEach(async (item) => {
+				const paper = await props.viewManager.getIndexPaper(item.paperId);
+				if (paper !== null && typeof paper !== "number") indexCards.push({ id: item.citeKey, paper: paper });
+				if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
+			});
+		}
+
+		if (props.settings.searchTitle && props.fileNameString) {
+			const titleSearchPapers = await props.viewManager.searchIndexPapers(
+				props.fileNameString, props.settings.searchLimit
+			);
+			titleSearchPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper: paper });
+			});
+		}
+
+		if (props.settings.searchFrontMatter && props.frontMatterString) {
+			const frontMatterPapers = await props.viewManager.searchIndexPapers(
+				props.frontMatterString, props.settings.searchFrontMatterLimit
+			);
+			frontMatterPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper: paper });
+			});
+		}
+
+		(indexCards.length > 0) ? setPapers(indexCards) : setPapers([]);
+		setIsLoading(false);
+	};
+
 	const Search = (isSearchList: boolean) => {
 		const searchFieldName = isSearchList ? 'orm-index-search' : 'orm-index-no-search'
 		return (
@@ -53,52 +103,6 @@ export const ReferenceMapList = (props: {
 			</div>
 		)
 	}
-
-	const processPapers = async (currentMarkdownFile: TFile) => {
-		const indexCards: IndexPaper[] = [];
-		const fileContent = await app.vault.cachedRead(currentMarkdownFile);
-		const paperIds = getPaperIds(fileContent);
-		const isLibrary = props.settings.searchCiteKey && props.library.libraryData
-		paperIds.forEach(async (paperId) => {
-			const paper = await props.viewManager.getIndexPaper(paperId);
-			let paperCiteId = paperId
-			if (isLibrary && props.settings.findZoteroCiteKeyFromID)
-				paperCiteId = setCiteKeyId(paperId, props.library);
-			if (paper !== null && typeof paper !== "number") indexCards.push({ id: paperCiteId, paper: paper });
-			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
-		});
-
-		if (isLibrary) {
-			const citeKeys = getCiteKeys(fileContent, props.settings.findCiteKeyFromLinksWithoutPrefix);
-			const citeKeyMap = getCiteKeyIds(citeKeys, props.library);
-			if (citeKeyMap) {
-				citeKeyMap.forEach(async (item) => {
-					const paper = await props.viewManager.getIndexPaper(item.paperId);
-					if (paper !== null && typeof paper !== "number") indexCards.push({ id: item.citeKey, paper: paper });
-					if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
-				});
-			}
-		}
-		if (props.settings.searchTitle && props.fileNameString) {
-			const titleSearchPapers = await props.viewManager.searchIndexPapers(
-				props.fileNameString, props.settings.searchLimit
-			);
-			titleSearchPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
-			});
-		}
-		if (props.settings.searchFrontMatter && props.frontMatterString) {
-			const frontMatterPapers = await props.viewManager.searchIndexPapers(
-				props.frontMatterString, props.settings.searchFrontMatterLimit
-			);
-			frontMatterPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
-			});
-		}
-
-		(indexCards.length > 0) ? setPapers(indexCards) : setPapers([]);
-		setIsLoading(false);
-	};
 
 	const postProcessPapers = (indexCards: IndexPaper[]) => {
 		let listItems = removeNullReferences(indexCards);
