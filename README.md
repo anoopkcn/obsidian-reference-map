@@ -1,3 +1,9 @@
+[![MIT license](https://img.shields.io/github/license/anoopkcn/obsidian-reference-map)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/anoopkcn/obsidian-reference-map/total?color=purple)](https://github.com/anoopkcn/obsidian-reference-map/releases)
+[![GitHub version](https://img.shields.io/github/manifest-json/v/anoopkcn/obsidian-reference-map)](https://github.com/anoopkcn/obsidian-reference-map/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/anoopkcn/obsidian-reference-map/release.yml)](https://github.com/anoopkcn/obsidian-reference-map/actions)
+![Release Date](https://img.shields.io/github/release-date/anoopkcn/obsidian-reference-map?color=blue)
+
 ![ORM-Header-logo](./images/reference-map.png)
 
 # Reference Map
@@ -74,6 +80,8 @@ The following types of IDs are supported:
 *To enable CiteKey support(for Zotero or for other reference managers), one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file or `BibTeX` file with `.bib` extension. Once enabled in the settings, the plugin can recognize the Pandoc citation format.
 
 **Note**: CiteKey's should NOT contain `spaces`, `[`, `(` or `*`. Also make sure in Zotero library DOI field contains a valid ID. 
+
+For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map view.
  
 
 ### Dynamic Reference List
