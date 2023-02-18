@@ -152,7 +152,8 @@ export class ReferenceMapView extends ItemView {
 				return null
 			}
 			if (mtime !== this.library.mtime) {
-				if (this.plugin.settings.debugMode) console.log(`ORM: Loading library from '${this.plugin.settings.searchCiteKeyPath}'`)
+				if (this.plugin.settings.debugMode)
+					console.log(`ORM: Loading library from '${this.plugin.settings.searchCiteKeyPath}'`);
 				try {
 					if (!fs.existsSync(libraryPath)) {
 						if (this.plugin.settings.debugMode) {
@@ -162,14 +163,19 @@ export class ReferenceMapView extends ItemView {
 					rawData = fs.readFileSync(libraryPath).toString();
 				} catch (e) {
 					if (this.plugin.settings.debugMode) {
-						console.warn("ORM: Warnings associated with loading the library file.")
+						console.warn("ORM: Warnings associated with loading the library file.");
 					}
 					return null
 				}
 				if (this.plugin.settings.searchCiteKeyPath.endsWith(".json")) {
 					try {
 						const libraryData = JSON.parse(rawData);
-						this.library = { active: true, adapter: 'csl-json', libraryData: libraryData, mtime: mtime }
+						this.library = {
+							active: true,
+							adapter: 'csl-json',
+							libraryData: libraryData,
+							mtime: mtime
+						}
 						return libraryData
 					} catch (e) {
 						if (this.plugin.settings.debugMode) {
@@ -187,7 +193,12 @@ export class ReferenceMapView extends ItemView {
 					};
 					try {
 						const parsed = BibTeXParser.parse(rawData, options) as BibTeXParser.Bibliography;
-						this.library = { active: true, adapter: 'bibtex', libraryData: parsed.entries, mtime: mtime }
+						this.library = {
+							active: true,
+							adapter: 'bibtex',
+							libraryData: parsed.entries,
+							mtime: mtime
+						}
 						return parsed.entries
 					} catch (e) {
 						if (this.plugin.settings.debugMode) {
@@ -311,8 +322,10 @@ export class ReferenceMapView extends ItemView {
 		return indexCards
 	}
 
-	postProcessPapers = (indexCards: IndexPaper[]) => {
-		if (!this.plugin.settings.enableIndexSorting) return removeNullReferences(indexCards)
+	preProcessReferences = (indexCards: IndexPaper[]) => {
+		if (!this.plugin.settings.enableIndexSorting) {
+			return removeNullReferences(indexCards)
+		}
 		return iSort(
 			removeNullReferences(indexCards),
 			this.plugin.settings.sortByIndex,
@@ -331,7 +344,7 @@ export class ReferenceMapView extends ItemView {
 				basename={this.basename}
 				paperIDs={this.paperIDs}
 				citeKeyMap={this.citeKeyMap}
-				indexCards={this.postProcessPapers(indexCards)}
+				indexCards={this.preProcessReferences(indexCards)}
 				selection={selection}
 			/>
 		);
