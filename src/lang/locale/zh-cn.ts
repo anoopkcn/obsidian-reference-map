@@ -1,3 +1,3 @@
 // 简体中文
 
-export default {};
+export default {}

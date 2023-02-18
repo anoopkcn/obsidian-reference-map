@@ -1,3 +1,3 @@
 // čeština
 
-export default {};
+export default {}

@@ -1,3 +1,3 @@
 // British English
 
-export default {};
+export default {}

@@ -1,21 +1,21 @@
-import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from "src/types";
-import React, { useEffect, useState, useRef } from "react";
-import { IndexPaperCard } from "./IndexPaperCard";
-import { ViewManager } from "src/viewManager";
-import { iSearch } from "src/utils";
+import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from 'src/types'
+import React, { useEffect, useState, useRef } from 'react'
+import { IndexPaperCard } from './IndexPaperCard'
+import { ViewManager } from 'src/viewManager'
+import { iSearch } from 'src/utils'
 
 export const ReferenceMapList = (props: {
-	settings: ReferenceMapSettings;
-	library: Library;
-	viewManager: ViewManager;
-	basename: string;
-	paperIDs: Set<string>;
-	citeKeyMap: CiteKey[];
+	settings: ReferenceMapSettings
+	library: Library
+	viewManager: ViewManager
+	basename: string
+	paperIDs: Set<string>
+	citeKeyMap: CiteKey[]
 	indexCards: IndexPaper[]
 	selection: string
 }) => {
-	const [papers, setPapers] = useState<IndexPaper[]>([]);
-	const [query, setQuery] = useState("");
+	const [papers, setPapers] = useState<IndexPaper[]>([])
+	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -24,18 +24,23 @@ export const ReferenceMapList = (props: {
 		props.settings,
 		props.indexCards,
 		props.library.libraryData,
-		props.basename
-	]);
+		props.basename,
+	])
 
 	useEffect(() => {
 		if (activeRef.current !== null)
-			activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
+			activeRef.current.scrollIntoView({
+				block: 'nearest',
+				behavior: 'smooth',
+			})
 	}, [props.selection])
 
 	const Search = (isSearchList: boolean) => {
-		const searchFieldName = isSearchList ? 'orm-index-search' : 'orm-index-no-search'
+		const searchFieldName = isSearchList
+			? 'orm-index-search'
+			: 'orm-index-no-search'
 		return (
-			<div className="orm-search-form index-search" >
+			<div className="orm-search-form index-search">
 				<input
 					type="search"
 					className={`orm-search-input ${searchFieldName}`}
@@ -58,17 +63,18 @@ export const ReferenceMapList = (props: {
 					</div>
 				</div>
 			</div>
-		);
+		)
 	} else if (papers.length > 0) {
 		return (
 			<div className="orm-reference-map">
 				{Search(true)}
 				{iSearch(papers, query).map((paper, index) => {
-					const activeIndexCardClass = (
+					const activeIndexCardClass =
 						paper.id === props.selection ||
 						paper.id === `@${props.selection}` ||
 						`https://doi.org/${paper.id}` === props.selection
-					) ? 'orm-active-index' : '';
+							? 'orm-active-index'
+							: ''
 					const ref = activeIndexCardClass ? activeRef : null
 					return (
 						<div
@@ -82,10 +88,10 @@ export const ReferenceMapList = (props: {
 								viewManager={props.viewManager}
 							/>
 						</div>
-					);
+					)
 				})}
 			</div>
-		);
+		)
 	} else {
 		return (
 			<div className="orm-no-content">
@@ -96,6 +102,6 @@ export const ReferenceMapList = (props: {
 					</div>
 				</div>
 			</div>
-		);
+		)
 	}
-};
+}

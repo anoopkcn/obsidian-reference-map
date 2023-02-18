@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { PaperHeading } from "./PaperHeading";
-import { PaperButtons } from "./PaperButtons";
-import { IndexPaper, ReferenceMapSettings } from "src/types";
+import React, { useState } from 'react'
+import { PaperHeading } from './PaperHeading'
+import { PaperButtons } from './PaperButtons'
+import { IndexPaper, ReferenceMapSettings } from 'src/types'
 
 export const PaperCard = (props: {
-	paper: IndexPaper;
-	settings: ReferenceMapSettings;
+	paper: IndexPaper
+	settings: ReferenceMapSettings
 }) => {
-	const paper = props.paper;
+	const paper = props.paper
 	const [isButtonShown, setIsButtonShown] = useState(
 		props.settings.hideButtonsOnHover ? false : true
-	);
+	)
 	const handleHoverButtons = (isShow: boolean) => {
 		props.settings.hideButtonsOnHover
 			? setIsButtonShown(isShow)
-			: setIsButtonShown(true);
-	};
+			: setIsButtonShown(true)
+	}
 	return (
 		<div
 			className="orm-paper-card"
@@ -27,5 +27,5 @@ export const PaperCard = (props: {
 				<PaperButtons settings={props.settings} paper={paper} />
 			)}
 		</div>
-	);
-};
+	)
+}

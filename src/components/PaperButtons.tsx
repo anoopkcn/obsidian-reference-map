@@ -1,29 +1,33 @@
-import React from "react";
-import { FiPaperclip, FiClipboard } from "react-icons/fi";
-import { SiOpenaccess } from "react-icons/si";
-import { BsClipboardData } from "react-icons/bs";
+import React from 'react'
+import { FiPaperclip, FiClipboard } from 'react-icons/fi'
+import { SiOpenaccess } from 'react-icons/si'
+import { BsClipboardData } from 'react-icons/bs'
 import {
 	METADATA_COPY_TEMPLATE_ONE,
 	METADATA_COPY_TEMPLATE_THREE,
 	METADATA_COPY_TEMPLATE_TWO,
-} from "src/constants";
-import { IndexPaper, ReferenceMapSettings } from "src/types";
-import { copyElToClipboard, makeMetaData, standardizeBibtex, templateReplace } from "src/utils";
+} from 'src/constants'
+import { IndexPaper, ReferenceMapSettings } from 'src/types'
+import {
+	copyElToClipboard,
+	makeMetaData,
+	standardizeBibtex,
+	templateReplace,
+} from 'src/utils'
 
 type Props = {
-	settings: ReferenceMapSettings;
-	paper: IndexPaper;
-	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>;
-	showReferences?: boolean;
-	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>;
-	showCitations?: boolean;
-	setIsButtonShown?: React.Dispatch<React.SetStateAction<boolean>>;
-	isButtonShown?: boolean;
-	batchCopyMetadataOne?: string;
-	batchCopyMetadataTwo?: string;
-	batchCopyMetadataThree?: string;
-
-};
+	settings: ReferenceMapSettings
+	paper: IndexPaper
+	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>
+	showReferences?: boolean
+	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>
+	showCitations?: boolean
+	setIsButtonShown?: React.Dispatch<React.SetStateAction<boolean>>
+	isButtonShown?: boolean
+	batchCopyMetadataOne?: string
+	batchCopyMetadataTwo?: string
+	batchCopyMetadataThree?: string
+}
 
 export const PaperButtons = ({
 	settings,
@@ -34,64 +38,78 @@ export const PaperButtons = ({
 	showCitations = false,
 	setIsButtonShown = undefined,
 	isButtonShown = false,
-	batchCopyMetadataOne = "",
-	batchCopyMetadataTwo = "",
-	batchCopyMetadataThree = "",
+	batchCopyMetadataOne = '',
+	batchCopyMetadataTwo = '',
+	batchCopyMetadataThree = '',
 }: Props) => {
 	const metadataTemplateOne = settings.formatMetadataCopyOne
 		? settings.metadataCopyTemplateOne
-		: METADATA_COPY_TEMPLATE_ONE;
+		: METADATA_COPY_TEMPLATE_ONE
 
 	const metadataTemplateTwo = settings.formatMetadataCopyTwo
 		? settings.metadataCopyTemplateTwo
-		: METADATA_COPY_TEMPLATE_TWO;
+		: METADATA_COPY_TEMPLATE_TWO
 
 	const metadataTemplateThree = settings.formatMetadataCopyThree
 		? settings.metadataCopyTemplateThree
-		: METADATA_COPY_TEMPLATE_THREE;
+		: METADATA_COPY_TEMPLATE_THREE
 
-	const metaData = makeMetaData(paper.paper);
-	settings.standardizeBibtex ? metaData.bibtex = standardizeBibtex(metaData.bibtex) : metaData.bibtex
-	let copyMetadataOne = "";
-	let copyMetadataTwo = "";
-	let copyMetadataThree = "";
+	const metaData = makeMetaData(paper.paper)
+	settings.standardizeBibtex
+		? (metaData.bibtex = standardizeBibtex(metaData.bibtex))
+		: metaData.bibtex
+	let copyMetadataOne = ''
+	let copyMetadataTwo = ''
+	let copyMetadataThree = ''
 	if (settings.formatMetadataCopyOne) {
-		(settings.metadataCopyOneBatch && batchCopyMetadataOne)
-			? copyMetadataOne = batchCopyMetadataOne
-			: copyMetadataOne = templateReplace(metadataTemplateOne, metaData, paper.id)
+		settings.metadataCopyOneBatch && batchCopyMetadataOne
+			? (copyMetadataOne = batchCopyMetadataOne)
+			: (copyMetadataOne = templateReplace(
+					metadataTemplateOne,
+					metaData,
+					paper.id
+			  ))
 	}
 	if (settings.formatMetadataCopyTwo) {
-		(settings.metadataCopyTwoBatch && batchCopyMetadataTwo)
-			? copyMetadataTwo = batchCopyMetadataTwo
-			: copyMetadataTwo = templateReplace(metadataTemplateTwo, metaData, paper.id)
+		settings.metadataCopyTwoBatch && batchCopyMetadataTwo
+			? (copyMetadataTwo = batchCopyMetadataTwo)
+			: (copyMetadataTwo = templateReplace(
+					metadataTemplateTwo,
+					metaData,
+					paper.id
+			  ))
 	}
 	if (settings.formatMetadataCopyThree) {
-		(settings.metadataCopyThreeBatch && batchCopyMetadataThree)
-			? copyMetadataThree = batchCopyMetadataThree
-			: copyMetadataThree = templateReplace(metadataTemplateThree, metaData, paper.id)
+		settings.metadataCopyThreeBatch && batchCopyMetadataThree
+			? (copyMetadataThree = batchCopyMetadataThree)
+			: (copyMetadataThree = templateReplace(
+					metadataTemplateThree,
+					metaData,
+					paper.id
+			  ))
 	}
 
-	let citingCited = null;
+	let citingCited = null
 	if (
 		setShowReferences !== undefined &&
 		setShowCitations !== undefined &&
 		setIsButtonShown !== undefined
 	) {
 		const handleShowReferencesClick = () => {
-			setShowReferences(!showReferences);
-			setShowCitations(false);
+			setShowReferences(!showReferences)
+			setShowCitations(false)
 			if (showReferences || showCitations) {
-				setIsButtonShown(true);
+				setIsButtonShown(true)
 			}
-		};
+		}
 
 		const handleShowCitationsClick = () => {
-			setShowCitations(!showCitations);
-			setShowReferences(false);
+			setShowCitations(!showCitations)
+			setShowReferences(false)
 			if (showReferences || showCitations) {
-				setIsButtonShown(true);
+				setIsButtonShown(true)
 			}
-		};
+		}
 		citingCited = (
 			<>
 				<div
@@ -99,10 +117,10 @@ export const PaperButtons = ({
 					style={
 						showReferences
 							? {
-								fontWeight: "bold",
-								color: "var(--text-accent)",
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
+									fontWeight: 'bold',
+									color: 'var(--text-accent)',
+									// eslint-disable-next-line no-mixed-spaces-and-tabs
+							  }
 							: {}
 					}
 					onClick={() => handleShowReferencesClick()}
@@ -114,10 +132,10 @@ export const PaperButtons = ({
 					style={
 						showCitations
 							? {
-								fontWeight: "bold",
-								color: "var(--text-accent)",
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
+									fontWeight: 'bold',
+									color: 'var(--text-accent)',
+									// eslint-disable-next-line no-mixed-spaces-and-tabs
+							  }
 							: {}
 					}
 					onClick={() => handleShowCitationsClick()}
@@ -125,7 +143,7 @@ export const PaperButtons = ({
 					{metaData.citationCount}
 				</div>
 			</>
-		);
+		)
 	} else {
 		citingCited = (
 			<>
@@ -134,7 +152,7 @@ export const PaperButtons = ({
 				</div>
 				<div className="orm-citations-2">{metaData.citationCount}</div>
 			</>
-		);
+		)
 	}
 
 	return (
@@ -143,7 +161,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-one"
 					onClick={() => {
-						copyElToClipboard(copyMetadataOne);
+						copyElToClipboard(copyMetadataOne)
 					}}
 				>
 					<FiClipboard size={16} />
@@ -153,7 +171,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-two"
 					onClick={() => {
-						copyElToClipboard(copyMetadataTwo);
+						copyElToClipboard(copyMetadataTwo)
 					}}
 				>
 					<FiPaperclip size={15} />
@@ -163,7 +181,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-three"
 					onClick={() => {
-						copyElToClipboard(copyMetadataThree);
+						copyElToClipboard(copyMetadataThree)
 					}}
 				>
 					<BsClipboardData size={15} />
@@ -187,5 +205,5 @@ export const PaperButtons = ({
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}

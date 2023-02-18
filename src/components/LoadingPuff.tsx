@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export const LoadingPuff = () => {
 	return (
@@ -51,5 +51,5 @@ export const LoadingPuff = () => {
 				</circle>
 			</svg>
 		</div>
-	);
-};
+	)
+}

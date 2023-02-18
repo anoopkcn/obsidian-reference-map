@@ -1,3 +1,3 @@
 // русский
 
-export default {};
+export default {}

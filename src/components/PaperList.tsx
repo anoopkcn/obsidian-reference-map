@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { ReferenceMapSettings, SemanticPaper } from "src/types";
-import { PaperCard } from "./PaperCard";
-import { search, sort } from "src/utils";
+import React, { useState } from 'react'
+import { ReferenceMapSettings, SemanticPaper } from 'src/types'
+import { PaperCard } from './PaperCard'
+import { search, sort } from 'src/utils'
 
 export const PaperList = (props: {
-	papers: SemanticPaper[];
-	settings: ReferenceMapSettings;
-	type: string;
+	papers: SemanticPaper[]
+	settings: ReferenceMapSettings
+	type: string
 }) => {
-	const [query, setQuery] = useState("");
+	const [query, setQuery] = useState('')
 
-	let papers = props.papers;
+	let papers = props.papers
 	if (props.settings.enableReferenceSorting)
 		papers = sort(
 			props.papers,
 			props.settings.sortByReference,
 			props.settings.sortOrderReference
-		);
+		)
 
 	const paperList = search(papers, query).map((paper, index) => {
 		return (
@@ -25,8 +25,8 @@ export const PaperList = (props: {
 				paper={{ id: paper.paperId, paper: paper }}
 				settings={props.settings}
 			/>
-		);
-	});
+		)
+	})
 	return (
 		<div className="orm-paper-list">
 			<div className="orm-paper-list-buttons">
@@ -41,5 +41,5 @@ export const PaperList = (props: {
 			</div>
 			{paperList}
 		</div>
-	);
-};
+	)
+}

@@ -1,3 +1,3 @@
 // 한국어
 
-export default {};
+export default {}

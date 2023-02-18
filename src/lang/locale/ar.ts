@@ -1,3 +1,3 @@
 // العربية
 
-export default {};
+export default {}
