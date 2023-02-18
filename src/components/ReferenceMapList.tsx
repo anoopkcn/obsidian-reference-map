@@ -48,11 +48,8 @@ export const ReferenceMapList = (props: {
 	}
 
 	const postProcessPapers = (indexCards: IndexPaper[]) => {
-		let listItems = removeNullReferences(indexCards);
-		if (props.settings.enableIndexSorting) {
-			listItems = iSort(listItems, props.settings.sortByIndex, props.settings.sortOrderIndex);
-		}
-		return listItems;
+		if (!props.settings.enableIndexSorting) return indexCards
+		return iSort(indexCards, props.settings.sortByIndex, props.settings.sortOrderIndex);
 	};
 
 	if (!props.basename) {
