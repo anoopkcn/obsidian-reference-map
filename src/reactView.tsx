@@ -125,7 +125,14 @@ export class ReferenceMapView extends ItemView {
 				if (textSelection !== undefined && textSelection !== null && textSelection !== '')
 					selection = textSelection.trim()
 			}
-			if (selection)
+			//check if selection is a citekey
+			const isInIDs = [...this.paperIDs].some((item) => {
+				return item === selection || `https://doi.org/${item}` === selection
+			});
+			const isInCiteKeys = _.map(this.citeKeyMap, 'citeKey').some((item) => {
+				return item === selection || item === `@${selection}`
+			});
+			if (isInIDs || isInCiteKeys)
 				this.prepareIDs().then(() => this.processReferences(selection));
 		}
 	}, 300, true);
