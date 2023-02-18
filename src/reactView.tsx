@@ -334,7 +334,6 @@ export class ReferenceMapView extends ItemView {
 	};
 
 	processReferences = async (selection = '') => {
-		console.log("ORM: Processing references")
 		const indexCards = await this.getIndexCards()
 		this.rootEl.render(
 			<ReferenceMapList
