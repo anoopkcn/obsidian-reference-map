@@ -302,7 +302,6 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	processReferences = async (selection = '') => {
-		console.log("render is called")
 		const indexCards = await this.getIndexCards()
 		this.rootEl.render(
 			<ReferenceMapList
