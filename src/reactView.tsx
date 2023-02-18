@@ -5,7 +5,7 @@ import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapList } from "./components/ReferenceMapList";
-import { extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, setCiteKeyId } from "./utils";
+import { extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, iSort, removeNullReferences, setCiteKeyId } from "./utils";
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from "./constants";
 import * as fs from "fs";
 import * as BibTeXParser from '@retorquere/bibtex-parser';
@@ -311,15 +311,27 @@ export class ReferenceMapView extends ItemView {
 		return indexCards
 	}
 
+	postProcessPapers = (indexCards: IndexPaper[]) => {
+		if (!this.plugin.settings.enableIndexSorting) return removeNullReferences(indexCards)
+		return iSort(
+			removeNullReferences(indexCards),
+			this.plugin.settings.sortByIndex,
+			this.plugin.settings.sortOrderIndex
+		);
+	};
+
 	processReferences = async (selection = '') => {
+		console.log("ORM: Processing references")
 		const indexCards = await this.getIndexCards()
 		this.rootEl.render(
 			<ReferenceMapList
 				settings={this.plugin.settings}
 				viewManager={this.viewManager}
 				library={this.library}
-				indexCards={indexCards}
 				basename={this.basename}
+				paperIDs={this.paperIDs}
+				citeKeyMap={this.citeKeyMap}
+				indexCards={this.postProcessPapers(indexCards)}
 				selection={selection}
 			/>
 		);

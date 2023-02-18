@@ -1,23 +1,25 @@
-import { IndexPaper, Library, ReferenceMapSettings } from "src/types";
+import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState, useRef } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { ViewManager } from "src/viewManager";
-import { iSearch, iSort, removeNullReferences } from "src/utils";
+import { iSearch } from "src/utils";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
 	library: Library;
 	viewManager: ViewManager;
-	indexCards: IndexPaper[];
 	basename: string;
-	selection: string;
+	paperIDs: Set<string>;
+	citeKeyMap: CiteKey[];
+	indexCards: IndexPaper[]
+	selection: string
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
 	const [query, setQuery] = useState("");
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
-		setPapers(removeNullReferences(props.indexCards))
+		setPapers(props.indexCards)
 	}, [
 		props.settings,
 		props.indexCards,
@@ -44,15 +46,6 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
-	const postProcessPapers = (indexCards: IndexPaper[]) => {
-		if (!props.settings.enableIndexSorting) return indexCards
-		return iSort(
-			indexCards,
-			props.settings.sortByIndex,
-			props.settings.sortOrderIndex
-		);
-	};
-
 	if (!props.basename) {
 		return (
 			<div className="orm-no-content">
@@ -70,7 +63,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-reference-map">
 				{Search(true)}
-				{iSearch(postProcessPapers(papers), query).map((paper, index) => {
+				{iSearch(papers, query).map((paper, index) => {
 					const activeIndexCardClass = (
 						paper.id === props.selection ||
 						paper.id === `@${props.selection}` ||
