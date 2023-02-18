@@ -13,6 +13,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/doi-regex": "^0.1.0",
+		"@types/lodash": "^4.14.191",
 		"@types/node": "^16.11.6",
 		"@types/react": "^18.0.26",
 		"@types/react-dom": "^18.0.10",
@@ -27,6 +28,7 @@
 	"dependencies": {
 		"@retorquere/bibtex-parser": "^6.4.7",
 		"doi-regex": "^0.1.13",
+		"lodash": "^4.17.21",
 		"lru-cache": "^7.14.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",

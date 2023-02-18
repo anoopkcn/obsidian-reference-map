@@ -11,6 +11,7 @@ import * as fs from "fs";
 import * as BibTeXParser from '@retorquere/bibtex-parser';
 import { resolvePath } from './utils';
 import { CiteKey, IndexPaper, Library } from "./types";
+import _ from "lodash";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
@@ -20,6 +21,11 @@ export class ReferenceMapView extends ItemView {
 	activeMarkdownLeaf: MarkdownView;
 	rootEl: Root;
 	library: Library;
+	paperIDs: Set<string>;
+	citeKeyMap: CiteKey[];
+	frontMatterString: string;
+	fileNameString: string;
+	basename: string;
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf);
@@ -27,13 +33,22 @@ export class ReferenceMapView extends ItemView {
 		this.viewManager = new ViewManager(plugin);
 		this.rootEl = createRoot(this.containerEl.children[1]);
 		this.library = DEFAULT_LIBRARY
+		this.paperIDs = new Set()
+		this.citeKeyMap = []
+		this.frontMatterString = ''
+		this.fileNameString = ''
+		this.basename = ''
 
 		this.registerEvent(
 			app.metadataCache.on("changed", (file) => {
 				const activeView =
 					app.workspace.getActiveViewOfType(MarkdownView);
 				if (activeView && file === activeView.file) {
-					this.processReferences();
+					this.prepareIDs().then((prepare) => {
+						if (prepare.isUpdated) {
+							this.processReferences();
+						}
+					});
 				}
 			})
 		);
@@ -186,6 +201,7 @@ export class ReferenceMapView extends ItemView {
 		let frontMatterString = "";
 		let paperIDs: Set<string> = new Set();
 		let citeKeyMap: CiteKey[] = [];
+		let isUpdated = false;
 		if (activeView) {
 			if (isLibrary) this.loadLibrary();
 			basename = activeView.file.basename;
@@ -212,13 +228,23 @@ export class ReferenceMapView extends ItemView {
 			) {
 				fileNameString = extractKeywords(basename).unique().join("+");
 			}
+			const ispaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs);
+			const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap);
+			const isFrontMatterUpdated = frontMatterString === this.frontMatterString
+			const isFileNameUpdated = fileNameString === this.fileNameString
+
+			isUpdated = !ispaperIDsUpdated || !isCiteKeyMapUpdated || !isFrontMatterUpdated || !isFileNameUpdated;
+			if (isUpdated) {
+				this.basename = basename;
+				this.paperIDs = paperIDs;
+				this.citeKeyMap = citeKeyMap;
+				this.frontMatterString = frontMatterString;
+				this.fileNameString = fileNameString;
+			}
 		}
 		return {
+			isUpdated: isUpdated,
 			basename: basename,
-			paperIDs: paperIDs,
-			citeKeyMap: citeKeyMap,
-			frontMatterString: frontMatterString,
-			fileNameString: fileNameString,
 			isLibrary: isLibrary
 		}
 
@@ -228,8 +254,8 @@ export class ReferenceMapView extends ItemView {
 		const paperIDs = await this.prepareIDs()
 		const indexCards: IndexPaper[] = [];
 		const basename = paperIDs.basename
-		if (paperIDs.paperIDs.size > 0) {
-			const paperIDPromises = [...paperIDs.paperIDs].map(async (paperId) => {
+		if (this.paperIDs.size > 0) {
+			const paperIDPromises = [...this.paperIDs].map(async (paperId) => {
 				const paper = await this.viewManager.getIndexPaper(paperId);
 				let paperCiteId = paperId
 				if (paperIDs.isLibrary && this.plugin.settings.findZoteroCiteKeyFromID)
@@ -241,8 +267,8 @@ export class ReferenceMapView extends ItemView {
 			await Promise.allSettled(paperIDPromises);
 		}
 
-		if (paperIDs.citeKeyMap.length > 0) {
-			const citeKeyPromises = paperIDs.citeKeyMap.map(async (item) => {
+		if (this.citeKeyMap.length > 0) {
+			const citeKeyPromises = this.citeKeyMap.map(async (item) => {
 				const paper = await this.viewManager.getIndexPaper(item.paperId);
 				if (paper !== null && typeof paper !== "number")
 					return Promise.resolve(indexCards.push({ id: item.citeKey, paper: paper }))
@@ -250,18 +276,18 @@ export class ReferenceMapView extends ItemView {
 			await Promise.allSettled(citeKeyPromises);
 		}
 
-		if (this.plugin.settings.searchTitle && paperIDs.fileNameString) {
+		if (this.plugin.settings.searchTitle && this.fileNameString) {
 			const titleSearchPapers = await this.viewManager.searchIndexPapers(
-				paperIDs.fileNameString, this.plugin.settings.searchLimit
+				this.fileNameString, this.plugin.settings.searchLimit
 			);
 			titleSearchPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });
 			});
 		}
 
-		if (this.plugin.settings.searchFrontMatter && paperIDs.frontMatterString) {
+		if (this.plugin.settings.searchFrontMatter && this.frontMatterString) {
 			const frontMatterPapers = await this.viewManager.searchIndexPapers(
-				paperIDs.frontMatterString, this.plugin.settings.searchFrontMatterLimit
+				this.frontMatterString, this.plugin.settings.searchFrontMatterLimit
 			);
 			frontMatterPapers.forEach((paper) => {
 				indexCards.push({ id: paper.paperId, paper: paper });
@@ -271,6 +297,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	processReferences = async (selection = '') => {
+		console.log("render is called")
 		const { basename, indexCards } = await this.getReferences()
 		this.rootEl.render(
 			<ReferenceMapList
