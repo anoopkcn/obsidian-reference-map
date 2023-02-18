@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
 import { ViewManager } from "src/viewManager";
 import { iSearch, iSort, removeNullReferences } from "src/utils";
-import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
@@ -14,14 +13,11 @@ export const ReferenceMapList = (props: {
 	selection: string;
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
 	const [query, setQuery] = useState("");
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
-		setIsLoading(true);
 		setPapers(removeNullReferences(props.indexCards))
-		setIsLoading(false);
 	}, [
 		props.settings,
 		props.indexCards,
@@ -30,7 +26,8 @@ export const ReferenceMapList = (props: {
 	]);
 
 	useEffect(() => {
-		if (activeRef.current !== null) activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
+		if (activeRef.current !== null)
+			activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
 	}, [props.selection])
 
 	const Search = (isSearchList: boolean) => {
@@ -49,7 +46,11 @@ export const ReferenceMapList = (props: {
 
 	const postProcessPapers = (indexCards: IndexPaper[]) => {
 		if (!props.settings.enableIndexSorting) return indexCards
-		return iSort(indexCards, props.settings.sortByIndex, props.settings.sortOrderIndex);
+		return iSort(
+			indexCards,
+			props.settings.sortByIndex,
+			props.settings.sortOrderIndex
+		);
 	};
 
 	if (!props.basename) {
@@ -65,15 +66,6 @@ export const ReferenceMapList = (props: {
 				</div>
 			</div>
 		);
-	} else if (isLoading) {
-		return (
-			<div className="orm-no-content">
-				<div>
-					{Search(false)}
-					<LoadingPuff />
-				</div>
-			</div>
-		);
 	} else if (papers.length > 0) {
 		return (
 			<div className="orm-reference-map">
@@ -81,12 +73,15 @@ export const ReferenceMapList = (props: {
 				{iSearch(postProcessPapers(papers), query).map((paper, index) => {
 					const activeIndexCardClass = (
 						paper.id === props.selection ||
-						paper.id === '@' + props.selection ||
-						'https://doi.org/' + paper.id === props.selection
+						paper.id === `@${props.selection}` ||
+						`https://doi.org/${paper.id}` === props.selection
 					) ? 'orm-active-index' : '';
 					const ref = activeIndexCardClass ? activeRef : null
 					return (
-						<div key={paper.paper.paperId + index + props.basename} ref={ref}>
+						<div
+							key={`${paper.paper.paperId}${index}${props.basename}`}
+							ref={ref}
+						>
 							<IndexPaperCard
 								className={activeIndexCardClass}
 								settings={props.settings}

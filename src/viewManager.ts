@@ -1,7 +1,12 @@
 import LRUCache from 'lru-cache';
 import { SemanticPaper } from './types';
 import ReferenceMap from './main';
-import { getIndexItem, getReferenceItems, getCitationItems, getSearchItems } from './routers/s2agAPI';
+import {
+    getIndexItem,
+    getReferenceItems,
+    getCitationItems,
+    getSearchItems
+} from './routers/s2agAPI';
 
 export interface DocCache {
     paperIds: Set<string>;

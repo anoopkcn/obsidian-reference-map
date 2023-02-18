@@ -240,7 +240,10 @@ export class ReferenceMapView extends ItemView {
 			const isFrontMatterUpdated = frontMatterString === this.frontMatterString
 			const isFileNameUpdated = fileNameString === this.fileNameString
 
-			isUpdated = !ispaperIDsUpdated || !isCiteKeyMapUpdated || !isFrontMatterUpdated || !isFileNameUpdated;
+			isUpdated = !ispaperIDsUpdated ||
+				!isCiteKeyMapUpdated ||
+				!isFrontMatterUpdated ||
+				!isFileNameUpdated;
 
 			// If there are updated changes then update the class variables
 			if (isUpdated) {
