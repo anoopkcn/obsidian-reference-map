@@ -44,8 +44,8 @@ export class ReferenceMapView extends ItemView {
 				const activeView =
 					app.workspace.getActiveViewOfType(MarkdownView);
 				if (activeView && file === activeView.file) {
-					this.prepareIDs().then((prepare) => {
-						if (prepare.isUpdated) {
+					this.prepareIDs().then((isUpdated) => {
+						if (isUpdated) {
 							this.processReferences();
 						}
 					});
@@ -58,7 +58,7 @@ export class ReferenceMapView extends ItemView {
 				if (leaf) {
 					app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							this.processReferences();
+							this.prepareIDs().then(() => this.processReferences());
 						}
 					});
 				}
@@ -73,7 +73,7 @@ export class ReferenceMapView extends ItemView {
 			this.idSelectionHandle();
 		});
 
-		this.processReferences();
+		this.prepareIDs().then(() => this.processReferences());
 	}
 
 	getViewType() {
@@ -90,7 +90,7 @@ export class ReferenceMapView extends ItemView {
 
 	async onOpen() {
 		await this.loadLibrary();
-		this.processReferences();
+		this.prepareIDs().then(() => this.processReferences());
 	}
 
 	async onClose() {
@@ -104,12 +104,12 @@ export class ReferenceMapView extends ItemView {
 			this.viewManager.clearCache()
 			this.library.mtime = 0
 			await this.loadLibrary()
-			this.processReferences()
+			this.prepareIDs().then(() => this.processReferences());
 		} else if (reloadType === "soft") {
 			await this.loadLibrary()
-			this.processReferences()
+			this.prepareIDs().then(() => this.processReferences());
 		} else if (reloadType === "view") {
-			this.processReferences()
+			this.prepareIDs().then(() => this.processReferences());
 		}
 	}
 
@@ -126,7 +126,7 @@ export class ReferenceMapView extends ItemView {
 					selection = textSelection.trim()
 			}
 			if (selection)
-				this.processReferences(selection)
+				this.prepareIDs().then(() => this.processReferences(selection));
 		}
 	}, 300, true);
 
@@ -196,15 +196,15 @@ export class ReferenceMapView extends ItemView {
 	prepareIDs = async () => {
 		const isLibrary = this.plugin.settings.searchCiteKey && this.library.libraryData !== null
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-		let basename = "";
 		let fileNameString = "";
 		let frontMatterString = "";
 		let paperIDs: Set<string> = new Set();
 		let citeKeyMap: CiteKey[] = [];
 		let isUpdated = false;
+		this.basename = "";
 		if (activeView) {
 			if (isLibrary) this.loadLibrary();
-			basename = activeView.file.basename;
+			this.basename = activeView.file.basename;
 			const fileContent = await app.vault.cachedRead(activeView.file);
 			paperIDs = getPaperIds(fileContent);
 
@@ -223,10 +223,10 @@ export class ReferenceMapView extends ItemView {
 			}
 			if (
 				this.plugin.settings.searchTitle &&
-				!EXCLUDE_FILE_NAMES.some((name) => basename.toLowerCase() === name.toLowerCase()
+				!EXCLUDE_FILE_NAMES.some((name) => this.basename.toLowerCase() === name.toLowerCase()
 				)
 			) {
-				fileNameString = extractKeywords(basename).unique().join("+");
+				fileNameString = extractKeywords(this.basename).unique().join("+");
 			}
 			const ispaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs);
 			const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap);
@@ -234,31 +234,31 @@ export class ReferenceMapView extends ItemView {
 			const isFileNameUpdated = fileNameString === this.fileNameString
 
 			isUpdated = !ispaperIDsUpdated || !isCiteKeyMapUpdated || !isFrontMatterUpdated || !isFileNameUpdated;
+
+			// If there are updated changes then update the class variables
 			if (isUpdated) {
-				this.basename = basename;
 				this.paperIDs = paperIDs;
 				this.citeKeyMap = citeKeyMap;
 				this.frontMatterString = frontMatterString;
 				this.fileNameString = fileNameString;
 			}
 		}
-		return {
-			isUpdated: isUpdated,
-			basename: basename,
-			isLibrary: isLibrary
-		}
+		return isUpdated
 
 	}
 
-	getReferences = async () => {
-		const paperIDs = await this.prepareIDs()
+	getIndexCards = async () => {
 		const indexCards: IndexPaper[] = [];
-		const basename = paperIDs.basename
+
+		// Get references using the paper IDs
 		if (this.paperIDs.size > 0) {
 			const paperIDPromises = [...this.paperIDs].map(async (paperId) => {
 				const paper = await this.viewManager.getIndexPaper(paperId);
 				let paperCiteId = paperId
-				if (paperIDs.isLibrary && this.plugin.settings.findZoteroCiteKeyFromID)
+				if (this.plugin.settings.searchCiteKey &&
+					this.library.libraryData !== null &&
+					this.plugin.settings.findZoteroCiteKeyFromID
+				)
 					paperCiteId = setCiteKeyId(paperId, this.library);
 				if (paper !== null && typeof paper !== "number")
 					return Promise.resolve(indexCards.push({ id: paperCiteId, paper: paper }))
@@ -267,6 +267,7 @@ export class ReferenceMapView extends ItemView {
 			await Promise.allSettled(paperIDPromises);
 		}
 
+		// Get references using the cite keys
 		if (this.citeKeyMap.length > 0) {
 			const citeKeyPromises = this.citeKeyMap.map(async (item) => {
 				const paper = await this.viewManager.getIndexPaper(item.paperId);
@@ -276,36 +277,40 @@ export class ReferenceMapView extends ItemView {
 			await Promise.allSettled(citeKeyPromises);
 		}
 
+		// Get references using the file name
 		if (this.plugin.settings.searchTitle && this.fileNameString) {
 			const titleSearchPapers = await this.viewManager.searchIndexPapers(
 				this.fileNameString, this.plugin.settings.searchLimit
 			);
-			titleSearchPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
+			const titlePromises = titleSearchPapers.map((paper) => {
+				return Promise.resolve(indexCards.push({ id: paper.paperId, paper: paper }))
 			});
+			await Promise.allSettled(titlePromises);
 		}
 
+		// Get references using the front matter
 		if (this.plugin.settings.searchFrontMatter && this.frontMatterString) {
 			const frontMatterPapers = await this.viewManager.searchIndexPapers(
 				this.frontMatterString, this.plugin.settings.searchFrontMatterLimit
 			);
-			frontMatterPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
+			const frontMatterPromises = frontMatterPapers.map((paper) => {
+				return Promise.resolve(indexCards.push({ id: paper.paperId, paper: paper }))
 			});
+			await Promise.allSettled(frontMatterPromises);
 		}
-		return { basename, indexCards }
+		return indexCards
 	}
 
 	processReferences = async (selection = '') => {
 		console.log("render is called")
-		const { basename, indexCards } = await this.getReferences()
+		const indexCards = await this.getIndexCards()
 		this.rootEl.render(
 			<ReferenceMapList
 				settings={this.plugin.settings}
 				viewManager={this.viewManager}
 				library={this.library}
 				indexCards={indexCards}
-				basename={basename}
+				basename={this.basename}
 				selection={selection}
 			/>
 		);
