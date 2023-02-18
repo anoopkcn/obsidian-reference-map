@@ -1,18 +1,16 @@
-import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from "src/types";
+import { IndexPaper, Library, ReferenceMapSettings } from "src/types";
 import React, { useEffect, useState, useRef } from "react";
 import { IndexPaperCard } from "./IndexPaperCard";
-import { MarkdownView, TFile } from "obsidian";
 import { ViewManager } from "src/viewManager";
-import { getCiteKeyIds, getCiteKeys, getPaperIds, iSearch, iSort, removeNullReferences, setCiteKeyId } from "src/utils";
+import { iSearch, iSort, removeNullReferences } from "src/utils";
 import { LoadingPuff } from "./LoadingPuff";
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings;
-	view: MarkdownView | null;
-	viewManager: ViewManager;
-	frontMatterString: string;
-	fileNameString: string;
 	library: Library;
+	viewManager: ViewManager;
+	indexCards: IndexPaper[];
+	basename: string;
 	selection: string;
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([]);
@@ -21,74 +19,19 @@ export const ReferenceMapList = (props: {
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
-		if (props.view) {
-			processPapers(props.view.file)
-		}
+		setIsLoading(true);
+		setPapers(removeNullReferences(props.indexCards))
+		setIsLoading(false);
 	}, [
 		props.settings,
-		props.view?.data,
-		props.frontMatterString,
-		props.fileNameString,
-		props.library.libraryData
+		props.indexCards,
+		props.library.libraryData,
+		props.basename
 	]);
-
-	useEffect(() => {
-		setIsLoading(true);
-	}, [props.view?.file.basename]);
 
 	useEffect(() => {
 		if (activeRef.current !== null) activeRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" })
 	}, [props.selection])
-
-	const processPapers = async (currentMarkdownFile: TFile) => {
-		const indexCards: IndexPaper[] = [];
-		let citeKeyMap: CiteKey[] = [];
-		const fileContent = await app.vault.cachedRead(currentMarkdownFile);
-		const paperIds = getPaperIds(fileContent);
-		const isLibrary = props.settings.searchCiteKey && props.library.libraryData
-		if (isLibrary) {
-			const citeKeys = getCiteKeys(fileContent, props.settings.findCiteKeyFromLinksWithoutPrefix);
-			citeKeyMap = getCiteKeyIds(citeKeys, props.library);
-		}
-
-		paperIds.forEach(async (paperId) => {
-			const paper = await props.viewManager.getIndexPaper(paperId);
-			let paperCiteId = paperId
-			if (isLibrary && props.settings.findZoteroCiteKeyFromID)
-				paperCiteId = setCiteKeyId(paperId, props.library);
-			if (paper !== null && typeof paper !== "number") indexCards.push({ id: paperCiteId, paper: paper });
-			if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
-		});
-
-		if (citeKeyMap) {
-			citeKeyMap.forEach(async (item) => {
-				const paper = await props.viewManager.getIndexPaper(item.paperId);
-				if (paper !== null && typeof paper !== "number") indexCards.push({ id: item.citeKey, paper: paper });
-				if (indexCards.length > 0) setPapers(removeNullReferences(indexCards));
-			});
-		}
-
-		if (props.settings.searchTitle && props.fileNameString) {
-			const titleSearchPapers = await props.viewManager.searchIndexPapers(
-				props.fileNameString, props.settings.searchLimit
-			);
-			titleSearchPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
-			});
-		}
-
-		if (props.settings.searchFrontMatter && props.frontMatterString) {
-			const frontMatterPapers = await props.viewManager.searchIndexPapers(
-				props.frontMatterString, props.settings.searchFrontMatterLimit
-			);
-			frontMatterPapers.forEach((paper) => {
-				indexCards.push({ id: paper.paperId, paper: paper });
-			});
-		}
-
-		(indexCards.length > 0) ? setPapers(indexCards) : setPapers([]);
-		setIsLoading(false);
-	};
 
 	const Search = (isSearchList: boolean) => {
 		const searchFieldName = isSearchList ? 'orm-index-search' : 'orm-index-no-search'
@@ -112,7 +55,7 @@ export const ReferenceMapList = (props: {
 		return listItems;
 	};
 
-	if (!props.view) {
+	if (!props.basename) {
 		return (
 			<div className="orm-no-content">
 				<div>
@@ -146,7 +89,7 @@ export const ReferenceMapList = (props: {
 					) ? 'orm-active-index' : '';
 					const ref = activeIndexCardClass ? activeRef : null
 					return (
-						<div key={paper.paper.paperId + index + props.view?.file.basename} ref={ref}>
+						<div key={paper.paper.paperId + index + props.basename} ref={ref}>
 							<IndexPaperCard
 								className={activeIndexCardClass}
 								settings={props.settings}

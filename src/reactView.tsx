@@ -5,12 +5,12 @@ import { ViewManager } from "./viewManager";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapList } from "./components/ReferenceMapList";
-import { extractKeywords } from "./utils";
+import { extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, setCiteKeyId } from "./utils";
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from "./constants";
 import * as fs from "fs";
 import * as BibTeXParser from '@retorquere/bibtex-parser';
 import { resolvePath } from './utils';
-import { Library } from "./types";
+import { CiteKey, IndexPaper, Library } from "./types";
 
 export const REFERENCE_MAP_VIEW_TYPE = "reference-map-view";
 
@@ -178,48 +178,107 @@ export class ReferenceMapView extends ItemView {
 		return null
 	}
 
-	processReferences = async (selection = '') => {
-		if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) this.loadLibrary();
+	prepareIDs = async () => {
+		const isLibrary = this.plugin.settings.searchCiteKey && this.library.libraryData !== null
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView);
-		let frontMatterString = "";
+		let basename = "";
 		let fileNameString = "";
+		let frontMatterString = "";
+		let paperIDs: Set<string> = new Set();
+		let citeKeyMap: CiteKey[] = [];
 		if (activeView) {
+			if (isLibrary) this.loadLibrary();
+			basename = activeView.file.basename;
+			const fileContent = await app.vault.cachedRead(activeView.file);
+			paperIDs = getPaperIds(fileContent);
+
+			if (isLibrary) {
+				const citeKeys = getCiteKeys(fileContent, this.plugin.settings.findCiteKeyFromLinksWithoutPrefix);
+				citeKeyMap = getCiteKeyIds(citeKeys, this.library);
+			}
+
 			if (this.plugin.settings.searchFrontMatter) {
-				const fileCache = app.metadataCache.getFileCache(
-					activeView.file
-				);
+				const fileCache = app.metadataCache.getFileCache(activeView.file);
 				if (fileCache?.frontmatter) {
-					const keywords =
-						fileCache?.frontmatter?.[
-						this.plugin.settings.searchFrontMatterKey
-						];
+					const keywords = fileCache?.frontmatter?.[this.plugin.settings.searchFrontMatterKey];
 					if (keywords)
-						frontMatterString = extractKeywords(keywords)
-							.unique()
-							.join("+");
+						frontMatterString = extractKeywords(keywords).unique().join("+");
 				}
 			}
 			if (
 				this.plugin.settings.searchTitle &&
-				!EXCLUDE_FILE_NAMES.some(
-					(name) =>
-						activeView.file.basename.toString().toLowerCase() ===
-						name.toLowerCase()
+				!EXCLUDE_FILE_NAMES.some((name) => basename.toLowerCase() === name.toLowerCase()
 				)
 			) {
-				fileNameString = extractKeywords(activeView.file.basename)
-					.unique()
-					.join("+");
+				fileNameString = extractKeywords(basename).unique().join("+");
 			}
 		}
+		return {
+			basename: basename,
+			paperIDs: paperIDs,
+			citeKeyMap: citeKeyMap,
+			frontMatterString: frontMatterString,
+			fileNameString: fileNameString,
+			isLibrary: isLibrary
+		}
+
+	}
+
+	getReferences = async () => {
+		const paperIDs = await this.prepareIDs()
+		const indexCards: IndexPaper[] = [];
+		const basename = paperIDs.basename
+		if (paperIDs.paperIDs.size > 0) {
+			const paperIDPromises = [...paperIDs.paperIDs].map(async (paperId) => {
+				const paper = await this.viewManager.getIndexPaper(paperId);
+				let paperCiteId = paperId
+				if (paperIDs.isLibrary && this.plugin.settings.findZoteroCiteKeyFromID)
+					paperCiteId = setCiteKeyId(paperId, this.library);
+				if (paper !== null && typeof paper !== "number")
+					return Promise.resolve(indexCards.push({ id: paperCiteId, paper: paper }))
+
+			});
+			await Promise.allSettled(paperIDPromises);
+		}
+
+		if (paperIDs.citeKeyMap.length > 0) {
+			const citeKeyPromises = paperIDs.citeKeyMap.map(async (item) => {
+				const paper = await this.viewManager.getIndexPaper(item.paperId);
+				if (paper !== null && typeof paper !== "number")
+					return Promise.resolve(indexCards.push({ id: item.citeKey, paper: paper }))
+			});
+			await Promise.allSettled(citeKeyPromises);
+		}
+
+		if (this.plugin.settings.searchTitle && paperIDs.fileNameString) {
+			const titleSearchPapers = await this.viewManager.searchIndexPapers(
+				paperIDs.fileNameString, this.plugin.settings.searchLimit
+			);
+			titleSearchPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper: paper });
+			});
+		}
+
+		if (this.plugin.settings.searchFrontMatter && paperIDs.frontMatterString) {
+			const frontMatterPapers = await this.viewManager.searchIndexPapers(
+				paperIDs.frontMatterString, this.plugin.settings.searchFrontMatterLimit
+			);
+			frontMatterPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper: paper });
+			});
+		}
+		return { basename, indexCards }
+	}
+
+	processReferences = async (selection = '') => {
+		const { basename, indexCards } = await this.getReferences()
 		this.rootEl.render(
 			<ReferenceMapList
 				settings={this.plugin.settings}
-				view={activeView}
 				viewManager={this.viewManager}
-				frontMatterString={frontMatterString}
-				fileNameString={fileNameString}
 				library={this.library}
+				indexCards={indexCards}
+				basename={basename}
 				selection={selection}
 			/>
 		);
