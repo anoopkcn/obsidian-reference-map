@@ -22,9 +22,7 @@ export const IndexPaperCard = (props: {
 	const [citations, setCitations] = useState<SemanticPaper[]>([])
 	const [showReferences, setShowReferences] = useState(false)
 	const [showCitations, setShowCitations] = useState(false)
-	const [isButtonShown, setIsButtonShown] = useState(
-		!props.settings.hideButtonsOnHover
-	)
+	const [isButtonShown, setIsButtonShown] = useState(!props.settings.hideButtonsOnHover)
 	const [isReferenceLoading, setIsReferenceLoading] = useState(false)
 	const [isCitationLoading, setIsCitationLoading] = useState(false)
 
