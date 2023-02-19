@@ -8,9 +8,7 @@ export const PaperCard = (props: {
 	settings: ReferenceMapSettings
 }) => {
 	const paper = props.paper
-	const [isButtonShown, setIsButtonShown] = useState(
-		props.settings.hideButtonsOnHover ? false : true
-	)
+	const [isButtonShown, setIsButtonShown] = useState(!props.settings.hideButtonsOnHover)
 	const handleHoverButtons = (isShow: boolean) => {
 		props.settings.hideButtonsOnHover
 			? setIsButtonShown(isShow)
