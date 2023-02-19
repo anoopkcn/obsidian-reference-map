@@ -146,7 +146,7 @@ export const getCiteKeys = (
 			}
 		}
 
-		const citekeyRegex3 = /\[^\^([^\s].*)\]\(/gi // Markdown Link
+		const citekeyRegex3 = /\[([^\s].*)\]\(/gi // Markdown Link
 		const matches3 = content.matchAll(citekeyRegex3)
 		if (matches3) {
 			for (const match of matches3) {
