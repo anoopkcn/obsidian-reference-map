@@ -1,4 +1,4 @@
-import { MarkdownView, Plugin, WorkspaceLeaf } from 'obsidian'
+import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
 import { MetaData, ReferenceMapSettings, SemanticPaper } from './types'
 import { addIcons } from './ui/icons'
@@ -136,6 +136,7 @@ export default class ReferenceMap extends Plugin {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (!markdownView) {
 				if (this.settings.debugMode) console.warn('Can not find an active markdown view');
+				new Notice('No active markdown view');
 				return;
 			}
 			let selection = '';
@@ -153,6 +154,7 @@ export default class ReferenceMap extends Plugin {
 			markdownView.editor.replaceRange(renderedContents, markdownView.editor.getCursor());
 		} catch (err) {
 			if (this.settings.debugMode) console.warn(err);
+			new Notice('Sorry, something went wrong.');
 		}
 	}
 
