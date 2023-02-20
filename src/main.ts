@@ -139,7 +139,14 @@ export default class ReferenceMap extends Plugin {
 
 	async createNewReferenceNote(): Promise<void> {
 		try {
-			const metaData = await this.searchReferenceMetadata();
+			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			let selection = '';
+			if (markdownView) {
+				if (markdownView.getMode() === 'source') {
+					selection = markdownView.editor.getSelection().trim()
+				}
+			}
+			const metaData = await this.searchReferenceMetadata(selection);
 
 			// open file
 			const activeLeaf = this.app.workspace.getLeaf();
