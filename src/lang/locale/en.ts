@@ -147,6 +147,20 @@ export default {
 		'<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>' +
 		'<b>Toggle ON:</b> Copy metadata for all references <br>' +
 		'<b>Toggle OFF:</b> Copy metadata for the individual index/reference card',
+	// modal settings
+	MODAL_SEARCH_LIMIT: 'Search Limit',
+	MODAL_SEARCH_LIMIT_DESC: 'Number of references to show in the modal search. Default is set to 10. Maximum is 100.',
+	MODAL_SEARCH_CREATE_FOLDER: 'Folder Location',
+	MODAL_SEARCH_CREATE_FOLDER_DESC: 'Folder location to create the new reference. Relative to the vault root. If left blank, the new reference will be created in the vault root.',
+	MODAL_SEARCH_CREATE_FILE_FORMAT: 'File Name Format',
+	MODAL_SEARCH_CREATE_FILE_FORMAT_DESC: 'File name format to create the new reference. <br>' +
+		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
+	MODAL_SEARCH_CREATE_FILE_TEMPLATE: 'Create New File Template',
+	MODAL_SEARCH_CREATE_FILE_TEMPLATE_DESC: 'Template to create the new reference markdown file.<br>' +
+		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
+	MODAL_SEARCH_INSERT_TEMPLATE: 'Insert Reference Template',
+	MODAL_SEARCH_INSERT_TEMPLATE_DESC: 'Template to insert the reference in the current note.<br>' +
+		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
 	// Debug settings
 	DEBUG_MODE: 'Debug Mode',
 	DEBUG_MODE_DESC:

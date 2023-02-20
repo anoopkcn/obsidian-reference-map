@@ -221,11 +221,17 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	async getRenderedContentsForInsert(metaData: MetaData): Promise<string> {
-		return templateReplace(METADATA_MODAL_INSERT_TEMPLATE, metaData)
+		const template = this.settings.modalInsertTemplate
+			? this.settings.modalInsertTemplate
+			: METADATA_MODAL_INSERT_TEMPLATE
+		return templateReplace(template, metaData)
 	}
 
 	async getRenderedContentsForCreate(metaData: MetaData): Promise<string> {
-		return templateReplace(METADATA_MODAL_CREATE_TEMPLATE, metaData)
+		const template = this.settings.modalCreateTemplate
+			? this.settings.modalCreateTemplate
+			: METADATA_MODAL_CREATE_TEMPLATE
+		return templateReplace(template, metaData)
 	}
 
 }

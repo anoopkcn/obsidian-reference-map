@@ -481,7 +481,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		if (this.plugin.settings.formatMetadataCopyTwo) {
 			new Setting(containerEl)
 				.setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
+				.setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO_DESC')))
 				.addTextArea((text) => {
 					text.inputEl.rows = 7
 					text.setValue(
@@ -560,6 +560,82 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
+		containerEl.createEl('h2', { text: 'Search Settings' })
+
+		new Setting(containerEl)
+			.setName(fragWithHTML(t('MODAL_SEARCH_LIMIT')))
+			.setDesc(fragWithHTML(t('MODAL_SEARCH_LIMIT_DESC')))
+			.addSlider((slider) =>
+				slider
+					.setLimits(1, 100, 1)
+					.setValue(this.plugin.settings.modalSearchLimit)
+					.onChange(async (value) => {
+						zoomText.innerText = ` ${value.toString()}`
+						this.plugin.settings.modalSearchLimit = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload('view')
+						})
+					})
+			)
+			.settingEl.createDiv('', (el) => {
+				zoomText = el
+				el.style.minWidth = '2.3em'
+				el.style.textAlign = 'right'
+				el.innerText = ` ${this.plugin.settings.modalSearchLimit.toString()}`
+			})
+
+		new Setting(containerEl)
+			.setName(fragWithHTML(t('MODAL_SEARCH_CREATE_FOLDER')))
+			.setDesc(fragWithHTML(t('MODAL_SEARCH_CREATE_FOLDER_DESC')))
+			.addText((text) =>
+				text
+					.setValue(this.plugin.settings.folder)
+					.onChange(async (value) => {
+						this.plugin.settings.folder = value
+						this.plugin.saveSettings()
+					})
+			)
+		new Setting(containerEl)
+			.setName(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_FORMAT')))
+			.setDesc(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_FORMAT_DESC')))
+			.addText((text) =>
+				text
+					.setValue(this.plugin.settings.fileNameFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.fileNameFormat = value
+						this.plugin.saveSettings()
+					})
+			)
+		new Setting(containerEl)
+			.setName(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_TEMPLATE')))
+			.setDesc(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_TEMPLATE_DESC')))
+			.addTextArea((text) => {
+				text.inputEl.rows = 7
+				text
+					.setValue(this.plugin.settings.modalCreateTemplate)
+					.onChange(async (value) => {
+						this.plugin.settings.modalCreateTemplate = value
+						this.plugin.saveSettings()
+					})
+			}
+			)
+
+		new Setting(containerEl)
+			.setName(fragWithHTML(t('MODAL_SEARCH_INSERT_TEMPLATE')))
+			.setDesc(fragWithHTML(t('MODAL_SEARCH_INSERT_TEMPLATE_DESC')))
+			.addTextArea((text) => {
+				text.inputEl.rows = 7
+				text
+					.setValue(this.plugin.settings.modalInsertTemplate)
+					.onChange(async (value) => {
+						this.plugin.settings.modalInsertTemplate = value
+						this.plugin.saveSettings()
+					})
+			}
+			)
+
+
 		containerEl.createEl('h2', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
@@ -575,8 +651,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								this.plugin.view.reload('hard')
 						})
 					})
-			)
-
+		)
 		containerEl.createEl('hr')
 		containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') })
 		containerEl.createEl('p', {

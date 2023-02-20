@@ -22,6 +22,8 @@ export interface ReferenceMapSettings {
 	modalSearchLimit: number
 	fileNameFormat: string
 	folder: string
+	modalCreateTemplate: string
+	modalInsertTemplate: string
 	standardizeBibtex: boolean
 	formatMetadataCopyOne: boolean
 	formatMetadataCopyTwo: boolean
