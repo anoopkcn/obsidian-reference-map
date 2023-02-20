@@ -3,7 +3,7 @@ import { ReferenceMapSettingTab } from './settings'
 import { MetaData, ReferenceMapSettings, SemanticPaper } from './types'
 import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
-import { DEFAULT_SETTINGS, METADATA_COPY_TEMPLATE_ONE } from './constants'
+import { DEFAULT_SETTINGS, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
 import { templateReplace } from './utils'
 
@@ -138,9 +138,11 @@ export default class ReferenceMap extends Plugin {
 				if (this.settings.debugMode) console.warn('Can not find an active markdown view');
 				return;
 			}
-
-			// TODO: Try using a search query on the selected text
-			const reference = await this.searchReferenceMetadata();
+			let selection = '';
+			if (markdownView.getMode() === 'source') {
+				selection = markdownView.editor.getSelection().trim()
+			}
+			const reference = await this.searchReferenceMetadata(selection);
 
 			if (!markdownView.editor) {
 				if (this.settings.debugMode) console.warn('Can not find editor from the active markdown view');
@@ -175,7 +177,7 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	async getRenderedContents(metaData: MetaData): Promise<string> {
-		return templateReplace(METADATA_COPY_TEMPLATE_ONE, metaData)
+		return templateReplace(METADATA_MODAL_INSERT_TEMPLATE, metaData)
 	}
 
 }

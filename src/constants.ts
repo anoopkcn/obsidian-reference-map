@@ -15,6 +15,12 @@ export const METADATA_COPY_TEMPLATE_TWO = `# {{title}}
 `
 export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
 
+export const METADATA_MODAL_INSERT_TEMPLATE = `{{title}}
+{{authors}}
+{{journal}}, {{year}}
+{{abstract}}
+`
+
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
 	influentialCount: false,
