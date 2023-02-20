@@ -137,7 +137,7 @@ export const getCiteKeys = (
 	}
 
 	if (findCiteKeyFromLinksWithoutPrefix) {
-		const citekeyRegex2 = /\[\[([^\s].*)\]\]/gi // Wiki Link
+		const citekeyRegex2 = /\[\[([^\s].*?)\]\]/gi // Wiki Link
 		const matches2 = content.matchAll(citekeyRegex2)
 		if (matches2) {
 			for (const match of matches2) {
@@ -146,7 +146,7 @@ export const getCiteKeys = (
 			}
 		}
 
-		const citekeyRegex3 = /\[([^\s].*)\]\(/gi // Markdown Link
+		const citekeyRegex3 = /\[([^\][]*)]\(/gi // Markdown Link
 		const matches3 = content.matchAll(citekeyRegex3)
 		if (matches3) {
 			for (const match of matches3) {
