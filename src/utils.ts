@@ -192,7 +192,7 @@ export function extractKeywords(text: string) {
 }
 
 export const makeMetaData = (paper: SemanticPaper): MetaData => {
-	const paperTitle = paper.title ? paper.title.trim() : 'Unknown Title'
+	const paperTitle = paper.title ? paper.title.trim().replace(/[^\x20-\x7E]/g, '').replace(/(<([^>]+)>)/gi, "") : 'Unknown Title'
 	let authors = 'Unknown Authors'
 	let author = 'Unknown Author'
 	if (paper.authors?.length > 0)
