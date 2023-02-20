@@ -62,7 +62,8 @@ export class ViewManager {
 	// Get papers of to keyword search
 	searchIndexPapers = async (
 		query: string,
-		limit = 0
+		limit = 0,
+		cache = true
 	): Promise<SemanticPaper[]> => {
 		const cacheKey = query + limit.toString()
 		const cachedSearch = this.searchCache.has(cacheKey)
@@ -77,7 +78,7 @@ export class ViewManager {
 					debugMode
 				)
 				// Add limit to the key to avoid collisions
-				this.searchCache.set(cacheKey, indexCardsList)
+				if(cache) this.searchCache.set(cacheKey, indexCardsList)
 				return indexCardsList
 			} catch (e) {
 				if (debugMode)
