@@ -155,11 +155,11 @@ export default {
 	MODAL_SEARCH_CREATE_FILE_FORMAT: 'File Name Format',
 	MODAL_SEARCH_CREATE_FILE_FORMAT_DESC: 'File name format to create the new reference. <br>' +
 		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
-	MODAL_SEARCH_CREATE_FILE_TEMPLATE: 'Create New File Template',
+	MODAL_SEARCH_CREATE_FILE_TEMPLATE: 'Template for New Note',
 	MODAL_SEARCH_CREATE_FILE_TEMPLATE_DESC: 'Template to create the new reference markdown file.<br>' +
 		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
-	MODAL_SEARCH_INSERT_TEMPLATE: 'Insert Reference Template',
-	MODAL_SEARCH_INSERT_TEMPLATE_DESC: 'Template to insert the reference in the current note.<br>' +
+	MODAL_SEARCH_INSERT_TEMPLATE: 'Template for Inserting to Current Note',
+	MODAL_SEARCH_INSERT_TEMPLATE_DESC: 'Template to insert the reference metadata in the current note at the cursor position.<br>' +
 		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
 	// Debug settings
 	DEBUG_MODE: 'Debug Mode',
