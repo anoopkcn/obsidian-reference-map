@@ -65,28 +65,28 @@ export const PaperButtons = ({
 		settings.metadataCopyOneBatch && batchCopyMetadataOne
 			? (copyMetadataOne = batchCopyMetadataOne)
 			: (copyMetadataOne = templateReplace(
-					metadataTemplateOne,
-					metaData,
-					paper.id
-			  ))
+				metadataTemplateOne,
+				metaData,
+				paper.id
+			))
 	}
 	if (settings.formatMetadataCopyTwo) {
 		settings.metadataCopyTwoBatch && batchCopyMetadataTwo
 			? (copyMetadataTwo = batchCopyMetadataTwo)
 			: (copyMetadataTwo = templateReplace(
-					metadataTemplateTwo,
-					metaData,
-					paper.id
-			  ))
+				metadataTemplateTwo,
+				metaData,
+				paper.id
+			))
 	}
 	if (settings.formatMetadataCopyThree) {
 		settings.metadataCopyThreeBatch && batchCopyMetadataThree
 			? (copyMetadataThree = batchCopyMetadataThree)
 			: (copyMetadataThree = templateReplace(
-					metadataTemplateThree,
-					metaData,
-					paper.id
-			  ))
+				metadataTemplateThree,
+				metaData,
+				paper.id
+			))
 	}
 
 	let citingCited = null
@@ -117,10 +117,10 @@ export const PaperButtons = ({
 					style={
 						showReferences
 							? {
-									fontWeight: 'bold',
-									color: 'var(--text-accent)',
-									// eslint-disable-next-line no-mixed-spaces-and-tabs
-							  }
+								fontWeight: 'bold',
+								color: 'var(--text-accent)',
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
+							}
 							: {}
 					}
 					onClick={() => handleShowReferencesClick()}
@@ -132,10 +132,10 @@ export const PaperButtons = ({
 					style={
 						showCitations
 							? {
-									fontWeight: 'bold',
-									color: 'var(--text-accent)',
-									// eslint-disable-next-line no-mixed-spaces-and-tabs
-							  }
+								fontWeight: 'bold',
+								color: 'var(--text-accent)',
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
+							}
 							: {}
 					}
 					onClick={() => handleShowCitationsClick()}

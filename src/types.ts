@@ -19,6 +19,7 @@ export interface ReferenceMapSettings {
 	enableIndexSorting: boolean
 	sortByIndex: string
 	sortOrderIndex: string
+	modalSearchLimit: number,
 	standardizeBibtex: boolean
 	formatMetadataCopyOne: boolean
 	formatMetadataCopyTwo: boolean

@@ -253,6 +253,7 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
 }
 
 export const templateReplace = (template: string, data: MetaData, id = '') => {
+	if (id === '') { id = data.doi }
 	return template
 		.replaceAll('{{id}}', id)
 		.replaceAll('{{bibtex}}', data.bibtex)

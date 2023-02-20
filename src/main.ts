@@ -1,9 +1,11 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian'
+import { MarkdownView, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
-import { ReferenceMapSettings } from './types'
+import { MetaData, ReferenceMapSettings, SemanticPaper } from './types'
 import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
-import { DEFAULT_SETTINGS } from './constants'
+import { DEFAULT_SETTINGS, METADATA_COPY_TEMPLATE_ONE } from './constants'
+import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
+import { templateReplace } from './utils'
 
 enum Direction {
 	Left = 'left',
@@ -43,6 +45,12 @@ export default class ReferenceMap extends Plugin {
 				}
 			},
 		})
+
+		this.addCommand({
+			id: 'open-reference-map-search-modal-to-insert',
+			name: 'Search and Insert',
+			callback: () => this.insertMetadata(),
+		});
 
 		this.app.workspace.onLayoutReady(() => {
 			this.ensureLeafExists(false)
@@ -122,4 +130,52 @@ export default class ReferenceMap extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings)
 	}
+
+	async insertMetadata(): Promise<void> {
+		try {
+			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (!markdownView) {
+				if (this.settings.debugMode) console.warn('Can not find an active markdown view');
+				return;
+			}
+
+			// TODO: Try using a search query on the selected text
+			const reference = await this.searchReferenceMetadata();
+
+			if (!markdownView.editor) {
+				if (this.settings.debugMode) console.warn('Can not find editor from the active markdown view');
+				return;
+			}
+
+			const renderedContents = await this.getRenderedContents(reference);
+			markdownView.editor.replaceRange(renderedContents, markdownView.editor.getCursor());
+		} catch (err) {
+			if (this.settings.debugMode) console.warn(err);
+		}
+	}
+
+	async searchReferenceMetadata(query?: string): Promise<MetaData> {
+		const searchedBooks = await this.openReferenceSearchModal(query);
+		return await this.openReferenceSuggestModal(searchedBooks);
+	}
+
+	async openReferenceSearchModal(query = ''): Promise<SemanticPaper[]> {
+		return new Promise((resolve, reject) => {
+			return new ReferenceSearchModal(this, query, (error, results: SemanticPaper[]) => {
+				return error ? reject(error) : resolve(results);
+			}).open();
+		});
+	}
+	async openReferenceSuggestModal(references: SemanticPaper[]): Promise<MetaData> {
+		return new Promise((resolve, reject) => {
+			return new ReferenceSuggestModal(this.app, references, (error, selectedReference: MetaData) => {
+				return error ? reject(error) : resolve(selectedReference);
+			}).open();
+		});
+	}
+
+	async getRenderedContents(metaData: MetaData): Promise<string> {
+		return templateReplace(METADATA_COPY_TEMPLATE_ONE, metaData)
+	}
+
 }

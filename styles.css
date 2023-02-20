@@ -370,3 +370,29 @@ body {
 	padding: 0.5rem;
 	margin-bottom: 0.5rem;
 }
+
+/* Search modal settings */
+.orm-search-modal-input {
+	padding-bottom: 15px;
+}
+.orm-search-modal-input input {
+	width: 100%;
+}
+
+.orm-modal-paper-title{
+	padding-bottom: 0.25rem;
+}
+
+.orm-modal-paper-authors{
+	font-size: var(--orm-paper-author-font-size);
+	font-weight: var(--orm-paper-author-font-weight);
+	display: block;
+
+}
+
+.orm-modal-paper-year{
+	font-size: var(--orm-paper-author-font-size);
+	font-weight: var(--orm-paper-author-font-weight);
+	display: block;
+
+}
