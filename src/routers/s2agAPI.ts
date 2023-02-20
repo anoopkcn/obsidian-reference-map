@@ -11,7 +11,7 @@ export const getIndexItem = async (
 	)}`
 	const paperMetadata: SemanticPaper | null = await requestUrl(url).then(
 		(response) => {
-			if (response.status != 200) {
+			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return null
 			}
@@ -30,7 +30,7 @@ export const getReferenceItems = async (
 	)}`
 	const references: SemanticPaper[] = await requestUrl(url).then(
 		(response) => {
-			if (response.status != 200) {
+			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return []
 			}
@@ -51,7 +51,7 @@ export const getCitationItems = async (
 	)}`
 	const citations: SemanticPaper[] = await requestUrl(url).then(
 		(response) => {
-			if (response.status != 200) {
+			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return []
 			}
@@ -71,9 +71,9 @@ export const getSearchItems = async (
 	let url = `${SEMANTICSCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
-	if (limit != 0) url += `&offset=0&limit=${limit}`
+	if (limit !== 0) url += `&offset=0&limit=${limit}`
 	const search: SemanticPaper[] = await requestUrl(url).then((response) => {
-		if (response.status != 200) {
+		if (response.status !== 200) {
 			if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 			return []
 		}
@@ -114,7 +114,7 @@ export const getPaperMetadata = async (
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${fields}`
 	const papermetadata: SemanticPaper[] = await requestUrl(url).then(
 		(response) => {
-			if (response.status != 200) {
+			if (response.status !== 200) {
 				console.log(`Error ${response.status}`) //TODO: better error handling
 				return []
 			} else if (response.json.data) {
@@ -144,7 +144,7 @@ export const postPaperMetadata = async (
 		},
 		body: JSON.stringify({ ids: Array.from(paperIds) }),
 	}).then((response) => {
-		if (response.status != 200) {
+		if (response.status !== 200) {
 			// console.log(`Error ${response.status}`)
 			//TODO: better error handling
 			return []
