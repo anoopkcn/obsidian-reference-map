@@ -1,4 +1,4 @@
-import { FileSystemAdapter, Notice } from 'obsidian'
+import { App, FileSystemAdapter, MarkdownView, Notice, TFile } from 'obsidian'
 import path from 'path'
 import doiRegex from 'doi-regex'
 import { CiteKey, IndexPaper, Library, MetaData, SemanticPaper } from './types'
@@ -192,7 +192,9 @@ export function extractKeywords(text: string) {
 }
 
 export const makeMetaData = (paper: SemanticPaper): MetaData => {
-	const paperTitle = paper.title ? paper.title.trim().replace(/[^\x20-\x7E]/g, '').replace(/(<([^>]+)>)/gi, "") : 'Unknown Title'
+	const paperTitle = paper.title ? paper.title.trim()
+		.replace(/[^\x20-\x7E]/g, '')
+		.replace(/(<([^>]+)>)/gi, "") : 'Unknown Title'
 	let authors = 'Unknown Authors'
 	let author = 'Unknown Author'
 	if (paper.authors?.length > 0)
@@ -253,7 +255,7 @@ export const makeMetaData = (paper: SemanticPaper): MetaData => {
 }
 
 export const templateReplace = (template: string, data: MetaData, id = '') => {
-	if (id === '') { id = data.doi }
+	if (id === '') { id = data.doi ? data.doi : '' }
 	return template
 		.replaceAll('{{id}}', id)
 		.replaceAll('{{bibtex}}', data.bibtex)
@@ -276,20 +278,20 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 			(item) =>
 				item?.DOI?.toLowerCase() === paperId.toLowerCase() ||
 				item?.DOI?.toLowerCase() ===
-					`https://doi.org/${paperId.toLowerCase()}` ||
+				`https://doi.org/${paperId.toLowerCase()}` ||
 				item?.URL?.toLowerCase() ===
-					paperId.replace('URL:', '').toLowerCase()
+				paperId.replace('URL:', '').toLowerCase()
 		)?.id
 		return citeKey ? '@' + citeKey : paperId
 	} else if (citeLibrary.adapter === 'bibtex') {
 		const citeKey = citeLibrary.libraryData?.find(
 			(item) =>
 				item.fields?.doi?.[0]?.toLowerCase() ===
-					paperId.toLowerCase() ||
+				paperId.toLowerCase() ||
 				item.fields?.doi?.[0]?.toLowerCase() ===
-					`https://doi.org/${paperId.toLowerCase()}` ||
+				`https://doi.org/${paperId.toLowerCase()}` ||
 				item.fields?.url?.[0]?.toLowerCase() ===
-					paperId.replace('URL:', '').toLowerCase()
+				paperId.replace('URL:', '').toLowerCase()
 		)?.key
 		return citeKey ? '@' + citeKey : paperId
 	} else {
@@ -440,4 +442,42 @@ export const iSort = (
 				: -1
 		}
 	})
+}
+
+export async function useTemplaterPluginInFile(app: App, file: TFile) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const templater = (app as any).plugins.plugins['templater-obsidian'];
+	if (templater && !templater?.settings['trigger_on_file_creation']) {
+		await templater.templater.overwrite_file_commands(file);
+	}
+}
+
+export class CursorJumper {
+	constructor(private app: App) { }
+
+	async jumpToNextCursorLocation(): Promise<void> {
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView) {
+			return;
+		}
+		const content = await this.app.vault.cachedRead(activeView.file);
+		const indexOffset = content.length + 1;
+		const editor = activeView.editor;
+		editor.focus();
+		editor.setCursor(indexOffset, 0);
+	}
+}
+
+export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
+	let output;
+	if (fileNameFormat) {
+		output = templateReplace(fileNameFormat, metaData);
+	} else {
+		output = metaData.title;
+	}
+	return replaceIllegalFileNameCharactersInString(output) + '.md';
+}
+
+export function replaceIllegalFileNameCharactersInString(text: string) {
+	return text.replace(/[\\,#%&{}/*<>$":@.]/g, '').replace(/\s+/g, ' ');
 }

@@ -3,9 +3,9 @@ import { ReferenceMapSettingTab } from './settings'
 import { MetaData, ReferenceMapSettings, SemanticPaper } from './types'
 import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
-import { DEFAULT_SETTINGS, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
+import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
-import { templateReplace } from './utils'
+import { CursorJumper, makeFileName, templateReplace, useTemplaterPluginInFile } from './utils'
 
 enum Direction {
 	Left = 'left',
@@ -50,6 +50,12 @@ export default class ReferenceMap extends Plugin {
 			id: 'open-reference-map-search-modal-to-insert',
 			name: 'Search and Insert',
 			callback: () => this.insertMetadata(),
+		});
+
+		this.addCommand({
+			id: 'open-reference-map-search-modal-to-create',
+			name: 'Search and Create',
+			callback: () => this.createNewReferenceNote(),
 		});
 
 		this.app.workspace.onLayoutReady(() => {
@@ -131,6 +137,42 @@ export default class ReferenceMap extends Plugin {
 		await this.saveData(this.settings)
 	}
 
+	async createNewReferenceNote(): Promise<void> {
+		try {
+			const metaData = await this.searchReferenceMetadata();
+
+			// open file
+			const activeLeaf = this.app.workspace.getLeaf();
+			if (!activeLeaf) {
+				if (this.settings.debugMode) console.warn('No active leaf');
+				new Notice('No active leaf');
+				return;
+			}
+
+			const renderedContents = await this.getRenderedContentsForCreate(metaData);
+
+			// TODO: If the same file exists, it asks if you want to overwrite it.
+			// create new File
+			const fileName = makeFileName(metaData, this.settings.fileNameFormat);
+			const filePath = `${this.settings.folder}/${fileName}`;
+			const targetFile = await this.app.vault.create(filePath, renderedContents);
+
+			// if use Templater plugin
+			await useTemplaterPluginInFile(this.app, targetFile);
+
+			// open file
+			await activeLeaf.openFile(targetFile, { state: { mode: 'source' } });
+			activeLeaf.setEphemeralState({ rename: 'all' });
+
+			// cursor focus
+			await new CursorJumper(this.app).jumpToNextCursorLocation();
+		} catch (err) {
+			if (this.settings.debugMode) console.warn(err);
+			new Notice('Sorry, something went wrong.');
+		}
+	}
+
+
 	async insertMetadata(): Promise<void> {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -150,7 +192,7 @@ export default class ReferenceMap extends Plugin {
 				return;
 			}
 
-			const renderedContents = await this.getRenderedContents(reference);
+			const renderedContents = await this.getRenderedContentsForInsert(reference);
 			markdownView.editor.replaceRange(renderedContents, markdownView.editor.getCursor());
 		} catch (err) {
 			if (this.settings.debugMode) console.warn(err);
@@ -178,8 +220,12 @@ export default class ReferenceMap extends Plugin {
 		});
 	}
 
-	async getRenderedContents(metaData: MetaData): Promise<string> {
+	async getRenderedContentsForInsert(metaData: MetaData): Promise<string> {
 		return templateReplace(METADATA_MODAL_INSERT_TEMPLATE, metaData)
+	}
+
+	async getRenderedContentsForCreate(metaData: MetaData): Promise<string> {
+		return templateReplace(METADATA_MODAL_CREATE_TEMPLATE, metaData)
 	}
 
 }

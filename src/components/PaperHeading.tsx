@@ -7,7 +7,9 @@ export const PaperHeading = (props: {
 	settings: ReferenceMapSettings
 }) => {
 	const paperTitle = props.paper?.paper?.title
-		? props.paper?.paper?.title
+		? props.paper?.paper?.title.trim()
+			.replace(/[^\x20-\x7E]/g, '')
+			.replace(/(<([^>]+)>)/gi, "")
 		: 'Unknown Title'
 	const firstAuthor = props.paper?.paper?.authors[0]
 		? props.paper?.paper?.authors[0]?.name

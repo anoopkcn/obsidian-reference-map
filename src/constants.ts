@@ -21,6 +21,14 @@ export const METADATA_MODAL_INSERT_TEMPLATE = `{{title}}
 {{abstract}}
 `
 
+export const METADATA_MODAL_CREATE_TEMPLATE = `{{title}}
+{{authors}}
+{{journal}}, {{year}}
+{{abstract}}
+{{doi}}
+{{pdfurl}}
+`
+
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
 	influentialCount: false,
@@ -43,6 +51,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	sortByIndex: 'year',
 	sortOrderIndex: 'desc',
 	modalSearchLimit: 0,
+	fileNameFormat: '{{title}}-{{author}} {{year}}',
+	folder: '',
 	standardizeBibtex: false,
 	formatMetadataCopyOne: true,
 	formatMetadataCopyTwo: true,

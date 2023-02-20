@@ -19,7 +19,9 @@ export interface ReferenceMapSettings {
 	enableIndexSorting: boolean
 	sortByIndex: string
 	sortOrderIndex: string
-	modalSearchLimit: number,
+	modalSearchLimit: number
+	fileNameFormat: string
+	folder: string
 	standardizeBibtex: boolean
 	formatMetadataCopyOne: boolean
 	formatMetadataCopyTwo: boolean
