@@ -479,5 +479,5 @@ export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 }
 
 export function replaceIllegalFileNameCharactersInString(text: string) {
-	return text.replace(/[\\,#%&{}/*<>$":@.]/g, '').replace(/\s+/g, ' ');
+	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
 }
