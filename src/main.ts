@@ -1,16 +1,12 @@
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
-import { MetaData, ReferenceMapSettings, SemanticPaper } from './types'
+import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, SemanticPaper } from './types'
 import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
 import { CursorJumper, makeFileName, templateReplace, useTemplaterPluginInFile } from './utils'
 
-enum Direction {
-	Left = 'left',
-	Right = 'right',
-}
 
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings
@@ -41,7 +37,7 @@ export default class ReferenceMap extends Plugin {
 			name: 'Refresh View',
 			callback: () => {
 				if (this.view) {
-					this.view.reload('soft')
+					this.view.reload(RELOAD.SOFT)
 				}
 			},
 		})
@@ -81,7 +77,7 @@ export default class ReferenceMap extends Plugin {
 	ensureLeafExists(active = false): void {
 		const { workspace } = this.app
 
-		const preferredSidebar = Direction.Right
+		const preferredSidebar = DIRECTION.RIGHT
 
 		let leaf: WorkspaceLeaf
 		const existingPluginLeaves = workspace.getLeavesOfType(
@@ -92,7 +88,7 @@ export default class ReferenceMap extends Plugin {
 			leaf = existingPluginLeaves[0]
 		} else {
 			leaf =
-				(preferredSidebar as Direction) === Direction.Left
+				(preferredSidebar as Direction) === DIRECTION.LEFT
 					? workspace.getLeftLeaf(false)
 					: workspace.getRightLeaf(false)
 			workspace.revealLeaf(leaf)

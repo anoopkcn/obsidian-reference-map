@@ -18,7 +18,7 @@ import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants'
 import * as fs from 'fs'
 import * as BibTeXParser from '@retorquere/bibtex-parser'
 import { resolvePath } from './utils'
-import { CiteKey, IndexPaper, Library } from './types'
+import { CiteKey, IndexPaper, Library, RELOAD, Reload } from './types'
 import _ from 'lodash'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
@@ -109,16 +109,16 @@ export class ReferenceMapView extends ItemView {
 		return super.onClose()
 	}
 
-	async reload(reloadType: 'hard' | 'soft' | 'view') {
-		if (reloadType === 'hard') {
+	async reload(reloadType: Reload) {
+		if (reloadType === RELOAD.HARD) {
 			this.viewManager.clearCache()
 			this.library.mtime = 0
 			await this.loadLibrary()
 			this.prepareIDs().then(() => this.processReferences())
-		} else if (reloadType === 'soft') {
+		} else if (reloadType === RELOAD.SOFT) {
 			await this.loadLibrary()
 			this.prepareIDs().then(() => this.processReferences())
-		} else if (reloadType === 'view') {
+		} else if (reloadType === RELOAD.VIEW) {
 			this.prepareIDs().then(() => this.processReferences())
 		}
 	}

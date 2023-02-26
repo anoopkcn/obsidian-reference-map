@@ -134,3 +134,18 @@ export interface Library {
 	libraryData: citeKeyLibrary[] | null
 	mtime: number
 }
+
+export const RELOAD = {
+	HARD: 'hard',
+	SOFT: 'soft',
+	VIEW: 'view',
+} as const
+
+export type Reload = typeof RELOAD[keyof typeof RELOAD]
+
+export const DIRECTION = {
+	LEFT: 'left',
+	RIGHT: 'right',
+} as const
+
+export type Direction = typeof DIRECTION[keyof typeof DIRECTION]
