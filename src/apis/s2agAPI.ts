@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { requestUrl } from 'obsidian'
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 import { Reference } from 'src/types'
@@ -34,9 +35,7 @@ export const getReferenceItems = async (
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return []
 			}
-			return response.json.data.map(
-				(e: Record<string, unknown>) => e['citedPaper']
-			)
+			return _.map(response.json.data, 'citedPaper')
 		}
 	)
 	return references
@@ -55,9 +54,7 @@ export const getCitationItems = async (
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return []
 			}
-			return response.json.data.map(
-				(e: Record<string, unknown>) => e['citingPaper']
-			)
+			return _.map(response.json.data, 'citingPaper')
 		}
 	)
 	return citations
@@ -119,9 +116,7 @@ export const getPaperMetadata = async (
 				return []
 			} else if (response.json.data) {
 				if (refType === 'search') return response.json.data
-				return response.json.data.map(
-					(e: Record<string, unknown>) => e[cite]
-				)
+				return _.map(response.json.data, cite)
 			} else {
 				return [response.json]
 			}
