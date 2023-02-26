@@ -6,7 +6,7 @@ import {
 	getReferenceItems,
 	getCitationItems,
 	getSearchItems,
-} from './routers/s2agAPI'
+} from './apis/s2agAPI'
 
 export interface DocCache {
 	paperIds: Set<string>

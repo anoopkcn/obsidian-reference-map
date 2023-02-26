@@ -115,7 +115,7 @@ export class ReferenceSuggestModal extends SuggestModal<SemanticPaper> {
     const data = makeMetaData(reference)
     el.createEl('div', { cls: 'orm-modal-paper-title', text: data.title });
     el.createEl('div', { cls: 'orm-modal-paper-authors', text: data.authors });
-    el.createEl('div', { cls: 'orm-modal-paper-year', text: `${data.year}, ${data.journal}` });
+    el.createEl('div', { cls: 'orm-modal-paper-year', text: `${data.year}, ${data.journal}, ${data.volume}, ${data.pages}` });
   }
 
   // Perform action on the selected suggestion.
