@@ -143,6 +143,11 @@ body {
 	--orm-paper-buttons-hover-color: var(--text-accent);
 	--orm-paper-line-color: var(--color-base-30);
 }
+/* following removes the jumping when scrollbar is visible */
+
+[data-type="reference-map-view"] > .view-content{
+	scrollbar-gutter: stable both-edges;
+}
 
 .orm-view-title {
 	font-weight: 600;
