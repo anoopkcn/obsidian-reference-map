@@ -9,7 +9,7 @@ import {
 } from 'obsidian';
 import ReferenceMap from './main';
 import { ViewManager } from './viewManager';
-import { MetaData, SemanticPaper } from './types';
+import { MetaData, Reference } from './types';
 import { makeMetaData } from './utils';
 
 export class ReferenceSearchModal extends Modal {
@@ -21,7 +21,7 @@ export class ReferenceSearchModal extends Modal {
   constructor(
     plugin: ReferenceMap,
     private query: string,
-    private callback: (error: Error | null, result?: SemanticPaper[]) => void,
+    private callback: (error: Error | null, result?: Reference[]) => void,
   ) {
     super(plugin.app);
     this.plugin = plugin
@@ -91,17 +91,17 @@ export class ReferenceSearchModal extends Modal {
   }
 }
 
-export class ReferenceSuggestModal extends SuggestModal<SemanticPaper> {
+export class ReferenceSuggestModal extends SuggestModal<Reference> {
   constructor(
     app: App,
-    private readonly suggestion: SemanticPaper[],
+    private readonly suggestion: Reference[],
     private onChoose: (error: Error | null, result?: MetaData) => void,
   ) {
     super(app);
   }
 
   // Returns all available suggestions.
-  getSuggestions(query: string): SemanticPaper[] {
+  getSuggestions(query: string): Reference[] {
     return this.suggestion.filter(reference => {
       const searchQuery = query?.toLowerCase();
       return (
@@ -111,7 +111,7 @@ export class ReferenceSuggestModal extends SuggestModal<SemanticPaper> {
   }
 
   // Renders each suggestion item.
-  renderSuggestion(reference: SemanticPaper, el: HTMLElement) {
+  renderSuggestion(reference: Reference, el: HTMLElement) {
     const data = makeMetaData(reference)
     el.createEl('div', { cls: 'orm-modal-paper-title', text: data.title });
     el.createEl('div', { cls: 'orm-modal-paper-authors', text: data.authors });
@@ -119,7 +119,7 @@ export class ReferenceSuggestModal extends SuggestModal<SemanticPaper> {
   }
 
   // Perform action on the selected suggestion.
-  onChooseSuggestion(reference: SemanticPaper) {
+  onChooseSuggestion(reference: Reference) {
     this.onChoose(null, makeMetaData(reference));
   }
 }

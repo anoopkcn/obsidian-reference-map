@@ -1,21 +1,21 @@
 import { requestUrl } from 'obsidian'
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
-import { SemanticPaper } from 'src/types'
+import { Reference } from 'src/types'
 
 export const getIndexItem = async (
 	paperId: string,
 	debugMode = false
-): Promise<SemanticPaper | null> => {
+): Promise<Reference | null> => {
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
-	const paperMetadata: SemanticPaper | null = await requestUrl(url).then(
+	const paperMetadata: Reference | null = await requestUrl(url).then(
 		(response) => {
 			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 				return null
 			}
-			return response.json as SemanticPaper
+			return response.json as Reference
 		}
 	)
 	return paperMetadata
@@ -24,11 +24,11 @@ export const getIndexItem = async (
 export const getReferenceItems = async (
 	paperId: string,
 	debugMode = false
-): Promise<SemanticPaper[]> => {
+): Promise<Reference[]> => {
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
-	const references: SemanticPaper[] = await requestUrl(url).then(
+	const references: Reference[] = await requestUrl(url).then(
 		(response) => {
 			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
@@ -45,11 +45,11 @@ export const getReferenceItems = async (
 export const getCitationItems = async (
 	paperId: string,
 	debugMode = false
-): Promise<SemanticPaper[]> => {
+): Promise<Reference[]> => {
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
-	const citations: SemanticPaper[] = await requestUrl(url).then(
+	const citations: Reference[] = await requestUrl(url).then(
 		(response) => {
 			if (response.status !== 200) {
 				if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
@@ -67,12 +67,12 @@ export const getSearchItems = async (
 	query: string,
 	limit: number,
 	debugMode = false
-): Promise<SemanticPaper[]> => {
+): Promise<Reference[]> => {
 	let url = `${SEMANTICSCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
 	if (limit !== 0) url += `&offset=0&limit=${limit}`
-	const search: SemanticPaper[] = await requestUrl(url).then((response) => {
+	const search: Reference[] = await requestUrl(url).then((response) => {
 		if (response.status !== 200) {
 			if (debugMode) console.log(`Error ${response.status}`) //TODO: better error handling
 			return []
@@ -88,7 +88,7 @@ export const getPaperMetadata = async (
 	query = '',
 	offlimit = [0, null],
 	unknownRef = false
-): Promise<SemanticPaper[]> => {
+): Promise<Reference[]> => {
 	let fields: string
 	let cite: string
 	const offset = offlimit[0]
@@ -112,7 +112,7 @@ export const getPaperMetadata = async (
 	if (unknownRef) fields += '&include_unknown_references=true'
 
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${fields}`
-	const papermetadata: SemanticPaper[] = await requestUrl(url).then(
+	const papermetadata: Reference[] = await requestUrl(url).then(
 		(response) => {
 			if (response.status !== 200) {
 				console.log(`Error ${response.status}`) //TODO: better error handling
@@ -132,11 +132,11 @@ export const getPaperMetadata = async (
 
 export const postPaperMetadata = async (
 	paperIds: Set<string>
-): Promise<SemanticPaper[]> => {
+): Promise<Reference[]> => {
 	const fields = `?fields=${SEMANTIC_FIELDS.join(',')}`
 	// add json body to request
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/batch${fields}`
-	const papermetadata: SemanticPaper[] = await requestUrl({
+	const papermetadata: Reference[] = await requestUrl({
 		url: url,
 		method: 'POST',
 		headers: {

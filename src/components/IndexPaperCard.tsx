@@ -1,4 +1,4 @@
-import { IndexPaper, ReferenceMapSettings, SemanticPaper } from 'src/types'
+import { IndexPaper, ReferenceMapSettings, Reference } from 'src/types'
 import React, { useEffect, useState } from 'react'
 import { isEmpty, makeMetaData, templateReplace } from 'src/utils'
 import { PaperList } from './PaperList'
@@ -18,8 +18,8 @@ export const IndexPaperCard = (props: {
 	rootPaper: IndexPaper
 	viewManager: ViewManager
 }) => {
-	const [references, setReferences] = useState<SemanticPaper[]>([])
-	const [citations, setCitations] = useState<SemanticPaper[]>([])
+	const [references, setReferences] = useState<Reference[]>([])
+	const [citations, setCitations] = useState<Reference[]>([])
 	const [showReferences, setShowReferences] = useState(false)
 	const [showCitations, setShowCitations] = useState(false)
 	const [isButtonShown, setIsButtonShown] = useState(!props.settings.hideButtonsOnHover)

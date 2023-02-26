@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { ReferenceMapSettings, SemanticPaper } from 'src/types'
+import { ReferenceMapSettings, Reference } from 'src/types'
 import { PaperCard } from './PaperCard'
 import { search, sort } from 'src/utils'
 
 export const PaperList = (props: {
-	papers: SemanticPaper[]
+	papers: Reference[]
 	settings: ReferenceMapSettings
 	type: string
 }) => {

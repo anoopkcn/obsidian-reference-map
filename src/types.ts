@@ -37,7 +37,7 @@ export interface ReferenceMapSettings {
 	debugMode: boolean
 }
 
-export interface SemanticPaper {
+export interface Reference {
 	paperId: string
 	externalIds: ExternalIds
 	url: string
@@ -120,7 +120,7 @@ export interface MetaData {
 
 export interface IndexPaper {
 	id: string
-	paper: SemanticPaper
+	paper: Reference
 }
 
 export interface CiteKey {

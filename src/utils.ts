@@ -1,7 +1,7 @@
 import { App, FileSystemAdapter, MarkdownView, Notice, TFile } from 'obsidian'
 import path from 'path'
 import doiRegex from 'doi-regex'
-import { CiteKey, IndexPaper, Library, MetaData, SemanticPaper } from './types'
+import { CiteKey, IndexPaper, Library, MetaData, Reference } from './types'
 import {
 	BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
@@ -18,7 +18,7 @@ export const errorlog = (data: Record<string, unknown>) => {
 	console.error({ plugin: 'Zotero Annotations', ...data })
 }
 
-export const isEmpty = (obj: SemanticPaper): boolean => {
+export const isEmpty = (obj: Reference): boolean => {
 	return Object.keys(obj).length === 0
 }
 
@@ -191,7 +191,7 @@ export function extractKeywords(text: string) {
 	return result
 }
 
-export const makeMetaData = (paper: SemanticPaper): MetaData => {
+export const makeMetaData = (paper: Reference): MetaData => {
 	const paperTitle = paper.title ? paper.title.trim()
 		.replace(/[^\x20-\x7E]/g, '')
 		.replace(/(<([^>]+)>)/gi, "") : 'Unknown Title'
@@ -370,8 +370,8 @@ export const standardizeBibtex = (bibtex: string) => {
 	return ''
 }
 
-export const search = (data: SemanticPaper[], query: string) => {
-	return data.filter((item: SemanticPaper) =>
+export const search = (data: Reference[], query: string) => {
+	return data.filter((item: Reference) =>
 		SEARCH_PARAMETERS.some((parameter) => {
 			if (parameter === 'authors') {
 				return item.authors.some((author) =>
@@ -388,7 +388,7 @@ export const search = (data: SemanticPaper[], query: string) => {
 }
 
 export const sort = (
-	data: SemanticPaper[],
+	data: Reference[],
 	sortProperty: string,
 	sortOrder: string
 ) => {

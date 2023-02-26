@@ -1,6 +1,6 @@
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
-import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, SemanticPaper } from './types'
+import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference } from './types'
 import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
@@ -208,14 +208,14 @@ export default class ReferenceMap extends Plugin {
 		return await this.openReferenceSuggestModal(searchedBooks);
 	}
 
-	async openReferenceSearchModal(query = ''): Promise<SemanticPaper[]> {
+	async openReferenceSearchModal(query = ''): Promise<Reference[]> {
 		return new Promise((resolve, reject) => {
-			return new ReferenceSearchModal(this, query, (error, results: SemanticPaper[]) => {
+			return new ReferenceSearchModal(this, query, (error, results: Reference[]) => {
 				return error ? reject(error) : resolve(results);
 			}).open();
 		});
 	}
-	async openReferenceSuggestModal(references: SemanticPaper[]): Promise<MetaData> {
+	async openReferenceSuggestModal(references: Reference[]): Promise<MetaData> {
 		return new Promise((resolve, reject) => {
 			return new ReferenceSuggestModal(this.app, references, (error, selectedReference: MetaData) => {
 				return error ? reject(error) : resolve(selectedReference);

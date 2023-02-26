@@ -1,5 +1,5 @@
 import LRUCache from 'lru-cache'
-import { SemanticPaper } from './types'
+import { Reference } from './types'
 import ReferenceMap from './main'
 import {
 	getIndexItem,
@@ -10,15 +10,15 @@ import {
 
 export interface DocCache {
 	paperIds: Set<string>
-	rootPapers: SemanticPaper[]
+	rootPapers: Reference[]
 }
 
 export class ViewManager {
 	plugin: ReferenceMap
-	indexCache: LRUCache<string, SemanticPaper | number | null>
-	refCache: LRUCache<string, SemanticPaper[]>
-	citeCache: LRUCache<string, SemanticPaper[]>
-	searchCache: LRUCache<string, SemanticPaper[]>
+	indexCache: LRUCache<string, Reference | number | null>
+	refCache: LRUCache<string, Reference[]>
+	citeCache: LRUCache<string, Reference[]>
+	searchCache: LRUCache<string, Reference[]>
 
 	constructor(plugin: ReferenceMap) {
 		this.plugin = plugin
@@ -38,7 +38,7 @@ export class ViewManager {
 
 	getIndexPaper = async (
 		paperId: string
-	): Promise<SemanticPaper | number | null> => {
+	): Promise<Reference | number | null> => {
 		const cachedPaper = this.indexCache.has(paperId)
 			? this.indexCache.get(paperId)
 			: null
@@ -64,7 +64,7 @@ export class ViewManager {
 		query: string,
 		limit = 0,
 		cache = true
-	): Promise<SemanticPaper[]> => {
+	): Promise<Reference[]> => {
 		const cacheKey = query + limit.toString()
 		const cachedSearch = this.searchCache.has(cacheKey)
 			? this.searchCache.get(cacheKey)
@@ -90,7 +90,7 @@ export class ViewManager {
 	}
 
 	// Get references of an index card paper
-	getReferences = async (paperId: string): Promise<SemanticPaper[]> => {
+	getReferences = async (paperId: string): Promise<Reference[]> => {
 		const cachedRefs = this.refCache.has(paperId)
 			? this.refCache.get(paperId)
 			: null
@@ -110,7 +110,7 @@ export class ViewManager {
 	}
 
 	// Get citations of an index card paper
-	getCitations = async (paperId: string): Promise<SemanticPaper[]> => {
+	getCitations = async (paperId: string): Promise<Reference[]> => {
 		const cachedCitations = this.citeCache.has(paperId)
 			? this.citeCache.get(paperId)
 			: null
