@@ -26,6 +26,7 @@ export const METADATA_MODAL_CREATE_TEMPLATE = `{{title}}
 {{journal}}, {{year}}
 {{abstract}}
 {{doi}}
+[External Link]({{url}})
 {{pdfurl}}
 `
 
