@@ -29,7 +29,7 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 ## Usage
 
-This `README.md` file contains the basic description of the plugin for a detailed guide please **refer to the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page**.
+This `README.md` file contains the basic description of the plugin. For a detailed guide please **refer to the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page**.
 
 Main features:
 
