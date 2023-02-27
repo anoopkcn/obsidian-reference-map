@@ -40,7 +40,7 @@ Main features:
 
 ![ORm-search-demo](./images/orm-search-create-demo.png)
 
-Search for references and citations online to create of insert details. You  can locate  the commands by opening the Obsidian command palette (Ctrl/Cmd + P) and typing `Reference Map`. By default no hotkeys are se for the commands, but you can easily add them in the Hotkeys tab.
+Search for references and citations online to create or insert details. You  can locate  the commands by opening the Obsidian command palette (Ctrl/Cmd + P) and typing `Reference Map`. By default no hotkeys are se for the commands, but you can easily add them in the Hotkeys tab.
 
 If you select a text in the current document and then issue the command the selected text will be used as the search query.
 
