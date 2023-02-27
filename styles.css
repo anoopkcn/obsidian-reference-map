@@ -377,9 +377,34 @@ body {
 }
 
 /* Search modal settings */
-.orm-search-modal-input {
-	padding-bottom: 15px;
+
+.orm-search-modal-input-heading {
+    font-variant: var(--h2-variant);
+    line-height: var(--h2-line-height);
+    font-size: var(--h2-size);
+    color: var(--h2-color);
+    font-weight: var(--h2-weight);
+    font-style: var(--h2-style);
+    font-family: var(--h2-font);
+	display: flex;
+	padding: 0.5rem 0;
+	text-align: center;
+	width: 100%;
 }
+.orm-search-modal-input-heading-mode{
+	margin-left: 0.25rem;
+	color: var(--code-normal);
+	font-family: var(--font-monospace);
+	background-color: var(--code-background);
+	border-radius: var(--radius-s);
+	font-size: var(--code-size);
+	padding: 0.1em 0.25em;
+}
+
+.orm-search-modal-input-button {
+	border: none;
+}
+
 .orm-search-modal-input input {
 	width: 100%;
 }

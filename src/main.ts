@@ -142,7 +142,7 @@ export default class ReferenceMap extends Plugin {
 					selection = markdownView.editor.getSelection().trim()
 				}
 			}
-			const metaData = await this.searchReferenceMetadata(selection);
+			const metaData = await this.searchReferenceMetadata(selection, 'create');
 
 			// open file
 			const activeLeaf = this.app.workspace.getLeaf();
@@ -188,7 +188,7 @@ export default class ReferenceMap extends Plugin {
 			if (markdownView.getMode() === 'source') {
 				selection = markdownView.editor.getSelection().trim()
 			}
-			const reference = await this.searchReferenceMetadata(selection);
+			const reference = await this.searchReferenceMetadata(selection, 'insert');
 
 			if (!markdownView.editor) {
 				if (this.settings.debugMode) console.warn('Can not find editor from the active markdown view');
@@ -203,14 +203,14 @@ export default class ReferenceMap extends Plugin {
 		}
 	}
 
-	async searchReferenceMetadata(query?: string): Promise<MetaData> {
-		const searchedBooks = await this.openReferenceSearchModal(query);
-		return await this.openReferenceSuggestModal(searchedBooks);
+	async searchReferenceMetadata(query?: string, mode?: string): Promise<MetaData> {
+		const searchedReferences = await this.openReferenceSearchModal(query, mode);
+		return await this.openReferenceSuggestModal(searchedReferences);
 	}
 
-	async openReferenceSearchModal(query = ''): Promise<Reference[]> {
+	async openReferenceSearchModal(query = '', mode = 'insert'): Promise<Reference[]> {
 		return new Promise((resolve, reject) => {
-			return new ReferenceSearchModal(this, query, (error, results: Reference[]) => {
+			return new ReferenceSearchModal(this, query, mode, (error, results: Reference[]) => {
 				return error ? reject(error) : resolve(results);
 			}).open();
 		});

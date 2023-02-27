@@ -21,6 +21,7 @@ export class ReferenceSearchModal extends Modal {
   constructor(
     plugin: ReferenceMap,
     private query: string,
+    private mode: string,
     private callback: (error: Error | null, result?: Reference[]) => void,
   ) {
     super(plugin.app);
@@ -34,7 +35,7 @@ export class ReferenceSearchModal extends Modal {
     this.okBtnRef?.setButtonText(busy ? 'Requesting...' : 'Search');
   }
 
-  async searchReference() {
+  async searchReference() { 
     if (!this.query) {
       throw new Error('ORM: No query entered.');
     }
@@ -66,17 +67,21 @@ export class ReferenceSearchModal extends Modal {
   onOpen() {
     const { contentEl } = this;
 
-    contentEl.createEl('h2', { text: 'Search References' });
+    // contentEl.createEl('h2', { text: 'Search References' });
+    const search_heading = contentEl.createDiv({ cls: 'orm-search-modal-input-heading', text: 'Search References' });
+    search_heading.createDiv({ cls: 'orm-search-modal-input-heading-mode', text: `${this.mode}` });  
 
     contentEl.createDiv({ cls: 'orm-search-modal-input' }, settingItem => {
       new TextComponent(settingItem)
         .setValue(this.query)
-        .setPlaceholder('Search by keyword, title, authors, etc.')
+        .setPlaceholder('Search by keyword, title, authors, journal, abstract, etc.')
         .onChange(value => (this.query = value))
         .inputEl.addEventListener('keydown', this.submitEnterCallback.bind(this));
     });
 
-    new Setting(contentEl).addButton(btn => {
+    new Setting(contentEl)
+      .setClass('orm-search-modal-input-button')
+      .addButton(btn => {
       return (this.okBtnRef = btn
         .setButtonText('Search')
         .setCta()
