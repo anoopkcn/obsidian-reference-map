@@ -14,7 +14,9 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you to
 
 ## Installation
 
-The plugin is available in the Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
+The plugin is available in the Obsidian's Community Plugin Tab via: 
+
+Settings → Community Plugins → Browse → Search for "Reference Map"
 
 ### Manual Installation
 
