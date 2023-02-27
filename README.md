@@ -14,6 +14,8 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you to
 
 ## Installation
 
+### Community Plugin Installation
+
 The plugin is available in the Obsidian's Community Plugin Tab via: Settings → Community Plugins → Browse → Search for "Reference Map"
 
 ### Manual Installation
@@ -29,9 +31,29 @@ You can also use the [BRAT](https://github.com/TfTHacker/obsidian42-brat/) plugi
 
 This `README.md` file contains the basic description of the plugin for a detailed guide please **refer to the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page**.
 
-![ORM-demo](./images/orm-demo-0.7.5.png)
+Main features:
+
+- **Reference Map Search** - Search for references online to create or insert details.
+- **Reference Map View** - View details of your references in the current document.
+
+### Reference Map Search
+
+![ORm-search-demo](./images/orm-search-create-demo.png)
+
+Search for references and citations online to create of insert details. You  can locate  the commands by opening the Obsidian command palette (Ctrl/Cmd + P) and typing `Reference Map`. By default no hotkeys are se for the commands, but you can easily add them in the Hotkeys tab.
+
+If you select a text in the current document and then issue the command the selected text will be used as the search query.
+
+| Command | Description | Hotkey |
+| --- | --- | --- |     
+| Reference Map: Search and Insert | Search for references online to insert details in the current document. | - |
+| Reference Map: Search and Create | Search for references online to create a new markdown file using the details | - |
+
+You can configure the template for both commands in the settings tab.
 
 ### Reference Map View
+
+![ORM-demo](./images/orm-demo-0.7.5.png)
 
 Reference Map View contains Index cards and Reference Cards.
 
