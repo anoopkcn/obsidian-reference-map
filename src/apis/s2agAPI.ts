@@ -26,7 +26,7 @@ export const getReferenceItems = async (
 	paperId: string,
 	debugMode = false
 ): Promise<Reference[]> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(
+	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/references?limit=1000&fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
 	const references: Reference[] = await requestUrl(url).then(
@@ -45,7 +45,7 @@ export const getCitationItems = async (
 	paperId: string,
 	debugMode = false
 ): Promise<Reference[]> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(
+	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/citations?limit=1000&fields=${SEMANTIC_FIELDS.join(
 		','
 	)}`
 	const citations: Reference[] = await requestUrl(url).then(
