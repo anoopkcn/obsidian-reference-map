@@ -43,6 +43,7 @@ export interface Reference {
 	url: string
 	title: string
 	abstract: string
+	tldr: TLDR
 	venue: string
 	year: number
 	referenceCount: number
@@ -68,6 +69,11 @@ export interface ExternalIds {
 export interface OpenAccessPdf {
 	url: string
 	status: string
+}
+
+export interface TLDR {
+	model: string
+	text: string
 }
 
 export interface Journal {
@@ -110,6 +116,7 @@ export interface MetaData {
 	volume: string
 	pages: string
 	abstract: string
+	tldr: string
 	url: string
 	pdfurl: string
 	doi: string

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { requestUrl } from 'obsidian'
-import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
+import { SEMANTIC_FIELDS, SEMANTIC_FIELDS_PAPER_ONLY, SEMANTIC_FIELDS_SEARCH_ONLY, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 import { Reference } from 'src/types'
 
 export const getIndexItem = async (
@@ -9,7 +9,7 @@ export const getIndexItem = async (
 ): Promise<Reference | null> => {
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(
 		','
-	)}`
+	)},${SEMANTIC_FIELDS_PAPER_ONLY.join(',')}`
 	const paperMetadata: Reference | null = await requestUrl(url).then(
 		(response) => {
 			if (response.status !== 200) {
@@ -67,7 +67,7 @@ export const getSearchItems = async (
 ): Promise<Reference[]> => {
 	let url = `${SEMANTICSCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(
 		','
-	)}`
+	)},${SEMANTIC_FIELDS_SEARCH_ONLY.join(',')}`
 	if (limit !== 0) url += `&offset=0&limit=${limit}`
 	const search: Reference[] = await requestUrl(url).then((response) => {
 		if (response.status !== 200) {
@@ -99,9 +99,9 @@ export const getPaperMetadata = async (
 		cite = 'citingPaper'
 	} else if (refType === 'search') {
 		if (query === '') return []
-		fields = `search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')}`
+		fields = `search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')},${SEMANTIC_FIELDS_SEARCH_ONLY.join(',')}`
 	} else {
-		fields = `${paperId}?fields=${SEMANTIC_FIELDS.join(',')}`
+		fields = `${paperId}?fields=${SEMANTIC_FIELDS.join(',')},${SEMANTIC_FIELDS_PAPER_ONLY.join(',')}`
 	}
 
 	if (offset != 0) fields += `&offset=${offset}`

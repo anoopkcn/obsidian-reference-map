@@ -105,6 +105,12 @@ export const SEMANTIC_FIELDS = [
 	'year',
 	'citationStyles',
 ]
+export const SEMANTIC_FIELDS_PAPER_ONLY = [
+	'tldr',
+]
+export const SEMANTIC_FIELDS_SEARCH_ONLY = [
+	'tldr',
+]
 export const SEARCH_PARAMETERS = [
 	'paperId',
 	'externalIds',

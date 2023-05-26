@@ -215,6 +215,9 @@ export const makeMetaData = (paper: Reference): MetaData => {
 	const abstract = paper.abstract
 		? paper.abstract.trim()
 		: 'No abstract available'
+	const tldr = paper.tldr
+		? paper.tldr.text.trim()
+		: 'No TLDR available'
 	const bibTex = paper.citationStyles?.bibtex
 		? paper.citationStyles.bibtex
 		: 'No BibTex available'
@@ -245,6 +248,7 @@ export const makeMetaData = (paper: Reference): MetaData => {
 		volume: volume,
 		pages: pages,
 		abstract: abstract,
+		tldr: tldr,
 		url: paperURL,
 		pdfurl: openAccessPdfUrl,
 		doi: doi,
@@ -267,6 +271,7 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
 		.replaceAll('{{volume}}', data.volume.replace(/[:\\\\/]/g, ''))
 		.replaceAll('{{pages}}', data.pages.replace(/[:\\\\/]/g, ''))
 		.replaceAll('{{abstract}}', data.abstract)
+		.replaceAll('{{tldr}}', data.tldr)
 		.replaceAll('{{url}}', data.url)
 		.replaceAll('{{pdfurl}}', data.pdfurl)
 		.replaceAll('{{doi}}', data.doi)
