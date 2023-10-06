@@ -6,18 +6,15 @@ import { PaperHeading } from './PaperHeading'
 import { PaperButtons } from './PaperButtons'
 import { ViewManager } from 'src/viewManager'
 import { LoadingPuff } from './LoadingPuff'
-import {
-	METADATA_COPY_TEMPLATE_ONE,
-	METADATA_COPY_TEMPLATE_THREE,
-	METADATA_COPY_TEMPLATE_TWO,
-} from 'src/constants'
 
-export const IndexPaperCard = (props: {
+interface Props {
 	className?: string
 	settings: ReferenceMapSettings
 	rootPaper: IndexPaper
 	viewManager: ViewManager
-}) => {
+}
+
+export const IndexPaperCard = (props: Props) => {
 	const [references, setReferences] = useState<Reference[]>([])
 	const [citations, setCitations] = useState<Reference[]>([])
 	const [showReferences, setShowReferences] = useState(false)
@@ -48,59 +45,33 @@ export const IndexPaperCard = (props: {
 
 	const getReferences = async () => {
 		setIsReferenceLoading(true)
-		const references = await props.viewManager.getReferences(
-			props.rootPaper.paper.paperId
-		)
+		const references = await props.viewManager.getReferences(props.rootPaper.paper.paperId)
 		if (references) setReferences(references)
 		setIsReferenceLoading(false)
 	}
 
 	const getCitations = async () => {
 		setIsCitationLoading(true)
-		const citations = await props.viewManager.getCitations(
-			props.rootPaper.paper.paperId
-		)
+		const citations = await props.viewManager.getCitations(props.rootPaper.paper.paperId)
 		if (citations) setCitations(citations)
 		setIsCitationLoading(false)
 	}
 
-	const metadataTemplateOne = props.settings.formatMetadataCopyOne
-		? props.settings.metadataCopyTemplateOne
-		: METADATA_COPY_TEMPLATE_ONE
+	const metadataTemplates = [
+		{ format: props.settings.formatMetadataCopyOne, template: props.settings.metadataCopyTemplateOne, batch: props.settings.metadataCopyOneBatch },
+		{ format: props.settings.formatMetadataCopyTwo, template: props.settings.metadataCopyTemplateTwo, batch: props.settings.metadataCopyTwoBatch },
+		{ format: props.settings.formatMetadataCopyThree, template: props.settings.metadataCopyTemplateThree, batch: props.settings.metadataCopyThreeBatch },
+	]
 
-	const metadataTemplateTwo = props.settings.formatMetadataCopyTwo
-		? props.settings.metadataCopyTemplateTwo
-		: METADATA_COPY_TEMPLATE_TWO
-
-	const metadataTemplateThree = props.settings.formatMetadataCopyThree
-		? props.settings.metadataCopyTemplateThree
-		: METADATA_COPY_TEMPLATE_THREE
-
-	let batchCopyMetadataOne = ''
-	let batchCopyMetadataTwo = ''
-	let batchCopyMetadataThree = ''
-	if (references && props.settings.metadataCopyOneBatch) {
-		references.forEach((paper) => {
-			const metaData = makeMetaData(paper)
-			batchCopyMetadataOne +=
-				templateReplace(metadataTemplateOne, metaData) + '\n'
-		})
-	}
-	if (references && props.settings.metadataCopyTwoBatch) {
-		references.forEach((paper) => {
-			const metaData = makeMetaData(paper)
-			batchCopyMetadataTwo +=
-				templateReplace(metadataTemplateTwo, metaData) + '\n'
-		})
-	}
-
-	if (references && props.settings.metadataCopyThreeBatch) {
-		references.forEach((paper) => {
-			const metaData = makeMetaData(paper)
-			batchCopyMetadataThree +=
-				templateReplace(metadataTemplateThree, metaData) + '\n'
-		})
-	}
+	const batchCopyMetadata = metadataTemplates.map(({ format, template, batch }) => {
+		if (batch && format) {
+			return references.map((paper) => {
+				const metaData = makeMetaData(paper)
+				return templateReplace(template, metaData) + '\n'
+			}).join('')
+		}
+		return ''
+	})
 
 	return (
 		<div
@@ -119,9 +90,9 @@ export const IndexPaperCard = (props: {
 					showCitations={showCitations}
 					setIsButtonShown={setIsButtonShown}
 					isButtonShown={isButtonShown}
-					batchCopyMetadataTwo={batchCopyMetadataTwo}
-					batchCopyMetadataOne={batchCopyMetadataOne}
-					batchCopyMetadataThree={batchCopyMetadataThree}
+					batchCopyMetadataOne={batchCopyMetadata[0]}
+					batchCopyMetadataTwo={batchCopyMetadata[1]}
+					batchCopyMetadataThree={batchCopyMetadata[2]}
 				/>
 			)}
 			{(isCitationLoading || isReferenceLoading) && (
@@ -130,22 +101,10 @@ export const IndexPaperCard = (props: {
 				</div>
 			)}
 			{showReferences && (
-				<>
-					<PaperList
-						settings={props.settings}
-						papers={references}
-						type={'References'}
-					/>
-				</>
+				<PaperList settings={props.settings} papers={references} type={'References'} />
 			)}
 			{showCitations && (
-				<>
-					<PaperList
-						settings={props.settings}
-						papers={citations}
-						type={'Citations'}
-					/>
-				</>
+				<PaperList settings={props.settings} papers={citations} type={'Citations'} />
 			)}
 		</div>
 	)

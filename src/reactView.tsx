@@ -123,140 +123,63 @@ export class ReferenceMapView extends ItemView {
 		}
 	}
 
-	idSelectionHandle = debounce(
-		() => {
-			const activeView = app.workspace.getActiveViewOfType(MarkdownView)
-			let selection = ''
-			if (activeView && activeView.file) {
-				const editor = activeView.editor
-				if (activeView.getMode() === 'source') {
-					selection = editor.getSelection().trim()
-				} else {
-					const textSelection = window.getSelection()?.toString()
-					if (
-						textSelection !== undefined &&
-						textSelection !== null &&
-						textSelection !== ''
-					)
-						selection = textSelection.trim()
-				}
-				//check if selection is a citekey
-				const isInIDs = [...this.paperIDs].some((item) => {
-					return (
-						item === selection ||
-						`https://doi.org/${item}` === selection
-					)
-				})
-				const isInCiteKeys = _.map(this.citeKeyMap, 'citeKey').some(
-					(item) => {
-						return item === selection || item === `@${selection}`
-					}
-				)
-				if (isInIDs || isInCiteKeys)
-					this.prepareIDs().then(() =>
-						this.processReferences(selection)
-					)
-			}
-		},
-		300,
-		true
-	)
+	idSelectionHandle = debounce(() => {
+		const activeView = app.workspace.getActiveViewOfType(MarkdownView)
+		if (!activeView || !activeView.file) return
+
+		const editor = activeView.editor
+		const selection =
+			activeView.getMode() === 'source'
+				? editor.getSelection().trim()
+				: window.getSelection()?.toString().trim()
+
+		const isInIDs = this.paperIDs.has(selection ?? '') || this.paperIDs.has(`https://doi.org/${selection}`)
+		const isInCiteKeys = _.map(this.citeKeyMap, 'citeKey').includes(selection ?? '') || _.map(this.citeKeyMap, 'citeKey').includes(`@${selection}`)
+		if (isInIDs || isInCiteKeys) {
+			this.prepareIDs().then(() => this.processReferences(selection ?? ''))
+		}
+	}, 300, true)
+
 
 	loadLibrary = async () => {
-		if (
-			this.plugin.settings.searchCiteKey &&
-			this.plugin.settings.searchCiteKeyPath
-		) {
-			const libraryPath = resolvePath(
-				this.plugin.settings.searchCiteKeyPath
-			)
-			let rawData
-			let mtime = 0
-			try {
-				const stats = fs.statSync(libraryPath)
-				mtime = stats.mtimeMs
-			} catch (e) {
-				if (this.plugin.settings.debugMode) {
-					console.warn(
-						'ORM: Something went wrong when checking the library stats.'
-					)
-				}
-				return null
-			}
-			if (mtime !== this.library.mtime) {
-				if (this.plugin.settings.debugMode)
-					console.log(
-						`ORM: Loading library from '${this.plugin.settings.searchCiteKeyPath}'`
-					)
-				try {
-					if (!fs.existsSync(libraryPath)) {
-						if (this.plugin.settings.debugMode) {
-							console.log(
-								`ORM: No library file found at ${libraryPath}`
-							)
-						}
-					}
-					rawData = fs.readFileSync(libraryPath).toString()
-				} catch (e) {
-					if (this.plugin.settings.debugMode) {
-						console.warn(
-							'ORM: Warnings associated with loading the library file.'
-						)
-					}
-					return null
-				}
-				if (this.plugin.settings.searchCiteKeyPath.endsWith('.json')) {
-					try {
-						const libraryData = JSON.parse(rawData)
-						this.library = {
-							active: true,
-							adapter: 'csl-json',
-							libraryData: libraryData,
-							mtime: mtime,
-						}
-						return libraryData
-					} catch (e) {
-						if (this.plugin.settings.debugMode) {
-							console.warn(
-								'ORM: Warnings associated with loading the library file.'
-							)
-						}
-					}
-				}
-				if (this.plugin.settings.searchCiteKeyPath.endsWith('.bib')) {
-					const options: BibTeXParser.ParserOptions = {
-						errorHandler: () => {
-							if (this.plugin.settings.debugMode) {
-								console.warn(
-									'ORM: Warnings associated with loading the BibTeX entry.'
-								)
-							}
-						},
-					}
-					try {
-						const parsed = BibTeXParser.parse(
-							rawData,
-							options
-						) as BibTeXParser.Bibliography
-						this.library = {
-							active: true,
-							adapter: 'bibtex',
-							libraryData: parsed.entries,
-							mtime: mtime,
-						}
-						return parsed.entries
-					} catch (e) {
-						if (this.plugin.settings.debugMode) {
-							console.warn(
-								'ORM: Warnings associated with loading the library file.'
-							)
-						}
-					}
-				}
-			}
+		const { searchCiteKey, searchCiteKeyPath, debugMode } = this.plugin.settings;
+		if (!searchCiteKey || !searchCiteKeyPath) return null;
+
+		const libraryPath = resolvePath(searchCiteKeyPath);
+		const stats = fs.statSync(libraryPath);
+		const mtime = stats.mtimeMs;
+		if (mtime === this.library.mtime) return null;
+
+		if (debugMode) console.log(`ORM: Loading library from '${searchCiteKeyPath}'`);
+		let rawData;
+		try {
+			rawData = fs.readFileSync(libraryPath).toString();
+		} catch (e) {
+			if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
+			return null;
 		}
-		return null
-	}
+
+		const isJson = searchCiteKeyPath.endsWith('.json');
+		const isBib = searchCiteKeyPath.endsWith('.bib');
+		if (!isJson && !isBib) return null;
+
+		let libraryData;
+		try {
+			libraryData = isJson ? JSON.parse(rawData) : BibTeXParser.parse(rawData, { errorHandler: () => { } }).entries;
+		} catch (e) {
+			if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
+			return null;
+		}
+
+		this.library = {
+			active: true,
+			adapter: isJson ? 'csl-json' : 'bibtex',
+			libraryData,
+			mtime,
+		};
+		return libraryData;
+	};
+
 
 	prepareIDs = async () => {
 		const isLibrary =
@@ -271,11 +194,11 @@ export class ReferenceMapView extends ItemView {
 		this.basename = ''
 		if (activeView) {
 			if (isLibrary) this.loadLibrary()
-			this.basename = activeView.file.basename
-			const fileContent = await app.vault.cachedRead(activeView.file)
+			this.basename = activeView.file?.basename ?? ''
+			const fileContent = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
 			paperIDs = getPaperIds(fileContent)
 
-			if (isLibrary) {
+			if (isLibrary && activeView.file) {
 				const citeKeys = getCiteKeys(
 					fileContent,
 					this.plugin.settings.findCiteKeyFromLinksWithoutPrefix
@@ -284,18 +207,18 @@ export class ReferenceMapView extends ItemView {
 			}
 
 			if (this.plugin.settings.searchFrontMatter) {
-				const fileCache = app.metadataCache.getFileCache(
-					activeView.file
-				)
-				if (fileCache?.frontmatter) {
-					const keywords =
-						fileCache?.frontmatter?.[
+				if (activeView.file) {
+					const fileCache = app.metadataCache.getFileCache(activeView.file);
+					if (fileCache?.frontmatter) {
+						const keywords =
+							fileCache?.frontmatter?.[
 							this.plugin.settings.searchFrontMatterKey
-						]
-					if (keywords)
-						frontMatterString = extractKeywords(keywords)
-							.unique()
-							.join('+')
+							];
+						if (keywords)
+							frontMatterString = extractKeywords(keywords)
+								.unique()
+								.join("+");
+					}
 				}
 			}
 			if (
@@ -308,14 +231,14 @@ export class ReferenceMapView extends ItemView {
 					.unique()
 					.join('+')
 			}
-			const ispaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs)
+			const isPaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs)
 			const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap)
 			const isFrontMatterUpdated =
 				frontMatterString === this.frontMatterString
 			const isFileNameUpdated = fileNameString === this.fileNameString
 
 			isUpdated =
-				!ispaperIDsUpdated ||
+				!isPaperIDsUpdated ||
 				!isCiteKeyMapUpdated ||
 				!isFrontMatterUpdated ||
 				!isFileNameUpdated
@@ -331,52 +254,55 @@ export class ReferenceMapView extends ItemView {
 		return isUpdated
 	}
 
+
 	getIndexCards = async () => {
-		const indexCards: IndexPaper[] = []
+		const indexCards: IndexPaper[] = [];
 
 		// Get references using the paper IDs
 		if (this.paperIDs.size > 0) {
-			const paperIDPromises = [...this.paperIDs].map(async (paperId) => {
-				const paper = await this.viewManager.getIndexPaper(paperId)
-				let paperCiteId = paperId
-				if (
-					this.plugin.settings.searchCiteKey &&
-					this.library.libraryData !== null &&
-					this.plugin.settings.findZoteroCiteKeyFromID
-				)
-					paperCiteId = setCiteKeyId(paperId, this.library)
-				if (paper !== null && typeof paper !== 'number')
-					return Promise.resolve(
-						indexCards.push({ id: paperCiteId, paper: paper })
-					)
-			})
-			await Promise.allSettled(paperIDPromises)
+			await Promise.allSettled(
+				[...this.paperIDs].map(async (paperId) => {
+					const paper = await this.viewManager.getIndexPaper(paperId);
+					if (paper !== null && typeof paper !== "number") {
+						const paperCiteId =
+							this.plugin.settings.searchCiteKey &&
+								this.library.libraryData !== null &&
+								this.plugin.settings.findZoteroCiteKeyFromID
+								? setCiteKeyId(paperId, this.library)
+								: paperId;
+						indexCards.push({ id: paperCiteId, paper });
+					}
+				})
+			);
 		}
 
 		// Get references using the cite keys
 		if (this.citeKeyMap.length > 0) {
-			const citeKeyPromises = this.citeKeyMap.map(async (item) => {
-				const paper = await this.viewManager.getIndexPaper(item.paperId)
-				if (paper !== null && typeof paper !== 'number')
-					return Promise.resolve(
-						indexCards.push({ id: item.citeKey, paper: paper })
-					)
-			})
-			await Promise.allSettled(citeKeyPromises)
+			await Promise.allSettled(
+				this.citeKeyMap.map(async (item) => {
+					const paper = await this.viewManager.getIndexPaper(item.paperId);
+					if (paper !== null && typeof paper !== "number") {
+						indexCards.push({ id: item.citeKey, paper });
+					}
+				})
+			);
 		}
 
 		// Get references using the file name
-		if (this.plugin.settings.searchTitle && this.fileNameString) {
+		if (
+			this.plugin.settings.searchTitle &&
+			this.fileNameString &&
+			!EXCLUDE_FILE_NAMES.some(
+				(name) => this.basename.toLowerCase() === name.toLowerCase()
+			)
+		) {
 			const titleSearchPapers = await this.viewManager.searchIndexPapers(
 				this.fileNameString,
 				this.plugin.settings.searchLimit
-			)
-			const titlePromises = titleSearchPapers.map((paper) => {
-				return Promise.resolve(
-					indexCards.push({ id: paper.paperId, paper: paper })
-				)
-			})
-			await Promise.allSettled(titlePromises)
+			);
+			titleSearchPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper });
+			});
 		}
 
 		// Get references using the front matter
@@ -384,16 +310,14 @@ export class ReferenceMapView extends ItemView {
 			const frontMatterPapers = await this.viewManager.searchIndexPapers(
 				this.frontMatterString,
 				this.plugin.settings.searchFrontMatterLimit
-			)
-			const frontMatterPromises = frontMatterPapers.map((paper) => {
-				return Promise.resolve(
-					indexCards.push({ id: paper.paperId, paper: paper })
-				)
-			})
-			await Promise.allSettled(frontMatterPromises)
+			);
+			frontMatterPapers.forEach((paper) => {
+				indexCards.push({ id: paper.paperId, paper });
+			});
 		}
-		return indexCards
-	}
+
+		return indexCards;
+	};
 
 	preProcessReferences = (indexCards: IndexPaper[]) => {
 		if (!this.plugin.settings.enableIndexSorting) {

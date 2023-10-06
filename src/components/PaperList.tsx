@@ -1,32 +1,29 @@
-import React, { useState } from 'react'
-import { ReferenceMapSettings, Reference } from 'src/types'
-import { PaperCard } from './PaperCard'
-import { search, sort } from 'src/utils'
+import React, { useState } from 'react';
+import { ReferenceMapSettings, Reference } from 'src/types';
+import { PaperCard } from './PaperCard';
+import { search, sort } from 'src/utils';
 
-export const PaperList = (props: {
-	papers: Reference[]
-	settings: ReferenceMapSettings
-	type: string
-}) => {
-	const [query, setQuery] = useState('')
+interface Props {
+	papers: Reference[];
+	settings: ReferenceMapSettings;
+	type: string;
+}
 
-	let papers = props.papers
-	if (props.settings.enableReferenceSorting)
-		papers = sort(
-			props.papers,
-			props.settings.sortByReference,
-			props.settings.sortOrderReference
-		)
+export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
+	const [query, setQuery] = useState('');
 
-	const paperList = search(papers, query).map((paper, index) => {
-		return (
-			<PaperCard
-				key={paper.paperId + index}
-				paper={{ id: paper.paperId, paper: paper }}
-				settings={props.settings}
-			/>
-		)
-	})
+	const sortedPapers = settings.enableReferenceSorting
+		? sort(papers, settings.sortByReference, settings.sortOrderReference)
+		: papers;
+
+	const paperList = search(sortedPapers, query).map((paper, index) => (
+		<PaperCard
+			key={`${paper.paperId}-${index}`}
+			paper={{ id: paper.paperId, paper }}
+			settings={settings}
+		/>
+	));
+
 	return (
 		<div className="orm-paper-list">
 			<div className="orm-paper-list-buttons">
@@ -34,12 +31,14 @@ export const PaperList = (props: {
 					<input
 						type="search"
 						className="orm-search-input"
-						placeholder={props.type}
+						placeholder={type}
 						onChange={(e) => setQuery(e.target.value)}
 					/>
 				</div>
 			</div>
 			{paperList}
 		</div>
-	)
-}
+	);
+};
+
+export default PaperList;

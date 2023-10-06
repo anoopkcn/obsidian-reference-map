@@ -179,7 +179,7 @@ body {
 	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	border-radius: 0.25rem;
 	padding: 0.5rem;
-	margin-bottom: 0.5rem;
+	margin: 0.25rem 0;
 	position: relative;
 }
 

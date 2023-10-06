@@ -8,124 +8,100 @@ import {
 	getSearchItems,
 } from './apis/s2agAPI'
 
-export interface DocCache {
-	paperIds: Set<string>
-	rootPapers: Reference[]
-}
-
 export class ViewManager {
-	plugin: ReferenceMap
-	indexCache: LRUCache<string, Reference | number | null>
-	refCache: LRUCache<string, Reference[]>
-	citeCache: LRUCache<string, Reference[]>
-	searchCache: LRUCache<string, Reference[]>
+	private indexCache = new LRUCache<string, Reference | number | null>({ max: 250 })
+	private refCache = new LRUCache<string, Reference[]>({ max: 20 })
+	private citeCache = new LRUCache<string, Reference[]>({ max: 20 })
+	private searchCache = new LRUCache<string, Reference[]>({ max: 20 })
 
-	constructor(plugin: ReferenceMap) {
-		this.plugin = plugin
-		this.indexCache = new LRUCache({ max: 250 })
-		this.refCache = new LRUCache({ max: 20 })
-		this.citeCache = new LRUCache({ max: 20 })
-		this.searchCache = new LRUCache({ max: 20 })
-	}
+	constructor(private plugin: ReferenceMap) { }
 
 	clearCache = () => {
-		// Clear all caches when the user unmounts the view
 		this.indexCache.clear()
 		this.refCache.clear()
 		this.citeCache.clear()
 		this.searchCache.clear()
 	}
 
-	getIndexPaper = async (
-		paperId: string
-	): Promise<Reference | number | null> => {
-		const cachedPaper = this.indexCache.has(paperId)
-			? this.indexCache.get(paperId)
-			: null
-		const debugMode = this.plugin.settings.debugMode
-		if (!cachedPaper) {
-			try {
-				const paper = await getIndexItem(paperId, debugMode)
-				this.indexCache.set(paperId, paper)
-				return paper
-			} catch (e) {
-				if (debugMode)
-					console.log('ORM: S2AG API Index Card request error', e)
-				// Cache the 404 status(no entry found) to avoid repeated requests
-				if (e.status === 404) this.indexCache.set(paperId, e.status)
-				return e.status
-			}
+	getIndexPaper = async (paperId: string): Promise<Reference | number | null> => {
+		const cachedPaper = this.indexCache.get(paperId)
+		if (cachedPaper) {
+			return cachedPaper
 		}
-		return cachedPaper
+
+		const debugMode = this.plugin.settings.debugMode
+		try {
+			const paper = await getIndexItem(paperId, debugMode)
+			this.indexCache.set(paperId, paper)
+			return paper
+		} catch (e) {
+			if (debugMode) {
+				console.log('ORM: S2AG API Index Card request error', e)
+			}
+			if (e.status === 404) {
+				this.indexCache.set(paperId, e.status)
+			}
+			return e.status
+		}
 	}
 
-	// Get papers of to keyword search
-	searchIndexPapers = async (
-		query: string,
-		limit = 0,
-		cache = true
-	): Promise<Reference[]> => {
-		const cacheKey = query + limit.toString()
-		const cachedSearch = this.searchCache.has(cacheKey)
-			? this.searchCache.get(cacheKey)
-			: null
-		const debugMode = this.plugin.settings.debugMode
-		if (!cachedSearch) {
-			try {
-				const indexCardsList = await getSearchItems(
-					query,
-					limit,
-					debugMode
-				)
-				// Add limit to the key to avoid collisions
-				if(cache) this.searchCache.set(cacheKey, indexCardsList)
-				return indexCardsList
-			} catch (e) {
-				if (debugMode)
-					console.log('ORM: S2AG API SEARCH request error', e)
-				return []
-			}
+	searchIndexPapers = async (query: string, limit = 0, cache = true): Promise<Reference[]> => {
+		const cacheKey = `${query}${limit}`
+		const cachedSearch = this.searchCache.get(cacheKey)
+		if (cachedSearch) {
+			return cachedSearch
 		}
-		return cachedSearch
+
+		const debugMode = this.plugin.settings.debugMode
+		try {
+			const indexCardsList = await getSearchItems(query, limit, debugMode)
+			if (cache) {
+				this.searchCache.set(cacheKey, indexCardsList)
+			}
+			return indexCardsList
+		} catch (e) {
+			if (debugMode) {
+				console.log('ORM: S2AG API SEARCH request error', e)
+			}
+			return []
+		}
 	}
 
-	// Get references of an index card paper
 	getReferences = async (paperId: string): Promise<Reference[]> => {
-		const cachedRefs = this.refCache.has(paperId)
-			? this.refCache.get(paperId)
-			: null
-		const debugMode = this.plugin.settings.debugMode
-		if (!cachedRefs) {
-			try {
-				const references = await getReferenceItems(paperId, debugMode)
-				this.refCache.set(paperId, references)
-				return references
-			} catch (e) {
-				if (debugMode)
-					console.log('ORM: S2AG API GET references request error', e)
-				return []
-			}
+		const cachedRefs = this.refCache.get(paperId)
+		if (cachedRefs) {
+			return cachedRefs
 		}
-		return cachedRefs
+
+		const debugMode = this.plugin.settings.debugMode
+		try {
+			const references = await getReferenceItems(paperId, debugMode)
+			this.refCache.set(paperId, references)
+			return references
+		} catch (e) {
+			if (debugMode) {
+				console.log('ORM: S2AG API GET references request error', e)
+			}
+			return []
+		}
 	}
 
-	// Get citations of an index card paper
 	getCitations = async (paperId: string): Promise<Reference[]> => {
-		const cachedCitations = this.citeCache.has(paperId)
-			? this.citeCache.get(paperId)
-			: null
-		const debugMode = this.plugin.settings.debugMode
-		if (!cachedCitations) {
-			try {
-				const citations = await getCitationItems(paperId, debugMode)
-				this.citeCache.set(paperId, citations)
-				return citations
-			} catch (e) {
-				if (debugMode)
-					console.log('ORM: S2AG API  GET citations request error', e)
-				return []
-			}
+		const cachedCitations = this.citeCache.get(paperId)
+		if (cachedCitations) {
+			return cachedCitations
 		}
-		return cachedCitations
+
+		const debugMode = this.plugin.settings.debugMode
+		try {
+			const citations = await getCitationItems(paperId, debugMode)
+			this.citeCache.set(paperId, citations)
+			return citations
+		} catch (e) {
+			if (debugMode) {
+				console.log('ORM: S2AG API  GET citations request error', e)
+			}
+			return []
+		}
 	}
 }
