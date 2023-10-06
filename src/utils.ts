@@ -137,7 +137,10 @@ export const getCiteKeys = (
 	}
 
 	if (findCiteKeyFromLinksWithoutPrefix) {
-		const citekeyRegex2 = /\[\[([^\s].*?)\]\]/gi // Wiki Link
+
+		//Get citekeys from wiki links
+		const citekeyRegex2 = /\[\[([^\][]*)]]/gi // Wiki Link
+		// const citekeyRegex2 = /\[\[([^\s].*?)\]\]/gi // Wiki Link
 		const matches2 = content.matchAll(citekeyRegex2)
 		if (matches2) {
 			for (const match of matches2) {
@@ -146,7 +149,9 @@ export const getCiteKeys = (
 			}
 		}
 
-		const citekeyRegex3 = /\[([^\][]*)]\(/gi // Markdown Link
+		//Get citekeys from markdown links
+		const citekeyRegex3 = /\[([^\][]*)]/gi // Markdown Link
+		// const citekeyRegex3 = /\[([^\][]*)]\(/gi // Markdown Link
 		const matches3 = content.matchAll(citekeyRegex3)
 		if (matches3) {
 			for (const match of matches3) {
@@ -190,69 +195,41 @@ export function extractKeywords(text: string) {
 	})
 	return result
 }
-
 export const makeMetaData = (paper: Reference): MetaData => {
-	const paperTitle = paper.title ? paper.title.trim()
-		.replace(/[^\x20-\x7E]/g, '')
-		.replace(/(<([^>]+)>)/gi, "") : 'Unknown Title'
-	let authors = 'Unknown Authors'
-	let author = 'Unknown Author'
-	if (paper.authors?.length > 0)
-		author = paper.authors[0].name
-			? paper.authors[0].name.trim()
-			: 'Unknown Author'
-	authors = paper.authors?.map((author) => author.name).join(', ')
-	const year = paper.year ? paper.year.toString().trim() : 'Unknown Year'
-	const journal = paper.journal
-		? `${paper.journal.name}`.trim()
-		: 'Unknown Journal'
-	const volume = paper.journal?.volume
-		? paper.journal?.volume.trim()
-		: 'Unknown Volume'
-	const pages = paper.journal?.pages
-		? paper.journal?.pages.trim()
-		: 'Unknown Pages'
-	const abstract = paper.abstract
-		? paper.abstract.trim()
-		: 'No abstract available'
-	const bibTex = paper.citationStyles?.bibtex
-		? paper.citationStyles.bibtex
-		: 'No BibTex available'
-	const referenceCount = paper.referenceCount
-		? paper.referenceCount.toString()
-		: '0'
-	const citationCount = paper.citationCount
-		? paper.citationCount.toString()
-		: '0'
-	const influentialCount = paper.influentialCitationCount
-		? paper.influentialCitationCount.toString()
-		: '0'
-	let openAccessPdfUrl = ''
-	if (paper.isOpenAccess) {
-		openAccessPdfUrl = paper.openAccessPdf?.url
-			? paper.openAccessPdf.url
-			: ''
-	}
-	const paperURL = paper.url ? paper.url : 'Unknown URL'
-	const doi = paper.externalIds?.DOI ? paper.externalIds.DOI : 'Unknown DOI'
+	const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Unknown Title';
+	const author = paper.authors?.[0]?.name?.trim() || 'Unknown Author';
+	const authors = paper.authors?.map(author => author.name).join(', ') || 'Unknown Authors';
+	const year = paper.year?.toString().trim() || 'Unknown Year';
+	const journal = paper.journal?.name?.trim() || 'Unknown Journal';
+	const volume = paper.journal?.volume?.trim() || 'Unknown Volume';
+	const pages = paper.journal?.pages?.trim() || 'Unknown Pages';
+	const abstract = paper.abstract?.trim() || 'No abstract available';
+	const bibTex = paper.citationStyles?.bibtex || 'No BibTex available';
+	const referenceCount = paper.referenceCount?.toString() || '0';
+	const citationCount = paper.citationCount?.toString() || '0';
+	const influentialCount = paper.influentialCitationCount?.toString() || '0';
+	const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
+	const paperURL = paper.url || 'Unknown URL';
+	const doi = paper.externalIds?.DOI || 'Unknown DOI';
+
 	return {
 		bibtex: bibTex,
 		title: paperTitle,
-		author: author,
-		authors: authors,
-		year: year,
-		journal: journal,
-		volume: volume,
-		pages: pages,
-		abstract: abstract,
+		author,
+		authors,
+		year,
+		journal,
+		volume,
+		pages,
+		abstract,
 		url: paperURL,
 		pdfurl: openAccessPdfUrl,
-		doi: doi,
-		referenceCount: referenceCount,
-		citationCount: citationCount,
-		influentialCount: influentialCount,
-	}
-}
+		doi,
+		referenceCount,
+		citationCount,
+		influentialCount,
+	};
+};
 
 export const templateReplace = (template: string, data: MetaData, id = '') => {
 	if (id === '') { id = data.doi ? data.doi : '' }
