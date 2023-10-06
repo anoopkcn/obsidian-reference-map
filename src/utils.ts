@@ -460,6 +460,9 @@ export class CursorJumper {
 		if (!activeView) {
 			return;
 		}
+		if (!activeView.file) {
+			return;
+		}
 		const content = await this.app.vault.cachedRead(activeView.file);
 		const indexOffset = content.length + 1;
 		const editor = activeView.editor;
