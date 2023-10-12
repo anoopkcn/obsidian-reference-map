@@ -1,32 +1,20 @@
-import {
-  ButtonComponent,
-  Modal,
-  Setting,
-  TextComponent,
-  Notice,
-  SuggestModal,
-  App
-} from 'obsidian';
+import { ButtonComponent, Modal, Setting, TextComponent, Notice, SuggestModal, App } from 'obsidian';
 import ReferenceMap from './main';
 import { ViewManager } from './viewManager';
 import { MetaData, Reference } from './types';
-import { makeMetaData } from './utils';
+import { makeMetaData, getPaperIds } from './utils';
 
 export class ReferenceSearchModal extends Modal {
-  plugin: ReferenceMap
-  viewManager: ViewManager
   private isBusy = false;
   private okBtnRef?: ButtonComponent;
 
   constructor(
-    plugin: ReferenceMap,
+    private plugin: ReferenceMap,
     private query: string,
     private mode: string,
     private callback: (error: Error | null, result?: Reference[]) => void,
   ) {
     super(plugin.app);
-    this.plugin = plugin
-    this.viewManager = new ViewManager(plugin)
   }
 
   setBusy(busy: boolean) {
@@ -43,14 +31,28 @@ export class ReferenceSearchModal extends Modal {
     if (!this.isBusy) {
       try {
         this.setBusy(true);
-        const searchResults = await this.viewManager.searchIndexPapers(this.query, this.plugin.settings.modalSearchLimit, false)
-        this.setBusy(false);
+        // If query contains a DOI or other ID, extract it and get index paper directly using that ID as paperId
+        // else search for papers using the query string
+        const paperIds = getPaperIds(this.query);
+        if (paperIds.size > 0) {
+          const paperPromises = Array.from(paperIds).map((paperId) => new ViewManager(this.plugin).getIndexPaper(paperId));
+          const papers = await Promise.all(paperPromises);
+          const validPapers = papers.filter((paper) => paper !== null) as Reference[];
+          if (validPapers.length > 0) {
+            this.callback(null, validPapers);
+            this.close();
+            return;
+          }
+        } else {
+          const searchResults = await new ViewManager(this.plugin).searchIndexPapers(this.query, this.plugin.settings.modalSearchLimit, false)
+          this.setBusy(false);
 
-        if (!searchResults?.length) {
-          new Notice(`No results found for "${this.query}"`);
-          return;
+          if (!searchResults?.length) {
+            new Notice(`No results found for "${this.query}"`);
+            return;
+          }
+          this.callback(null, searchResults);
         }
-        this.callback(null, searchResults);
       } catch (err) {
         this.callback(err as Error);
       }
@@ -67,7 +69,6 @@ export class ReferenceSearchModal extends Modal {
   onOpen() {
     const { contentEl } = this;
 
-    // contentEl.createEl('h2', { text: 'Search References' });
     const search_heading = contentEl.createDiv({ cls: 'orm-search-modal-input-heading', text: 'Search References' });
     search_heading.createDiv({ cls: 'orm-search-modal-input-heading-mode', text: `${this.mode}` });  
 
@@ -107,12 +108,7 @@ export class ReferenceSuggestModal extends SuggestModal<Reference> {
 
   // Returns all available suggestions.
   getSuggestions(query: string): Reference[] {
-    return this.suggestion.filter(reference => {
-      const searchQuery = query?.toLowerCase();
-      return (
-        reference.title?.toLowerCase().includes(searchQuery)
-      );
-    });
+    return this.suggestion.filter(reference => reference.title?.toLowerCase().includes(query?.toLowerCase()));
   }
 
   // Renders each suggestion item.
