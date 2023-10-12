@@ -136,7 +136,7 @@ export default class ReferenceMap extends Plugin {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (!markdownView || markdownView.getMode() !== 'source') {
-				new Notice('No active markdown view');
+				new Notice('No active markdown view OR in Reading view');
 				return;
 			}
 			const selection = markdownView.editor.getSelection().trim();
@@ -163,7 +163,7 @@ export default class ReferenceMap extends Plugin {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (!markdownView || markdownView.getMode() !== 'source') {
-				new Notice('No active markdown view');
+				new Notice('No active markdown view OR in Reading view');
 				return;
 			}
 			const selection = markdownView.editor.getSelection().trim();
