@@ -132,73 +132,48 @@ export default class ReferenceMap extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings)
 	}
-
 	async createNewReferenceNote(): Promise<void> {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			let selection = '';
-			if (markdownView) {
-				if (markdownView.getMode() === 'source') {
-					selection = markdownView.editor.getSelection().trim()
-				}
+			if (!markdownView || markdownView.getMode() !== 'source') {
+				new Notice('No active markdown view');
+				return;
 			}
+			const selection = markdownView.editor.getSelection().trim();
 			const metaData = await this.searchReferenceMetadata(selection, 'create');
-
-			// open file
 			const activeLeaf = this.app.workspace.getLeaf();
 			if (!activeLeaf) {
-				if (this.settings.debugMode) console.warn('No active leaf');
 				new Notice('No active leaf');
 				return;
 			}
-
 			const renderedContents = await this.getRenderedContentsForCreate(metaData);
-
-			// TODO: If the same file exists, it asks if you want to overwrite it.
-			// create new File
 			const fileName = makeFileName(metaData, this.settings.fileNameFormat);
 			const filePath = `${this.settings.folder}/${fileName}`;
 			const targetFile = await this.app.vault.create(filePath, renderedContents);
-
-			// if use Templater plugin
 			await useTemplaterPluginInFile(this.app, targetFile);
-
-			// open file
 			await activeLeaf.openFile(targetFile, { state: { mode: 'source' } });
 			activeLeaf.setEphemeralState({ rename: 'all' });
-
-			// cursor focus
 			await new CursorJumper(this.app).jumpToNextCursorLocation();
 		} catch (err) {
-			if (this.settings.debugMode) console.warn(err);
 			new Notice('Sorry, something went wrong.');
 		}
 	}
 
-
 	async insertMetadata(): Promise<void> {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			if (!markdownView) {
-				if (this.settings.debugMode) console.warn('Can not find an active markdown view');
+			if (!markdownView || markdownView.getMode() !== 'source') {
 				new Notice('No active markdown view');
 				return;
 			}
-			let selection = '';
-			if (markdownView.getMode() === 'source') {
-				selection = markdownView.editor.getSelection().trim()
-			}
+			const selection = markdownView.editor.getSelection().trim();
 			const reference = await this.searchReferenceMetadata(selection, 'insert');
-
 			if (!markdownView.editor) {
-				if (this.settings.debugMode) console.warn('Can not find editor from the active markdown view');
 				return;
 			}
-
 			const renderedContents = await this.getRenderedContentsForInsert(reference);
 			markdownView.editor.replaceRange(renderedContents, markdownView.editor.getCursor());
 		} catch (err) {
-			if (this.settings.debugMode) console.warn(err);
 			new Notice('Sorry, something went wrong.');
 		}
 	}
@@ -210,31 +185,28 @@ export default class ReferenceMap extends Plugin {
 
 	async openReferenceSearchModal(query = '', mode = 'insert'): Promise<Reference[]> {
 		return new Promise((resolve, reject) => {
-			return new ReferenceSearchModal(this, query, mode, (error, results: Reference[]) => {
-				return error ? reject(error) : resolve(results);
+			new ReferenceSearchModal(this, query, mode, (error, results: Reference[]) => {
+				error ? reject(error) : resolve(results);
 			}).open();
 		});
 	}
+
 	async openReferenceSuggestModal(references: Reference[]): Promise<MetaData> {
 		return new Promise((resolve, reject) => {
-			return new ReferenceSuggestModal(this.app, references, (error, selectedReference: MetaData) => {
-				return error ? reject(error) : resolve(selectedReference);
+			new ReferenceSuggestModal(this.app, references, (error, selectedReference: MetaData) => {
+				error ? reject(error) : resolve(selectedReference);
 			}).open();
 		});
 	}
 
 	async getRenderedContentsForInsert(metaData: MetaData): Promise<string> {
-		const template = this.settings.modalInsertTemplate
-			? this.settings.modalInsertTemplate
-			: METADATA_MODAL_INSERT_TEMPLATE
-		return templateReplace(template, metaData)
+		const template = this.settings.modalInsertTemplate || METADATA_MODAL_INSERT_TEMPLATE;
+		return templateReplace(template, metaData);
 	}
 
 	async getRenderedContentsForCreate(metaData: MetaData): Promise<string> {
-		const template = this.settings.modalCreateTemplate
-			? this.settings.modalCreateTemplate
-			: METADATA_MODAL_CREATE_TEMPLATE
-		return templateReplace(template, metaData)
+		const template = this.settings.modalCreateTemplate || METADATA_MODAL_CREATE_TEMPLATE;
+		return templateReplace(template, metaData);
 	}
 
 }
