@@ -87,7 +87,6 @@ export const getPaperIds = (content: string): Set<string> => {
 	if (pmcidMatches) {
 		for (const match of pmcidMatches) {
 			output.push(`PMCID:${match[1]}`)
-			console.log(match[1])
 		}
 	}
 	if (urlMatches) {

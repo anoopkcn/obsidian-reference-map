@@ -69,12 +69,9 @@ export const ReferenceMapList = (props: {
 			<div className="orm-reference-map">
 				{Search(true)}
 				{iSearch(papers, query).map((paper, index) => {
+					const paperId = paper.id.replace('@', '');
 					const activeIndexCardClass =
-						paper.id === props.selection ||
-						paper.id === `@${props.selection}` ||
-						`https://doi.org/${paper.id}` === props.selection
-							? 'orm-active-index'
-							: ''
+						props.selection.includes(paperId) ? 'orm-active-index' : '';
 					const ref = activeIndexCardClass ? activeRef : null
 					return (
 						<div

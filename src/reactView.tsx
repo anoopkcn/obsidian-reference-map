@@ -133,8 +133,18 @@ export class ReferenceMapView extends ItemView {
 				? editor.getSelection().trim()
 				: window.getSelection()?.toString().trim()
 
-		const isInIDs = this.paperIDs.has(selection ?? '') || this.paperIDs.has(`https://doi.org/${selection}`)
-		const isInCiteKeys = _.map(this.citeKeyMap, 'citeKey').includes(selection ?? '') || _.map(this.citeKeyMap, 'citeKey').includes(`@${selection}`)
+		const isInIDs = Array.from(this.paperIDs).map((id: string) => {
+			id = id.replace('https://doi.org/', '');
+			return selection?.includes(id)
+		})
+		let isInCiteKeys = false
+		for (const key in this.citeKeyMap) {
+			const value = String(this.citeKeyMap[key])
+			if (selection?.includes(key) || selection?.includes(value)) {
+				isInCiteKeys = true
+				break
+			}
+		}
 		if (isInIDs || isInCiteKeys) {
 			this.prepareIDs().then(() => this.processReferences(selection ?? ''))
 		}
