@@ -42,6 +42,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchFrontMatterLimit: 3,
 	searchCiteKey: false,
 	searchCiteKeyPath: 'My Library.json',
+	citeKeyFilter: ',',
 	linkCiteKey: false,
 	findZoteroCiteKeyFromID: false,
 	findCiteKeyFromLinksWithoutPrefix: false,

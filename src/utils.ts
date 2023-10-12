@@ -122,17 +122,21 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 		.replace(/^@+|\)+$|\]+$|\*+$|_+$|`+$|'+$|"+$/, '')
 		.replace(/\s+/g, '')
 }
-
 export const getCiteKeys = (
 	content: string,
-	findCiteKeyFromLinksWithoutPrefix: boolean
+	findCiteKeyFromLinksWithoutPrefix: boolean,
+	filterChars?: string
 ): Set<string> => {
 	const output: string[] = []
 	const citekeyRegex = /@([^\s]+)/gi // citekey with @ prefix
 	const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex)
 	if (matches) {
 		for (const match of matches) {
-			output.push(sanitizeCiteKey(match[1]))
+			let citeKey = sanitizeCiteKey(match[1])
+			if (filterChars) {
+				citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+			}
+			output.push(citeKey)
 		}
 	}
 
@@ -145,7 +149,11 @@ export const getCiteKeys = (
 		if (matches2) {
 			for (const match of matches2) {
 				const trial = match[1].trim().split(' ')[0]
-				output.push(sanitizeCiteKey(trial))
+				let citeKey = sanitizeCiteKey(trial)
+				if (filterChars) {
+					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				}
+				output.push(citeKey)
 			}
 		}
 
@@ -156,13 +164,16 @@ export const getCiteKeys = (
 		if (matches3) {
 			for (const match of matches3) {
 				const trial = match[1].trim().split(' ')[0]
-				output.push(sanitizeCiteKey(trial))
+				let citeKey = sanitizeCiteKey(trial)
+				if (filterChars) {
+					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				}
+				output.push(citeKey)
 			}
 		}
 	}
 	return new Set(output.sort())
 }
-
 export function copyElToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('electron').clipboard.writeText(el)

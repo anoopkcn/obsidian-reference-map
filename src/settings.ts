@@ -252,6 +252,21 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 
 			new Setting(containerEl)
+				.setName(fragWithHTML(t('CITEKEY_FILTER')))
+				.setDesc(fragWithHTML(t('CITEKEY_FILTER_DESC')))
+				.addText((text) =>
+					text.setValue(
+						this.plugin.settings.citeKeyFilter
+					).onChange(async (value) => {
+						this.plugin.settings.citeKeyFilter = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload(RELOAD.SOFT)
+						})
+					})
+				)
+
+			new Setting(containerEl)
 				.setName(t('CITEKEY_ZOTERO_LINK'))
 				.setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
 				.addToggle((toggle) =>

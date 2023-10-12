@@ -10,6 +10,7 @@ export interface ReferenceMapSettings {
 	searchFrontMatterLimit: number
 	searchCiteKey: boolean
 	searchCiteKeyPath: string
+	citeKeyFilter: string
 	linkCiteKey: boolean
 	findZoteroCiteKeyFromID: boolean
 	findCiteKeyFromLinksWithoutPrefix: boolean

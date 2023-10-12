@@ -201,7 +201,8 @@ export class ReferenceMapView extends ItemView {
 			if (isLibrary && activeView.file) {
 				const citeKeys = getCiteKeys(
 					fileContent,
-					this.plugin.settings.findCiteKeyFromLinksWithoutPrefix
+					this.plugin.settings.findCiteKeyFromLinksWithoutPrefix,
+					this.plugin.settings.citeKeyFilter
 				)
 				citeKeyMap = getCiteKeyIds(citeKeys, this.library)
 			}
