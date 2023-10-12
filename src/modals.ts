@@ -75,7 +75,7 @@ export class ReferenceSearchModal extends Modal {
     contentEl.createDiv({ cls: 'orm-search-modal-input' }, settingItem => {
       new TextComponent(settingItem)
         .setValue(this.query)
-        .setPlaceholder('Search by keyword, title, authors, journal, abstract, etc.')
+        .setPlaceholder('Search by keyword, title, authors, journal, abstract, ID, DOI, etc.')
         .onChange(value => (this.query = value))
         .inputEl.addEventListener('keydown', this.submitEnterCallback.bind(this));
     });
