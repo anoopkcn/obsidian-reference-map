@@ -12,12 +12,13 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
 ## Contents
 1. [Requirements](#requirements)
 2. [Installation](#installation)
+    - [From Community Plugins](#from-community-plugins)
     - [Manual Installation](#manual-installation)
 3. [Usage](#usage)
     - [Reference Map Search](#reference-map-search)
     - [Reference Map View](#reference-map-view)
-    - [Static Reference List](#static-reference-list)
-    - [Dynamic Reference List](#dynamic-reference-list)
+        - [Static Reference List](#static-reference-list)
+        - [Dynamic Reference List](#dynamic-reference-list)
 4. [Configuration](#configuration)
 <!-- /TOC -->
 
@@ -26,10 +27,11 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
 -   [Obsidian](https://obsidian.md/) with community plugins enabled
 
 ## Installation
+### From Community Plugins
 
 The plugin is available in the Obsidian's Community Plugin Tab via: 
 
-Settings → Community Plugins → Browse → Search for "Reference Map"
+**Settings → Community Plugins → Browse → Search for "Reference Map"**
 
 ### Manual Installation
 
@@ -97,7 +99,7 @@ _Batch operations are exclusive to Index Cards_
 
 ![ORM-ref-cite](./images/orm-list-demo.png)
 
-### Static Reference List
+#### Static Reference List
 
 Reference IDs (DOI, arxiv, corpusID, URL, citeKey, etc,.) that are found in the current document are listed in the `Reference Map` view. Valid IDs can be added anywhere in the document and they will be detected.
 
@@ -120,7 +122,7 @@ The following types of IDs are supported:
 
 For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map view.
 
-### Dynamic Reference List
+#### Dynamic Reference List
 
 The Reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords.
 _Check out the settings tab to configure the plugin behaviour_
