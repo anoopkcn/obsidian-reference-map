@@ -54,14 +54,15 @@ export default {
 	SEARCH_CITEKEY: 'Get References Using <code>CiteKey</code>',
 	SEARCH_CITEKEY_DESC:
 		'Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs.<br>' +
+		'Make sure to give a <b>valid Library File Path</b> which is exported from reference manager<br>' +
 		'<b>Toggle ON:</b> Enable citekey detection<br>' +
 		'<b>Toggle OFF:</b> Disable citekey detection',
 	SEARCH_CITEKEY_PATH: 'Library File Path',
 	SEARCH_CITEKEY_PATH_DESC:
 		'Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
 		'Path must be relative to the vaults root',
-	CITEKEY_FILTER: 'CiteKey Filter Characters',
-	CITEKEY_FILTER_DESC: 'Give the characters that are not part of the citekey. For Example if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to give <code>,</code> as the filter character. If you have multiple filter characters give all of them without any separators(Eg: <code>,.</code> which will recognize <code>,</code> and <code>.</code> as NOT part of the <code>citekey</code>). Default is set to <code>,</code>',
+	CITEKEY_FILTER: 'CiteKey Exclusion Characters',
+	CITEKEY_FILTER_DESC: 'Give the characters that are not part of the citekey. For Example if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to give <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> which will recognize <code>,</code> and <code>.</code> as NOT part of the <code>citekey</code>). Default is set to <code>,</code>',
 	FIND_CITEKEY_WITHOUT_PREFIX: 'Process Citations in Links Without <code>@</code> Prefix',
 	FIND_CITEKEY_WITHOUT_PREFIX_DESC:
 		'Find citekey without <code>@</code> prefix in WikiLinks and Markdown Links. This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +

@@ -56,6 +56,18 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
+	const SetKeyInfo = () => {
+		return (
+			<div>
+				{!props.settings.searchCiteKey &&
+					<div className="orm-no-content-subtext">
+						Configure <code>Get References Using CiteKey</code> in the settings tab to process citations using pandoc citekey
+					</div>
+				}
+			</div>
+		)
+	}
+
 	if (!props.basename) {
 		return (
 			<div className="orm-no-content">
@@ -66,6 +78,7 @@ export const ReferenceMapList = (props: {
 						<br />
 						Click on a file to view its references.
 					</div>
+					<SetKeyInfo />
 				</div>
 			</div>
 		)
@@ -102,6 +115,7 @@ export const ReferenceMapList = (props: {
 					<div className="orm-no-content-subtext">
 						No Valid References Found.
 					</div>
+					<SetKeyInfo />
 				</div>
 			</div>
 		)
