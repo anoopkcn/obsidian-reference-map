@@ -40,13 +40,18 @@ export const ReferenceMapList = (props: {
 			? 'orm-index-search'
 			: 'orm-index-no-search'
 		return (
-			<div className="orm-search-form index-search">
-				<input
-					type="search"
-					className={`orm-search-input ${searchFieldName}`}
-					placeholder="Reference Map"
-					onChange={(e) => setQuery(e.target.value)}
-				/>
+			<div className="orm-search-form">
+				<div className="index-search">
+					<input
+						type="search"
+						className={`orm-search-input ${searchFieldName}`}
+						placeholder={`Reference Map`}
+						onChange={(e) => setQuery(e.target.value)}
+					/>
+					{isSearchList &&
+						<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
+					}
+				</div>
 			</div>
 		)
 	}

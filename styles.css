@@ -331,6 +331,25 @@ body {
 .orm-index-no-search {
 	pointer-events: none;
 }
+.index-search{
+	position: relative;
+	align-items: center;
+	gap: var(--size-4-1);
+}
+.cardCount{
+	position: absolute;
+	right: var(--size-4-1);
+	top: var(--size-4-1);
+	/* padding: 0.25em; */
+	color: var(--text-muted);
+	display: flex;
+	padding: var(--size-4-1) var(--size-4-2);
+	border-radius: var(--tag-radius);
+	background-color: rgba(var(--mono-rgb-100), 0.05);
+	font-weight: var(--font-normal);
+	line-height: 1;
+	font-size: var(--font-ui-smaller);
+}
 
 .orm-loading {
 	text-align: center;
