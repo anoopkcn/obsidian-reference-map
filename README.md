@@ -8,6 +8,19 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
 
 **More information is available on the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page.**
 
+<!-- TOC -->
+## Contents
+1. [Requirements](#requirements)
+2. [Installation](#installation)
+    - [Manual Installation](#manual-installation)
+3. [Usage](#usage)
+    - [Reference Map Search](#reference-map-search)
+    - [Reference Map View](#reference-map-view)
+    - [Static Reference List](#static-reference-list)
+    - [Dynamic Reference List](#dynamic-reference-list)
+4. [Configuration](#configuration)
+<!-- /TOC -->
+
 ## Requirements
 
 -   [Obsidian](https://obsidian.md/) with community plugins enabled
