@@ -63,14 +63,14 @@ export const IndexPaperCard = (props: Props) => {
 		{ format: props.settings.formatMetadataCopyThree, template: props.settings.metadataCopyTemplateThree, batch: props.settings.metadataCopyThreeBatch },
 	]
 
-	const batchCopyMetadata = metadataTemplates.map(({ format, template, batch }) => {
+	const batchCopyMetadata = metadataTemplates.flatMap(({ format, template, batch }) => {
 		if (batch && format) {
 			return references.map((paper) => {
 				const metaData = makeMetaData(paper)
 				return templateReplace(template, metaData) + '\n'
-			}).join('')
+			})
 		}
-		return ''
+		return []
 	})
 
 	return (
