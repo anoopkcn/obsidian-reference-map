@@ -124,7 +124,7 @@ export default class ReferenceMap extends Plugin {
 
 	// Get the reference map view
 	get view() {
-		const leaves = app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
+		const leaves = this.app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
 		if (!leaves?.length) return null
 		return leaves[0].view as ReferenceMapView
 	}
