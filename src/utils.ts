@@ -357,7 +357,7 @@ export const standardizeBibtex = (bibtex: string) => {
 	return ''
 }
 
-export const search = (data: Reference[], query: string) => {
+export const dataSearch = (data: Reference[], query: string) => {
 	return data.filter((item: Reference) =>
 		SEARCH_PARAMETERS.some((parameter) => {
 			if (parameter === 'authors') {
@@ -374,7 +374,7 @@ export const search = (data: Reference[], query: string) => {
 	)
 }
 
-export const sort = (
+export const dataSort = (
 	data: Reference[],
 	sortProperty: string,
 	sortOrder: string
@@ -394,7 +394,7 @@ export const sort = (
 	})
 }
 
-export const iSearch = (data: IndexPaper[], query: string) => {
+export const indexSearch = (data: IndexPaper[], query: string) => {
 	return data.filter((item: IndexPaper) =>
 		SEARCH_PARAMETERS.some((parameter) => {
 			if (parameter === 'authors') {
@@ -411,7 +411,7 @@ export const iSearch = (data: IndexPaper[], query: string) => {
 	)
 }
 
-export const iSort = (
+export const indexSort = (
 	data: IndexPaper[],
 	sortProperty: string,
 	sortOrder: string

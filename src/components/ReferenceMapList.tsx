@@ -2,7 +2,7 @@ import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from 'src/types'
 import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
 import { ViewManager } from 'src/viewManager'
-import { iSearch } from 'src/utils'
+import { indexSearch } from 'src/utils'
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings
@@ -35,7 +35,7 @@ export const ReferenceMapList = (props: {
 			})
 	}, [props.selection])
 
-	const Search = (isSearchList: boolean) => {
+	const userSearch = (isSearchList: boolean) => {
 		const searchFieldName = isSearchList
 			? 'orm-index-search'
 			: 'orm-index-no-search'
@@ -72,7 +72,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				<div>
-					{Search(false)}
+					{userSearch(false)}
 					<div className="orm-no-content-subtext">
 						No Active Markdown File.
 						<br />
@@ -85,8 +85,8 @@ export const ReferenceMapList = (props: {
 	} else if (papers.length > 0) {
 		return (
 			<div className="orm-reference-map">
-				{Search(true)}
-				{iSearch(papers, query).map((paper, index) => {
+				{userSearch(true)}
+				{indexSearch(papers, query).map((paper, index) => {
 					const paperId = paper.id.replace('@', '');
 					const activeIndexCardClass =
 						props.selection.includes(paperId) ? 'orm-active-index' : '';
@@ -111,7 +111,7 @@ export const ReferenceMapList = (props: {
 		return (
 			<div className="orm-no-content">
 				<div>
-					{Search(false)}
+					{userSearch(false)}
 					<div className="orm-no-content-subtext">
 						No Valid References Found.
 					</div>

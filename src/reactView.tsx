@@ -10,7 +10,7 @@ import {
 	getCiteKeyIds,
 	getCiteKeys,
 	getPaperIds,
-	iSort,
+	indexSort,
 	removeNullReferences,
 	setCiteKeyId,
 } from './utils'
@@ -289,7 +289,7 @@ export class ReferenceMapView extends ItemView {
 		if (!this.plugin.settings.enableIndexSorting) {
 			return removeNullReferences(indexCards)
 		}
-		return iSort(
+		return indexSort(
 			removeNullReferences(indexCards),
 			this.plugin.settings.sortByIndex,
 			this.plugin.settings.sortOrderIndex

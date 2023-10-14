@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ReferenceMapSettings, Reference } from 'src/types';
 import { PaperCard } from './PaperCard';
-import { search, sort } from 'src/utils';
+import { dataSearch, dataSort } from 'src/utils';
 
 interface Props {
 	papers: Reference[];
@@ -13,10 +13,10 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 	const [query, setQuery] = useState('');
 
 	const sortedPapers = settings.enableReferenceSorting
-		? sort(papers, settings.sortByReference, settings.sortOrderReference)
+		? dataSort(papers, settings.sortByReference, settings.sortOrderReference)
 		: papers;
 
-	const paperList = search(sortedPapers, query).map((paper, index) => (
+	const paperList = dataSearch(sortedPapers, query).map((paper, index) => (
 		<PaperCard
 			key={`${paper.paperId}-${index}`}
 			paper={{ id: paper.paperId, paper }}
