@@ -35,13 +35,12 @@ export const IndexPaperCard = (props: Props) => {
 	}, [props.settings.hideButtonsOnHover])
 
 	const handleHoverButtons = (isShow: boolean) => {
-		if (props.settings.hideButtonsOnHover) {
-			if (showReferences || showCitations) return
-			setIsButtonShown(isShow)
-		} else {
-			setIsButtonShown(true)
+		if (!props.settings.hideButtonsOnHover || showReferences || showCitations) {
+			setIsButtonShown(true);
+			return;
 		}
-	}
+		setIsButtonShown(isShow);
+	};
 
 	const getReferences = async () => {
 		setIsReferenceLoading(true)
