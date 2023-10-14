@@ -222,14 +222,14 @@ export class ReferenceMapView extends ItemView {
 		return isUpdated
 	}
 
-
 	getIndexCards = async () => {
 		const indexCards: IndexPaper[] = [];
 
 		// Get references using the paper IDs
+
 		if (this.paperIDs.size > 0) {
-			await Promise.allSettled(
-				[...this.paperIDs].map(async (paperId) => {
+			await Promise.all(
+				_.map([...this.paperIDs], async (paperId) => {
 					const paper = await this.viewManager.getIndexPaper(paperId);
 					if (paper !== null && typeof paper !== "number") {
 						const paperCiteId =
@@ -246,8 +246,8 @@ export class ReferenceMapView extends ItemView {
 
 		// Get references using the cite keys
 		if (this.citeKeyMap.length > 0) {
-			await Promise.allSettled(
-				this.citeKeyMap.map(async (item) => {
+			await Promise.all(
+				_.map(this.citeKeyMap, async (item) => {
 					const paper = await this.viewManager.getIndexPaper(item.paperId);
 					if (paper !== null && typeof paper !== "number") {
 						indexCards.push({ id: item.citeKey, paper });
@@ -268,7 +268,7 @@ export class ReferenceMapView extends ItemView {
 				this.fileNameString,
 				this.plugin.settings.searchLimit
 			);
-			titleSearchPapers.forEach((paper) => {
+			_.forEach(titleSearchPapers, (paper) => {
 				indexCards.push({ id: paper.paperId, paper });
 			});
 		}
@@ -279,14 +279,13 @@ export class ReferenceMapView extends ItemView {
 				this.frontMatterString,
 				this.plugin.settings.searchFrontMatterLimit
 			);
-			frontMatterPapers.forEach((paper) => {
+			_.forEach(frontMatterPapers, (paper) => {
 				indexCards.push({ id: paper.paperId, paper });
 			});
 		}
 
 		return indexCards;
 	};
-
 	preProcessReferences = (indexCards: IndexPaper[]) => {
 		if (!this.plugin.settings.enableIndexSorting) {
 			return removeNullReferences(indexCards)
