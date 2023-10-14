@@ -14,12 +14,10 @@ import {
 	removeNullReferences,
 	setCiteKeyId,
 } from './utils'
-import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants'
-import * as fs from 'fs'
-import * as BibTeXParser from '@retorquere/bibtex-parser'
-import { resolvePath } from './utils'
-import { CiteKey, IndexPaper, Library, RELOAD, Reload } from './types'
+import { EXCLUDE_FILE_NAMES } from './constants'
+import { CiteKey, IndexPaper, RELOAD, Reload } from './types'
 import _ from 'lodash'
+import { ReferenceMapData } from './referenceData'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -27,8 +25,8 @@ export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap
 	viewManager: ViewManager
 	activeMarkdownLeaf: MarkdownView
+	referenceMapData: ReferenceMapData
 	rootEl: Root
-	library: Library
 	paperIDs: Set<string>
 	citeKeyMap: CiteKey[]
 	frontMatterString: string
@@ -39,8 +37,8 @@ export class ReferenceMapView extends ItemView {
 		super(leaf)
 		this.plugin = plugin
 		this.viewManager = new ViewManager(plugin)
+		this.referenceMapData = new ReferenceMapData(plugin)
 		this.rootEl = createRoot(this.containerEl.children[1])
-		this.library = DEFAULT_LIBRARY
 		this.paperIDs = new Set()
 		this.citeKeyMap = []
 		this.frontMatterString = ''
@@ -99,7 +97,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onOpen() {
-		await this.loadLibrary()
+		await this.referenceMapData.loadLibrary()
 		this.prepareIDs().then(() => this.processReferences())
 	}
 
@@ -112,11 +110,11 @@ export class ReferenceMapView extends ItemView {
 	async reload(reloadType: Reload) {
 		if (reloadType === RELOAD.HARD) {
 			this.viewManager.clearCache()
-			this.library.mtime = 0
-			await this.loadLibrary()
+			this.referenceMapData.resetLibraryTime()
+			await this.referenceMapData.loadLibrary()
 			this.prepareIDs().then(() => this.processReferences())
 		} else if (reloadType === RELOAD.SOFT) {
-			await this.loadLibrary()
+			await this.referenceMapData.loadLibrary()
 			this.prepareIDs().then(() => this.processReferences())
 		} else if (reloadType === RELOAD.VIEW) {
 			this.prepareIDs().then(() => this.processReferences())
@@ -150,51 +148,10 @@ export class ReferenceMapView extends ItemView {
 		}
 	}, 300, true)
 
-
-	loadLibrary = async () => {
-		const { searchCiteKey, searchCiteKeyPath, debugMode } = this.plugin.settings;
-		if (!searchCiteKey || !searchCiteKeyPath) return null;
-
-		const libraryPath = resolvePath(searchCiteKeyPath);
-		const stats = fs.statSync(libraryPath);
-		const mtime = stats.mtimeMs;
-		if (mtime === this.library.mtime) return null;
-
-		if (debugMode) console.log(`ORM: Loading library from '${searchCiteKeyPath}'`);
-		let rawData;
-		try {
-			rawData = fs.readFileSync(libraryPath).toString();
-		} catch (e) {
-			if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
-			return null;
-		}
-
-		const isJson = searchCiteKeyPath.endsWith('.json');
-		const isBib = searchCiteKeyPath.endsWith('.bib');
-		if (!isJson && !isBib) return null;
-
-		let libraryData;
-		try {
-			libraryData = isJson ? JSON.parse(rawData) : BibTeXParser.parse(rawData, { errorHandler: () => { } }).entries;
-		} catch (e) {
-			if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
-			return null;
-		}
-
-		this.library = {
-			active: true,
-			adapter: isJson ? 'csl-json' : 'bibtex',
-			libraryData,
-			mtime,
-		};
-		return libraryData;
-	};
-
-
 	prepareIDs = async () => {
 		const isLibrary =
 			this.plugin.settings.searchCiteKey &&
-			this.library.libraryData !== null
+			this.referenceMapData.library.libraryData !== null
 		const activeView = app.workspace.getActiveViewOfType(MarkdownView)
 		let fileNameString = ''
 		let frontMatterString = ''
@@ -203,7 +160,7 @@ export class ReferenceMapView extends ItemView {
 		let isUpdated = false
 		this.basename = ''
 		if (activeView) {
-			if (isLibrary) this.loadLibrary()
+			if (isLibrary) this.referenceMapData.loadLibrary()
 			this.basename = activeView.file?.basename ?? ''
 			const fileContent = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
 			paperIDs = getPaperIds(fileContent)
@@ -214,7 +171,7 @@ export class ReferenceMapView extends ItemView {
 					this.plugin.settings.findCiteKeyFromLinksWithoutPrefix,
 					this.plugin.settings.citeKeyFilter
 				)
-				citeKeyMap = getCiteKeyIds(citeKeys, this.library)
+				citeKeyMap = getCiteKeyIds(citeKeys, this.referenceMapData.library)
 			}
 
 			if (this.plugin.settings.searchFrontMatter) {
@@ -277,9 +234,9 @@ export class ReferenceMapView extends ItemView {
 					if (paper !== null && typeof paper !== "number") {
 						const paperCiteId =
 							this.plugin.settings.searchCiteKey &&
-								this.library.libraryData !== null &&
+								this.referenceMapData.library.libraryData !== null &&
 								this.plugin.settings.findZoteroCiteKeyFromID
-								? setCiteKeyId(paperId, this.library)
+								? setCiteKeyId(paperId, this.referenceMapData.library)
 								: paperId;
 						indexCards.push({ id: paperCiteId, paper });
 					}
@@ -347,7 +304,7 @@ export class ReferenceMapView extends ItemView {
 			<ReferenceMapList
 				settings={this.plugin.settings}
 				viewManager={this.viewManager}
-				library={this.library}
+				library={this.referenceMapData.library}
 				basename={this.basename}
 				paperIDs={this.paperIDs}
 				citeKeyMap={this.citeKeyMap}
