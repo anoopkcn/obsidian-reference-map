@@ -20,8 +20,7 @@ export const getReferenceItems = async (paperId: string, debugMode = false): Pro
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
 		return [];
 	}
-	const references = _.map(response.json.data, 'citedPaper');
-	return _.uniqBy(references, 'id');
+	return _.map(response.json.data, 'citedPaper');
 };
 
 export const getCitationItems = async (paperId: string, debugMode = false): Promise<Reference[]> => {
@@ -31,8 +30,7 @@ export const getCitationItems = async (paperId: string, debugMode = false): Prom
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
 		return [];
 	}
-	const citations = _.map(response.json.data, 'citingPaper');
-	return _.uniqBy(citations, 'id');
+	return _.map(response.json.data, 'citingPaper');
 };
 
 export const getSearchItems = async (
