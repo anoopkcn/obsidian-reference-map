@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { requestUrl } from 'obsidian'
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 import { Reference } from 'src/types'
@@ -19,8 +20,8 @@ export const getReferenceItems = async (paperId: string, debugMode = false): Pro
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
 		return [];
 	}
-	const references = response.json.data.map((item: { citedPaper: Reference }) => item.citedPaper);
-	return references;
+	const references = _.map(response.json.data, 'citedPaper');
+	return _.uniqBy(references, 'id');
 };
 
 export const getCitationItems = async (paperId: string, debugMode = false): Promise<Reference[]> => {
@@ -30,8 +31,8 @@ export const getCitationItems = async (paperId: string, debugMode = false): Prom
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
 		return [];
 	}
-	const citations = response.json.data.map((item: { citingPaper: Reference }) => item.citingPaper);
-	return citations;
+	const citations = _.map(response.json.data, 'citingPaper');
+	return _.uniqBy(citations, 'id');
 };
 
 export const getSearchItems = async (
@@ -45,7 +46,5 @@ export const getSearchItems = async (
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
 		return [];
 	}
-
-	const responseData = response.json.data;
-	return responseData;
+	return response.json.data;
 };
