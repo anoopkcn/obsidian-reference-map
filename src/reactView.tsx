@@ -46,9 +46,9 @@ export class ReferenceMapView extends ItemView {
 		this.basename = ''
 
 		this.registerEvent(
-			app.metadataCache.on('changed', (file) => {
+			this.app.metadataCache.on('changed', (file) => {
 				const activeView =
-					app.workspace.getActiveViewOfType(MarkdownView)
+					this.app.workspace.getActiveViewOfType(MarkdownView)
 				if (activeView && file === activeView.file) {
 					this.prepareIDs().then((isUpdated) => {
 						if (isUpdated) {
@@ -60,9 +60,9 @@ export class ReferenceMapView extends ItemView {
 		)
 
 		this.registerEvent(
-			app.workspace.on('active-leaf-change', (leaf) => {
+			this.app.workspace.on('active-leaf-change', (leaf) => {
 				if (leaf) {
-					app.workspace.iterateRootLeaves((rootLeaf) => {
+					this.app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
 							this.prepareIDs().then(() =>
 								this.processReferences()
@@ -122,7 +122,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	idSelectionHandle = debounce(() => {
-		const activeView = app.workspace.getActiveViewOfType(MarkdownView)
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
 		if (!activeView || !activeView.file) return
 
 		const editor = activeView.editor
@@ -152,7 +152,7 @@ export class ReferenceMapView extends ItemView {
 		const isLibrary =
 			this.plugin.settings.searchCiteKey &&
 			this.referenceMapData.library.libraryData !== null
-		const activeView = app.workspace.getActiveViewOfType(MarkdownView)
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
 		let fileNameString = ''
 		let frontMatterString = ''
 		let paperIDs: Set<string> = new Set()
@@ -162,7 +162,7 @@ export class ReferenceMapView extends ItemView {
 		if (activeView) {
 			if (isLibrary) this.referenceMapData.loadLibrary()
 			this.basename = activeView.file?.basename ?? ''
-			const fileContent = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
+			const fileContent = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
 			paperIDs = getPaperIds(fileContent)
 
 			if (isLibrary && activeView.file) {
@@ -176,7 +176,7 @@ export class ReferenceMapView extends ItemView {
 
 			if (this.plugin.settings.searchFrontMatter) {
 				if (activeView.file) {
-					const fileCache = app.metadataCache.getFileCache(activeView.file);
+					const fileCache = this.app.metadataCache.getFileCache(activeView.file);
 					if (fileCache?.frontmatter) {
 						const keywords =
 							fileCache?.frontmatter?.[
