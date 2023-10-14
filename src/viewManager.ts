@@ -9,10 +9,10 @@ import {
 } from './apis/s2agAPI'
 
 export class ViewManager {
-	private indexCache = new LRUCache<string, Reference | number | null>({ max: 250 })
-	private refCache = new LRUCache<string, Reference[]>({ max: 50 })
-	private citeCache = new LRUCache<string, Reference[]>({ max: 50 })
-	private searchCache = new LRUCache<string, Reference[]>({ max: 50 })
+	private indexCache = new LRUCache<string, Reference | number | null>({ max: 150 })
+	private refCache = new LRUCache<string, Reference[]>({ max: 20 })
+	private citeCache = new LRUCache<string, Reference[]>({ max: 20 })
+	private searchCache = new LRUCache<string, Reference[]>({ max: 20 })
 
 	constructor(private plugin: ReferenceMap) { }
 
