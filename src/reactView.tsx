@@ -226,7 +226,6 @@ export class ReferenceMapView extends ItemView {
 		const indexCards: IndexPaper[] = [];
 
 		// Get references using the paper IDs
-
 		if (this.paperIDs.size > 0) {
 			await Promise.all(
 				_.map([...this.paperIDs], async (paperId) => {
