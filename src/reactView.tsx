@@ -1,21 +1,12 @@
 import { ItemView, MarkdownView, WorkspaceLeaf, debounce } from 'obsidian'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
-import { ViewManager } from './viewManager'
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
 import { ReferenceMapList } from './components/ReferenceMapList'
-import {
-	extractKeywords,
-	getCiteKeyIds,
-	getCiteKeys,
-	getPaperIds,
-	indexSort,
-	removeNullReferences,
-	setCiteKeyId,
-} from './utils'
+import { extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, } from './utils'
 import { EXCLUDE_FILE_NAMES } from './constants'
-import { CiteKey, IndexPaper, RELOAD, Reload } from './types'
+import { CiteKey, RELOAD, Reload } from './types'
 import _ from 'lodash'
 import { ReferenceMapData } from './referenceData'
 
@@ -23,7 +14,6 @@ export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
 export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap
-	viewManager: ViewManager
 	activeMarkdownLeaf: MarkdownView
 	referenceMapData: ReferenceMapData
 	rootEl: Root
@@ -36,7 +26,6 @@ export class ReferenceMapView extends ItemView {
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf)
 		this.plugin = plugin
-		this.viewManager = new ViewManager(plugin)
 		this.referenceMapData = new ReferenceMapData(plugin)
 		this.rootEl = createRoot(this.containerEl.children[1])
 		this.paperIDs = new Set()
@@ -103,13 +92,13 @@ export class ReferenceMapView extends ItemView {
 
 	async onClose() {
 		this.rootEl.unmount()
-		this.viewManager.clearCache()
+		this.referenceMapData.viewManager.clearCache()
 		return super.onClose()
 	}
 
 	async reload(reloadType: Reload) {
 		if (reloadType === RELOAD.HARD) {
-			this.viewManager.clearCache()
+			this.referenceMapData.viewManager.clearCache()
 			this.referenceMapData.resetLibraryTime()
 			await this.referenceMapData.loadLibrary()
 			this.prepareIDs().then(() => this.processReferences())
@@ -222,91 +211,24 @@ export class ReferenceMapView extends ItemView {
 		return isUpdated
 	}
 
-	getIndexCards = async () => {
-		const indexCards: IndexPaper[] = [];
-
-		// Get references using the paper IDs
-		if (this.paperIDs.size > 0) {
-			await Promise.all(
-				_.map([...this.paperIDs], async (paperId) => {
-					const paper = await this.viewManager.getIndexPaper(paperId);
-					if (paper !== null && typeof paper !== "number") {
-						const paperCiteId =
-							this.plugin.settings.searchCiteKey &&
-								this.referenceMapData.library.libraryData !== null &&
-								this.plugin.settings.findZoteroCiteKeyFromID
-								? setCiteKeyId(paperId, this.referenceMapData.library)
-								: paperId;
-						indexCards.push({ id: paperCiteId, paper });
-					}
-				})
-			);
-		}
-
-		// Get references using the cite keys
-		if (this.citeKeyMap.length > 0) {
-			await Promise.all(
-				_.map(this.citeKeyMap, async (item) => {
-					const paper = await this.viewManager.getIndexPaper(item.paperId);
-					if (paper !== null && typeof paper !== "number") {
-						indexCards.push({ id: item.citeKey, paper });
-					}
-				})
-			);
-		}
-
-		// Get references using the file name
-		if (
-			this.plugin.settings.searchTitle &&
-			this.fileNameString &&
-			!EXCLUDE_FILE_NAMES.some(
-				(name) => this.basename.toLowerCase() === name.toLowerCase()
-			)
-		) {
-			const titleSearchPapers = await this.viewManager.searchIndexPapers(
-				this.fileNameString,
-				this.plugin.settings.searchLimit
-			);
-			_.forEach(titleSearchPapers, (paper) => {
-				indexCards.push({ id: paper.paperId, paper });
-			});
-		}
-
-		// Get references using the front matter
-		if (this.plugin.settings.searchFrontMatter && this.frontMatterString) {
-			const frontMatterPapers = await this.viewManager.searchIndexPapers(
-				this.frontMatterString,
-				this.plugin.settings.searchFrontMatterLimit
-			);
-			_.forEach(frontMatterPapers, (paper) => {
-				indexCards.push({ id: paper.paperId, paper });
-			});
-		}
-
-		return indexCards;
-	};
-	preProcessReferences = (indexCards: IndexPaper[]) => {
-		if (!this.plugin.settings.enableIndexSorting) {
-			return removeNullReferences(indexCards)
-		}
-		return indexSort(
-			removeNullReferences(indexCards),
-			this.plugin.settings.sortByIndex,
-			this.plugin.settings.sortOrderIndex
-		)
-	}
-
 	processReferences = async (selection = '') => {
-		const indexCards = await this.getIndexCards()
+		const indexCards = await this.referenceMapData.getIndexCards(
+			this.paperIDs,
+			this.citeKeyMap,
+			this.fileNameString,
+			this.frontMatterString,
+			this.basename,
+			true
+		)
 		this.rootEl.render(
 			<ReferenceMapList
 				settings={this.plugin.settings}
-				viewManager={this.viewManager}
+				viewManager={this.referenceMapData.viewManager}
 				library={this.referenceMapData.library}
 				basename={this.basename}
 				paperIDs={this.paperIDs}
 				citeKeyMap={this.citeKeyMap}
-				indexCards={this.preProcessReferences(indexCards)}
+				indexCards={indexCards}
 				selection={selection}
 			/>
 		)
