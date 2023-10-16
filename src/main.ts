@@ -54,14 +54,6 @@ export default class ReferenceMap extends Plugin {
 			callback: () => this.createNewReferenceNote(),
 		});
 
-		this.addCommand(
-			{
-				id: 'open-reference-map-graph-view',
-				name: "Graph View",
-				callback: () => this.showReferenceMapGraph()
-			}
-		)
-
 		this.app.workspace.onLayoutReady(() => {
 			this.ensureLeafExists(false)
 		})
@@ -215,14 +207,6 @@ export default class ReferenceMap extends Plugin {
 	async getRenderedContentsForCreate(metaData: MetaData): Promise<string> {
 		const template = this.settings.modalCreateTemplate || METADATA_MODAL_CREATE_TEMPLATE;
 		return templateReplace(template, metaData);
-	}
-
-	showReferenceMapGraph() {
-		this.app.workspace.getLeaf(false).setViewState({
-			type: 'graph',
-			active: true
-		});
-
 	}
 
 }
