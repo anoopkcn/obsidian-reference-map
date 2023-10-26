@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
 import { ViewManager } from 'src/viewManager'
 import { indexSearch } from 'src/utils'
+import { BsSearch } from 'react-icons/bs'
 
 export const ReferenceMapList = (props: {
 	settings: ReferenceMapSettings
@@ -47,7 +48,9 @@ export const ReferenceMapList = (props: {
 						className={`orm-search-input ${searchFieldName}`}
 						placeholder={`Reference Map`}
 						onChange={(e) => setQuery(e.target.value)}
+						style={{ padding: '0 30px 0 30px' }}
 					/>
+					<BsSearch size={15} className="search-icon" />
 					{isSearchList &&
 						<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
 					}

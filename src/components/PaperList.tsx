@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
-import { ReferenceMapSettings, Reference } from 'src/types';
-import { PaperCard } from './PaperCard';
-import { dataSearch, dataSort } from 'src/utils';
+import React, { useState } from 'react'
+import { ReferenceMapSettings, Reference } from 'src/types'
+import { PaperCard } from './PaperCard'
+import { dataSearch, dataSort } from 'src/utils'
+import { BsSearch } from 'react-icons/bs'
 
 interface Props {
-	papers: Reference[];
-	settings: ReferenceMapSettings;
-	type: string;
+	papers: Reference[]
+	settings: ReferenceMapSettings
+	type: string
 }
 
 export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
-	const [query, setQuery] = useState('');
+	const [query, setQuery] = useState('')
 
 	const sortedPapers = settings.enableReferenceSorting
-		? dataSort(papers, settings.sortByReference, settings.sortOrderReference)
-		: papers;
+		? dataSort(
+			papers,
+			settings.sortByReference,
+			settings.sortOrderReference
+		)
+		: papers
 
 	const paperList = dataSearch(sortedPapers, query).map((paper, index) => (
 		<PaperCard
@@ -22,23 +27,27 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 			paper={{ id: paper.paperId, paper }}
 			settings={settings}
 		/>
-	));
+	))
 
 	return (
 		<div className="orm-paper-list">
 			<div className="orm-paper-list-buttons">
 				<div className="orm-search-form">
-					<input
-						type="search"
-						className="orm-search-input"
-						placeholder={type}
-						onChange={(e) => setQuery(e.target.value)}
-					/>
+					<div className="index-search">
+						<input
+							type="search"
+							className="orm-search-input"
+							placeholder={type}
+							onChange={(e) => setQuery(e.target.value)}
+							style={{ padding: '0 30px 0 30px' }}
+						/>
+						<BsSearch size={15} className="search-icon" />
+					</div>
 				</div>
 			</div>
 			{paperList}
 		</div>
-	);
-};
+	)
+}
 
-export default PaperList;
+export default PaperList

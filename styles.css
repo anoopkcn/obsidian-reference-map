@@ -312,6 +312,7 @@ body {
 
 .orm-search-form {
 	width: 100%;
+	position: relative;
 }
 
 .orm-search-input {
@@ -324,18 +325,24 @@ body {
 	text-align: center;
 }
 
-.orm-index-search {
-	margin-bottom: 0.5rem;
-}
+.search-icon {
+	position: absolute;
+	top: 50%;
+	left: 10px;
+	transform: translateY(-50%);
+	color: var(--orm-paper-buttons-color);
+  }
 
 .orm-index-no-search {
 	pointer-events: none;
 }
+
 .index-search{
 	position: relative;
 	align-items: center;
 	gap: var(--size-4-1);
 }
+
 .cardCount{
 	position: absolute;
 	right: var(--size-4-1);
