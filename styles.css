@@ -67,6 +67,24 @@ settings:
 		max: 4
 		step: 1
 	-
+		id: orm-paper-index-card-padding
+		title: Reference paper index card padding
+		type: variable-number-slider
+		default: 0.5
+		format: rem
+		min: 0.25
+		max: 2
+		step: 0.25
+	-
+		id: orm-paper-reference-card-padding
+		title: Reference paper reference card padding
+		type: variable-number-slider
+		default: 0.5
+		format: rem
+		min: 0.25
+		max: 2
+		step: 0.25
+	-
 		id: orm-paper-background-color
 		title: Primary background color
 		type: variable-color
@@ -144,6 +162,8 @@ body {
 	--orm-paper-citekey-font-size: small;
 	--orm-paper-citekey-font-weight: 400;
 	--orm-paper-line-thickness: 1px;
+	--orm-paper-index-card-padding: 0.5rem;
+	--orm-paper-reference-card-padding: 0.5rem;
 	--orm-paper-background-color: var(--background-primary);
 	--orm-paper-background-secondary-color: var(--background-secondary-alt);
 	--orm-paper-title-link-color: var(--text-normal);
@@ -193,8 +213,8 @@ body {
 	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	background: var(--orm-paper-background-color);
 	border-radius: 0.25rem;
-	padding: 0.5rem;
-	margin: 0.25rem 0;
+	padding: var(--orm-paper-index-card-padding);
+	margin: 0.25rem 0 0 0;
 	position: relative;
 }
 
@@ -309,13 +329,13 @@ body {
 }
 
 .orm-paper-list .orm-paper-heading {
-	padding-top: 0.5rem;
-	margin-top: 0.5rem;
+	padding-top: 0.5rem 0;
+	margin-top: 0.5rem 0;
 }
 .orm-paper-card{
 	background: var(--orm-paper-background-secondary-color);
-	padding: 0.25rem 0.5rem;
-	margin: 0.35rem 0;
+	padding: var(--orm-paper-reference-card-padding);
+	margin: 0.5rem 0;
 	border-radius: 0.25rem;
 }
 
