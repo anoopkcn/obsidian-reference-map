@@ -67,6 +67,18 @@ settings:
 		max: 4
 		step: 1
 	-
+		id: orm-paper-background-color
+		title: Primary background color
+		type: variable-color
+		format: hex
+		default: var(--background-primary)
+	-
+		id: orm-paper-background-secondary-color
+		title: Secondary background color
+		type: variable-color
+		format: hex
+		default: var(--background-secondary-alt)
+	-
 		id: orm-paper-title-link-color
 		title: Reference paper title link color
 		type: variable-color
@@ -132,6 +144,8 @@ body {
 	--orm-paper-citekey-font-size: small;
 	--orm-paper-citekey-font-weight: 400;
 	--orm-paper-line-thickness: 1px;
+	--orm-paper-background-color: var(--background-primary);
+	--orm-paper-background-secondary-color: var(--background-secondary-alt);
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
@@ -177,6 +191,7 @@ body {
 /* RootPaperCard */
 .orm-root-paper {
 	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
+	background: var(--orm-paper-background-color);
 	border-radius: 0.25rem;
 	padding: 0.5rem;
 	margin: 0.25rem 0;
@@ -294,10 +309,14 @@ body {
 }
 
 .orm-paper-list .orm-paper-heading {
-	border-top: var(--orm-paper-line-thickness) solid
-		var(--orm-paper-line-color);
 	padding-top: 0.5rem;
 	margin-top: 0.5rem;
+}
+.orm-paper-card{
+	background: var(--orm-paper-background-secondary-color);
+	padding: 0.25rem 0.5rem;
+	margin: 0.35rem 0;
+	border-radius: 0.25rem;
 }
 
 .orm-loading-puff {
