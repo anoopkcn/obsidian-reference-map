@@ -206,21 +206,21 @@ export function extractKeywords(text: string) {
 	return result
 }
 export const makeMetaData = (paper: Reference): MetaData => {
-	const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Unknown Title';
-	const author = paper.authors?.[0]?.name?.trim() || 'Unknown Author';
-	const authors = paper.authors?.map(author => author.name).join(', ') || 'Unknown Authors';
-	const year = paper.year?.toString().trim() || 'Unknown Year';
-	const journal = paper.journal?.name?.trim() || 'Unknown Journal';
-	const volume = paper.journal?.volume?.trim() || 'Unknown Volume';
-	const pages = paper.journal?.pages?.trim() || 'Unknown Pages';
+	const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
+	const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
+	const authors = paper.authors?.map(author => author.name).join(', ') || 'Could not recover Authors';
+	const year = paper.year?.toString().trim() || 'Could not recover Year';
+	const journal = paper.journal?.name?.trim() || 'Could not recover Journal';
+	const volume = paper.journal?.volume?.trim() || 'Could not recover Volume';
+	const pages = paper.journal?.pages?.trim() || 'Could not recover Pages';
 	const abstract = paper.abstract?.trim() || 'No abstract available';
 	const bibTex = paper.citationStyles?.bibtex || 'No BibTex available';
 	const referenceCount = paper.referenceCount?.toString() || '0';
 	const citationCount = paper.citationCount?.toString() || '0';
 	const influentialCount = paper.influentialCitationCount?.toString() || '0';
 	const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
-	const paperURL = paper.url || 'Unknown URL';
-	const doi = paper.externalIds?.DOI || 'Unknown DOI';
+	const paperURL = paper.url || 'Could not recover URL';
+	const doi = paper.externalIds?.DOI || 'Could not recover DOI';
 
 	return {
 		bibtex: bibTex,
