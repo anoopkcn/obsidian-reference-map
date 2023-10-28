@@ -312,6 +312,25 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							})
 						})
 				)
+
+			new Setting(containerEl)
+				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE')))
+				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC')))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(
+							this.plugin.settings
+								.autoUpdateCitekeyFile
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.autoUpdateCitekeyFile =
+								value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.view.reload(RELOAD.SOFT)
+							})
+						})
+				)
 		}
 
 		containerEl.createEl('h2', { text: 'Dynamic List Settings' })
