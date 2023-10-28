@@ -165,7 +165,7 @@ export class ReferenceMapData {
             this.library.libraryData !== null
         this.basename = ''
         if (activeView) {
-            if (isLibrary) this.loadLibrary()
+            if (isLibrary && this.plugin.settings.autoUpdateCitekeyFile) this.loadLibrary()
             this.basename = activeView.file?.basename ?? ''
             if (fileMetadataCache) {
                 this.paperIDs = getPaperIds(fileMetadataCache)
