@@ -6,6 +6,7 @@ import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
 import { CursorJumper, makeFileName, templateReplace, useTemplaterPluginInFile } from './utils'
+import { GraphView } from './graph/GraphView';
 
 
 export default class ReferenceMap extends Plugin {
@@ -52,6 +53,12 @@ export default class ReferenceMap extends Plugin {
 			id: 'open-reference-map-search-modal-to-create',
 			name: 'Search and Create',
 			callback: () => this.createNewReferenceNote(),
+		});
+
+		this.addCommand({
+			id: "open-reference-map-graph",
+			name: "Open Graph",
+			callback: () => this.openReferenceMapGraph(),
 		});
 
 		this.app.workspace.onLayoutReady(() => {
@@ -207,6 +214,12 @@ export default class ReferenceMap extends Plugin {
 	async getRenderedContentsForCreate(metaData: MetaData): Promise<string> {
 		const template = this.settings.modalCreateTemplate || METADATA_MODAL_CREATE_TEMPLATE;
 		return templateReplace(template, metaData);
+	}
+
+	async openReferenceMapGraph() {
+		const leaf = this.app.workspace.getLeaf("split");
+		const graphView = new GraphView(leaf);
+		leaf.open(graphView);
 	}
 
 }
