@@ -61,6 +61,12 @@ export default {
 	SEARCH_CITEKEY_PATH_DESC:
 		'Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
 		'Path must be relative to the vaults root',
+	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE: 'Auto Detect Update to CiteKey File',
+	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC:
+		'Auto detect changes to the citekey file(Your Zotero/BibDesk Library) and update the reference map.<br>' +
+		'If not enabled you can also use <code>Refresh Map</code> in the command pallet to achieve the same effect.<br>' +
+		'<b>Toggle ON:</b> Enable auto detection of citekey file changes<br>' +
+		'<b>Toggle OFF:</b> Disable auto detection of citekey file changes',
 	CITEKEY_FILTER: 'CiteKey Exclusion Characters',
 	CITEKEY_FILTER_DESC: 'Give the characters that are not part of the citekey. For Example if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to give <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> which will recognize <code>,</code> and <code>.</code> as NOT part of the <code>citekey</code>). Default is set to <code>,</code>',
 	FIND_CITEKEY_WITHOUT_PREFIX: 'Process Citations in Links Without <code>@</code> Prefix',
