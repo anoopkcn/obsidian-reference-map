@@ -6,6 +6,7 @@ import { Root, createRoot } from 'react-dom/client'
 import { ReferenceMapList } from './components/ReferenceMapList'
 import { RELOAD, Reload } from './types'
 import { ReferenceMapData } from './referenceData'
+import { AppContext } from './context'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -13,7 +14,7 @@ export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap
 	activeMarkdownLeaf: MarkdownView
 	referenceMapData: ReferenceMapData
-	rootEl: Root
+	rootEl: Root | null
 	isUpdated: boolean
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
@@ -74,7 +75,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onClose() {
-		this.rootEl.unmount()
+		this.rootEl?.unmount()
 		this.referenceMapData.viewManager.clearCache()
 		return super.onClose()
 	}
@@ -140,17 +141,19 @@ export class ReferenceMapView extends ItemView {
 			this.referenceMapData.basename,
 			true
 		)
-		this.rootEl.render(
-			<ReferenceMapList
-				settings={this.plugin.settings}
-				viewManager={this.referenceMapData.viewManager}
-				library={this.referenceMapData.library}
-				basename={this.referenceMapData.basename}
-				paperIDs={this.referenceMapData.paperIDs}
-				citeKeyMap={this.referenceMapData.citeKeyMap}
-				indexCards={indexCards}
-				selection={selection}
-			/>
+		this.rootEl?.render(
+			<AppContext.Provider value={this.app}>
+				<ReferenceMapList
+					settings={this.plugin.settings}
+					viewManager={this.referenceMapData.viewManager}
+					library={this.referenceMapData.library}
+					basename={this.referenceMapData.basename}
+					paperIDs={this.referenceMapData.paperIDs}
+					citeKeyMap={this.referenceMapData.citeKeyMap}
+					indexCards={indexCards}
+					selection={selection}
+				/>
+			</AppContext.Provider>
 		)
 	}
 }
