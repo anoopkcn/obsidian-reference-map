@@ -11,6 +11,11 @@ import {
 	VALID_S2AG_API_URLS,
 } from './constants'
 
+export function getVaultRoot() {
+	// This is a desktop only plugin, so assume adapter is FileSystemAdapter
+	return (app.vault.adapter as FileSystemAdapter).getBasePath();
+}  
+
 export const fragWithHTML = (html: string) =>
 	createFragment((frag) => (frag.createDiv().innerHTML = html))
 
