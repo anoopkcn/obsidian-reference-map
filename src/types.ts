@@ -10,6 +10,8 @@ export interface ReferenceMapSettings {
 	searchFrontMatterLimit: number
 	searchCiteKey: boolean
 	pullFromZotero: boolean
+	zoteroGroups: ZoteroGroup[]
+	zoteroPort: string
 	searchCiteKeyPath: string
 	autoUpdateCitekeyFile: boolean
 	citeKeyFilter: string
@@ -93,7 +95,6 @@ export interface citeKeyLibrary {
 	id?: string
 	DOI?: string | null
 	fields?: BibFields
-	abstract?: string | null
 	title?: string | null
 	URL?: string | null
 }
@@ -157,6 +158,12 @@ export interface PartialCSLEntry {
 	id: string;
 	title: string;
 	groupID?: number;
+}
+
+export interface ZoteroGroup {
+	id: number;
+	name: string;
+	lastUpdate?: number;
 }
 
 export type CSLList = PartialCSLEntry[];

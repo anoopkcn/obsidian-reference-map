@@ -3,6 +3,9 @@ import ReferenceMap from './main'
 import { t } from './lang/helpers'
 import { fragWithHTML, resolvePath } from './utils'
 import { RELOAD } from './types'
+import React from 'react';
+import { ZoteroPullSetting } from './components/ZoteroPullSetting'
+import { createRoot } from 'react-dom/client'
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -252,8 +255,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 
 			new Setting(containerEl)
-				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE')))
-				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC')))
+				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY')))
+				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_DESC')))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(
@@ -269,6 +272,11 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							})
 						})
 				)
+			containerEl.createDiv('setting-item orm-setting-item-wrapper', (el) => {
+				createRoot(el).render(
+					<ZoteroPullSetting plugin={this.plugin} />,
+				);
+			})
 
 			new Setting(containerEl)
 				.setName(fragWithHTML(t('CITEKEY_FILTER')))

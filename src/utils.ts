@@ -533,7 +533,7 @@ function getGlobal() {
 
 export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
 	const p = download(`http://127.0.0.1:${port}/better-bibtex/cayw?probe=true`);
-	const res = await Promise.race([
+	const res: any = await Promise.race([
 		p,
 		new Promise((res) => {
 			getGlobal().setTimeout(() => {
@@ -585,6 +585,53 @@ export async function getZBib(
 	fs.writeFileSync(cached, str);
 
 	return applyGroupID(JSON.parse(str) as CSLList, groupId);
+}
+
+
+export async function getZUserGroups(
+	port: string = DEFAULT_ZOTERO_PORT
+): Promise<Array<{ id: number; name: string }>> {
+	if (!(await isZoteroRunning(port))) return [];
+
+	return new Promise((res, rej) => {
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			method: 'user.groups',
+		});
+
+		const postRequest = request(
+			{
+				host: '127.0.0.1',
+				port: port,
+				path: '/better-bibtex/json-rpc',
+				method: 'POST',
+				headers: {
+					...DEFAULT_HEADERS,
+					'Content-Length': Buffer.byteLength(body),
+				},
+			},
+			(result) => {
+				let output = '';
+
+				result.setEncoding('utf8');
+				result.on('data', (chunk) => (output += chunk));
+				result.on('error', (e) => rej(`Error connecting to Zotero: ${e}`));
+				result.on('close', () => {
+					rej(new Error('Error: cannot connect to Zotero'));
+				});
+				result.on('end', () => {
+					try {
+						res(JSON.parse(output).result);
+					} catch (e) {
+						rej(e);
+					}
+				});
+			}
+		);
+
+		postRequest.write(body);
+		postRequest.end();
+	});
 }
 
 function panNum(n: number) {

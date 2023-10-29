@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 import * as BibTeXParser from '@retorquere/bibtex-parser'
-import { PromiseCapability, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, indexSort, removeNullReferences, resolvePath, setCiteKeyId } from './utils'
+import { PromiseCapability, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, getZBib, indexSort, removeNullReferences, resolvePath, setCiteKeyId } from './utils'
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
-import { CiteKey, IndexPaper, Library } from './types';
+import { CiteKey, IndexPaper, Library, citeKeyLibrary } from './types';
 import _ from 'lodash';
 import { ViewManager } from './viewManager';
 import { CachedMetadata, MarkdownView } from 'obsidian';
@@ -35,7 +35,56 @@ export class ReferenceMapData {
         this.library.mtime = 0;
     }
 
-    loadBibFileFromCache = async () => {
+    async reinit(clearCache: boolean) {
+        this.initPromise = new PromiseCapability();
+
+        if (this.plugin.settings.pullFromZotero) {
+            await this.LoadBibCache(false);
+        } else {
+            await this.LoadBibCache(true);
+        }
+
+        this.initPromise.resolve();
+    }
+
+    async LoadBibCache(fromCache?: boolean) {
+        const { settings, cacheDir } = this.plugin;
+        if (!settings.zoteroGroups?.length) return;
+
+        const bib: citeKeyLibrary[] = [];
+        for (const group of settings.zoteroGroups) {
+            try {
+                const list = await getZBib(
+                    settings.zoteroPort,
+                    cacheDir,
+                    group.id,
+                    fromCache
+                );
+                if (list?.length) {
+                    bib.push(...list);
+                    group.lastUpdate = Date.now();
+                }
+            } catch (e) {
+                console.error('Error fetching bibliography from Zotero', e);
+                continue;
+            }
+        }
+        this.library = {
+            active: true,
+            adapter: 'csl-json',
+            libraryData: bib,
+            mtime: Date.now(),
+        };
+        return bib;
+    }
+
+    async refreshBibCache() {
+        return
+    }
+
+    async loadBibFileFromCache() {
+        await this.LoadBibCache(true);
+    // await this.refreshBibCache();
     }
 
     loadBibFileFromUserPath = async () => {
@@ -78,7 +127,7 @@ export class ReferenceMapData {
     }
 
     loadLibrary = async () => {
-        if (this.plugin.settings.pullFromZotero) {
+        if (this.plugin.settings.pullFromZotero && this.plugin.settings.searchCiteKey) {
             return this.loadBibFileFromCache();
         } else {
             return this.loadBibFileFromUserPath();
@@ -119,9 +168,11 @@ export class ReferenceMapData {
         if (citeKeyMap.length > 0) {
             await Promise.all(
                 _.map(citeKeyMap, async (item) => {
-                    const paper = await this.viewManager.getIndexPaper(item.paperId);
-                    if (paper !== null && typeof paper !== "number") {
-                        indexCards.push({ id: item.citeKey, paper });
+                    if (item.paperId !== item.citeKey) {
+                        const paper = await this.viewManager.getIndexPaper(item.paperId);
+                        if (paper !== null && typeof paper !== "number") {
+                            indexCards.push({ id: item.citeKey, paper });
+                        }
                     }
                 })
             );

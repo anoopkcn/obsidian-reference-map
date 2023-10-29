@@ -29,6 +29,17 @@ export const METADATA_MODAL_CREATE_TEMPLATE = `{{title}}
 [External Link]({{url}})
 {{pdfurl}}
 `
+export const DEFAULT_ZOTERO_PORT = '23119';
+
+export const DEFAULT_HEADERS = {
+	'Content-Type': 'application/json',
+	'User-Agent': 'obsidian/zotero',
+	Accept: 'application/json',
+	Connection: 'keep-alive',
+};
+
+export const DEFAULT_ZOTERO_GROUPS = [];
+
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
@@ -41,7 +52,9 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchFrontMatterKey: 'keywords',
 	searchFrontMatterLimit: 3,
 	searchCiteKey: false,
-	pullFromZotero: false,
+	pullFromZotero: true,
+	zoteroGroups: [],
+	zoteroPort: DEFAULT_ZOTERO_PORT,
 	searchCiteKeyPath: 'My Library.json',
 	autoUpdateCitekeyFile: true,
 	citeKeyFilter: ',',
@@ -286,12 +299,3 @@ export const VALID_S2AG_API_URLS = [
 	'acm.org',
 	'biorxiv.org',
 ]
-
-export const DEFAULT_ZOTERO_PORT = '23119';
-
-export const DEFAULT_HEADERS = {
-	'Content-Type': 'application/json',
-	'User-Agent': 'obsidian/zotero',
-	Accept: 'application/json',
-	Connection: 'keep-alive',
-};

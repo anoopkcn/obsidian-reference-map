@@ -61,8 +61,8 @@ export default {
 	SEARCH_CITEKEY_PATH_DESC:
 		'Path to your CSL JSON file with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
 		'Path must be relative to the vaults root',
-	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE: 'Auto Detect Updates to Library File',
-	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC:
+	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto Detect Updates to Library',
+	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
 		'Auto detect changes to the citekey file(Your Zotero/BibDesk Library) and update the reference map.<br>' +
 		'If not enabled you can also use <code>Refresh Map</code> in the command pallet to achieve the same effect.<br>' +
 		'<b>Toggle ON:</b> Enable auto detection of citekey file changes<br>' +
@@ -177,4 +177,13 @@ export default {
 		'Enabling this will also reset all the reference data caches of Reference map.<br>' +
 		'<b>Toggle ON:</b> Enable debug mode <br>' +
 		'<b>Toggle OFF:</b> Disable debug mode',
+
+	// Zotero Pull Settings
+	ZOTERO_PULL: 'Pull bibliography from Zotero',
+	ZOTERO_PULL_DESC: 'When enabled, bibliography data will be pulled from Zotero rather than a bibliography file. The Better Bibtex plugin must be installed in Zotero.',
+	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
+	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again',
+	ZOTERO_PORT: 'Zotero port',
+	ZOTERO_PORT_DESC: 'Use 24119 for Juris-M or specify a custom port if you have changed Zoteros default.',
+	ZOTERO_LIBRARY_ID: 'Libraries to include in bibliography',
 }
