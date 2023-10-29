@@ -59,9 +59,9 @@ export default {
 		'<b>Toggle OFF:</b> Disable citekey detection',
 	SEARCH_CITEKEY_PATH: 'Library File Path',
 	SEARCH_CITEKEY_PATH_DESC:
-		'Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
+		'Path to your CSL JSON file with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
 		'Path must be relative to the vaults root',
-	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE: 'Auto Detect Update to CiteKey File',
+	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE: 'Auto Detect Updates to Library File',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC:
 		'Auto detect changes to the citekey file(Your Zotero/BibDesk Library) and update the reference map.<br>' +
 		'If not enabled you can also use <code>Refresh Map</code> in the command pallet to achieve the same effect.<br>' +

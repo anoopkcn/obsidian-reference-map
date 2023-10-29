@@ -20,7 +20,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		const { containerEl } = this
 		containerEl.empty()
 
-		containerEl.createEl('h2', { text: t('GENERAL_SETTINGS') })
+		containerEl.createEl('h1', { text: t('GENERAL_SETTINGS') })
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_ABSTRACT'))
@@ -200,7 +200,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h2', { text: 'Static List Settings' })
+		containerEl.createEl('h1', { text: 'Static List Settings' })
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('SEARCH_CITEKEY')))
 			.setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
@@ -333,7 +333,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h2', { text: 'Dynamic List Settings' })
+		containerEl.createEl('h1', { text: 'Dynamic List Settings' })
 
 		new Setting(containerEl)
 			.setName(t('SEARCH_TITLE'))
@@ -433,7 +433,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				})
 		}
 
-		containerEl.createEl('h2', { text: 'Buttons Settings' })
+		containerEl.createEl('h1', { text: 'Buttons Settings' })
 
 		new Setting(containerEl)
 			.setName(t('STANDARDIZE_BIBTEX'))
@@ -595,7 +595,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h2', { text: 'Search Settings' })
+		containerEl.createEl('h1', { text: 'Search Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_LIMIT')))
@@ -671,7 +671,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 
-		containerEl.createEl('h2', { text: 'Debug Settings' })
+		containerEl.createEl('h1', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('DEBUG_MODE')))
