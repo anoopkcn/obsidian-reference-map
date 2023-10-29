@@ -71,6 +71,14 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
+	const noContentItems = () => {
+		// in citekeyMap if items have citeKey and paperId are the same then return a new array with only citeKey
+		const items = props.citeKeyMap.filter((item) => item.citeKey === item.paperId)
+		// convert the items to an array of strings
+		const citeKeys = items.map((item) => item.citeKey)
+		return citeKeys
+	}
+
 	if (!props.basename) {
 		return (
 			<div className="orm-no-content">
@@ -87,40 +95,74 @@ export const ReferenceMapList = (props: {
 		)
 	} else if (papers.length > 0) {
 		return (
-			<div className="orm-reference-map">
-				{userSearch(true)}
-				{indexSearch(papers, query).map((paper, index) => {
-					const paperId = paper.id.replace('@', '');
-					const activeIndexCardClass =
-						props.selection.includes(paperId) ? 'orm-active-index' : '';
-					const ref = activeIndexCardClass ? activeRef : null
-					return (
-						<div
-							key={`${paper.paper.paperId}${index}${props.basename}`}
-							ref={ref}
-						>
-							<IndexPaperCard
-								className={activeIndexCardClass}
-								settings={props.settings}
-								rootPaper={paper}
-								viewManager={props.viewManager}
-							/>
+			<>
+				<div className="orm-reference-map">
+					{userSearch(true)}
+					{indexSearch(papers, query).map((paper, index) => {
+						const paperId = paper.id.replace('@', '');
+						const activeIndexCardClass =
+							props.selection.includes(paperId) ? 'orm-active-index' : '';
+						const ref = activeIndexCardClass ? activeRef : null
+						return (
+							<div
+								key={`${paper.paper.paperId}${index}${props.basename}`}
+								ref={ref}
+							>
+								<IndexPaperCard
+									className={activeIndexCardClass}
+									settings={props.settings}
+									rootPaper={paper}
+									viewManager={props.viewManager}
+								/>
+							</div>
+						)
+					})}
+				</div>
+				{(noContentItems().length > 0) &&
+					<div className="orm-no-content">
+						<div>
+							{noContentItems().map((item) => {
+								return (
+									<div className="orm-no-content-subtext" key={item}>
+										<code>{item}</code> has no associated DOI or URL in the Library.
+									</div>
+								)
+							})}
+							<SetKeyInfo />
 						</div>
-					)
-				})}
-			</div>
+					</div>
+				}
+			</>
 		)
 	} else {
-		return (
-			<div className="orm-no-content">
-				<div>
-					{userSearch(false)}
-					<div className="orm-no-content-subtext">
-						No Valid References Found.
+		if (noContentItems().length > 0) {
+			return (
+				<div className="orm-no-content">
+					<div>
+						{userSearch(false)}
+						{noContentItems().map((item) => {
+							return (
+								<div className="orm-no-content-subtext" key={item}>
+									<code>{item}</code> has no associated DOI or URL in the Library.
+								</div>
+							)
+						})}
+						<SetKeyInfo />
 					</div>
-					<SetKeyInfo />
 				</div>
-			</div>
-		)
+			)
+		} else {
+			return (
+				<div className="orm-no-content">
+					<div>
+						{userSearch(false)}
+						<div className="orm-no-content-subtext">
+							No Valid References Found.
+						</div>
+						<SetKeyInfo />
+					</div>
+				</div>
+			)
+		}
 	}
 }
