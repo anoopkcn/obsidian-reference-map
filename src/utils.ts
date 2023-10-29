@@ -4,6 +4,7 @@ import fs from 'fs';
 import doiRegex from 'doi-regex'
 import download from 'download';
 import { request } from 'http';
+import https from 'https';
 import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference } from './types'
 import {
 	BIBTEX_STANDARD_TYPES,
@@ -319,6 +320,11 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 						citeKey: '@' + citeKey,
 						paperId: `URL:${entry?.URL}`,
 					})
+				} else {
+					citeKeysMap.push({
+						citeKey: '@' + citeKey,
+						paperId: '@' + citeKey,
+					})
 				}
 			} else if (citeLibrary.adapter === 'bibtex') {
 				const entry = citeLibrary.libraryData?.find(
@@ -337,6 +343,12 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
 						paperId: `URL:${entry?.fields?.url?.[0]}`,
+					})
+				}
+				else {
+					citeKeysMap.push({
+						citeKey: '@' + citeKey,
+						paperId: '@' + citeKey,
 					})
 				}
 			}
@@ -697,4 +709,66 @@ export async function refreshZBib(
 		list: applyGroupID(list, groupId),
 		modified,
 	};
+}
+
+
+export async function getCSLStyle(
+	styleCache: Map<string, string>,
+	cacheDir: string,
+	url: string,
+	explicitPath?: string
+) {
+	if (explicitPath) {
+		if (styleCache.has(explicitPath)) {
+			return styleCache.get(explicitPath);
+		}
+
+		if (!fs.existsSync(explicitPath)) {
+			throw new Error(
+				`Error: retrieving citation style; Cannot find file '${explicitPath}'.`
+			);
+		}
+
+		const styleData = fs.readFileSync(explicitPath).toString();
+		styleCache.set(explicitPath, styleData);
+		return styleData;
+	}
+
+	if (styleCache.has(url)) {
+		return styleCache.get(url);
+	}
+
+	const fileFromURL = url.split('/').pop();
+	const outpath = path.join(cacheDir, fileFromURL ?? '');
+
+	ensureDir(cacheDir);
+	if (fs.existsSync(outpath)) {
+		const styleData = fs.readFileSync(outpath).toString();
+		styleCache.set(url, styleData);
+		return styleData;
+	}
+
+	const str = await new Promise<string>((res, rej) => {
+		https.get(url, (result) => {
+			let output = '';
+
+			result.setEncoding('utf8');
+			result.on('data', (chunk) => (output += chunk));
+			result.on('error', (e) => rej(`Error downloading CSL: ${e}`));
+			result.on('close', () => {
+				rej(new Error('Error: cannot download CSL'));
+			});
+			result.on('end', () => {
+				try {
+					res(output);
+				} catch (e) {
+					rej(e);
+				}
+			});
+		});
+	});
+
+	fs.writeFileSync(outpath, str);
+	styleCache.set(url, str);
+	return str;
 }
