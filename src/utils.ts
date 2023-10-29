@@ -1,10 +1,15 @@
 import { App, FileSystemAdapter, MarkdownView, Notice, TFile } from 'obsidian'
 import path from 'path'
+import fs from 'fs';
 import doiRegex from 'doi-regex'
-import { CiteKey, IndexPaper, Library, MetaData, Reference } from './types'
+import download from 'download';
+import { request } from 'http';
+import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference } from './types'
 import {
 	BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
+	DEFAULT_HEADERS,
+	DEFAULT_ZOTERO_PORT,
 	NUMBERS,
 	PUNCTUATION,
 	SEARCH_PARAMETERS,
@@ -475,4 +480,221 @@ export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 
 export function replaceIllegalFileNameCharactersInString(text: string) {
 	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
+}
+
+// Following functions are copied from 
+// https://github.com/mgmeyers/obsidian-pandoc-reference-list/blob/main/src/bib/helpers.ts
+// with some modifications
+
+export class PromiseCapability<T> {
+	settled = false;
+	promise: Promise<T>;
+	resolve: (data: T) => void;
+	reject: (reason?: any) => void;
+
+	constructor() {
+		this.promise = new Promise((resolve, reject) => {
+			this.resolve = (data) => {
+				resolve(data);
+				this.settled = true;
+			};
+
+			this.reject = (reason) => {
+				reject(reason);
+				this.settled = true;
+			};
+		});
+	}
+}
+
+function ensureDir(dir: string) {
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, { recursive: true });
+	}
+}
+
+function getGlobal() {
+	if (window?.activeWindow) return activeWindow;
+	if (window) return window;
+	return global;
+}
+
+export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
+	const p = download(`http://127.0.0.1:${port}/better-bibtex/cayw?probe=true`);
+	const res = await Promise.race([
+		p,
+		new Promise((res) => {
+			getGlobal().setTimeout(() => {
+				res(null);
+				p.destroy();
+			}, 150);
+		}),
+	]);
+
+	return res?.toString() === 'ready';
+}
+
+function applyGroupID(list: CSLList, groupId: number) {
+	return list.map((item) => {
+		item.groupID = groupId;
+		return item;
+	});
+}
+
+
+export async function getZBib(
+	port: string = DEFAULT_ZOTERO_PORT,
+	cacheDir: string,
+	groupId: number,
+	loadCached?: boolean
+) {
+	const isRunning = await isZoteroRunning(port);
+	const cached = path.join(cacheDir, `zotero-library-${groupId}.json`);
+
+	ensureDir(cacheDir);
+	if (loadCached || !isRunning) {
+		if (fs.existsSync(cached)) {
+			return applyGroupID(
+				JSON.parse(fs.readFileSync(cached).toString()) as CSLList,
+				groupId
+			);
+		}
+		if (!isRunning) {
+			return null;
+		}
+	}
+
+	const bib = await download(
+		`http://127.0.0.1:${port}/better-bibtex/export/library?/${groupId}/library.json`
+	);
+
+	const str = bib.toString();
+
+	fs.writeFileSync(cached, str);
+
+	return applyGroupID(JSON.parse(str) as CSLList, groupId);
+}
+
+function panNum(n: number) {
+	if (n < 10) return `0${n}`;
+	return n.toString();
+}
+
+function timestampToZDate(ts: number) {
+	const d = new Date(ts);
+	return `${d.getUTCFullYear()}-${panNum(d.getUTCMonth() + 1)}-${panNum(
+		d.getUTCDate()
+	)} ${panNum(d.getUTCHours())}:${panNum(d.getUTCMinutes())}:${panNum(
+		d.getUTCSeconds()
+	)}`;
+}
+
+export async function getZModified(
+	port: string = DEFAULT_ZOTERO_PORT,
+	groupId: number,
+	since: number
+): Promise<CSLList> {
+	if (!(await isZoteroRunning(port))) return [];
+
+	return new Promise((res, rej) => {
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			method: 'item.search',
+			params: [[['dateModified', 'isAfter', timestampToZDate(since)]], groupId],
+		});
+
+		const postRequest = request(
+			{
+				host: '127.0.0.1',
+				port: port,
+				path: '/better-bibtex/json-rpc',
+				method: 'POST',
+				headers: {
+					...DEFAULT_HEADERS,
+					'Content-Length': Buffer.byteLength(body),
+				},
+			},
+			(result) => {
+				let output = '';
+
+				result.setEncoding('utf8');
+				result.on('data', (chunk) => (output += chunk));
+				result.on('error', (e) => rej(`Error connecting to Zotero: ${e}`));
+				result.on('close', () => {
+					rej(new Error('Error: cannot connect to Zotero'));
+				});
+				result.on('end', () => {
+					try {
+						res(JSON.parse(output).result);
+					} catch (e) {
+						rej(e);
+					}
+				});
+			}
+		);
+
+		postRequest.write(body);
+		postRequest.end();
+	});
+}
+
+
+export async function refreshZBib(
+	port: string = DEFAULT_ZOTERO_PORT,
+	cacheDir: string,
+	groupId: number,
+	since: number
+) {
+	if (!(await isZoteroRunning(port))) {
+		return null;
+	}
+
+	const cached = path.join(cacheDir, `zotero-library-${groupId}.json`);
+	ensureDir(cacheDir);
+	if (!fs.existsSync(cached)) {
+		return null;
+	}
+
+	const mList = (await getZModified(port, groupId, since)) as CSLList;
+
+	if (!mList?.length) {
+		return null;
+	}
+
+	const modified: Map<string, PartialCSLEntry> = new Map();
+	const newKeys: Set<string> = new Set();
+
+	for (const mod of mList) {
+		mod.id = (mod as any).citekey || (mod as any)['citation-key'];
+		if (!mod.id) continue;
+		modified.set(mod.id, mod);
+		newKeys.add(mod.id);
+	}
+
+	const list = JSON.parse(fs.readFileSync(cached).toString()) as CSLList;
+
+	for (let i = 0; i < list.length; i++) {
+		const item = list[i];
+		if (modified.has(item.id)) {
+			newKeys.delete(item.id);
+			const modifiedItem = modified.get(item.id);
+			if (modifiedItem !== undefined) {
+				list[i] = modifiedItem;
+			}
+		}
+	}
+
+	for (const key of newKeys) {
+		const modifiedItem = modified.get(key);
+		if (modifiedItem !== undefined) {
+			list.push(modifiedItem);
+		}
+	}
+
+	fs.writeFileSync(cached, JSON.stringify(list));
+
+	return {
+		list: applyGroupID(list, groupId),
+		modified,
+	};
 }

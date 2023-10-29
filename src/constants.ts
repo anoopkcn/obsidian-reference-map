@@ -41,6 +41,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchFrontMatterKey: 'keywords',
 	searchFrontMatterLimit: 3,
 	searchCiteKey: false,
+	pullFromZotero: false,
 	searchCiteKeyPath: 'My Library.json',
 	autoUpdateCitekeyFile: false,
 	citeKeyFilter: ',',
@@ -285,3 +286,12 @@ export const VALID_S2AG_API_URLS = [
 	'acm.org',
 	'biorxiv.org',
 ]
+
+export const DEFAULT_ZOTERO_PORT = '23119';
+
+export const DEFAULT_HEADERS = {
+	'Content-Type': 'application/json',
+	'User-Agent': 'obsidian/zotero',
+	Accept: 'application/json',
+	Connection: 'keep-alive',
+};

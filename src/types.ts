@@ -9,6 +9,7 @@ export interface ReferenceMapSettings {
 	searchFrontMatterKey: string
 	searchFrontMatterLimit: number
 	searchCiteKey: boolean
+	pullFromZotero: boolean
 	searchCiteKeyPath: string
 	autoUpdateCitekeyFile: boolean
 	citeKeyFilter: string
@@ -151,3 +152,11 @@ export const DIRECTION = {
 } as const
 
 export type Direction = typeof DIRECTION[keyof typeof DIRECTION]
+
+export interface PartialCSLEntry {
+	id: string;
+	title: string;
+	groupID?: number;
+}
+
+export type CSLList = PartialCSLEntry[];

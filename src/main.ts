@@ -5,14 +5,38 @@ import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
-import { CursorJumper, makeFileName, templateReplace, useTemplaterPluginInFile } from './utils'
+import { CursorJumper, PromiseCapability, getVaultRoot, makeFileName, templateReplace, useTemplaterPluginInFile } from './utils'
+import path from 'path'
+import { ReferenceMapData } from './referenceData'
 
 
 export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings
+	cacheDir: string;
+	referenceMapData: ReferenceMapData;
+	_initPromise: PromiseCapability<void>;
+
+	get initPromise() {
+		if (!this._initPromise) {
+			return (this._initPromise = new PromiseCapability());
+		}
+		return this._initPromise;
+	}
+
 
 	async onload() {
-		this.loadSettings().then(() => this.init())
+		this.cacheDir = path.join(getVaultRoot(), '.reference-map');
+		this.referenceMapData = new ReferenceMapData(this)
+		this.loadSettings().then(() => {
+			this.init()
+			this.initPromise.promise
+				.then(() => {
+					this.referenceMapData.loadLibrary();
+				})
+				.finally(() => this.referenceMapData.initPromise.resolve());
+			this.initPromise.resolve();
+		})
+
 	}
 
 	async init(): Promise<void> {

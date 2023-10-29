@@ -20,7 +20,7 @@ export class ReferenceMapView extends ItemView {
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf)
 		this.plugin = plugin
-		this.referenceMapData = new ReferenceMapData(plugin)
+		this.referenceMapData = this.plugin.referenceMapData
 		this.rootEl = createRoot(this.containerEl.children[1])
 		this.isUpdated = false
 
@@ -70,7 +70,7 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onOpen() {
-		await this.referenceMapData.loadLibrary()
+		// await this.referenceMapData.loadLibrary()
 		this.processReferences()
 	}
 

@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as BibTeXParser from '@retorquere/bibtex-parser'
-import { extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, indexSort, removeNullReferences, resolvePath, setCiteKeyId } from './utils'
+import { PromiseCapability, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, indexSort, removeNullReferences, resolvePath, setCiteKeyId } from './utils'
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
 import { CiteKey, IndexPaper, Library } from './types';
@@ -17,10 +17,13 @@ export class ReferenceMapData {
     frontMatterString: string
     fileNameString: string
     basename: string
+    initPromise: PromiseCapability<void>;
+
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin
         this.library = DEFAULT_LIBRARY
         this.viewManager = new ViewManager(plugin)
+        this.initPromise = new PromiseCapability();
         this.paperIDs = new Set()
         this.citeKeyMap = []
         this.frontMatterString = ''
@@ -32,7 +35,10 @@ export class ReferenceMapData {
         this.library.mtime = 0;
     }
 
-    loadLibrary = async () => {
+    loadBibFileFromCache = async () => {
+    }
+
+    loadBibFileFromUserPath = async () => {
         const { searchCiteKey, searchCiteKeyPath, debugMode } = this.plugin.settings;
         if (!searchCiteKey || !searchCiteKeyPath) return null;
 
@@ -69,6 +75,14 @@ export class ReferenceMapData {
             mtime,
         };
         return libraryData;
+    }
+
+    loadLibrary = async () => {
+        if (this.plugin.settings.pullFromZotero) {
+            return this.loadBibFileFromCache();
+        } else {
+            return this.loadBibFileFromUserPath();
+        }
     };
 
 
