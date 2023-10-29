@@ -43,7 +43,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchCiteKey: false,
 	pullFromZotero: false,
 	searchCiteKeyPath: 'My Library.json',
-	autoUpdateCitekeyFile: false,
+	autoUpdateCitekeyFile: true,
 	citeKeyFilter: ',',
 	linkCiteKey: false,
 	findZoteroCiteKeyFromID: false,
