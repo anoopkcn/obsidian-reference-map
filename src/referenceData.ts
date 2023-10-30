@@ -48,17 +48,16 @@ export class ReferenceMapData {
 
     async reinit(clearCache: boolean) {
         this.initPromise = new PromiseCapability();
-
         if (this.plugin.settings.pullFromZotero) {
-            await this.LoadBibCache(false);
+            await this.loadBibFileFromCache(false);
         } else {
-            await this.LoadBibCache(true);
+            await this.loadBibFileFromCache(true);
         }
 
         this.initPromise.resolve();
     }
 
-    async LoadBibCache(fromCache?: boolean) {
+    async loadBibFileFromCache(fromCache?: boolean) {
         const { settings, cacheDir } = this.plugin;
         if (!settings.zoteroGroups?.length) return;
 
@@ -87,15 +86,6 @@ export class ReferenceMapData {
             mtime: Date.now(),
         };
         return bib;
-    }
-
-    async refreshBibCache() {
-        return
-    }
-
-    async loadBibFileFromCache() {
-        await this.LoadBibCache(true);
-        // await this.refreshBibCache();
     }
 
     loadBibFileFromUserPath = async () => {
@@ -142,11 +132,13 @@ export class ReferenceMapData {
         }
     }
 
-    loadLibrary = async () => {
+    loadLibrary = async (fromCache?: boolean) => {
         if (this.plugin.settings.searchCiteKey && this.plugin.settings.pullFromZotero) {
-            return this.loadBibFileFromCache();
+            await this.loadBibFileFromCache(fromCache);
+            return
         } else if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
-            return this.loadBibFileFromUserPath();
+            await this.loadBibFileFromUserPath();
+            return
         } else {
             this.library = DEFAULT_LIBRARY
         }
@@ -251,7 +243,7 @@ export class ReferenceMapData {
             this.library.libraryData !== null
         this.basename = ''
         if (activeView) {
-            if (isLibrary && this.plugin.settings.autoUpdateCitekeyFile) this.loadLibrary()
+            if (isLibrary && this.plugin.settings.autoUpdateCitekeyFile) this.loadLibrary(false)
             this.basename = activeView.file?.basename ?? ''
             if (fileMetadataCache) {
                 this.paperIDs = getPaperIds(fileMetadataCache)

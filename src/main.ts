@@ -31,7 +31,7 @@ export default class ReferenceMap extends Plugin {
 			this.init()
 			this.initPromise.promise
 				.then(() => {
-					this.referenceMapData.loadLibrary();
+					this.referenceMapData.loadLibrary(true);
 				})
 				.finally(() => this.referenceMapData.initPromise.resolve());
 			this.initPromise.resolve();

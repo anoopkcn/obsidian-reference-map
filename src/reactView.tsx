@@ -70,7 +70,6 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onOpen() {
-		// await this.referenceMapData.loadLibrary()
 		this.processReferences()
 	}
 
@@ -84,10 +83,10 @@ export class ReferenceMapView extends ItemView {
 		if (reloadType === RELOAD.HARD) {
 			this.referenceMapData.viewManager.clearCache()
 			this.referenceMapData.resetLibraryTime()
-			await this.referenceMapData.loadLibrary()
+			await this.referenceMapData.loadLibrary(false)
 			this.processReferences()
 		} else if (reloadType === RELOAD.SOFT) {
-			await this.referenceMapData.loadLibrary()
+			await this.referenceMapData.loadLibrary(false)
 			this.processReferences()
 		} else if (reloadType === RELOAD.VIEW) {
 			this.processReferences()
