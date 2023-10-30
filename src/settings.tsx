@@ -99,8 +99,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 			)
 		new Setting(containerEl)
-			.setName(t('HIDE_SHOW_REDUNDENT_REFERENCES'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDENT_REFERENCES_DESC')))
+			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.filterRedundantReferences)
@@ -108,7 +108,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.filterRedundantReferences = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.view.reload(RELOAD.SOFT)
 						})
 					})
 			)

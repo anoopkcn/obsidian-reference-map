@@ -37,11 +37,11 @@ export default {
 		'Hide or show the invalid Index Cards in the reference map.<br>' +
 		'<b> Toggle ON: </b> Invalid items will be visible with a notice<br>' +
 		'<b> Toggle OFF: </b> Invalid items will be hidden',
-	HIDE_SHOW_REDUNDENT_REFERENCES: 'Hide or Show Redundent References',
-	HIDE_SHOW_REDUNDENT_REFERENCES_DESC:
+	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundent References',
+	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
 		'Hide or show references with no reference count and no citation count<br>' +
-		'<b> Toggle ON: </b> Redundent references will be listed<br>' +
-		'<b> Toggle OFF: </b> Redundent references will be hidden',
+		'<b> Toggle ON: </b> Redundant references will be listed<br>' +
+		'<b> Toggle OFF: </b> Redundant references will be hidden',
 	SEARCH_TITLE: 'Get References Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references also using the markdown note file name in addition to reference IDs.<br>' +
