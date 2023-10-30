@@ -5,7 +5,7 @@ import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
-import { CursorJumper, PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
+import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
 import { ReferenceMapData } from './referenceData'
 
@@ -172,11 +172,16 @@ export default class ReferenceMap extends Plugin {
 			}
 			const renderedContents = await this.getRenderedContentsForCreate(metaData);
 			const fileName = makeFileName(metaData, this.settings.fileNameFormat);
-			const filePath = `${this.settings.folder}/${fileName}`;
+			let filePath;
+			if (this.settings.folder) {
+				filePath = `${this.settings.folder}/${fileName}`;
+			} else {
+				filePath = `${fileName}`;
+			}
 			const targetFile = await this.app.vault.create(filePath, renderedContents);
 			await activeLeaf.openFile(targetFile, { state: { mode: 'source' } });
-			activeLeaf.setEphemeralState({ rename: 'all' });
-			await new CursorJumper(this.app).jumpToNextCursorLocation();
+			// activeLeaf.setEphemeralState({ rename: 'all' });
+			// await new CursorJumper(this.app).jumpToNextCursorLocation();
 		} catch (err) {
 			new Notice('Sorry, something went wrong.');
 		}
