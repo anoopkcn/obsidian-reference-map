@@ -37,7 +37,7 @@ export default {
 		'Hide or show the invalid Index Cards in the reference map.<br>' +
 		'<b> Toggle ON: </b> Invalid items will be visible with a notice<br>' +
 		'<b> Toggle OFF: </b> Invalid items will be hidden',
-	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundent References',
+	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundant References',
 	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
 		'Hide or show references with no reference count and no citation count<br>' +
 		'<b> Toggle ON: </b> Redundant references will be listed<br>' +
