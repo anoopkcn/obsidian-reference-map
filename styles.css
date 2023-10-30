@@ -95,7 +95,7 @@ settings:
 		title: Secondary background color
 		type: variable-color
 		format: hex
-		default: var(--background-secondary-alt)
+		default: var(--background-secondary)
 	-
 		id: orm-paper-title-link-color
 		title: Reference paper title link color
@@ -165,7 +165,7 @@ body {
 	--orm-paper-index-card-padding: 0.5rem;
 	--orm-paper-reference-card-padding: 0.5rem;
 	--orm-paper-background-color: var(--background-primary);
-	--orm-paper-background-secondary-color: var(--background-secondary-alt);
+	--orm-paper-background-secondary-color: var(--background-secondary);
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
@@ -333,6 +333,7 @@ body {
 	margin-top: 0.5rem 0;
 }
 .orm-paper-card {
+	border: var(--orm-paper-line-thickness) dotted var(--orm-paper-line-color);
 	background: var(--orm-paper-background-secondary-color);
 	padding: var(--orm-paper-reference-card-padding);
 	margin: 0.5rem 0;
