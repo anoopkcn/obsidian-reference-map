@@ -281,7 +281,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 			this.citationPathErrorEl = containerEl.createEl('p', {
 				cls: 'orm-PathError d-none',
-				text: 'The citation export file cannot be found. Please check the path above.',
+				text: fragWithHTML(t('CITEKEY_PATH_ERROR')),
 			})
 			this.citationPathSuccessEl = containerEl.createEl('p', {
 				cls: 'orm-PathSuccess d-none',

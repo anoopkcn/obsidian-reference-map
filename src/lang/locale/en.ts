@@ -66,6 +66,8 @@ export default {
 	SEARCH_CITEKEY_PATH_DESC:
 		'Path to your CSL JSON file with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
 		'Path must be relative to the vaults root',
+	CITEKEY_PATH_ERROR: 'The citation export file cannot be found. Please check the path.<br>' +
+		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
 	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto Detect Updates to Library',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
 		'Auto detect changes to the Library and update the reference map.<br>' +
@@ -185,7 +187,7 @@ export default {
 		'<b>Toggle OFF:</b> Disable debug mode',
 
 	// Zotero Pull Settings
-	ZOTERO_PULL: 'Pull bibliography from Zotero',
+	ZOTERO_PULL: 'Pull Bibliography From Zotero',
 	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again',
