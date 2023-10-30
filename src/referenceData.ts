@@ -1,6 +1,17 @@
 import * as fs from 'fs'
 import * as BibTeXParser from '@retorquere/bibtex-parser'
-import { PromiseCapability, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds, getZBib, indexSort, removeNullReferences, resolvePath, setCiteKeyId } from './utils'
+import {
+    PromiseCapability,
+    extractKeywords,
+    getCiteKeyIds,
+    getCiteKeys,
+    getPaperIds,
+    getZBib,
+    indexSort,
+    removeNullReferences,
+    resolvePath,
+    setCiteKeyId
+} from './utils'
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
 import { CiteKey, IndexPaper, Library, citeKeyLibrary } from './types';
@@ -247,6 +258,7 @@ export class ReferenceMapData {
             }
             if (isLibrary && activeView.file) {
                 const citeKeys = getCiteKeys(
+                    this.library.libraryData,
                     fileMetadataCache,
                     this.plugin.settings.findCiteKeyFromLinksWithoutPrefix,
                     this.plugin.settings.citeKeyFilter

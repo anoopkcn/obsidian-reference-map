@@ -76,7 +76,8 @@ export default {
 	CITEKEY_FILTER_DESC: 'Give the characters that are not part of the citekey. For Example if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to give <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> which will recognize <code>,</code> and <code>.</code> as NOT part of the <code>citekey</code>). Default is set to <code>,</code>',
 	FIND_CITEKEY_WITHOUT_PREFIX: 'Process Citations in Links Without <code>@</code> Prefix',
 	FIND_CITEKEY_WITHOUT_PREFIX_DESC:
-		'Find citekey without <code>@</code> prefix in WikiLinks and Markdown Links. This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
+		'Find citekey WITHOUT <code>@</code> prefix in <b>WikiLinks and Markdown Links</b>.<br>' +
+		'This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
 		'<b>Toggle ON:</b> Find citekey without <code>@</code> prefix<br>' +
 		'<b>Toggle OFF:</b> Do not find citekey without <code>@</code> prefix',
 	CITEKEY_ZOTERO_LINK: 'Hide or Show Link to Zotero Library',

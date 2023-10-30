@@ -5,7 +5,7 @@ import doiRegex from 'doi-regex'
 import download from 'download';
 import { request } from 'http';
 import https from 'https';
-import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference } from './types'
+import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
 import {
 	BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
@@ -20,7 +20,7 @@ import {
 export function getVaultRoot() {
 	// This is a desktop only plugin, so assume adapter is FileSystemAdapter
 	return (app.vault.adapter as FileSystemAdapter).getBasePath();
-}  
+}
 
 export const fragWithHTML = (html: string) =>
 	createFragment((frag) => (frag.createDiv().innerHTML = html))
@@ -133,11 +133,15 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 		.replace(/\s+/g, '')
 }
 export const getCiteKeys = (
+	libraryData: citeKeyLibrary[] | null,
 	content: string,
 	findCiteKeyFromLinksWithoutPrefix: boolean,
 	filterChars?: string
 ): Set<string> => {
 	const output: string[] = []
+	const citekeys = libraryData?.map((item) => item.id) ?? []
+	//Get citekeys from CSL JSON
+
 	const citekeyRegex = /@([^\s]+)/gi // citekey with @ prefix
 	const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex)
 	if (matches) {
@@ -146,7 +150,12 @@ export const getCiteKeys = (
 			if (filterChars) {
 				citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
 			}
-			output.push(citeKey)
+			//only push if citekey is found in citekeys
+			if (citekeys.length > 0) {
+				if (citekeys.includes(citeKey)) output.push(citeKey)
+			} else {
+				output.push(citeKey)
+			}
 		}
 	}
 
@@ -163,7 +172,11 @@ export const getCiteKeys = (
 					if (filterChars) {
 						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
 					}
-					output.push(citeKey)
+					if (citekeys.length > 0) {
+						if (citekeys.includes(citeKey)) output.push(citeKey)
+					} else {
+						output.push(citeKey)
+					}
 				}
 			}
 		}
@@ -179,7 +192,11 @@ export const getCiteKeys = (
 					if (filterChars) {
 						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
 					}
-					output.push(citeKey)
+					if (citekeys.length > 0) {
+						if (citekeys.includes(citeKey)) output.push(citeKey)
+					} else {
+						output.push(citeKey)
+					}
 				}
 			}
 		}
