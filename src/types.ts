@@ -4,6 +4,7 @@ export interface ReferenceMapSettings {
 	showAbstract: boolean
 	showAuthors: boolean
 	showInvalidItems: boolean
+	filterRedundantReferences: boolean
 	searchTitle: boolean
 	searchLimit: number
 	searchFrontMatter: boolean

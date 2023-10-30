@@ -43,18 +43,24 @@ export const IndexPaperCard = (props: Props) => {
 	};
 
 	const getReferences = async () => {
-		setIsReferenceLoading(true)
-		const references = await props.viewManager.getReferences(props.rootPaper.paper.paperId)
-		if (references) setReferences(references)
-		setIsReferenceLoading(false)
-	}
+		setIsReferenceLoading(true);
+		const references = await props.viewManager.getReferences(props.rootPaper.paper.paperId);
+		const filteredReferences = props.settings.filterRedundantReferences
+			? references.filter((reference) => reference.referenceCount > 0 && reference.citationCount > 0)
+			: references;
+		setReferences(filteredReferences);
+		setIsReferenceLoading(false);
+	};
 
 	const getCitations = async () => {
-		setIsCitationLoading(true)
-		const citations = await props.viewManager.getCitations(props.rootPaper.paper.paperId)
-		if (citations) setCitations(citations)
-		setIsCitationLoading(false)
-	}
+		setIsCitationLoading(true);
+		const citations = await props.viewManager.getCitations(props.rootPaper.paper.paperId);
+		const filteredCitations = props.settings.filterRedundantReferences
+			? citations.filter((citation) => citation.referenceCount > 0 && citation.citationCount > 0)
+			: citations;
+		setCitations(filteredCitations);
+		setIsCitationLoading(false);
+	};
 
 	const metadataTemplates = [
 		{ format: props.settings.formatMetadataCopyOne, template: props.settings.metadataCopyTemplateOne, batch: props.settings.metadataCopyOneBatch },

@@ -98,6 +98,20 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						})
 					})
 			)
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_REDUNDENT_REFERENCES'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDENT_REFERENCES_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.filterRedundantReferences)
+					.onChange(async (value) => {
+						this.plugin.settings.filterRedundantReferences = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload(RELOAD.VIEW)
+						})
+					})
+			)
 
 		containerEl.createEl('h2', { text: 'Sort Settings' })
 		new Setting(containerEl)
