@@ -40,8 +40,8 @@ export default {
 	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundant References',
 	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
 		'Hide or show references with no reference count and no citation count<br>' +
-		'<b> Toggle ON: </b> Redundant references will be listed<br>' +
-		'<b> Toggle OFF: </b> Redundant references will be hidden',
+		'<b> Toggle ON: </b> Redundant references will be hidden<br>' +
+		'<b> Toggle OFF: </b> Redundant references will be listed',
 	SEARCH_TITLE: 'Get References Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references also using the markdown note file name in addition to reference IDs.<br>' +
