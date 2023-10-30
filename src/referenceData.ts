@@ -136,6 +136,8 @@ export class ReferenceMapData {
             return this.loadBibFileFromCache();
         } else if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
             return this.loadBibFileFromUserPath();
+        } else {
+            this.library = DEFAULT_LIBRARY
         }
     };
 
@@ -150,7 +152,6 @@ export class ReferenceMapData {
 
     ) => {
         const indexCards: IndexPaper[] = [];
-
         // Get references using the paper IDs
         if (paperIDs.size > 0) {
             await Promise.all(
@@ -170,7 +171,7 @@ export class ReferenceMapData {
         }
 
         // Get references using the cite keys
-        if (citeKeyMap.length > 0) {
+        if (citeKeyMap.length > 0 && this.plugin.settings.searchCiteKey) {
             await Promise.all(
                 _.map(citeKeyMap, async (item) => {
                     if (item.paperId !== item.citeKey) {
@@ -229,7 +230,11 @@ export class ReferenceMapData {
     }
 
 
-    updatePaperIDs = async (activeView: MarkdownView, fileMetadataCache = '', fileCache: CachedMetadata | null = null) => {
+    updatePaperIDs = async (
+        activeView: MarkdownView,
+        fileMetadataCache = '',
+        fileCache: CachedMetadata | null = null
+    ) => {
         const isLibrary =
             this.plugin.settings.searchCiteKey &&
             this.library.libraryData !== null

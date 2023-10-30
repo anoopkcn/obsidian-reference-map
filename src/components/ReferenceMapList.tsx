@@ -124,7 +124,7 @@ export const ReferenceMapList = (props: {
 							{noContentItems().map((item) => {
 								return (
 									<div className="orm-no-content-subtext" key={item}>
-										<code>{item}</code> has no associated DOI or URL in the Library.
+										<code>{item.substring(1)}</code> has no DOI or URL in the Library.
 									</div>
 								)
 							})}
@@ -143,7 +143,7 @@ export const ReferenceMapList = (props: {
 						{noContentItems().map((item) => {
 							return (
 								<div className="orm-no-content-subtext" key={item}>
-									<code>{item}</code> has incorrect or no DOI or URL in the Library.
+									<code>{item.substring(1)}</code> has no DOI or URL in the Library.
 								</div>
 							)
 						})}

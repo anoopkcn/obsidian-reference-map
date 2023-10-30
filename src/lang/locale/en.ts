@@ -185,10 +185,10 @@ export default {
 
 	// Zotero Pull Settings
 	ZOTERO_PULL: 'Pull bibliography from Zotero',
-	ZOTERO_PULL_DESC: 'When enabled, bibliography data will be pulled from Zotero rather than a bibliography file. The Better Bibtex plugin must be installed in Zotero.',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again',
 	ZOTERO_PORT: 'Zotero port',
-	ZOTERO_PORT_DESC: 'Use 24119 for Juris-M or specify a custom port if you have changed Zoteros default.',
+	ZOTERO_PORT_DESC: 'Use 24119 or specify a custom port if you have changed Zotero\'s default.',
 	ZOTERO_LIBRARY_ID: 'Libraries to include',
 }
