@@ -10,6 +10,10 @@ function validateGroups(
     plugin: ReferenceMap,
     groups: Array<{ id: number; name: string }>
 ) {
+    // if groups is empty, we can't validate anything
+    if (groups.length === 0) {
+        return false;
+    }
     const validated: Array<{ id: number; name: string }> = [];
 
     plugin.settings.zoteroGroups.forEach((g) => {
@@ -20,6 +24,7 @@ function validateGroups(
 
     plugin.settings.zoteroGroups = validated;
     plugin.saveSettings();
+    return true;
 }
 
 export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
@@ -34,18 +39,22 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
     );
     const [connected, setConnected] = React.useState(false);
 
-    const pullUserGroups = React.useCallback(async () => {
+    const pullUserGroups = async () => {
         try {
             const groups = await getZUserGroups(
                 plugin.settings.zoteroPort ?? DEFAULT_ZOTERO_PORT
             );
-            validateGroups(plugin, groups);
-            setPossibleGroups(groups);
-            setConnected(true);
+            const isvalid = validateGroups(plugin, groups);
+            if (!isvalid) {
+                return;
+            } else {
+                setPossibleGroups(groups);
+                setConnected(true);
+            }
         } catch {
             setConnected(false);
         }
-    }, []);
+    }
 
     React.useEffect(() => {
         pullUserGroups();
@@ -72,7 +81,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                 }
                                 plugin.saveSettings().then(() => {
                                     plugin.referenceMapData.reinit(true)
-                                    plugin.view?.reload(RELOAD.VIEW)
+                                    plugin.view?.reload(RELOAD.SOFT)
                                 });
                                 return !cur;
                             });
@@ -81,7 +90,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                     />
                 </SettingItem>
             </div>
-            {connected ? null : (
+            {!connected && (
                 <div className="setting-item orm-setting-item">
                     <SettingItem
                         name={t('CANNOT_CONNECT_TO_ZOTERO')}
@@ -93,7 +102,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                     </SettingItem>
                 </div>
             )}
-            {!isEnabled ? null : (
+            {isEnabled && connected && (
                 <>
                     <div className="setting-item orm-setting-item">
                         <SettingItem
@@ -106,7 +115,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                 onChange={(e) => {
                                     plugin.settings.zoteroPort = e.target.value;
                                     plugin.saveSettings();
-                                    plugin.view?.reload(RELOAD.VIEW)
+                                    plugin.view?.reload(RELOAD.SOFT)
                                 }}
                                 type="text"
                                 spellCheck={false}
@@ -136,7 +145,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                                 }
                                                 plugin.saveSettings().then(() => {
                                                     plugin.referenceMapData.reinit(true)
-                                                    plugin.view?.reload(RELOAD.VIEW)
+                                                    plugin.view?.reload(RELOAD.SOFT)
                                                 });
                                             }}
                                             className={`checkbox-container${isEnabled ? ' is-enabled' : ''

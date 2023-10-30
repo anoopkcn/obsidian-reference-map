@@ -3,6 +3,7 @@ export interface ReferenceMapSettings {
 	influentialCount: boolean
 	showAbstract: boolean
 	showAuthors: boolean
+	showInvalidItems: boolean
 	searchTitle: boolean
 	searchLimit: number
 	searchFrontMatter: boolean
@@ -10,7 +11,7 @@ export interface ReferenceMapSettings {
 	searchFrontMatterLimit: number
 	searchCiteKey: boolean
 	pullFromZotero: boolean
-	zoteroGroups: ZoteroGroup[]
+	zoteroGroups: ZoteroGroup[] 
 	zoteroPort: string
 	searchCiteKeyPath: string
 	autoUpdateCitekeyFile: boolean

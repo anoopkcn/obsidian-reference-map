@@ -84,52 +84,57 @@ export class ReferenceMapData {
 
     async loadBibFileFromCache() {
         await this.LoadBibCache(true);
-    // await this.refreshBibCache();
+        // await this.refreshBibCache();
     }
 
     loadBibFileFromUserPath = async () => {
         const { searchCiteKey, searchCiteKeyPath, debugMode } = this.plugin.settings;
         if (!searchCiteKey || !searchCiteKeyPath) return null;
-
         const libraryPath = resolvePath(searchCiteKeyPath);
-        const stats = fs.statSync(libraryPath);
-        const mtime = stats.mtimeMs;
-        if (mtime === this.library.mtime) return null;
-
-        if (debugMode) console.log(`ORM: Loading library from '${searchCiteKeyPath}'`);
-        let rawData;
         try {
-            rawData = fs.readFileSync(libraryPath).toString();
-        } catch (e) {
-            if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
+            const stats = fs.statSync(libraryPath);
+            const mtime = stats.mtimeMs;
+            if (mtime === this.library.mtime) return null;
+
+            if (debugMode) console.log(`ORM: Loading library from '${searchCiteKeyPath}'`);
+            let rawData;
+            try {
+                rawData = fs.readFileSync(libraryPath).toString();
+            } catch (e) {
+                if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
+                return null;
+            }
+
+            const isJson = searchCiteKeyPath.endsWith('.json');
+            const isBib = searchCiteKeyPath.endsWith('.bib');
+            if (!isJson && !isBib) return null;
+
+            let libraryData;
+            try {
+                libraryData = isJson ? JSON.parse(rawData) : BibTeXParser.parse(rawData, { errorHandler: () => { } }).entries;
+            } catch (e) {
+                if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
+                return null;
+            }
+
+            this.library = {
+                active: true,
+                adapter: isJson ? 'csl-json' : 'bibtex',
+                libraryData,
+                mtime,
+            };
+            return libraryData;
+        }
+        catch (e) {
+            if (debugMode) console.log('ORM: Error loading library file.');
             return null;
         }
-
-        const isJson = searchCiteKeyPath.endsWith('.json');
-        const isBib = searchCiteKeyPath.endsWith('.bib');
-        if (!isJson && !isBib) return null;
-
-        let libraryData;
-        try {
-            libraryData = isJson ? JSON.parse(rawData) : BibTeXParser.parse(rawData, { errorHandler: () => { } }).entries;
-        } catch (e) {
-            if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
-            return null;
-        }
-
-        this.library = {
-            active: true,
-            adapter: isJson ? 'csl-json' : 'bibtex',
-            libraryData,
-            mtime,
-        };
-        return libraryData;
     }
 
     loadLibrary = async () => {
-        if (this.plugin.settings.pullFromZotero && this.plugin.settings.searchCiteKey) {
+        if (this.plugin.settings.searchCiteKey && this.plugin.settings.pullFromZotero) {
             return this.loadBibFileFromCache();
-        } else {
+        } else if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
             return this.loadBibFileFromUserPath();
         }
     };

@@ -1,4 +1,4 @@
-import { ReferenceMapSettings } from './types'
+import { ReferenceMapSettings, ZoteroGroup } from './types'
 
 // There are customizable metadata template
 // METADATA_COPY_TEMPLATE_ONE     correspond to button one
@@ -38,7 +38,7 @@ export const DEFAULT_HEADERS = {
 	Connection: 'keep-alive',
 };
 
-export const DEFAULT_ZOTERO_GROUPS = [];
+export const DEFAULT_ZOTERO_GROUPS: ZoteroGroup[] = [];
 
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
@@ -46,6 +46,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	influentialCount: false,
 	showAbstract: false,
 	showAuthors: false,
+	showInvalidItems: true,
 	searchTitle: false,
 	searchLimit: 3,
 	searchFrontMatter: false,
@@ -53,9 +54,9 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchFrontMatterLimit: 3,
 	searchCiteKey: false,
 	pullFromZotero: true,
-	zoteroGroups: [],
+	zoteroGroups: DEFAULT_ZOTERO_GROUPS,
 	zoteroPort: DEFAULT_ZOTERO_PORT,
-	searchCiteKeyPath: 'My Library.json',
+	searchCiteKeyPath: '',
 	autoUpdateCitekeyFile: true,
 	citeKeyFilter: ',',
 	linkCiteKey: false,

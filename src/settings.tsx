@@ -84,6 +84,21 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 			)
 
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_INVALID_ITEMS'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_INVALID_ITEMS_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.showInvalidItems)
+					.onChange(async (value) => {
+						this.plugin.settings.showInvalidItems = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload(RELOAD.VIEW)
+						})
+					})
+			)
+
 		containerEl.createEl('h2', { text: 'Sort Settings' })
 		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
@@ -214,7 +229,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.searchCiteKey = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.SOFT)
+								this.plugin.view.reload(RELOAD.HARD)
 						})
 						this.display()
 					})

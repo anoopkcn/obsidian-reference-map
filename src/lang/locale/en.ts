@@ -32,6 +32,11 @@ export default {
 		'Hide or show the influential citation count of references.<br>' +
 		'<b> Toggle ON: </b> Influential count will be visible<br>' +
 		'<b> Toggle OFF: </b> Influential count will be hidden',
+	HIDE_SHOW_INVALID_ITEMS: 'Hide or Show Invalid Items',
+	HIDE_SHOW_INVALID_ITEMS_DESC:
+		'Hide or show the invalid Index Cards in the reference map.<br>' +
+		'<b> Toggle ON: </b> Invalid items will be visible with a notice<br>' +
+		'<b> Toggle OFF: </b> Invalid items will be hidden',
 	SEARCH_TITLE: 'Get References Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references also using the markdown note file name in addition to reference IDs.<br>' +
@@ -185,5 +190,5 @@ export default {
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again',
 	ZOTERO_PORT: 'Zotero port',
 	ZOTERO_PORT_DESC: 'Use 24119 for Juris-M or specify a custom port if you have changed Zoteros default.',
-	ZOTERO_LIBRARY_ID: 'Libraries to include in bibliography',
+	ZOTERO_LIBRARY_ID: 'Libraries to include',
 }
