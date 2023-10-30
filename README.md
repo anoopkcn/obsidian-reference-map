@@ -15,10 +15,10 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
     - [From Community Plugins](#from-community-plugins)
     - [Manual Installation](#manual-installation)
 3. [Usage](#usage)
-    - [Reference Map Search](#reference-map-search)
     - [Reference Map View](#reference-map-view)
         - [Static Reference List](#static-reference-list)
         - [Dynamic Reference List](#dynamic-reference-list)
+    - [Reference Map Search](#reference-map-search)
 4. [Configuration](#configuration)
 <!-- /TOC -->
 
@@ -48,23 +48,8 @@ This `README.md` file contains the basic description of the plugin. For a detail
 
 Main features:
 
-- **Reference Map Search** - Search for references online to create or insert details.
 - **Reference Map View** - View details of your references in the current document.
-
-### Reference Map Search
-
-![ORm-search-demo](./images/orm-search-create-demo.png)
-
-Search for references and citations online to create or insert details. You  can locate  the commands by opening the Obsidian command palette (Ctrl/Cmd + P) and typing `Reference Map`. By default no hotkeys are se for the commands, but you can easily add them in the Hotkeys tab.
-
-If you select a text in the current document and then issue the command the selected text will be used as the search query.
-
-| Command | Description | Hotkey |
-| --- | --- | --- |     
-| Reference Map: Search and Insert | Search for references online to insert details in the current document. | - |
-| Reference Map: Search and Create | Search for references online to create a new markdown file using the details | - |
-
-You can configure the template for both commands in the settings tab.
+- **Reference Map Search** - Search for references online to create or insert details.
 
 ### Reference Map View
 
@@ -144,6 +129,21 @@ Cards will be displayed for references that match `autoencoders+machine+learning
 Note that since new references are added to the database regularly the dynamic list might not stay the same each time you open the file. Especially for generic keywords like `machine learning`, `deep learning`, `history` etc.
 
 **This feature can be used for keeping up to date with the latest research in a specific field as well**
+
+### Reference Map Search
+
+![ORm-search-demo](./images/orm-search-create-demo.png)
+
+Search for references and citations online to create or insert details. You  can locate  the commands by opening the Obsidian command palette (Ctrl/Cmd + P) and typing `Reference Map`. By default no hotkeys are se for the commands, but you can easily add them in the Hotkeys tab.
+
+If you select a text in the current document and then issue the command the selected text will be used as the search query.
+
+| Command | Description | Hotkey |
+| --- | --- | --- |     
+| Reference Map: Search and Insert | Search for references online to insert details in the current document. | - |
+| Reference Map: Search and Create | Search for references online to create a new markdown file using the details | - |
+
+You can configure the template for both commands in the settings tab.
 
 ## Configuration
 
