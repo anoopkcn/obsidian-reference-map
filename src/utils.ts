@@ -521,6 +521,7 @@ export class PromiseCapability<T> {
 	settled = false;
 	promise: Promise<T>;
 	resolve: (data: T) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	reject: (reason?: any) => void;
 
 	constructor() {
@@ -552,6 +553,8 @@ function getGlobal() {
 
 export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
 	const p = download(`http://127.0.0.1:${port}/better-bibtex/cayw?probe=true`);
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const res: any = await Promise.race([
 		p,
 		new Promise((res) => {
@@ -743,6 +746,7 @@ export async function refreshZBib(
 	const newKeys: Set<string> = new Set();
 
 	for (const mod of mList) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		mod.id = (mod as any).citekey || (mod as any)['citation-key'];
 		if (!mod.id) continue;
 		modified.set(mod.id, mod);
