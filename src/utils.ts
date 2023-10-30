@@ -151,34 +151,36 @@ export const getCiteKeys = (
 	}
 
 	if (findCiteKeyFromLinksWithoutPrefix) {
-
 		//Get citekeys from wiki links
 		const citekeyRegex2 = /\[\[([^\][]*)]]/gi // Wiki Link
-		// const citekeyRegex2 = /\[\[([^\s].*?)\]\]/gi // Wiki Link
+		const doi_matches = content.match(doiRegex())?.map(match => sanitizeCiteKey(match)) ?? []
 		const matches2 = content.matchAll(citekeyRegex2)
 		if (matches2) {
 			for (const match of matches2) {
 				const trial = match[1].trim().split(' ')[0]
 				let citeKey = sanitizeCiteKey(trial)
-				if (filterChars) {
-					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				if (!doi_matches?.includes(citeKey)) {
+					if (filterChars) {
+						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+					}
+					output.push(citeKey)
 				}
-				output.push(citeKey)
 			}
 		}
 
 		//Get citekeys from markdown links
 		const citekeyRegex3 = /\[([^\][]*)]/gi // Markdown Link
-		// const citekeyRegex3 = /\[([^\][]*)]\(/gi // Markdown Link
 		const matches3 = content.matchAll(citekeyRegex3)
 		if (matches3) {
 			for (const match of matches3) {
 				const trial = match[1].trim().split(' ')[0]
 				let citeKey = sanitizeCiteKey(trial)
-				if (filterChars) {
-					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				if (!doi_matches?.includes(citeKey)) {
+					if (filterChars) {
+						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+					}
+					output.push(citeKey)
 				}
-				output.push(citeKey)
 			}
 		}
 	}
