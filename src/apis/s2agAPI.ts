@@ -3,6 +3,30 @@ import { requestUrl } from 'obsidian'
 import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 import { Reference } from 'src/types'
 
+export const SEMANTIC_SCHOLAR_BATCH_URL = 'https://api.semanticscholar.org/graph/v1/paper/batch'
+// Get details for multiple papers at once
+export const getBatchItems = async (paperIds: string[], debugMode = false): Promise<Reference[]> => {
+	const data = {
+		ids: paperIds,
+		fields: SEMANTIC_FIELDS.join(','),
+	};
+
+	const response = await requestUrl({
+		url: SEMANTIC_SCHOLAR_BATCH_URL,
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(data),
+	});
+	if (response.status !== 200) {
+		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
+		return [];
+	}
+	return response.json.data;
+}
+
+
 export const getIndexItem = async (paperId: string, debugMode = false): Promise<Reference | null> => {
 	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
