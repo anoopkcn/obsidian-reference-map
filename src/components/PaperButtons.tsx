@@ -147,9 +147,7 @@ export const PaperButtons = ({
 	} else {
 		citingCited = (
 			<>
-				<div className="orm-references-2">
-					{metaData.referenceCount}
-				</div>
+				<div className="orm-references-2">{metaData.referenceCount}</div>
 				<div className="orm-citations-2">{metaData.citationCount}</div>
 			</>
 		)

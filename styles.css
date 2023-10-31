@@ -176,6 +176,7 @@ body {
 	--orm-paper-buttons-color: var(--icon-color);
 	--orm-paper-buttons-hover-color: var(--text-accent);
 	--orm-paper-line-color: var(--color-base-30);
+	--orm-paper-disable-opacity: 0.5;
 }
 /* following removes the jumping when scrollbar is visible */
 
@@ -190,7 +191,7 @@ body {
 
 .orm-no-content {
 	text-align: center;
-	opacity: 0.5;
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-no-content-subtext {
@@ -304,7 +305,7 @@ body {
 }
 
 .orm-button-disable {
-	opacity: 0.3;
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-paper-buttons > .orm-copy-metadata-one,
@@ -348,6 +349,10 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.orm-paper-list .orm-references-2, .orm-paper-list .orm-citations-2 {
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-search-form {
