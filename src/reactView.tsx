@@ -143,7 +143,7 @@ export class ReferenceMapView extends ItemView {
 		this.rootEl?.render(
 			<AppContext.Provider value={this.app}>
 				<ReferenceMapList
-					settings={this.plugin.settings}
+					plugin={this.plugin}
 					viewManager={this.referenceMapData.viewManager}
 					library={this.referenceMapData.library}
 					basename={this.referenceMapData.basename}

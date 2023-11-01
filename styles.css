@@ -370,6 +370,15 @@ body {
 	text-align: center;
 }
 
+.orm-plugin-graph{
+	position: absolute;
+	top: 0;
+	left: 5px;
+	padding: 0.4rem 0.25rem 0.15rem 0.25rem;
+	border-right: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
+	color: var(--orm-paper-buttons-color); 
+}
+
 .search-icon {
 	position: absolute;
 	top: 50%;

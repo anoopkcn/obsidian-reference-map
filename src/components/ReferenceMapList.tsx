@@ -1,12 +1,14 @@
-import { CiteKey, IndexPaper, Library, ReferenceMapSettings } from 'src/types'
+import { CiteKey, IndexPaper, Library } from 'src/types'
 import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
 import { ViewManager } from 'src/viewManager'
 import { indexSearch } from 'src/utils'
-import { BsSearch } from 'react-icons/bs'
+// import { BsSearch } from 'react-icons/bs'
+import { PiGraphFill } from 'react-icons/pi'
+import ReferenceMap from 'src/main'
 
 export const ReferenceMapList = (props: {
-	settings: ReferenceMapSettings
+	plugin: ReferenceMap
 	library: Library
 	viewManager: ViewManager
 	basename: string
@@ -22,7 +24,7 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		setPapers(props.indexCards)
 	}, [
-		props.settings,
+		props.plugin.settings,
 		props.indexCards,
 		props.library.libraryData,
 		props.basename,
@@ -41,20 +43,26 @@ export const ReferenceMapList = (props: {
 			? 'orm-index-search'
 			: 'orm-index-no-search'
 		return (
-			<div className="orm-search-form">
-				<div className="index-search">
-					<input
-						type="search"
-						className={`orm-search-input ${searchFieldName}`}
-						placeholder={`Reference Map`}
-						onChange={(e) => setQuery(e.target.value)}
-						style={{ padding: '0 30px 0 30px' }}
-					/>
-					<BsSearch size={15} className="search-icon" />
-					{isSearchList &&
-						<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
-					}
+			<div className="orm-plugin-name">
+				<div className="orm-search-form">
+					<div className="index-search">
+						<div className="orm-plugin-graph">
+							<PiGraphFill size={17} className="graph-icon" onClick={() => props.plugin.openReferenceMapGraph()} />
+						</div>
+						<input
+							type="search"
+							className={`orm-search-input ${searchFieldName}`}
+							placeholder={`Reference Map`}
+							onChange={(e) => setQuery(e.target.value)}
+							style={{ padding: '0 35px 0 35px' }}
+						/>
+						{/* <BsSearch size={15} className="search-icon" /> */}
+						{isSearchList &&
+							<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
+						}
+					</div>
 				</div>
+
 			</div>
 		)
 	}
@@ -62,7 +70,7 @@ export const ReferenceMapList = (props: {
 	const SetKeyInfo = () => {
 		return (
 			<div>
-				{!props.settings.searchCiteKey &&
+				{!props.plugin.settings.searchCiteKey &&
 					<div className="orm-no-content-subtext">
 						Configure <code>Get References Using CiteKey</code> in the settings tab to process citations using pandoc citekey
 					</div>
@@ -110,7 +118,7 @@ export const ReferenceMapList = (props: {
 							>
 								<IndexPaperCard
 									className={activeIndexCardClass}
-									settings={props.settings}
+									settings={props.plugin.settings}
 									rootPaper={paper}
 									viewManager={props.viewManager}
 								/>
@@ -118,7 +126,7 @@ export const ReferenceMapList = (props: {
 						)
 					})}
 				</div>
-				{(noContentItems().length > 0 && props.settings.showInvalidItems) &&
+				{(noContentItems().length > 0 && props.plugin.settings.showInvalidItems) &&
 					<div className="orm-no-content">
 						<div>
 							{noContentItems().map((item) => {
@@ -135,7 +143,7 @@ export const ReferenceMapList = (props: {
 			</>
 		)
 	} else {
-		if (noContentItems().length > 0 && props.settings.showInvalidItems) {
+		if (noContentItems().length > 0 && props.plugin.settings.showInvalidItems) {
 			return (
 				<div className="orm-no-content">
 					<div>
