@@ -421,16 +421,16 @@ export const dataSort = (
 	sortOrder: string
 ) => {
 	return data.sort((a, b) => {
+		const left = a[sortProperty as keyof typeof a]
+		const right = b[sortProperty as keyof typeof b]
 		if (sortOrder === 'asc') {
-			return a[sortProperty as keyof typeof a] >
-				b[sortProperty as keyof typeof b]
-				? 1
-				: -1
+			if (left === undefined) return 1
+			if (right === undefined) return -1
+			return left > right ? 1 : -1
 		} else {
-			return a[sortProperty as keyof typeof a] <
-				b[sortProperty as keyof typeof b]
-				? 1
-				: -1
+			if (left === undefined) return -1
+			if (right === undefined) return 1
+			return left < right ? 1 : -1
 		}
 	})
 }
@@ -458,19 +458,19 @@ export const indexSort = (
 	sortOrder: string
 ) => {
 	return data.sort((a, b) => {
+		const left = a.paper[sortProperty as keyof typeof a.paper];
+		const right = b.paper[sortProperty as keyof typeof b.paper];
 		if (sortOrder === 'asc') {
-			return a.paper[sortProperty as keyof typeof a.paper] >
-				b.paper[sortProperty as keyof typeof b.paper]
-				? 1
-				: -1
+			if (left === undefined) return 1;
+			if (right === undefined) return -1;
+			return left > right ? 1 : -1;
 		} else {
-			return a.paper[sortProperty as keyof typeof a.paper] <
-				b.paper[sortProperty as keyof typeof b.paper]
-				? 1
-				: -1
+			if (left === undefined) return -1;
+			if (right === undefined) return 1;
+			return left < right ? 1 : -1;
 		}
-	})
-}
+	});
+};
 
 export async function useTemplaterPluginInFile(app: App, file: TFile) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
