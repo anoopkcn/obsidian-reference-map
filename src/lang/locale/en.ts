@@ -32,6 +32,16 @@ export default {
 		'Hide or show the influential citation count of references.<br>' +
 		'<b> Toggle ON: </b> Influential count will be visible<br>' +
 		'<b> Toggle OFF: </b> Influential count will be hidden',
+	HIDE_SHOW_INVALID_ITEMS: 'Hide or Show Invalid Items',
+	HIDE_SHOW_INVALID_ITEMS_DESC:
+		'Hide or show the invalid Index Cards in the reference map.<br>' +
+		'<b> Toggle ON: </b> Invalid items will be visible with a notice<br>' +
+		'<b> Toggle OFF: </b> Invalid items will be hidden',
+	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundant References',
+	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
+		'Hide or show references with no reference count and no citation count<br>' +
+		'<b> Toggle ON: </b> Redundant references will be hidden<br>' +
+		'<b> Toggle OFF: </b> Redundant references will be listed',
 	SEARCH_TITLE: 'Get References Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references also using the markdown note file name in addition to reference IDs.<br>' +
@@ -42,7 +52,7 @@ export default {
 		'Limit of the number of references shown in the map when <b>Get References</b> is enabled.',
 	SEARCH_FRONT_MATTER: 'Get References Using Frontmatter',
 	SEARCH_FRONT_MATTER_DESC:
-		'Find references also using the front matter of the markdown note file in addition to reference IDs.<br>' +
+		'Find references also using the frontmatter of the markdown note file in addition to reference IDs.<br>' +
 		'<b>Toggle ON:</b> Enable search using front matter<br>' +
 		'<b>Toggle OFF:</b> Disable search using front matter',
 	SEARCH_FRONT_MATTER_LIMIT: 'Get Limit',
@@ -59,19 +69,32 @@ export default {
 		'<b>Toggle OFF:</b> Disable citekey detection',
 	SEARCH_CITEKEY_PATH: 'Library File Path',
 	SEARCH_CITEKEY_PATH_DESC:
-		'Path to your CSL JSON file  with <code>.json</code> extension or BibTex file with <code>.bib</code> extension. Usually exported from reference manager such as Zotero or BibDesk.<br>' +
-		'Path must be relative to the vaults root',
-	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE: 'Auto Detect Update to CiteKey File',
-	AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC:
-		'Auto detect changes to the citekey file(Your Zotero/BibDesk Library) and update the reference map.<br>' +
-		'If not enabled you can also use <code>Refresh Map</code> in the command pallet to achieve the same effect.<br>' +
-		'<b>Toggle ON:</b> Enable auto detection of citekey file changes<br>' +
-		'<b>Toggle OFF:</b> Disable auto detection of citekey file changes',
+		'Path to your CSL JSON file with <code>.json</code> extension or BibTex file with <code>.bib</code> extension.<br>' +
+		'Usually exported from reference manager such as Zotero or BibDesk.<br>' +
+		'Path must be relative to the vault\'s root. This option is redundant if <Code>Pull Bibliography From Zotero</code> is enabled.<br>',
+	CITEKEY_PATH_ERROR: 'The citation export file can\'t be found. Please check the path.<br>' +
+		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
+	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto Detect Updates to Library',
+	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
+		'Auto detect changes to the Library and update the reference map.<br>' +
+		'You can also use <code>Refresh Map</code> in the Command Palette manually do the same<br>' +
+		'<b>Toggle ON:</b> Enable auto detection changes in the Library<br>' +
+		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
+	// Zotero Pull Settings
+	ZOTERO_PULL: 'Pull Bibliography From Zotero',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. <b>Zotero must have Better Bibtex plugin</b>.',
+	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
+	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
+	ZOTERO_PORT: 'Zotero port',
+	ZOTERO_PORT_DESC: 'Use 24119 or specify a custom port if you have changed Zotero\'s default.',
+	ZOTERO_LIBRARY_ID: 'Select Libraries to Include',
+	// citekey settings
 	CITEKEY_FILTER: 'CiteKey Exclusion Characters',
-	CITEKEY_FILTER_DESC: 'Give the characters that are not part of the citekey. For Example if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to give <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> which will recognize <code>,</code> and <code>.</code> as NOT part of the <code>citekey</code>). Default is set to <code>,</code>',
+	CITEKEY_FILTER_DESC: 'Set characters that are not part of the <code>citekey</code>. For Example, if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to set <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> this means <code>,</code> and <code>.</code> are NOT part of the <code>citekey</code>). Default is set to <code>,.</code>',
 	FIND_CITEKEY_WITHOUT_PREFIX: 'Process Citations in Links Without <code>@</code> Prefix',
 	FIND_CITEKEY_WITHOUT_PREFIX_DESC:
-		'Find citekey without <code>@</code> prefix in WikiLinks and Markdown Links. This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
+		'Find citekey WITHOUT <code>@</code> prefix in <b>WikiLinks and Markdown Links</b>.<br>' +
+		'This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
 		'<b>Toggle ON:</b> Find citekey without <code>@</code> prefix<br>' +
 		'<b>Toggle OFF:</b> Do not find citekey without <code>@</code> prefix',
 	CITEKEY_ZOTERO_LINK: 'Hide or Show Link to Zotero Library',
@@ -176,5 +199,5 @@ export default {
 		'Enable debug mode to see more information in the console. This is useful for debugging and <b>reporting issues</b>.<br>' +
 		'Enabling this will also reset all the reference data caches of Reference map.<br>' +
 		'<b>Toggle ON:</b> Enable debug mode <br>' +
-		'<b>Toggle OFF:</b> Disable debug mode',
+		'<b>Toggle OFF:</b> Disable debug mode'
 }

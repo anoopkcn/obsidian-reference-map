@@ -6,10 +6,12 @@ import {
 	getReferenceItems,
 	getCitationItems,
 	getSearchItems,
+	getBatchItems,
 } from './apis/s2agAPI'
 
 export class ViewManager {
 	private indexCache = new LRUCache<string, Reference | number | null>({ max: 150 })
+	private batchCache = new LRUCache<string, Reference[]>({ max: 50 })
 	private refCache = new LRUCache<string, Reference[]>({ max: 20 })
 	private citeCache = new LRUCache<string, Reference[]>({ max: 20 })
 	private searchCache = new LRUCache<string, Reference[]>({ max: 20 })
@@ -18,9 +20,29 @@ export class ViewManager {
 
 	clearCache = () => {
 		this.indexCache.clear()
+		this.batchCache.clear()
 		this.refCache.clear()
 		this.citeCache.clear()
 		this.searchCache.clear()
+	}
+
+	getBatchPapers = async (paperIds: string[]): Promise<Reference[]> => {
+		const cachedBatch = this.batchCache.get(paperIds.join(','))
+		if (cachedBatch) {
+			return cachedBatch
+		}
+
+		const debugMode = this.plugin.settings.debugMode
+		try {
+			const batchPapers = await getBatchItems(paperIds, debugMode)
+			this.batchCache.set(paperIds.join(','), batchPapers)
+			return batchPapers
+		} catch (e) {
+			if (debugMode) {
+				console.log('ORM: S2AG API Batch request error', e)
+			}
+			return []
+		}
 	}
 
 	getIndexPaper = async (paperId: string): Promise<Reference | number | null> => {

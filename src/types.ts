@@ -3,12 +3,17 @@ export interface ReferenceMapSettings {
 	influentialCount: boolean
 	showAbstract: boolean
 	showAuthors: boolean
+	showInvalidItems: boolean
+	filterRedundantReferences: boolean
 	searchTitle: boolean
 	searchLimit: number
 	searchFrontMatter: boolean
 	searchFrontMatterKey: string
 	searchFrontMatterLimit: number
 	searchCiteKey: boolean
+	pullFromZotero: boolean
+	zoteroGroups: ZoteroGroup[] 
+	zoteroPort: string
 	searchCiteKeyPath: string
 	autoUpdateCitekeyFile: boolean
 	citeKeyFilter: string
@@ -92,7 +97,6 @@ export interface citeKeyLibrary {
 	id?: string
 	DOI?: string | null
 	fields?: BibFields
-	abstract?: string | null
 	title?: string | null
 	URL?: string | null
 }
@@ -122,11 +126,13 @@ export interface MetaData {
 
 export interface IndexPaper {
 	id: string
+	location: number | null
 	paper: Reference
 }
 
 export interface CiteKey {
 	citeKey: string
+	location: number
 	paperId: string
 }
 
@@ -151,3 +157,17 @@ export const DIRECTION = {
 } as const
 
 export type Direction = typeof DIRECTION[keyof typeof DIRECTION]
+
+export interface PartialCSLEntry {
+	id: string;
+	title: string;
+	groupID?: number;
+}
+
+export interface ZoteroGroup {
+	id: number;
+	name: string;
+	lastUpdate?: number;
+}
+
+export type CSLList = PartialCSLEntry[];

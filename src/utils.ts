@@ -1,15 +1,26 @@
 import { App, FileSystemAdapter, MarkdownView, Notice, TFile } from 'obsidian'
 import path from 'path'
+import fs from 'fs';
 import doiRegex from 'doi-regex'
-import { CiteKey, IndexPaper, Library, MetaData, Reference } from './types'
+import download from 'download';
+import { request } from 'http';
+import https from 'https';
+import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
 import {
 	BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
+	DEFAULT_HEADERS,
+	DEFAULT_ZOTERO_PORT,
 	NUMBERS,
 	PUNCTUATION,
 	SEARCH_PARAMETERS,
 	VALID_S2AG_API_URLS,
 } from './constants'
+
+export function getVaultRoot() {
+	// This is a desktop only plugin, so assume adapter is FileSystemAdapter
+	return (app.vault.adapter as FileSystemAdapter).getBasePath();
+}
 
 export const fragWithHTML = (html: string) =>
 	createFragment((frag) => (frag.createDiv().innerHTML = html))
@@ -122,11 +133,15 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 		.replace(/\s+/g, '')
 }
 export const getCiteKeys = (
+	libraryData: citeKeyLibrary[] | null,
 	content: string,
 	findCiteKeyFromLinksWithoutPrefix: boolean,
 	filterChars?: string
 ): Set<string> => {
 	const output: string[] = []
+	const citekeys = libraryData?.map((item) => item.id) ?? []
+	//Get citekeys from CSL JSON
+
 	const citekeyRegex = /@([^\s]+)/gi // citekey with @ prefix
 	const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex)
 	if (matches) {
@@ -135,43 +150,58 @@ export const getCiteKeys = (
 			if (filterChars) {
 				citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
 			}
-			output.push(citeKey)
+			//only push if citekey is found in citekeys
+			if (citekeys.length > 0) {
+				if (citekeys.includes(citeKey)) output.push(citeKey)
+			} else {
+				output.push(citeKey)
+			}
 		}
 	}
 
 	if (findCiteKeyFromLinksWithoutPrefix) {
-
 		//Get citekeys from wiki links
 		const citekeyRegex2 = /\[\[([^\][]*)]]/gi // Wiki Link
-		// const citekeyRegex2 = /\[\[([^\s].*?)\]\]/gi // Wiki Link
+		const doi_matches = content.match(doiRegex())?.map(match => sanitizeCiteKey(match)) ?? []
 		const matches2 = content.matchAll(citekeyRegex2)
 		if (matches2) {
 			for (const match of matches2) {
 				const trial = match[1].trim().split(' ')[0]
 				let citeKey = sanitizeCiteKey(trial)
-				if (filterChars) {
-					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				if (!doi_matches?.includes(citeKey)) {
+					if (filterChars) {
+						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+					}
+					if (citekeys.length > 0) {
+						if (citekeys.includes(citeKey)) output.push(citeKey)
+					} else {
+						output.push(citeKey)
+					}
 				}
-				output.push(citeKey)
 			}
 		}
 
 		//Get citekeys from markdown links
 		const citekeyRegex3 = /\[([^\][]*)]/gi // Markdown Link
-		// const citekeyRegex3 = /\[([^\][]*)]\(/gi // Markdown Link
 		const matches3 = content.matchAll(citekeyRegex3)
 		if (matches3) {
 			for (const match of matches3) {
 				const trial = match[1].trim().split(' ')[0]
 				let citeKey = sanitizeCiteKey(trial)
-				if (filterChars) {
-					citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+				if (!doi_matches?.includes(citeKey)) {
+					if (filterChars) {
+						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
+					}
+					if (citekeys.length > 0) {
+						if (citekeys.includes(citeKey)) output.push(citeKey)
+					} else {
+						output.push(citeKey)
+					}
 				}
-				output.push(citeKey)
 			}
 		}
 	}
-	return new Set(output.sort())
+	return new Set(output)
 }
 export function copyElToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -288,6 +318,7 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 	const citeKeysMap: CiteKey[] = []
+	let index = 1; // Initialize index variable outside the loop
 	if (citeKeys.size > 0) {
 		// Get DOI from CiteKeyData corresponding to each item in citeKeys
 		for (const citeKey of citeKeys) {
@@ -298,6 +329,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				if (entry?.DOI) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: sanitizeDOI(entry?.DOI),
 					})
 				} else if (
@@ -307,7 +339,14 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: `URL:${entry?.URL}`,
+					})
+				} else {
+					citeKeysMap.push({
+						citeKey: '@' + citeKey,
+						location: index,
+						paperId: '@' + citeKey,
 					})
 				}
 			} else if (citeLibrary.adapter === 'bibtex') {
@@ -317,6 +356,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				if (entry?.fields?.doi?.[0]) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: sanitizeDOI(entry?.fields?.doi?.[0]),
 					})
 				} else if (
@@ -326,10 +366,19 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: `URL:${entry?.fields?.url?.[0]}`,
 					})
 				}
+				else {
+					citeKeysMap.push({
+						citeKey: '@' + citeKey,
+						location: index,
+						paperId: '@' + citeKey,
+					})
+				}
 			}
+			index++;
 		}
 	}
 	return citeKeysMap
@@ -380,16 +429,16 @@ export const dataSort = (
 	sortOrder: string
 ) => {
 	return data.sort((a, b) => {
+		const left = a[sortProperty as keyof typeof a]
+		const right = b[sortProperty as keyof typeof b]
 		if (sortOrder === 'asc') {
-			return a[sortProperty as keyof typeof a] >
-				b[sortProperty as keyof typeof b]
-				? 1
-				: -1
+			if (left === undefined) return 1
+			if (right === undefined) return -1
+			return left > right ? 1 : -1
 		} else {
-			return a[sortProperty as keyof typeof a] <
-				b[sortProperty as keyof typeof b]
-				? 1
-				: -1
+			if (left === undefined) return -1
+			if (right === undefined) return 1
+			return left < right ? 1 : -1
 		}
 	})
 }
@@ -417,19 +466,19 @@ export const indexSort = (
 	sortOrder: string
 ) => {
 	return data.sort((a, b) => {
+		const left = a.paper[sortProperty as keyof typeof a.paper];
+		const right = b.paper[sortProperty as keyof typeof b.paper];
 		if (sortOrder === 'asc') {
-			return a.paper[sortProperty as keyof typeof a.paper] >
-				b.paper[sortProperty as keyof typeof b.paper]
-				? 1
-				: -1
+			if (left === undefined) return 1;
+			if (right === undefined) return -1;
+			return left > right ? 1 : -1;
 		} else {
-			return a.paper[sortProperty as keyof typeof a.paper] <
-				b.paper[sortProperty as keyof typeof b.paper]
-				? 1
-				: -1
+			if (left === undefined) return -1;
+			if (right === undefined) return 1;
+			return left < right ? 1 : -1;
 		}
-	})
-}
+	});
+};
 
 export async function useTemplaterPluginInFile(app: App, file: TFile) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -470,4 +519,334 @@ export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 
 export function replaceIllegalFileNameCharactersInString(text: string) {
 	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
+}
+
+// Following functions are copied from 
+// https://github.com/mgmeyers/obsidian-pandoc-reference-list/blob/main/src/bib/helpers.ts
+// with some modifications
+
+export class PromiseCapability<T> {
+	settled = false;
+	promise: Promise<T>;
+	resolve: (data: T) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	reject: (reason?: any) => void;
+
+	constructor() {
+		this.promise = new Promise((resolve, reject) => {
+			this.resolve = (data) => {
+				resolve(data);
+				this.settled = true;
+			};
+
+			this.reject = (reason) => {
+				reject(reason);
+				this.settled = true;
+			};
+		});
+	}
+}
+
+function ensureDir(dir: string) {
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, { recursive: true });
+	}
+}
+
+function getGlobal() {
+	if (window?.activeWindow) return activeWindow;
+	if (window) return window;
+	return global;
+}
+
+export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
+	const p = download(`http://127.0.0.1:${port}/better-bibtex/cayw?probe=true`);
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const res: any = await Promise.race([
+		p,
+		new Promise((res) => {
+			getGlobal().setTimeout(() => {
+				res(null);
+				p.destroy();
+			}, 150);
+		}),
+	]);
+
+	return res?.toString() === 'ready';
+}
+
+function applyGroupID(list: CSLList, groupId: number) {
+	return list.map((item) => {
+		item.groupID = groupId;
+		return item;
+	});
+}
+
+
+export async function getZBib(
+	port: string = DEFAULT_ZOTERO_PORT,
+	cacheDir: string,
+	groupId: number,
+	loadCached?: boolean
+) {
+	const isRunning = await isZoteroRunning(port);
+	const cached = path.join(cacheDir, `zotero-library-${groupId}.json`);
+
+	ensureDir(cacheDir);
+	if (loadCached || !isRunning) {
+		if (fs.existsSync(cached)) {
+			return applyGroupID(
+				JSON.parse(fs.readFileSync(cached).toString()) as CSLList,
+				groupId
+			);
+		}
+		if (!isRunning) {
+			return null;
+		}
+	}
+
+	const bib = await download(
+		`http://127.0.0.1:${port}/better-bibtex/export/library?/${groupId}/library.json`
+	);
+
+	const str = bib.toString();
+
+	fs.writeFileSync(cached, str);
+
+	return applyGroupID(JSON.parse(str) as CSLList, groupId);
+}
+
+
+export async function getZUserGroups(
+	port: string = DEFAULT_ZOTERO_PORT
+): Promise<Array<{ id: number; name: string }>> {
+	if (!(await isZoteroRunning(port))) return [];
+
+	return new Promise((res, rej) => {
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			method: 'user.groups',
+		});
+
+		const postRequest = request(
+			{
+				host: '127.0.0.1',
+				port: port,
+				path: '/better-bibtex/json-rpc',
+				method: 'POST',
+				headers: {
+					...DEFAULT_HEADERS,
+					'Content-Length': Buffer.byteLength(body),
+				},
+			},
+			(result) => {
+				let output = '';
+
+				result.setEncoding('utf8');
+				result.on('data', (chunk) => (output += chunk));
+				result.on('error', (e) => rej(`Error connecting to Zotero: ${e}`));
+				result.on('close', () => {
+					rej(new Error('Error: cannot connect to Zotero'));
+				});
+				result.on('end', () => {
+					try {
+						res(JSON.parse(output).result);
+					} catch (e) {
+						rej(e);
+					}
+				});
+			}
+		);
+
+		postRequest.write(body);
+		postRequest.end();
+	});
+}
+
+function panNum(n: number) {
+	if (n < 10) return `0${n}`;
+	return n.toString();
+}
+
+function timestampToZDate(ts: number) {
+	const d = new Date(ts);
+	return `${d.getUTCFullYear()}-${panNum(d.getUTCMonth() + 1)}-${panNum(
+		d.getUTCDate()
+	)} ${panNum(d.getUTCHours())}:${panNum(d.getUTCMinutes())}:${panNum(
+		d.getUTCSeconds()
+	)}`;
+}
+
+export async function getZModified(
+	port: string = DEFAULT_ZOTERO_PORT,
+	groupId: number,
+	since: number
+): Promise<CSLList> {
+	if (!(await isZoteroRunning(port))) return [];
+
+	return new Promise((res, rej) => {
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			method: 'item.search',
+			params: [[['dateModified', 'isAfter', timestampToZDate(since)]], groupId],
+		});
+
+		const postRequest = request(
+			{
+				host: '127.0.0.1',
+				port: port,
+				path: '/better-bibtex/json-rpc',
+				method: 'POST',
+				headers: {
+					...DEFAULT_HEADERS,
+					'Content-Length': Buffer.byteLength(body),
+				},
+			},
+			(result) => {
+				let output = '';
+
+				result.setEncoding('utf8');
+				result.on('data', (chunk) => (output += chunk));
+				result.on('error', (e) => rej(`Error connecting to Zotero: ${e}`));
+				result.on('close', () => {
+					rej(new Error('Error: cannot connect to Zotero'));
+				});
+				result.on('end', () => {
+					try {
+						res(JSON.parse(output).result);
+					} catch (e) {
+						rej(e);
+					}
+				});
+			}
+		);
+
+		postRequest.write(body);
+		postRequest.end();
+	});
+}
+
+
+export async function refreshZBib(
+	port: string = DEFAULT_ZOTERO_PORT,
+	cacheDir: string,
+	groupId: number,
+	since: number
+) {
+	if (!(await isZoteroRunning(port))) {
+		return null;
+	}
+
+	const cached = path.join(cacheDir, `zotero-library-${groupId}.json`);
+	ensureDir(cacheDir);
+	if (!fs.existsSync(cached)) {
+		return null;
+	}
+
+	const mList = (await getZModified(port, groupId, since)) as CSLList;
+
+	if (!mList?.length) {
+		return null;
+	}
+
+	const modified: Map<string, PartialCSLEntry> = new Map();
+	const newKeys: Set<string> = new Set();
+
+	for (const mod of mList) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		mod.id = (mod as any).citekey || (mod as any)['citation-key'];
+		if (!mod.id) continue;
+		modified.set(mod.id, mod);
+		newKeys.add(mod.id);
+	}
+
+	const list = JSON.parse(fs.readFileSync(cached).toString()) as CSLList;
+
+	for (let i = 0; i < list.length; i++) {
+		const item = list[i];
+		if (modified.has(item.id)) {
+			newKeys.delete(item.id);
+			const modifiedItem = modified.get(item.id);
+			if (modifiedItem !== undefined) {
+				list[i] = modifiedItem;
+			}
+		}
+	}
+
+	for (const key of newKeys) {
+		const modifiedItem = modified.get(key);
+		if (modifiedItem !== undefined) {
+			list.push(modifiedItem);
+		}
+	}
+
+	fs.writeFileSync(cached, JSON.stringify(list));
+
+	return {
+		list: applyGroupID(list, groupId),
+		modified,
+	};
+}
+
+
+export async function getCSLStyle(
+	styleCache: Map<string, string>,
+	cacheDir: string,
+	url: string,
+	explicitPath?: string
+) {
+	if (explicitPath) {
+		if (styleCache.has(explicitPath)) {
+			return styleCache.get(explicitPath);
+		}
+
+		if (!fs.existsSync(explicitPath)) {
+			throw new Error(
+				`Error: retrieving citation style; Cannot find file '${explicitPath}'.`
+			);
+		}
+
+		const styleData = fs.readFileSync(explicitPath).toString();
+		styleCache.set(explicitPath, styleData);
+		return styleData;
+	}
+
+	if (styleCache.has(url)) {
+		return styleCache.get(url);
+	}
+
+	const fileFromURL = url.split('/').pop();
+	const outpath = path.join(cacheDir, fileFromURL ?? '');
+
+	ensureDir(cacheDir);
+	if (fs.existsSync(outpath)) {
+		const styleData = fs.readFileSync(outpath).toString();
+		styleCache.set(url, styleData);
+		return styleData;
+	}
+
+	const str = await new Promise<string>((res, rej) => {
+		https.get(url, (result) => {
+			let output = '';
+
+			result.setEncoding('utf8');
+			result.on('data', (chunk) => (output += chunk));
+			result.on('error', (e) => rej(`Error downloading CSL: ${e}`));
+			result.on('close', () => {
+				rej(new Error('Error: cannot download CSL'));
+			});
+			result.on('end', () => {
+				try {
+					res(output);
+				} catch (e) {
+					rej(e);
+				}
+			});
+		});
+	});
+
+	fs.writeFileSync(outpath, str);
+	styleCache.set(url, str);
+	return str;
 }

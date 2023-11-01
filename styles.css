@@ -95,7 +95,7 @@ settings:
 		title: Secondary background color
 		type: variable-color
 		format: hex
-		default: var(--background-secondary-alt)
+		default: var(--background-secondary)
 	-
 		id: orm-paper-title-link-color
 		title: Reference paper title link color
@@ -165,7 +165,7 @@ body {
 	--orm-paper-index-card-padding: 0.5rem;
 	--orm-paper-reference-card-padding: 0.5rem;
 	--orm-paper-background-color: var(--background-primary);
-	--orm-paper-background-secondary-color: var(--background-secondary-alt);
+	--orm-paper-background-secondary-color: var(--background-secondary);
 	--orm-paper-title-link-color: var(--text-normal);
 	--orm-paper-title-link-hover-color: var(--text-accent);
 	--orm-paper-author-link-color: var(--text-muted);
@@ -176,10 +176,11 @@ body {
 	--orm-paper-buttons-color: var(--icon-color);
 	--orm-paper-buttons-hover-color: var(--text-accent);
 	--orm-paper-line-color: var(--color-base-30);
+	--orm-paper-disable-opacity: 0.5;
 }
 /* following removes the jumping when scrollbar is visible */
 
-[data-type="reference-map-view"] > .view-content{
+[data-type='reference-map-view'] > .view-content {
 	scrollbar-gutter: stable both-edges;
 }
 
@@ -190,7 +191,7 @@ body {
 
 .orm-no-content {
 	text-align: center;
-	opacity: 0.5;
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-no-content-subtext {
@@ -304,7 +305,7 @@ body {
 }
 
 .orm-button-disable {
-	opacity: 0.3;
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-paper-buttons > .orm-copy-metadata-one,
@@ -332,7 +333,8 @@ body {
 	padding-top: 0.5rem 0;
 	margin-top: 0.5rem 0;
 }
-.orm-paper-card{
+.orm-paper-card {
+	border: var(--orm-paper-line-thickness) dotted var(--orm-paper-line-color);
 	background: var(--orm-paper-background-secondary-color);
 	padding: var(--orm-paper-reference-card-padding);
 	margin: 0.5rem 0;
@@ -347,6 +349,10 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.orm-paper-list .orm-references-2, .orm-paper-list .orm-citations-2 {
+	opacity: var(--orm-paper-disable-opacity)
 }
 
 .orm-search-form {
@@ -370,19 +376,19 @@ body {
 	left: 10px;
 	transform: translateY(-50%);
 	color: var(--orm-paper-buttons-color);
-  }
+}
 
 .orm-index-no-search {
 	pointer-events: none;
 }
 
-.index-search{
+.index-search {
 	position: relative;
 	align-items: center;
 	gap: var(--size-4-1);
 }
 
-.cardCount{
+.cardCount {
 	position: absolute;
 	right: var(--size-4-1);
 	top: var(--size-4-1);
@@ -395,6 +401,16 @@ body {
 	font-weight: var(--font-normal);
 	line-height: 1;
 	font-size: var(--font-ui-smaller);
+}
+.cardLocation{
+	color: var(--text-muted);
+	padding: var(--size-4-1) var(--size-4-2);
+	border-radius: var(--tag-radius);
+	background-color: rgba(var(--mono-rgb-100), 0.05);
+	font-weight: var(--font-normal);
+	/* line-height: 1; */
+	font-size: var(--font-ui-smaller);
+	
 }
 
 .orm-loading {
@@ -444,19 +460,19 @@ body {
 /* Search modal settings */
 
 .orm-search-modal-input-heading {
-    font-variant: var(--h2-variant);
-    line-height: var(--h2-line-height);
-    font-size: var(--h2-size);
-    color: var(--h2-color);
-    font-weight: var(--h2-weight);
-    font-style: var(--h2-style);
-    font-family: var(--h2-font);
+	font-variant: var(--h2-variant);
+	line-height: var(--h2-line-height);
+	font-size: var(--h2-size);
+	color: var(--h2-color);
+	font-weight: var(--h2-weight);
+	font-style: var(--h2-style);
+	font-family: var(--h2-font);
 	display: flex;
 	padding: 0.5rem 0;
 	text-align: center;
 	width: 100%;
 }
-.orm-search-modal-input-heading-mode{
+.orm-search-modal-input-heading-mode {
 	margin-left: 0.25rem;
 	color: var(--code-normal);
 	font-family: var(--font-monospace);
@@ -474,20 +490,41 @@ body {
 	width: 100%;
 }
 
-.orm-modal-paper-title{
+.orm-modal-paper-title {
 	padding-bottom: 0.25rem;
 }
 
-.orm-modal-paper-authors{
+.orm-modal-paper-authors {
 	font-size: var(--orm-paper-author-font-size);
 	font-weight: var(--orm-paper-author-font-weight);
 	display: block;
-
 }
 
-.orm-modal-paper-year{
+.orm-modal-paper-year {
 	font-size: var(--orm-paper-author-font-size);
 	font-weight: var(--orm-paper-author-font-weight);
 	display: block;
+}
 
+.orm-setting-item-wrapper {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.orm-setting-item-wrapper > div {
+	margin-right: 0 !important;
+}
+
+.orm-setting-item-wrapper > div:last-child {
+	padding-bottom: 0;
+}
+
+.orm-group-toggle {
+	display: flex;
+	justify-content: flex-end;
+	padding-top: var(--size-4-2);
+}
+
+.orm-group-toggle .setting-item-description {
+	padding-top: 0;
 }

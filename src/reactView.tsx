@@ -6,6 +6,7 @@ import { Root, createRoot } from 'react-dom/client'
 import { ReferenceMapList } from './components/ReferenceMapList'
 import { RELOAD, Reload } from './types'
 import { ReferenceMapData } from './referenceData'
+import { AppContext } from './context'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -13,13 +14,13 @@ export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap
 	activeMarkdownLeaf: MarkdownView
 	referenceMapData: ReferenceMapData
-	rootEl: Root
+	rootEl: Root | null
 	isUpdated: boolean
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf)
 		this.plugin = plugin
-		this.referenceMapData = new ReferenceMapData(plugin)
+		this.referenceMapData = this.plugin.referenceMapData
 		this.rootEl = createRoot(this.containerEl.children[1])
 		this.isUpdated = false
 
@@ -69,12 +70,11 @@ export class ReferenceMapView extends ItemView {
 	}
 
 	async onOpen() {
-		await this.referenceMapData.loadLibrary()
 		this.processReferences()
 	}
 
 	async onClose() {
-		this.rootEl.unmount()
+		this.rootEl?.unmount()
 		this.referenceMapData.viewManager.clearCache()
 		return super.onClose()
 	}
@@ -83,10 +83,10 @@ export class ReferenceMapView extends ItemView {
 		if (reloadType === RELOAD.HARD) {
 			this.referenceMapData.viewManager.clearCache()
 			this.referenceMapData.resetLibraryTime()
-			await this.referenceMapData.loadLibrary()
+			await this.referenceMapData.loadLibrary(false)
 			this.processReferences()
 		} else if (reloadType === RELOAD.SOFT) {
-			await this.referenceMapData.loadLibrary()
+			await this.referenceMapData.loadLibrary(false)
 			this.processReferences()
 		} else if (reloadType === RELOAD.VIEW) {
 			this.processReferences()
@@ -140,17 +140,19 @@ export class ReferenceMapView extends ItemView {
 			this.referenceMapData.basename,
 			true
 		)
-		this.rootEl.render(
-			<ReferenceMapList
-				settings={this.plugin.settings}
-				viewManager={this.referenceMapData.viewManager}
-				library={this.referenceMapData.library}
-				basename={this.referenceMapData.basename}
-				paperIDs={this.referenceMapData.paperIDs}
-				citeKeyMap={this.referenceMapData.citeKeyMap}
-				indexCards={indexCards}
-				selection={selection}
-			/>
+		this.rootEl?.render(
+			<AppContext.Provider value={this.app}>
+				<ReferenceMapList
+					settings={this.plugin.settings}
+					viewManager={this.referenceMapData.viewManager}
+					library={this.referenceMapData.library}
+					basename={this.referenceMapData.basename}
+					paperIDs={this.referenceMapData.paperIDs}
+					citeKeyMap={this.referenceMapData.citeKeyMap}
+					indexCards={indexCards}
+					selection={selection}
+				/>
+			</AppContext.Provider>
 		)
 	}
 }

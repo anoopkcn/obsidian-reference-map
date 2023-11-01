@@ -1,4 +1,4 @@
-import { ReferenceMapSettings } from './types'
+import { ReferenceMapSettings, ZoteroGroup } from './types'
 
 // There are customizable metadata template
 // METADATA_COPY_TEMPLATE_ONE     correspond to button one
@@ -29,28 +29,44 @@ export const METADATA_MODAL_CREATE_TEMPLATE = `{{title}}
 [External Link]({{url}})
 {{pdfurl}}
 `
+export const DEFAULT_ZOTERO_PORT = '23119';
+
+export const DEFAULT_HEADERS = {
+	'Content-Type': 'application/json',
+	'User-Agent': 'obsidian/zotero',
+	Accept: 'application/json',
+	Connection: 'keep-alive',
+};
+
+export const DEFAULT_ZOTERO_GROUPS: ZoteroGroup[] = [];
+
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
 	influentialCount: false,
 	showAbstract: false,
 	showAuthors: false,
+	showInvalidItems: true,
+	filterRedundantReferences: false,
 	searchTitle: false,
 	searchLimit: 3,
 	searchFrontMatter: false,
 	searchFrontMatterKey: 'keywords',
 	searchFrontMatterLimit: 3,
 	searchCiteKey: false,
-	searchCiteKeyPath: 'My Library.json',
-	autoUpdateCitekeyFile: false,
-	citeKeyFilter: ',',
+	pullFromZotero: true,
+	zoteroGroups: DEFAULT_ZOTERO_GROUPS,
+	zoteroPort: DEFAULT_ZOTERO_PORT,
+	searchCiteKeyPath: '',
+	autoUpdateCitekeyFile: true,
+	citeKeyFilter: ',.',
 	linkCiteKey: false,
 	findZoteroCiteKeyFromID: false,
 	findCiteKeyFromLinksWithoutPrefix: false,
 	enableReferenceSorting: false,
 	sortByReference: 'year',
 	sortOrderReference: 'desc',
-	enableIndexSorting: true,
+	enableIndexSorting: false,
 	sortByIndex: 'year',
 	sortOrderIndex: 'desc',
 	modalSearchLimit: 10,

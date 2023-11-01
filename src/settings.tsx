@@ -3,6 +3,9 @@ import ReferenceMap from './main'
 import { t } from './lang/helpers'
 import { fragWithHTML, resolvePath } from './utils'
 import { RELOAD } from './types'
+import React from 'react';
+import { ZoteroPullSetting } from './components/ZoteroPullSetting'
+import { createRoot } from 'react-dom/client'
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -20,7 +23,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		const { containerEl } = this
 		containerEl.empty()
 
-		containerEl.createEl('h2', { text: t('GENERAL_SETTINGS') })
+		containerEl.createEl('h1', { text: t('GENERAL_SETTINGS') })
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_ABSTRACT'))
@@ -77,6 +80,35 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
 								this.plugin.view.reload(RELOAD.VIEW)
+						})
+					})
+			)
+
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_INVALID_ITEMS'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_INVALID_ITEMS_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.showInvalidItems)
+					.onChange(async (value) => {
+						this.plugin.settings.showInvalidItems = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload(RELOAD.VIEW)
+						})
+					})
+			)
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.filterRedundantReferences)
+					.onChange(async (value) => {
+						this.plugin.settings.filterRedundantReferences = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.view.reload(RELOAD.SOFT)
 						})
 					})
 			)
@@ -200,7 +232,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h2', { text: 'Static List Settings' })
+		containerEl.createEl('h1', { text: 'Static List Settings' })
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('SEARCH_CITEKEY')))
 			.setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
@@ -211,13 +243,32 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.searchCiteKey = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.SOFT)
+								this.plugin.view.reload(RELOAD.HARD)
 						})
 						this.display()
 					})
 			)
 
 		if (this.plugin.settings.searchCiteKey) {
+			new Setting(containerEl)
+				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY')))
+				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_DESC')))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(
+							this.plugin.settings
+								.autoUpdateCitekeyFile
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.autoUpdateCitekeyFile =
+								value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.view.reload(RELOAD.SOFT)
+							})
+						})
+				)
+
 			new Setting(containerEl)
 				.setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
 				.setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
@@ -244,11 +295,17 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 			this.citationPathErrorEl = containerEl.createEl('p', {
 				cls: 'orm-PathError d-none',
-				text: 'The citation export file cannot be found. Please check the path above.',
+				text: fragWithHTML(t('CITEKEY_PATH_ERROR')),
 			})
 			this.citationPathSuccessEl = containerEl.createEl('p', {
 				cls: 'orm-PathSuccess d-none',
 				text: 'Successfully Loaded Library Containing References.',
+			})
+
+			containerEl.createDiv('setting-item orm-setting-item-wrapper', (el) => {
+				createRoot(el).render(
+					<ZoteroPullSetting plugin={this.plugin} />,
+				);
 			})
 
 			new Setting(containerEl)
@@ -311,29 +368,10 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 									this.plugin.view.reload(RELOAD.VIEW)
 							})
 						})
-				)
-
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE')))
-				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_FILE_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(
-							this.plugin.settings
-								.autoUpdateCitekeyFile
-						)
-						.onChange(async (value) => {
-							this.plugin.settings.autoUpdateCitekeyFile =
-								value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.SOFT)
-							})
-						})
-				)
+			)
 		}
 
-		containerEl.createEl('h2', { text: 'Dynamic List Settings' })
+		containerEl.createEl('h1', { text: 'Dynamic List Settings' })
 
 		new Setting(containerEl)
 			.setName(t('SEARCH_TITLE'))
@@ -433,7 +471,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				})
 		}
 
-		containerEl.createEl('h2', { text: 'Buttons Settings' })
+		containerEl.createEl('h1', { text: 'Buttons Settings' })
 
 		new Setting(containerEl)
 			.setName(t('STANDARDIZE_BIBTEX'))
@@ -595,7 +633,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h2', { text: 'Search Settings' })
+		containerEl.createEl('h1', { text: 'Search Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_LIMIT')))
@@ -671,7 +709,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 
-		containerEl.createEl('h2', { text: 'Debug Settings' })
+		containerEl.createEl('h1', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('DEBUG_MODE')))

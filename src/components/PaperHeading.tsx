@@ -17,6 +17,9 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	return (
 		<div className="orm-paper-heading">
 			<div className="orm-paper-title">
+				{paper.location &&
+					<span className="cardLocation">{paper.location}</span>
+				}
 				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>
 					{' ' + (title || 'Unknown Title') + ' '}
 				</a>
