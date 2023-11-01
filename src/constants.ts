@@ -66,7 +66,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	enableReferenceSorting: false,
 	sortByReference: 'year',
 	sortOrderReference: 'desc',
-	enableIndexSorting: true,
+	enableIndexSorting: false,
 	sortByIndex: 'year',
 	sortOrderIndex: 'desc',
 	modalSearchLimit: 10,

@@ -126,11 +126,13 @@ export interface MetaData {
 
 export interface IndexPaper {
 	id: string
+	location: number | null
 	paper: Reference
 }
 
 export interface CiteKey {
 	citeKey: string
+	location: number
 	paperId: string
 }
 

@@ -24,7 +24,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 	const paperList = dataSearch(sortedPapers, query).map((paper, index) => (
 		<PaperCard
 			key={`${paper.paperId}-${index}`}
-			paper={{ id: paper.paperId, paper }}
+			paper={{ id: paper.paperId, location: null, paper }}
 			settings={settings}
 		/>
 	))

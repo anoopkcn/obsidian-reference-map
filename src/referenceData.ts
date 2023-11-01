@@ -167,7 +167,7 @@ export class ReferenceMapData {
                                 this.plugin.settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
-                        indexCards.push({ id: paperCiteId, paper });
+                        indexCards.push({ id: paperCiteId, location: null, paper });
                     }
                 })
             );
@@ -180,7 +180,7 @@ export class ReferenceMapData {
                     if (item.paperId !== item.citeKey) {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
-                            indexCards.push({ id: item.citeKey, paper });
+                            indexCards.push({ id: item.citeKey, location: item.location, paper });
                         }
                     }
                 })
@@ -200,7 +200,7 @@ export class ReferenceMapData {
                 this.plugin.settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
-                indexCards.push({ id: paper.paperId, paper });
+                indexCards.push({ id: paper.paperId, location: null, paper });
             });
         }
 
@@ -211,7 +211,7 @@ export class ReferenceMapData {
                 this.plugin.settings.searchFrontMatterLimit
             );
             _.forEach(frontMatterPapers, (paper) => {
-                indexCards.push({ id: paper.paperId, paper });
+                indexCards.push({ id: paper.paperId, location: null, paper });
             });
         }
         if (preprocess) {
@@ -223,7 +223,15 @@ export class ReferenceMapData {
 
     preProcessReferences = (indexCards: IndexPaper[]) => {
         if (!this.plugin.settings.enableIndexSorting) {
-            return removeNullReferences(indexCards)
+            // Remove null references and sort the array
+            return removeNullReferences(indexCards).sort((a, b) => {
+                // If location is null, place it at the end
+                if (a.location === null) return 1;
+                if (b.location === null) return -1;
+
+                // Sort by location
+                return a.location - b.location;
+            });
         }
         return indexSort(
             removeNullReferences(indexCards),

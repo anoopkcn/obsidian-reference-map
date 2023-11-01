@@ -201,7 +201,7 @@ export const getCiteKeys = (
 			}
 		}
 	}
-	return new Set(output.sort())
+	return new Set(output)
 }
 export function copyElToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -318,6 +318,7 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 
 export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 	const citeKeysMap: CiteKey[] = []
+	let index = 1; // Initialize index variable outside the loop
 	if (citeKeys.size > 0) {
 		// Get DOI from CiteKeyData corresponding to each item in citeKeys
 		for (const citeKey of citeKeys) {
@@ -328,6 +329,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				if (entry?.DOI) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: sanitizeDOI(entry?.DOI),
 					})
 				} else if (
@@ -337,11 +339,13 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: `URL:${entry?.URL}`,
 					})
 				} else {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: '@' + citeKey,
 					})
 				}
@@ -352,6 +356,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				if (entry?.fields?.doi?.[0]) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: sanitizeDOI(entry?.fields?.doi?.[0]),
 					})
 				} else if (
@@ -361,16 +366,19 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 				) {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: `URL:${entry?.fields?.url?.[0]}`,
 					})
 				}
 				else {
 					citeKeysMap.push({
 						citeKey: '@' + citeKey,
+						location: index,
 						paperId: '@' + citeKey,
 					})
 				}
 			}
+			index++;
 		}
 	}
 	return citeKeysMap
