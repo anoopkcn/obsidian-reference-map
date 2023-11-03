@@ -37,7 +37,7 @@ export default {
 		'Hide or show the invalid Index Cards in the reference map.<br>' +
 		'<b> Toggle ON: </b> Invalid items will be visible with a notice<br>' +
 		'<b> Toggle OFF: </b> Invalid items will be hidden',
-	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundant References',
+	HIDE_SHOW_REDUNDANT_REFERENCES: 'Hide or Show Redundant Cited or Citing Items',
 	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
 		'Hide or show references with no reference count and no citation count<br>' +
 		'<b> Toggle ON: </b> Redundant references will be hidden<br>' +
@@ -82,21 +82,13 @@ export default {
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
 	// Zotero Pull Settings
 	ZOTERO_PULL: 'Pull Bibliography From Zotero',
-	ZOTERO_PULL_DESC: 'Pull data from Zotero. <b>Zotero must have Better Bibtex plugin</b>.',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
 	ZOTERO_PORT: 'Zotero port',
 	ZOTERO_PORT_DESC: 'Use 24119 or specify a custom port if you have changed Zotero\'s default.',
 	ZOTERO_LIBRARY_ID: 'Select Libraries to Include',
 	// citekey settings
-	CITEKEY_FILTER: 'CiteKey Exclusion Characters',
-	CITEKEY_FILTER_DESC: 'Set characters that are not part of the <code>citekey</code>. For Example, if you have page numbers associated with a citekey in the markdown like <code>[@citekey, p. 101]</code>, you might want to set <code>,</code> as the exclusion character. If you have multiple exclusion characters give all of them without any separators(Eg: <code>,.</code> this means <code>,</code> and <code>.</code> are NOT part of the <code>citekey</code>). Default is set to <code>,.</code>',
-	FIND_CITEKEY_WITHOUT_PREFIX: 'Process Citations in Links Without <code>@</code> Prefix',
-	FIND_CITEKEY_WITHOUT_PREFIX_DESC:
-		'Find citekey WITHOUT <code>@</code> prefix in <b>WikiLinks and Markdown Links</b>.<br>' +
-		'This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
-		'<b>Toggle ON:</b> Find citekey without <code>@</code> prefix<br>' +
-		'<b>Toggle OFF:</b> Do not find citekey without <code>@</code> prefix',
 	CITEKEY_ZOTERO_LINK: 'Hide or Show Link to Zotero Library',
 	CITEKEY_ZOTERO_LINK_DESC:
 		'Hide or Show the <code>@citekey</code> link in the index cards to show reference in Zotero library.<br>' +

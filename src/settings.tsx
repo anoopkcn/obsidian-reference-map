@@ -309,21 +309,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 
 			new Setting(containerEl)
-				.setName(fragWithHTML(t('CITEKEY_FILTER')))
-				.setDesc(fragWithHTML(t('CITEKEY_FILTER_DESC')))
-				.addText((text) =>
-					text.setValue(
-						this.plugin.settings.citeKeyFilter
-					).onChange(async (value) => {
-						this.plugin.settings.citeKeyFilter = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.SOFT)
-						})
-					})
-				)
-
-			new Setting(containerEl)
 				.setName(t('CITEKEY_ZOTERO_LINK'))
 				.setDesc(fragWithHTML(t('CITEKEY_ZOTERO_LINK_DESC')))
 				.addToggle((toggle) =>
@@ -345,24 +330,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						.setValue(this.plugin.settings.findZoteroCiteKeyFromID)
 						.onChange(async (value) => {
 							this.plugin.settings.findZoteroCiteKeyFromID = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
-							})
-						})
-				)
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX')))
-				.setDesc(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(
-							this.plugin.settings
-								.findCiteKeyFromLinksWithoutPrefix
-						)
-						.onChange(async (value) => {
-							this.plugin.settings.findCiteKeyFromLinksWithoutPrefix =
-								value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
 									this.plugin.view.reload(RELOAD.VIEW)
@@ -472,21 +439,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		}
 
 		containerEl.createEl('h1', { text: 'Buttons Settings' })
-
-		new Setting(containerEl)
-			.setName(t('STANDARDIZE_BIBTEX'))
-			.setDesc(fragWithHTML(t('STANDARDIZE_BIBTEX_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.standardizeBibtex)
-					.onChange(async (value) => {
-						this.plugin.settings.standardizeBibtex = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
-						})
-					})
-			)
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('FORMAT_METADATA_COPY_ONE')))
