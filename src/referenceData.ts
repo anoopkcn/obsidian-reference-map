@@ -253,9 +253,7 @@ export class ReferenceMapData {
         if (activeView) {
             if (isLibrary && this.plugin.settings.autoUpdateCitekeyFile) this.loadLibrary(false)
             this.basename = activeView.file?.basename ?? ''
-            if (fileMetadataCache) {
-                this.paperIDs = getPaperIds(fileMetadataCache)
-            }
+
             if (isLibrary && activeView.file) {
                 const citeKeys = getCiteKeys(
                     this.library.libraryData,
@@ -264,6 +262,11 @@ export class ReferenceMapData {
                     this.plugin.settings.citeKeyFilter
                 )
                 this.citeKeyMap = getCiteKeyIds(citeKeys, this.library)
+            }
+            if (fileMetadataCache) {
+                this.paperIDs = getPaperIds(fileMetadataCache)
+                // if  any item in paperIDs is equal to citekeymap item.paperId then remove it from paperIDs
+                this.paperIDs = new Set([...this.paperIDs].filter(x => ![...this.citeKeyMap].map(y => y.paperId).includes(x)))
             }
 
             if (this.plugin.settings.searchFrontMatter) {
