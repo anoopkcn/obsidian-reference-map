@@ -35,7 +35,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.showAbstract = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -49,7 +49,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.showAuthors = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -64,7 +64,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.influentialCount = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -79,7 +79,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.hideButtonsOnHover = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -94,7 +94,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.showInvalidItems = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -108,7 +108,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.filterRedundantReferences = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.SOFT)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
 						})
 					})
 			)
@@ -124,7 +124,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.enableIndexSorting = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -151,7 +151,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.sortByIndex = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -167,7 +167,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.sortOrderIndex = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -183,7 +183,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.enableReferenceSorting = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -210,7 +210,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.sortByReference = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -226,7 +226,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.sortOrderReference = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -243,7 +243,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.searchCiteKey = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.HARD)
+								this.plugin.referenceMapData.reload(RELOAD.HARD)
 						})
 						this.display()
 					})
@@ -264,7 +264,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.SOFT)
+									this.plugin.referenceMapData.reload(RELOAD.SOFT)
 							})
 						})
 				)
@@ -282,7 +282,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								this.plugin.settings.searchCiteKeyPath = value
 								this.plugin.saveSettings().then(() => {
 									if (this.plugin.view)
-										this.plugin.view.reload(RELOAD.SOFT)
+										this.plugin.referenceMapData.reload(RELOAD.SOFT)
 								})
 							}
 						})
@@ -318,7 +318,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.linkCiteKey = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -332,7 +332,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.findZoteroCiteKeyFromID = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 			)
@@ -350,7 +350,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -368,7 +368,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.searchTitle = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -388,7 +388,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.searchLimit = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -410,7 +410,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.searchFrontMatter = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -428,7 +428,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.searchFrontMatterKey = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -444,7 +444,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.searchFrontMatterLimit = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -468,7 +468,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.formatMetadataCopyOne = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -485,7 +485,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.metadataCopyTemplateOne = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 				})
@@ -499,7 +499,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.metadataCopyOneBatch = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -515,7 +515,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.formatMetadataCopyTwo = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -533,7 +533,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.metadataCopyTemplateTwo = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 				})
@@ -547,7 +547,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.metadataCopyTwoBatch = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -563,7 +563,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.formatMetadataCopyThree = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 						this.display()
 					})
@@ -583,7 +583,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -597,7 +597,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							this.plugin.settings.metadataCopyThreeBatch = value
 							this.plugin.saveSettings().then(() => {
 								if (this.plugin.view)
-									this.plugin.view.reload(RELOAD.VIEW)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
 				)
@@ -617,7 +617,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.modalSearchLimit = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
 					})
 			)
@@ -691,7 +691,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.debugMode = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.view.reload(RELOAD.HARD)
+								this.plugin.referenceMapData.reload(RELOAD.HARD)
 						})
 					})
 		)

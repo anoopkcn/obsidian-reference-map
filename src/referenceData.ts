@@ -14,7 +14,7 @@ import {
 } from './utils'
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
-import { CiteKey, IndexPaper, Library, citeKeyLibrary } from './types';
+import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from './types';
 import _ from 'lodash';
 import { ViewManager } from './viewManager';
 import { CachedMetadata, MarkdownView } from 'obsidian';
@@ -40,6 +40,24 @@ export class ReferenceMapData {
         this.frontMatterString = ''
         this.fileNameString = ''
         this.basename = ''
+    }
+
+    async reload(reloadType: Reload) {
+        const debug = this.plugin.settings.debugMode
+        if (reloadType === RELOAD.HARD) {
+            this.viewManager.clearCache()
+            this.resetLibraryTime()
+            await this.loadLibrary(false)
+            this.plugin.view?.processReferences()
+            if (debug) console.log('ORM: Reloaded View and library')
+        } else if (reloadType === RELOAD.SOFT) {
+            await this.loadLibrary(false)
+            this.plugin.view?.processReferences()
+            if (debug) console.log('ORM: Reloaded library')
+        } else if (reloadType === RELOAD.VIEW) {
+            this.plugin.view?.processReferences()
+            if (debug) console.log('ORM: Reloaded View')
+        }
     }
 
     resetLibraryTime = () => {

@@ -67,7 +67,7 @@ export default class ReferenceMap extends Plugin {
 			name: 'Refresh View',
 			callback: () => {
 				if (this.view) {
-					this.view.reload(RELOAD.HARD)
+					this.referenceMapData.reload(RELOAD.HARD)
 				}
 			},
 		})

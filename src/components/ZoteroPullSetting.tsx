@@ -81,7 +81,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                 }
                                 plugin.saveSettings().then(() => {
                                     plugin.referenceMapData.reinit(true)
-                                    plugin.view?.reload(RELOAD.SOFT)
+                                    plugin.referenceMapData?.reload(RELOAD.SOFT)
                                 });
                                 return !cur;
                             });
@@ -115,7 +115,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                 onChange={(e) => {
                                     plugin.settings.zoteroPort = e.target.value;
                                     plugin.saveSettings();
-                                    plugin.view?.reload(RELOAD.SOFT)
+                                    plugin.referenceMapData?.reload(RELOAD.SOFT)
                                 }}
                                 type="text"
                                 spellCheck={false}
@@ -145,7 +145,7 @@ export function ZoteroPullSetting({ plugin }: { plugin: ReferenceMap }) {
                                                 }
                                                 plugin.saveSettings().then(() => {
                                                     plugin.referenceMapData.reinit(true)
-                                                    plugin.view?.reload(RELOAD.SOFT)
+                                                    plugin.referenceMapData?.reload(RELOAD.SOFT)
                                                 });
                                             }}
                                             className={`checkbox-container${isEnabled ? ' is-enabled' : ''
