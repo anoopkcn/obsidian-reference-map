@@ -1,14 +1,17 @@
-import { ItemView, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
 import ReferenceMap from "src/main";
+import { AppContext } from "src/context";
+import { ReferenceMapData } from "src/referenceData";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
 
 export class GraphView extends ItemView {
     plugin: ReferenceMap
+    referenceMapData: ReferenceMapData
     rootEl: Root
     viewContent: HTMLElement;
 
@@ -16,6 +19,7 @@ export class GraphView extends ItemView {
         super(leaf);
         this.plugin = plugin;
         this.navigation = false
+        this.referenceMapData = this.plugin.referenceMapData
         this.viewContent = this.containerEl.querySelector(
             ".view-content"
         ) as HTMLElement;
@@ -75,44 +79,35 @@ export class GraphView extends ItemView {
     }
 
     openGraph = async () => {
-        const data = {
-            "nodes": [
-                {
-                    "id": "id1",
-                    "name": "citedPaper",
-                    "val": 5,
-                    "color": "#7ABA57"
-                },
-                {
-                    "id": "id2",
-                    "name": "indexPaper",
-                    "val": 10,
-                    "color": "#61C1E8"
-                },
-                {
-                    "id": "id3",
-                    "name": "citingPaper",
-                    "val": 2,
-                    "color": "#A15399"
-                },
-            ],
-            "links": [
-                {
-                    "source": "id1",
-                    "target": "id2"
-                },
-                {
-                    "source": "id2",
-                    "target": "id3"
-                }
-            ]
+        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+        if (activeView?.file) {
+            const fileMetadataCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
+            const fileCache = this.app.metadataCache.getFileCache(activeView.file);
+            this.referenceMapData.updatePaperIDs(activeView, fileMetadataCache, fileCache)
+        } else {
+            // This is needed to trigger rendering if active view is not a markdown file
+            // the prop name basename will re render the view
+            this.referenceMapData.basename = ''
         }
-        this.rootEl.render(
-            <ReferenceMapGraph
-                data={data}
-                width={this.viewContent.innerWidth}
-                height={this.viewContent.innerHeight}
-            />
+        // if (!this.isUpdated) return
+        const indexCards = await this.referenceMapData.getIndexCards(
+            this.referenceMapData.paperIDs,
+            this.referenceMapData.citeKeyMap,
+            this.referenceMapData.fileNameString,
+            this.referenceMapData.frontMatterString,
+            this.referenceMapData.basename,
+            true
+        )
+        this.rootEl?.render(
+            <AppContext.Provider value={this.app}>
+                <ReferenceMapGraph
+                    settings={this.plugin.settings}
+                    viewManager={this.referenceMapData.viewManager}
+                    indexCards={indexCards}
+                    width={this.viewContent.innerWidth}
+                    height={this.viewContent.innerHeight}
+                />
+            </AppContext.Provider>
         )
     }
 

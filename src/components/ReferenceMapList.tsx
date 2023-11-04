@@ -3,8 +3,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
 import { ViewManager } from 'src/viewManager'
 import { indexSearch } from 'src/utils'
-// import { BsSearch } from 'react-icons/bs'
-import { LuGitBranch } from 'react-icons/lu'
+import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 
 export const ReferenceMapList = (props: {
@@ -46,8 +45,8 @@ export const ReferenceMapList = (props: {
 			<div className="orm-plugin-name">
 				<div className="orm-search-form">
 					<div className="index-search">
-						<div className="orm-plugin-graph">
-							<LuGitBranch size={16} className="graph-icon" onClick={() => props.plugin.openReferenceMapGraph()} />
+						<div className="orm-plugin-global-search">
+							<BsSearch size={15} className="global-search-icon" />
 						</div>
 						<input
 							type="search"
