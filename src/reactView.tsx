@@ -4,7 +4,6 @@ import { t } from './lang/helpers'
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
 import { ReferenceMapList } from './components/ReferenceMapList'
-import { RELOAD, Reload } from './types'
 import { ReferenceMapData } from './referenceData'
 import { AppContext } from './context'
 
@@ -77,20 +76,6 @@ export class ReferenceMapView extends ItemView {
 		this.rootEl?.unmount()
 		this.referenceMapData.viewManager.clearCache()
 		return super.onClose()
-	}
-
-	async reload(reloadType: Reload) {
-		if (reloadType === RELOAD.HARD) {
-			this.referenceMapData.viewManager.clearCache()
-			this.referenceMapData.resetLibraryTime()
-			await this.referenceMapData.loadLibrary(false)
-			this.processReferences()
-		} else if (reloadType === RELOAD.SOFT) {
-			await this.referenceMapData.loadLibrary(false)
-			this.processReferences()
-		} else if (reloadType === RELOAD.VIEW) {
-			this.processReferences()
-		}
 	}
 
 	idSelectionHandle = debounce(() => {
