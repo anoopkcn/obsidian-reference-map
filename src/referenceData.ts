@@ -155,6 +155,7 @@ export class ReferenceMapData {
 
     ) => {
         const indexCards: IndexPaper[] = [];
+        const settings = this.plugin.settings
         // Get references using the paper IDs
         if (paperIDs.size > 0) {
             await Promise.all(
@@ -162,9 +163,9 @@ export class ReferenceMapData {
                     const paper = await this.viewManager.getIndexPaper(paperId);
                     if (paper !== null && typeof paper !== "number") {
                         const paperCiteId =
-                            this.plugin.settings.searchCiteKey &&
+                            settings.searchCiteKey &&
                                 this.library.libraryData !== null &&
-                                this.plugin.settings.findZoteroCiteKeyFromID
+                                settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
                         indexCards.push({ id: paperCiteId, location: null, paper });
@@ -174,7 +175,7 @@ export class ReferenceMapData {
         }
 
         // Get references using the cite keys
-        if (citeKeyMap.length > 0 && this.plugin.settings.searchCiteKey) {
+        if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
                 _.map(citeKeyMap, async (item) => {
                     if (item.paperId !== item.citeKey) {
@@ -189,7 +190,7 @@ export class ReferenceMapData {
 
         // Get references using the file name
         if (
-            this.plugin.settings.searchTitle &&
+            settings.searchTitle &&
             fileNameString &&
             !EXCLUDE_FILE_NAMES.some(
                 (name) => basename.toLowerCase() === name.toLowerCase()
@@ -197,7 +198,7 @@ export class ReferenceMapData {
         ) {
             const titleSearchPapers = await this.viewManager.searchIndexPapers(
                 fileNameString,
-                this.plugin.settings.searchLimit
+                settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
                 indexCards.push({ id: paper.paperId, location: null, paper });
@@ -205,10 +206,10 @@ export class ReferenceMapData {
         }
 
         // Get references using the front matter
-        if (this.plugin.settings.searchFrontMatter && frontMatterString) {
+        if (settings.searchFrontMatter && frontMatterString) {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
                 frontMatterString,
-                this.plugin.settings.searchFrontMatterLimit
+                settings.searchFrontMatterLimit
             );
             _.forEach(frontMatterPapers, (paper) => {
                 indexCards.push({ id: paper.paperId, location: null, paper });
@@ -246,75 +247,44 @@ export class ReferenceMapData {
         fileMetadataCache = '',
         fileCache: CachedMetadata | null = null
     ) => {
-        const isLibrary =
-            this.plugin.settings.searchCiteKey &&
-            this.library.libraryData !== null
-        this.basename = ''
-        if (activeView) {
-            if (isLibrary && this.plugin.settings.autoUpdateCitekeyFile) this.loadLibrary(false)
-            this.basename = activeView.file?.basename ?? ''
+        const settings = this.plugin.settings
+        const isLibrary = settings.searchCiteKey && this.library.libraryData !== null
+        if (isLibrary && settings.autoUpdateCitekeyFile) this.loadLibrary(false)
+        this.basename = activeView.file?.basename ?? ''
 
-            if (isLibrary && activeView.file) {
-                const citeKeys = getCiteKeys(
-                    this.library.libraryData,
-                    fileMetadataCache,
-                    this.plugin.settings.findCiteKeyFromLinksWithoutPrefix,
-                    this.plugin.settings.citeKeyFilter
-                )
-                this.citeKeyMap = getCiteKeyIds(citeKeys, this.library)
-            }
+        if (fileMetadataCache) this.paperIDs = getPaperIds(fileMetadataCache)
 
-            if (fileMetadataCache) {
-                this.paperIDs = getPaperIds(fileMetadataCache)
-                // if  any item in paperIDs is equal to citekeymap item.paperId then remove it from paperIDs
-                this.paperIDs = new Set([...this.paperIDs].filter(x => ![...this.citeKeyMap].map(y => y.paperId).includes(x)))
-            }
+        if (isLibrary) {
+            const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
+            const citeKeys = getCiteKeys(this.library.libraryData, fileMetadataCache, prefix)
+            this.citeKeyMap = getCiteKeyIds(citeKeys, this.library)
+        }
 
-            if (this.plugin.settings.searchFrontMatter) {
-                if (activeView.file && fileCache) {
-                    if (fileCache?.frontmatter) {
-                        const keywords =
-                            fileCache?.frontmatter?.[
-                            this.plugin.settings.searchFrontMatterKey
-                            ];
-                        if (keywords)
-                            this.frontMatterString = extractKeywords(keywords)
-                                .unique()
-                                .join("+");
-                    }
+        if (settings.searchFrontMatter) {
+            if (activeView.file && fileCache) {
+                if (fileCache?.frontmatter) {
+                    const keywords =
+                        fileCache?.frontmatter?.[
+                        settings.searchFrontMatterKey
+                        ];
+                    if (keywords)
+                        this.frontMatterString = extractKeywords(keywords)
+                            .unique()
+                            .join("+");
                 }
             }
-            if (
-                this.plugin.settings.searchTitle &&
-                !EXCLUDE_FILE_NAMES.some(
-                    (name) => this.basename.toLowerCase() === name.toLowerCase()
-                )
-            ) {
-                this.fileNameString = extractKeywords(this.basename)
-                    .unique()
-                    .join('+')
-            }
-            // const isPaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs)
-            // const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap)
-            // const isFrontMatterUpdated =
-            //     frontMatterString === this.frontMatterString
-            // const isFileNameUpdated = fileNameString === this.fileNameString
-
-            // isUpdated =
-            //     !isPaperIDsUpdated ||
-            //     !isCiteKeyMapUpdated ||
-            //     !isFrontMatterUpdated ||
-            //     !isFileNameUpdated
-
-            // // If there are updated changes then update the class variables
-            // if (isUpdated) {
-            //     this.paperIDs = paperIDs
-            //     this.citeKeyMap = citeKeyMap
-            //     this.frontMatterString = frontMatterString
-            //     this.fileNameString = fileNameString
-            // }
         }
-        return
+
+        if (
+            settings.searchTitle &&
+            !EXCLUDE_FILE_NAMES.some(
+                (name) => this.basename.toLowerCase() === name.toLowerCase()
+            )
+        ) {
+            this.fileNameString = extractKeywords(this.basename)
+                .unique()
+                .join('+')
+        }
     }
 
 

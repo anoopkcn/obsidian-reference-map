@@ -11,7 +11,6 @@ import { IndexPaper, ReferenceMapSettings } from 'src/types'
 import {
 	copyElToClipboard,
 	makeMetaData,
-	standardizeBibtex,
 	templateReplace,
 } from 'src/utils'
 
@@ -55,9 +54,6 @@ export const PaperButtons = ({
 		: METADATA_COPY_TEMPLATE_THREE
 
 	const metaData = makeMetaData(paper.paper)
-	settings.standardizeBibtex
-		? (metaData.bibtex = standardizeBibtex(metaData.bibtex))
-		: metaData.bibtex
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''

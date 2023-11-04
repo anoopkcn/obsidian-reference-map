@@ -16,7 +16,6 @@ export interface ReferenceMapSettings {
 	zoteroPort: string
 	searchCiteKeyPath: string
 	autoUpdateCitekeyFile: boolean
-	citeKeyFilter: string
 	linkCiteKey: boolean
 	findZoteroCiteKeyFromID: boolean
 	findCiteKeyFromLinksWithoutPrefix: boolean
@@ -31,7 +30,6 @@ export interface ReferenceMapSettings {
 	folder: string
 	modalCreateTemplate: string
 	modalInsertTemplate: string
-	standardizeBibtex: boolean
 	formatMetadataCopyOne: boolean
 	formatMetadataCopyTwo: boolean
 	formatMetadataCopyThree: boolean

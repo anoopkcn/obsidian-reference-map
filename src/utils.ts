@@ -7,7 +7,7 @@ import { request } from 'http';
 import https from 'https';
 import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
 import {
-	BIBTEX_STANDARD_TYPES,
+	// BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
 	DEFAULT_HEADERS,
 	DEFAULT_ZOTERO_PORT,
@@ -132,77 +132,20 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 		.replace(/^@+|\)+$|\]+$|\*+$|_+$|`+$|'+$|"+$/, '')
 		.replace(/\s+/g, '')
 }
+
 export const getCiteKeys = (
 	libraryData: citeKeyLibrary[] | null,
 	content: string,
-	findCiteKeyFromLinksWithoutPrefix: boolean,
-	filterChars?: string
+	prefix: string
 ): Set<string> => {
-	const output: string[] = []
-	const citekeys = libraryData?.map((item) => item.id) ?? []
-	//Get citekeys from CSL JSON
-
-	const citekeyRegex = /@([^\s]+)/gi // citekey with @ prefix
-	const matches = content.replaceAll(/[\])*`]+/gi, ' ').matchAll(citekeyRegex)
-	if (matches) {
-		for (const match of matches) {
-			let citeKey = sanitizeCiteKey(match[1])
-			if (filterChars) {
-				citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
-			}
-			//only push if citekey is found in citekeys
-			if (citekeys.length > 0) {
-				if (citekeys.includes(citeKey)) output.push(citeKey)
-			} else {
-				output.push(citeKey)
-			}
-		}
-	}
-
-	if (findCiteKeyFromLinksWithoutPrefix) {
-		//Get citekeys from wiki links
-		const citekeyRegex2 = /\[\[([^\][]*)]]/gi // Wiki Link
-		const doi_matches = content.match(doiRegex())?.map(match => sanitizeCiteKey(match)) ?? []
-		const matches2 = content.matchAll(citekeyRegex2)
-		if (matches2) {
-			for (const match of matches2) {
-				const trial = match[1].trim().split(' ')[0]
-				let citeKey = sanitizeCiteKey(trial)
-				if (!doi_matches?.includes(citeKey)) {
-					if (filterChars) {
-						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
-					}
-					if (citekeys.length > 0) {
-						if (citekeys.includes(citeKey)) output.push(citeKey)
-					} else {
-						output.push(citeKey)
-					}
-				}
-			}
-		}
-
-		//Get citekeys from markdown links
-		const citekeyRegex3 = /\[([^\][]*)]/gi // Markdown Link
-		const matches3 = content.matchAll(citekeyRegex3)
-		if (matches3) {
-			for (const match of matches3) {
-				const trial = match[1].trim().split(' ')[0]
-				let citeKey = sanitizeCiteKey(trial)
-				if (!doi_matches?.includes(citeKey)) {
-					if (filterChars) {
-						citeKey = citeKey.replaceAll(new RegExp(`[${filterChars}]`, 'g'), '')
-					}
-					if (citekeys.length > 0) {
-						if (citekeys.includes(citeKey)) output.push(citeKey)
-					} else {
-						output.push(citeKey)
-					}
-				}
-			}
-		}
-	}
+	const citekeys = libraryData?.map((item) => prefix + item.id) ?? []
+	// Collect all citekes from the content
+	const pattern = new RegExp(citekeys.join('|'), 'g');
+	const matches = content.match(pattern);
+	const output = matches?.map(match => match.startsWith('@') ? match.slice(1) : match);
 	return new Set(output)
 }
+
 export function copyElToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('electron').clipboard.writeText(el)
@@ -315,96 +258,62 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 		return paperId
 	}
 }
-
 export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 	const citeKeysMap: CiteKey[] = []
 	let index = 1; // Initialize index variable outside the loop
 	if (citeKeys.size > 0) {
 		// Get DOI from CiteKeyData corresponding to each item in citeKeys
 		for (const citeKey of citeKeys) {
+			let entry: citeKeyLibrary | undefined;
 			if (citeLibrary.adapter === 'csl-json') {
-				const entry = citeLibrary.libraryData?.find(
-					(item) => item.id === citeKey
-				)
-				if (entry?.DOI) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: sanitizeDOI(entry?.DOI),
-					})
-				} else if (
-					VALID_S2AG_API_URLS.some((item) =>
-						entry?.URL?.includes(item)
-					)
-				) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: `URL:${entry?.URL}`,
-					})
-				} else {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: '@' + citeKey,
-					})
-				}
+				entry = citeLibrary.libraryData?.find((item) => item.id === citeKey);
 			} else if (citeLibrary.adapter === 'bibtex') {
-				const entry = citeLibrary.libraryData?.find(
-					(item) => item.key === citeKey
-				)
-				if (entry?.fields?.doi?.[0]) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: sanitizeDOI(entry?.fields?.doi?.[0]),
-					})
-				} else if (
-					VALID_S2AG_API_URLS.some((item) =>
-						entry?.fields?.url?.[0]?.includes(item)
-					)
-				) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: `URL:${entry?.fields?.url?.[0]}`,
-					})
-				}
-				else {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: '@' + citeKey,
-					})
-				}
+				entry = citeLibrary.libraryData?.find((item) => item.key === citeKey);
 			}
+
+			let paperId = '@' + citeKey;
+			if (entry?.DOI) {
+				paperId = sanitizeDOI(entry?.DOI).toLowerCase();
+			} else if (VALID_S2AG_API_URLS.some((item) => entry?.URL?.includes(item))) {
+				paperId = `URL:${entry?.URL}`;
+			} else if (entry?.fields?.doi?.[0]) {
+				paperId = sanitizeDOI(entry?.fields?.doi?.[0]).toLowerCase();
+			} else if (VALID_S2AG_API_URLS.some((item) => entry?.fields?.url?.[0]?.includes(item))) {
+				paperId = `URL:${entry?.fields?.url?.[0]}`;
+			}
+
+			citeKeysMap.push({
+				citeKey: '@' + citeKey,
+				location: index,
+				paperId: paperId,
+			});
+
 			index++;
 		}
 	}
-	return citeKeysMap
+	return citeKeysMap;
 }
-
-export const standardizeBibtex = (bibtex: string) => {
-	const bibRegex = /(^@\[.*\]|@None)/gm
-	// Get words from group one
-	const matches = bibtex.matchAll(bibRegex)
-	if (matches) {
-		for (const match of matches) {
-			const possibleTypes = match[1]
-				.replace(/[@\\[\]'\s+]/g, '')
-				.split(',')
-			//check if any of the possible types are in the BIBTEX_STANDARD_TYPES
-			// if so return one type else type is 'misc'
-			let type =
-				possibleTypes.find((item) =>
-					BIBTEX_STANDARD_TYPES.includes(item.toLowerCase())
-				) || 'misc'
-			if (type === 'JournalArticle') type = 'article'
-			return bibtex.replace(match[1], `@${type.toLowerCase()}`)
-		}
-	}
-	return ''
-}
+// export const standardizeBibtex = (bibtex: string) => {
+// 	const bibRegex = /(^@\[.*\]|@None)/gm
+// 	// Get words from group one
+// 	const matches = bibtex.matchAll(bibRegex)
+// 	if (matches) {
+// 		for (const match of matches) {
+// 			const possibleTypes = match[1]
+// 				.replace(/[@\\[\]'\s+]/g, '')
+// 				.split(',')
+// 			//check if any of the possible types are in the BIBTEX_STANDARD_TYPES
+// 			// if so return one type else type is 'misc'
+// 			let type =
+// 				possibleTypes.find((item) =>
+// 					BIBTEX_STANDARD_TYPES.includes(item.toLowerCase())
+// 				) || 'misc'
+// 			if (type === 'JournalArticle') type = 'article'
+// 			return bibtex.replace(match[1], `@${type.toLowerCase()}`)
+// 		}
+// 	}
+// 	return ''
+// }
 
 export const dataSearch = (data: Reference[], query: string) => {
 	return data.filter((item: Reference) =>
