@@ -258,75 +258,41 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 		return paperId
 	}
 }
-
 export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
 	const citeKeysMap: CiteKey[] = []
 	let index = 1; // Initialize index variable outside the loop
 	if (citeKeys.size > 0) {
 		// Get DOI from CiteKeyData corresponding to each item in citeKeys
 		for (const citeKey of citeKeys) {
+			let entry: citeKeyLibrary | undefined;
 			if (citeLibrary.adapter === 'csl-json') {
-				const entry = citeLibrary.libraryData?.find(
-					(item) => item.id === citeKey
-				)
-				if (entry?.DOI) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: sanitizeDOI(entry?.DOI).toLowerCase(),
-					})
-				} else if (
-					VALID_S2AG_API_URLS.some((item) =>
-						entry?.URL?.includes(item)
-					)
-				) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: `URL:${entry?.URL}`,
-					})
-				} else {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: '@' + citeKey,
-					})
-				}
+				entry = citeLibrary.libraryData?.find((item) => item.id === citeKey);
 			} else if (citeLibrary.adapter === 'bibtex') {
-				const entry = citeLibrary.libraryData?.find(
-					(item) => item.key === citeKey
-				)
-				if (entry?.fields?.doi?.[0]) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: sanitizeDOI(entry?.fields?.doi?.[0]).toLowerCase(),
-					})
-				} else if (
-					VALID_S2AG_API_URLS.some((item) =>
-						entry?.fields?.url?.[0]?.includes(item)
-					)
-				) {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: `URL:${entry?.fields?.url?.[0]}`,
-					})
-				}
-				else {
-					citeKeysMap.push({
-						citeKey: '@' + citeKey,
-						location: index,
-						paperId: '@' + citeKey,
-					})
-				}
+				entry = citeLibrary.libraryData?.find((item) => item.key === citeKey);
 			}
+
+			let paperId = '@' + citeKey;
+			if (entry?.DOI) {
+				paperId = sanitizeDOI(entry?.DOI).toLowerCase();
+			} else if (VALID_S2AG_API_URLS.some((item) => entry?.URL?.includes(item))) {
+				paperId = `URL:${entry?.URL}`;
+			} else if (entry?.fields?.doi?.[0]) {
+				paperId = sanitizeDOI(entry?.fields?.doi?.[0]).toLowerCase();
+			} else if (VALID_S2AG_API_URLS.some((item) => entry?.fields?.url?.[0]?.includes(item))) {
+				paperId = `URL:${entry?.fields?.url?.[0]}`;
+			}
+
+			citeKeysMap.push({
+				citeKey: '@' + citeKey,
+				location: index,
+				paperId: paperId,
+			});
+
 			index++;
 		}
 	}
-	return citeKeysMap
+	return citeKeysMap;
 }
-
 // export const standardizeBibtex = (bibtex: string) => {
 // 	const bibRegex = /(^@\[.*\]|@None)/gm
 // 	// Get words from group one
