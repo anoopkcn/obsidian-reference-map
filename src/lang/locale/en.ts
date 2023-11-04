@@ -82,7 +82,7 @@ export default {
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
 	// Zotero Pull Settings
 	ZOTERO_PULL: 'Pull Bibliography From Zotero',
-	ZOTERO_PULL_DESC: 'Pull data from Zotero. <b>Zotero must have Better Bibtex plugin</b>.',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
 	ZOTERO_PORT: 'Zotero port',
