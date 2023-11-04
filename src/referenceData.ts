@@ -258,7 +258,8 @@ export class ReferenceMapData {
         }
 
         if (isLibrary) {
-            const citeKeys = getCiteKeys(this.library.libraryData, fileMetadataCache)
+            const prefix = this.plugin.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
+            const citeKeys = getCiteKeys(this.library.libraryData, fileMetadataCache, prefix)
             this.citeKeyMap = getCiteKeyIds(citeKeys, this.library)
             this.paperIDs = new Set([...this.paperIDs].filter(x => ![...this.citeKeyMap].map(y => y.paperId).includes(x)));
         }

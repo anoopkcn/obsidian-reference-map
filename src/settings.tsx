@@ -336,6 +336,24 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							})
 						})
 			)
+			new Setting(containerEl)
+				.setName(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX')))
+				.setDesc(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX_DESC')))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(
+							this.plugin.settings
+								.findCiteKeyFromLinksWithoutPrefix
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.findCiteKeyFromLinksWithoutPrefix =
+								value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.view.reload(RELOAD.VIEW)
+							})
+						})
+				)
 		}
 
 		containerEl.createEl('h1', { text: 'Dynamic List Settings' })

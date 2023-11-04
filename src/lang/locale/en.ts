@@ -82,13 +82,19 @@ export default {
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
 	// Zotero Pull Settings
 	ZOTERO_PULL: 'Pull Bibliography From Zotero',
-	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. <b>Zotero must have Better Bibtex plugin</b>.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
 	ZOTERO_PORT: 'Zotero port',
 	ZOTERO_PORT_DESC: 'Use 24119 or specify a custom port if you have changed Zotero\'s default.',
 	ZOTERO_LIBRARY_ID: 'Select Libraries to Include',
 	// citekey settings
+	FIND_CITEKEY_WITHOUT_PREFIX: 'Process CiteKeys Without <code>@</code> Prefix',
+	FIND_CITEKEY_WITHOUT_PREFIX_DESC:
+		'Find and process citekey WITHOUT <code>@</code> prefix.<br>' +
+		'This <b>does NOT disable</b> citekey detection with <code>@</code> prefix.<br>' +
+		'<b>Toggle ON:</b> Find citekey without <code>@</code> prefix<br>' +
+		'<b>Toggle OFF:</b> Do not find citekey without <code>@</code> prefix',
 	CITEKEY_ZOTERO_LINK: 'Hide or Show Link to Zotero Library',
 	CITEKEY_ZOTERO_LINK_DESC:
 		'Hide or Show the <code>@citekey</code> link in the index cards to show reference in Zotero library.<br>' +

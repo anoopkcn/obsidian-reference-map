@@ -132,20 +132,20 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 		.replace(/^@+|\)+$|\]+$|\*+$|_+$|`+$|'+$|"+$/, '')
 		.replace(/\s+/g, '')
 }
+
 export const getCiteKeys = (
 	libraryData: citeKeyLibrary[] | null,
-	content: string
+	content: string,
+	prefix: string
 ): Set<string> => {
-	const output: string[] = []
-	const citekeys = libraryData?.map((item) => item.id) ?? []
+	const citekeys = libraryData?.map((item) => prefix + item.id) ?? []
 	// Collect all citekes from the content
 	const pattern = new RegExp(citekeys.join('|'), 'g');
 	const matches = content.match(pattern);
-	if (matches) {
-		output.push(...matches);
-	}
+	const output = matches?.map(match => match.startsWith('@') ? match.slice(1) : match);
 	return new Set(output)
 }
+
 export function copyElToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	require('electron').clipboard.writeText(el)

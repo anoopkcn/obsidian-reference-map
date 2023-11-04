@@ -18,6 +18,7 @@ export interface ReferenceMapSettings {
 	autoUpdateCitekeyFile: boolean
 	linkCiteKey: boolean
 	findZoteroCiteKeyFromID: boolean
+	findCiteKeyFromLinksWithoutPrefix: boolean
 	enableReferenceSorting: boolean
 	sortByReference: string
 	sortOrderReference: string
