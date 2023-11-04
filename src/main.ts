@@ -8,7 +8,7 @@ import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
 import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
 import { ReferenceMapData } from './referenceData'
-import { GraphView } from './graph/GraphView';
+import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
 
 
 export default class ReferenceMap extends Plugin {
@@ -50,6 +50,11 @@ export default class ReferenceMap extends Plugin {
 			(leaf: WorkspaceLeaf) => new ReferenceMapView(leaf, this)
 		)
 
+		this.registerView(
+			REFERENCE_MAP_GRAPH_VIEW_TYPE,
+			(leaf: WorkspaceLeaf) => new GraphView(leaf, this)
+		)
+
 		this.addCommand({
 			id: 'show-reference-map-sidebar-view',
 			name: 'Show View',
@@ -82,7 +87,7 @@ export default class ReferenceMap extends Plugin {
 		this.addCommand({
 			id: "open-reference-map-graph",
 			name: "Open Graph",
-			callback: () => this.openReferenceMapGraph(),
+			callback: () => this.openReferenceMapGraph(false),
 		});
 
 		this.app.workspace.onLayoutReady(() => {
@@ -99,10 +104,7 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	onunload() {
-		// TODO: in the production version unload the view
-		// this.app.workspace
-		// 	.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
-		// 	.forEach((leaf) => leaf.detach());
+		this.app.workspace.detachLeavesOfType(REFERENCE_MAP_GRAPH_VIEW_TYPE);
 	}
 
 	ensureLeafExists(active = false): void {
@@ -244,10 +246,19 @@ export default class ReferenceMap extends Plugin {
 		return templateReplace(template, metaData);
 	}
 
-	async openReferenceMapGraph() {
-		const leaf = this.app.workspace.getLeaf("split");
-		const graphView = new GraphView(leaf);
-		leaf.open(graphView);
+	async openReferenceMapGraph(active = false) {
+		const { workspace } = this.app;
+		let leaf: WorkspaceLeaf;
+		const existingPluginLeaves = workspace.getLeavesOfType(REFERENCE_MAP_GRAPH_VIEW_TYPE);
+		if (existingPluginLeaves.length > 0) {
+			leaf = existingPluginLeaves[0];
+		} else {
+			leaf = workspace.getLeaf('split', 'vertical');
+			leaf.setViewState({ type: REFERENCE_MAP_GRAPH_VIEW_TYPE });
+		}
+		if (active) {
+			workspace.revealLeaf(leaf);
+		}
 	}
 
 }

@@ -2,14 +2,20 @@ import { ItemView, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
+import ReferenceMap from "src/main";
+
+export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
 
 export class GraphView extends ItemView {
+    plugin: ReferenceMap
     rootEl: Root
     viewContent: HTMLElement;
 
-    constructor(leaf: WorkspaceLeaf) {
+    constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
+        this.plugin = plugin;
+        this.navigation = false
         this.viewContent = this.containerEl.querySelector(
             ".view-content"
         ) as HTMLElement;
@@ -45,7 +51,7 @@ export class GraphView extends ItemView {
     }
 
     getViewType(): string {
-        return "reference_map_graph";
+        return REFERENCE_MAP_GRAPH_VIEW_TYPE
     }
 
     getDisplayText(): string {
@@ -61,7 +67,7 @@ export class GraphView extends ItemView {
     }
 
     async onClose() {
-        this.rootEl.unmount()
+        this.rootEl?.unmount()
         return super.onClose()
     }
 
