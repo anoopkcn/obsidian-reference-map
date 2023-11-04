@@ -377,6 +377,7 @@ body {
 	padding: 0.4rem 0.25rem 0.15rem 0.25rem;
 	border-right: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
 	color: var(--orm-paper-buttons-color); 
+	cursor: pointer;
 }
 
 .search-icon {

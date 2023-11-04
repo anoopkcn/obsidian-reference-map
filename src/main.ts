@@ -86,7 +86,7 @@ export default class ReferenceMap extends Plugin {
 
 		this.addCommand({
 			id: "open-reference-map-graph",
-			name: "Open Graph",
+			name: "Open Literature Graph",
 			callback: () => this.openReferenceMapGraph(false),
 		});
 

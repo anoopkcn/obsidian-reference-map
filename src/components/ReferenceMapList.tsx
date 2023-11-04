@@ -4,7 +4,7 @@ import { IndexPaperCard } from './IndexPaperCard'
 import { ViewManager } from 'src/viewManager'
 import { indexSearch } from 'src/utils'
 // import { BsSearch } from 'react-icons/bs'
-import { PiGraphFill } from 'react-icons/pi'
+import { LuGitBranch } from 'react-icons/lu'
 import ReferenceMap from 'src/main'
 
 export const ReferenceMapList = (props: {
@@ -47,7 +47,7 @@ export const ReferenceMapList = (props: {
 				<div className="orm-search-form">
 					<div className="index-search">
 						<div className="orm-plugin-graph">
-							<PiGraphFill size={17} className="graph-icon" onClick={() => props.plugin.openReferenceMapGraph()} />
+							<LuGitBranch size={16} className="graph-icon" onClick={() => props.plugin.openReferenceMapGraph()} />
 						</div>
 						<input
 							type="search"

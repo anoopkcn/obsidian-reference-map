@@ -57,6 +57,9 @@ export class GraphView extends ItemView {
     getDisplayText(): string {
         return "Reference Map Graph";
     }
+    getIcon() {
+        return 'ReferenceMapGraphIcon'
+    }
 
     onResize() {
         super.onResize();
