@@ -10,7 +10,7 @@ export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
 	library: Library
 	viewManager: ViewManager
-	basename: string
+	basename: string | undefined
 	paperIDs: Set<string>
 	citeKeyMap: CiteKey[]
 	indexCards: IndexPaper[]
@@ -86,7 +86,7 @@ export const ReferenceMapList = (props: {
 		return citeKeys
 	}
 
-	if (!props.basename) {
+	if (props.basename === undefined) {
 		return (
 			<div className="orm-no-content">
 				<div>

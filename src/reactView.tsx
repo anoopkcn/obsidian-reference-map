@@ -11,22 +11,18 @@ export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
 export class ReferenceMapView extends ItemView {
 	plugin: ReferenceMap
-	activeMarkdownLeaf: MarkdownView
 	referenceMapData: ReferenceMapData
 	rootEl: Root | null
-	isUpdated: boolean
 
 	constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
 		super(leaf)
 		this.plugin = plugin
 		this.referenceMapData = this.plugin.referenceMapData
 		this.rootEl = createRoot(this.containerEl.children[1])
-		this.isUpdated = false
 
 		this.registerEvent(
 			this.app.metadataCache.on('changed', (file) => {
-				const activeView =
-					this.app.workspace.getActiveViewOfType(MarkdownView)
+				const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
 				if (activeView && file === activeView.file) {
 					this.processReferences()
 				}
@@ -35,13 +31,7 @@ export class ReferenceMapView extends ItemView {
 
 		this.registerEvent(
 			this.app.workspace.on('active-leaf-change', (leaf) => {
-				if (leaf) {
-					this.app.workspace.iterateRootLeaves((rootLeaf) => {
-						if (rootLeaf === leaf) {
-							this.processReferences()
-						}
-					})
-				}
+				if (leaf) this.processReferences()
 			})
 		)
 
@@ -107,31 +97,14 @@ export class ReferenceMapView extends ItemView {
 
 	processReferences = async (selection = '') => {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-		if (activeView?.file) {
-			const fileMetadataCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
-			const fileCache = this.app.metadataCache.getFileCache(activeView.file);
-			this.referenceMapData.updatePaperIDs(activeView, fileMetadataCache, fileCache)
-		} else {
-			// This is needed to trigger rendering if active view is not a markdown file
-			// the prop name basename will re render the view
-			this.referenceMapData.basename = ''
-		}
-		// if (!this.isUpdated) return
-		const indexCards = await this.referenceMapData.getIndexCards(
-			this.referenceMapData.paperIDs,
-			this.referenceMapData.citeKeyMap,
-			this.referenceMapData.fileNameString,
-			this.referenceMapData.frontMatterString,
-			this.referenceMapData.basename,
-			true
-		)
+		const indexCards = await this.referenceMapData.getIndexCards(activeView)
 		this.rootEl?.render(
 			<AppContext.Provider value={this.app}>
 				<ReferenceMapList
 					plugin={this.plugin}
 					viewManager={this.referenceMapData.viewManager}
 					library={this.referenceMapData.library}
-					basename={this.referenceMapData.basename}
+					basename={activeView?.file?.basename}
 					paperIDs={this.referenceMapData.paperIDs}
 					citeKeyMap={this.referenceMapData.citeKeyMap}
 					indexCards={indexCards}

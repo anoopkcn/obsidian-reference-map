@@ -15,9 +15,9 @@ import {
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
 import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from './types';
-import _ from 'lodash';
 import { ViewManager } from './viewManager';
 import { CachedMetadata, MarkdownView } from 'obsidian';
+import _ from 'lodash';
 
 export class ReferenceMapData {
     plugin: ReferenceMap
@@ -27,7 +27,6 @@ export class ReferenceMapData {
     citeKeyMap: CiteKey[]
     frontMatterString: string
     fileNameString: string
-    basename: string
     initPromise: PromiseCapability<void>;
 
     constructor(plugin: ReferenceMap) {
@@ -39,7 +38,6 @@ export class ReferenceMapData {
         this.citeKeyMap = []
         this.frontMatterString = ''
         this.fileNameString = ''
-        this.basename = ''
     }
 
     async reload(reloadType: Reload) {
@@ -164,20 +162,21 @@ export class ReferenceMapData {
 
 
     getIndexCards = async (
-        paperIDs: Set<string> = new Set(),
-        citeKeyMap: CiteKey[] = [],
-        fileNameString = '',
-        frontMatterString = '',
-        basename = '',
-        preprocess = false
-
+        activeView: MarkdownView | null
     ) => {
+        const basename = activeView?.file?.basename ? activeView.file.basename : ''
+        if (activeView?.file) {
+            const fileMetadataCache = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
+            const fileCache = app.metadataCache.getFileCache(activeView.file);
+            this.updatePaperIDs(activeView, fileMetadataCache, fileCache)
+
+        }
         const indexCards: IndexPaper[] = [];
         const settings = this.plugin.settings
         // Get references using the paper IDs
-        if (paperIDs.size > 0) {
+        if (this.paperIDs.size > 0) {
             await Promise.all(
-                _.map([...paperIDs], async (paperId) => {
+                _.map([...this.paperIDs], async (paperId) => {
                     const paper = await this.viewManager.getIndexPaper(paperId);
                     if (paper !== null && typeof paper !== "number") {
                         const paperCiteId =
@@ -193,9 +192,9 @@ export class ReferenceMapData {
         }
 
         // Get references using the cite keys
-        if (citeKeyMap.length > 0 && settings.searchCiteKey) {
+        if (this.citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
-                _.map(citeKeyMap, async (item) => {
+                _.map(this.citeKeyMap, async (item) => {
                     if (item.paperId !== item.citeKey) {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
@@ -207,15 +206,11 @@ export class ReferenceMapData {
         }
 
         // Get references using the file name
-        if (
-            settings.searchTitle &&
-            fileNameString &&
-            !EXCLUDE_FILE_NAMES.some(
-                (name) => basename.toLowerCase() === name.toLowerCase()
-            )
+        if (settings.searchTitle && this.fileNameString && !EXCLUDE_FILE_NAMES.some(
+            (name) => basename.toLowerCase() === name.toLowerCase())
         ) {
             const titleSearchPapers = await this.viewManager.searchIndexPapers(
-                fileNameString,
+                this.fileNameString,
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
@@ -224,21 +219,16 @@ export class ReferenceMapData {
         }
 
         // Get references using the front matter
-        if (settings.searchFrontMatter && frontMatterString) {
+        if (settings.searchFrontMatter && this.frontMatterString) {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
-                frontMatterString,
-                settings.searchFrontMatterLimit
-            );
+                this.frontMatterString, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
                 indexCards.push({ id: paper.paperId, location: null, paper });
             });
         }
-        if (preprocess) {
-            return this.preProcessReferences(indexCards);
-        }
-
-        return indexCards;
+        return this.preProcessReferences(indexCards);
     };
+
 
     preProcessReferences = (indexCards: IndexPaper[]) => {
         if (!this.plugin.settings.enableIndexSorting) {
@@ -264,18 +254,16 @@ export class ReferenceMapData {
         activeView: MarkdownView,
         fileMetadataCache = '',
         fileCache: CachedMetadata | null = null,
-        check = false
     ) => {
         let paperIDs = new Set<string>()
         let citeKeyMap: CiteKey[] = []
         let frontMatterString = ''
         let fileNameString = ''
-        let isUpdated = false
 
         const settings = this.plugin.settings
         const isLibrary = settings.searchCiteKey && this.library.libraryData !== null
         if (isLibrary && settings.autoUpdateCitekeyFile) this.loadLibrary(false)
-        this.basename = activeView.file?.basename ?? ''
+        const basename = activeView.file?.basename ? activeView.file.basename : ''
 
         if (fileMetadataCache) paperIDs = getPaperIds(fileMetadataCache)
 
@@ -293,9 +281,7 @@ export class ReferenceMapData {
                         settings.searchFrontMatterKey
                         ];
                     if (keywords)
-                        frontMatterString = extractKeywords(keywords)
-                            .unique()
-                            .join("+");
+                        frontMatterString = extractKeywords(keywords).unique().join("+");
                 }
             }
         }
@@ -303,40 +289,44 @@ export class ReferenceMapData {
         if (
             settings.searchTitle &&
             !EXCLUDE_FILE_NAMES.some(
-                (name) => this.basename.toLowerCase() === name.toLowerCase()
+                (name) => basename.toLowerCase() === name.toLowerCase()
             )
         ) {
-            fileNameString = extractKeywords(this.basename)
-                .unique()
-                .join('+')
+            fileNameString = extractKeywords(basename).unique().join('+')
         }
-
-        if (check) {
-            const isPaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs)
-            const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap)
-            const isFrontMatterUpdated = frontMatterString === this.frontMatterString
-            const isFileNameUpdated = fileNameString === this.fileNameString
-
-            isUpdated =
-                !isPaperIDsUpdated ||
-                !isCiteKeyMapUpdated ||
-                !isFrontMatterUpdated ||
-                !isFileNameUpdated
-            if (isUpdated) {
-                this.paperIDs = paperIDs
-                this.citeKeyMap = citeKeyMap
-                this.frontMatterString = frontMatterString
-                this.fileNameString = fileNameString
-                return isUpdated
-            }
-            return isUpdated
-        } else {
-            this.paperIDs = paperIDs
-            this.citeKeyMap = citeKeyMap
-            this.frontMatterString = frontMatterString
-            this.fileNameString = fileNameString
-            return isUpdated
-        }
+        this.paperIDs = paperIDs
+        this.citeKeyMap = citeKeyMap
+        this.frontMatterString = frontMatterString
+        this.fileNameString = fileNameString
     }
+
+
+    fetchData = async (indexCards: IndexPaper[]) => {
+        try {
+            if (!indexCards) return [];
+
+            const dataPromises = indexCards.map(async (paper) => {
+                const references = await this.viewManager.getReferences(paper.paper.paperId);
+                const filteredReferences = this.plugin.settings.filterRedundantReferences
+                    ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+                    : references;
+                const citations = await this.viewManager.getCitations(paper.paper.paperId);
+                const filteredCitations = this.plugin.settings.filterRedundantReferences
+                    ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
+                    : citations;
+                return {
+                    paper: paper.paper,
+                    references: filteredReferences,
+                    citations: filteredCitations
+                };
+            });
+
+            const resolvedData = await Promise.all(dataPromises);
+            return resolvedData
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    };
 }
 
