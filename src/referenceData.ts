@@ -260,22 +260,29 @@ export class ReferenceMapData {
     }
 
 
-    updatePaperIDs = async (
+    updatePaperIDs = (
         activeView: MarkdownView,
         fileMetadataCache = '',
-        fileCache: CachedMetadata | null = null
+        fileCache: CachedMetadata | null = null,
+        check = false
     ) => {
+        let paperIDs = new Set<string>()
+        let citeKeyMap: CiteKey[] = []
+        let frontMatterString = ''
+        let fileNameString = ''
+        let isUpdated = false
+
         const settings = this.plugin.settings
         const isLibrary = settings.searchCiteKey && this.library.libraryData !== null
         if (isLibrary && settings.autoUpdateCitekeyFile) this.loadLibrary(false)
         this.basename = activeView.file?.basename ?? ''
 
-        if (fileMetadataCache) this.paperIDs = getPaperIds(fileMetadataCache)
+        if (fileMetadataCache) paperIDs = getPaperIds(fileMetadataCache)
 
         if (isLibrary) {
             const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
             const citeKeys = getCiteKeys(this.library.libraryData, fileMetadataCache, prefix)
-            this.citeKeyMap = getCiteKeyIds(citeKeys, this.library)
+            citeKeyMap = getCiteKeyIds(citeKeys, this.library)
         }
 
         if (settings.searchFrontMatter) {
@@ -286,7 +293,7 @@ export class ReferenceMapData {
                         settings.searchFrontMatterKey
                         ];
                     if (keywords)
-                        this.frontMatterString = extractKeywords(keywords)
+                        frontMatterString = extractKeywords(keywords)
                             .unique()
                             .join("+");
                 }
@@ -299,13 +306,37 @@ export class ReferenceMapData {
                 (name) => this.basename.toLowerCase() === name.toLowerCase()
             )
         ) {
-            this.fileNameString = extractKeywords(this.basename)
+            fileNameString = extractKeywords(this.basename)
                 .unique()
                 .join('+')
         }
+
+        if (check) {
+            const isPaperIDsUpdated = _.isEqual(paperIDs, this.paperIDs)
+            const isCiteKeyMapUpdated = _.isEqual(citeKeyMap, this.citeKeyMap)
+            const isFrontMatterUpdated = frontMatterString === this.frontMatterString
+            const isFileNameUpdated = fileNameString === this.fileNameString
+
+            isUpdated =
+                !isPaperIDsUpdated ||
+                !isCiteKeyMapUpdated ||
+                !isFrontMatterUpdated ||
+                !isFileNameUpdated
+            if (isUpdated) {
+                this.paperIDs = paperIDs
+                this.citeKeyMap = citeKeyMap
+                this.frontMatterString = frontMatterString
+                this.fileNameString = fileNameString
+                return isUpdated
+            }
+            return isUpdated
+        } else {
+            this.paperIDs = paperIDs
+            this.citeKeyMap = citeKeyMap
+            this.frontMatterString = frontMatterString
+            this.fileNameString = fileNameString
+            return isUpdated
+        }
     }
-
-
-
 }
 

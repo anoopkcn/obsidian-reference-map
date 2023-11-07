@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { ViewManager } from 'src/viewManager'
-import ForceGraph2D, { GraphData } from 'react-force-graph-2d';
+import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
+import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
-import { ViewManager } from 'src/viewManager';
 
-interface MapGrapData {
+
+interface MapGraphData {
     paper: Reference
     references: Reference[]
     citations: Reference[]
@@ -12,68 +13,72 @@ interface MapGrapData {
 
 export const ReferenceMapGraph = (props: {
     settings: ReferenceMapSettings
-    viewManager: ViewManager
+    referenceMapData: ReferenceMapData
     indexCards: IndexPaper[]
     width: number
     height: number
 }) => {
-    const [data, setData] = useState<MapGrapData[]>()
+    const [data, setData] = useState<GraphData>()
+    const fgRef = useRef<any>();
 
-    const getReferences = async (paper: IndexPaper) => {
-        const references = await props.viewManager.getReferences(paper.paper.paperId);
-        const filteredReferences = props.settings.filterRedundantReferences
-            ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
-            : references;
-        return filteredReferences;
-    };
-
-    const getCitations = async (paper: IndexPaper) => {
-        const citations = await props.viewManager.getCitations(paper.paper.paperId);
-        const filteredCitations = props.settings.filterRedundantReferences
-            ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
-            : citations;
-        return filteredCitations;
-    };
-
-    // Fetch data
     const fetchData = async () => {
-        const dataPromises = props.indexCards.map(async (paper) => {
-            const references = await getReferences(paper);
-            const citations = await getCitations(paper);
-            return {
-                paper: paper.paper,
-                references: references,
-                citations: citations
-            }
-        });
+        try {
+            if (!props.indexCards) return;
 
-        const resolvedData = await Promise.all(dataPromises);
-        setData(resolvedData);
-    }
-    // Call fetchData in an effect hook
-    useEffect(() => {
-        fetchData();
-    }, [props.indexCards]);
+            const dataPromises = props.indexCards.map(async (paper) => {
+                const references = await props.referenceMapData.viewManager.getReferences(paper.paper.paperId);
+                const filteredReferences = props.settings.filterRedundantReferences
+                    ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+                    : references;
+                const citations = await props.referenceMapData.viewManager.getCitations(paper.paper.paperId);
+                const filteredCitations = props.settings.filterRedundantReferences
+                    ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
+                    : citations;
+                return {
+                    paper: paper.paper,
+                    references: filteredReferences,
+                    citations: filteredCitations
+                };
+            });
 
-    const formatData = (data: MapGrapData[]): GraphData => {
-        const nodes: any[] = [];
-        const links: any[] = [];
+            const resolvedData = await Promise.all(dataPromises);
+            const formattedData = formatData(resolvedData);
+            setData(formattedData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    const formatData = (data: MapGraphData[]): GraphData => {
+        const nodes: NodeObject[] = [];
+        const links: LinkObject[] = [];
+
+        let maxCitationCount = 1;
+        let minCitationCount = 0;
 
         data.forEach((item, index) => {
-            const paperId = item.paper.paperId ? item.paper.paperId : `paper${index}`;
+            const paperId = item.paper.paperId ? item.paper.paperId : `index${index}`;
+            maxCitationCount = Math.max(maxCitationCount, item.paper.citationCount);
+            minCitationCount = Math.min(minCitationCount, item.paper.citationCount);
+
             nodes.push({
                 id: paperId,
                 name: item.paper.title,
-                val: 10,
-                color: "#61C1E8"
+                val: item.paper.citationCount,
+                color: "#61C1E8",
+                isIndex: true
             });
 
             item.references.forEach((reference, refIndex) => {
                 const referenceId = reference.paperId ? reference.paperId : `reference${index}${refIndex}`;
+                maxCitationCount = Math.max(maxCitationCount, reference.citationCount);
+                minCitationCount = Math.min(minCitationCount, reference.citationCount);
+
                 nodes.push({
                     id: referenceId,
                     name: reference.title,
-                    val: 5,
+                    val: reference.citationCount,
                     color: "#7ABA57"
                 });
                 links.push({
@@ -84,10 +89,13 @@ export const ReferenceMapGraph = (props: {
 
             item.citations.forEach((citation, citIndex) => {
                 const citationId = citation.paperId ? citation.paperId : `citation${index}${citIndex}`;
+                maxCitationCount = Math.max(maxCitationCount, citation.citationCount);
+                minCitationCount = Math.min(minCitationCount, citation.citationCount);
+
                 nodes.push({
                     id: citationId,
                     name: citation.title,
-                    val: 2,
+                    val: citation.citationCount,
                     color: "#A15399"
                 });
                 links.push({
@@ -96,6 +104,10 @@ export const ReferenceMapGraph = (props: {
                 });
             });
         });
+        // Normalize the citation counts
+        nodes.forEach(node => {
+            node.val = 1 + (node.val - minCitationCount) * (20 - 1) / (maxCitationCount - minCitationCount);
+        });
 
         return {
             nodes: nodes,
@@ -103,44 +115,30 @@ export const ReferenceMapGraph = (props: {
         };
     };
 
-    if (!data) return null;
-    const graphData = formatData(data);
-    console.log(graphData);
+    useEffect(() => {
+        fetchData()
+    }, [props.indexCards]);
+
+    useEffect(() => {
+        fgRef.current.d3Force("charge").strength(-40);
+        fgRef.current.d3Force("link").distance(50);
+        fgRef.current.d3Force("charge").distanceMax(150);
+    }, [data]);
+
+    const handleNodeClick = (node: NodeObject) => {
+        fgRef.current.zoom(3.5, 400);
+        fgRef.current.centerAt(node.x, node.y, 400);
+    };
 
     return (
-        <ForceGraph2D width={props.width} height={props.height} graphData={graphData} />
+        <ForceGraph2D
+            ref={fgRef}
+            width={props.width}
+            height={props.height}
+            graphData={data}
+            onNodeClick={handleNodeClick}
+            linkColor={() => '#d3d3d3'}
+        // nodeRelSize={1}
+        />
     )
 }
-
-// const dataLayout: GraphData = {
-//     "nodes": [
-//         {
-//             "id": "id1",
-//             "name": "citedPaper",
-//             "val": 5,
-//             "color": "#7ABA57"
-//         },
-//         {
-//             "id": "id2",
-//             "name": "indexPaper",
-//             "val": 10,
-//             "color": "#61C1E8"
-//         },
-//         {
-//             "id": "id3",
-//             "name": "citingPaper",
-//             "val": 2,
-//             "color": "#A15399"
-//         },
-//     ],
-//     "links": [
-//         {
-//             "source": "id1",
-//             "target": "id2"
-//         },
-//         {
-//             "source": "id2",
-//             "target": "id3"
-//         }
-//     ]
-// }
