@@ -1,12 +1,11 @@
-import { MarkdownView } from 'obsidian';
 import React, { useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
 import { LoadingPuff } from 'src/components/LoadingPuff';
-import { ReferenceMapData } from 'src/referenceData';
-import { Reference, ReferenceMapSettings } from 'src/types';
+import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
+import { ViewManager } from 'src/viewManager';
 
 interface MapGraphData {
-    paper: Reference
+    paper: IndexPaper
     references: Reference[]
     citations: Reference[]
 }
@@ -19,20 +18,20 @@ const formatData = (data: MapGraphData[]): GraphData => {
     let minCitationCount = 0;
 
     data.forEach((item, index) => {
-        const paperId = item.paper.paperId ? item.paper.paperId : `index${index}`;
-        maxCitationCount = Math.max(maxCitationCount, item.paper.citationCount);
-        minCitationCount = Math.min(minCitationCount, item.paper.citationCount);
+        const paperId = item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id;
+        maxCitationCount = Math.max(maxCitationCount, item.paper.paper.citationCount);
+        minCitationCount = Math.min(minCitationCount, item.paper.paper.citationCount);
 
         nodes.push({
             id: paperId,
-            name: item.paper.title,
-            val: item.paper.citationCount,
+            name: item.paper.paper.title,
+            val: item.paper.paper.citationCount,
             color: "#61C1E8",
             isIndex: true
         });
 
         item.references.forEach((reference, refIndex) => {
-            const referenceId = reference.paperId ? reference.paperId : `reference${index}${refIndex}`;
+            const referenceId = reference.paperId ? reference.paperId : `reference${paperId}`;
             maxCitationCount = Math.max(maxCitationCount, reference.citationCount);
             minCitationCount = Math.min(minCitationCount, reference.citationCount);
 
@@ -43,13 +42,13 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 color: "#7ABA57"
             });
             links.push({
-                source: referenceId,
-                target: paperId
+                source: paperId,
+                target: referenceId
             });
         });
 
         item.citations.forEach((citation, citIndex) => {
-            const citationId = citation.paperId ? citation.paperId : `citation${index}${citIndex}`;
+            const citationId = citation.paperId ? citation.paperId : `citation${paperId}`;
             maxCitationCount = Math.max(maxCitationCount, citation.citationCount);
             minCitationCount = Math.min(minCitationCount, citation.citationCount);
 
@@ -76,12 +75,40 @@ const formatData = (data: MapGraphData[]): GraphData => {
     };
 };
 
+const fetchData = async (indexCards: IndexPaper[], settings: ReferenceMapSettings, viewManager: ViewManager) => {
+    try {
+        if (!indexCards) return [];
+
+        const dataPromises = indexCards.map(async (paper) => {
+            const references = await viewManager.getReferences(paper.paper.paperId);
+            const filteredReferences = settings.filterRedundantReferences
+                ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+                : references;
+            const citations = await viewManager.getCitations(paper.paper.paperId);
+            const filteredCitations = settings.filterRedundantReferences
+                ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
+                : citations;
+            return {
+                paper: paper,
+                references: filteredReferences,
+                citations: filteredCitations
+            };
+        });
+
+        const resolvedData = await Promise.all(dataPromises);
+        return resolvedData
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
 export const ReferenceMapGraph = (props: {
     width: number
     height: number
     settings: ReferenceMapSettings
-    referenceMapData: ReferenceMapData
-    activeView: MarkdownView | null
+    viewManager: ViewManager
+    indexCards: IndexPaper[]
     basename: string | undefined
 }) => {
     const [data, setData] = useState<GraphData>()
@@ -90,8 +117,7 @@ export const ReferenceMapGraph = (props: {
 
     const gatherData = async () => {
         setIsLoading(true)
-        const indexCards = await props.referenceMapData.getIndexCards(props.activeView)
-        const graphData = await props.referenceMapData.fetchData(indexCards)
+        const graphData = await fetchData(props.indexCards, props.settings, props.viewManager)
         setData(formatData(graphData))
         setIsLoading(false)
     }
@@ -105,17 +131,35 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         gatherData()
-    }, [props.activeView?.file?.basename, props.settings]);
+    }, [props.basename, props.settings, props.indexCards]);
 
     useEffect(() => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
-            fgRef.current.d3Force("charge").strength(-20);
-            fgRef.current.d3Force("link").distance(50);
-            fgRef.current.d3Force("charge").distanceMax(150);
+            fgRef.current.d3Force("charge").strength(-10);
+            fgRef.current.d3Force("link").distance(100);
+            // fgRef.current.d3Force("charge").distanceMax(150);
         }
     }, [data]);
 
-    if (props.activeView?.file?.basename === undefined) {
+    const PartialLoading = (props: { isLoading: boolean }) => {
+        if (props.isLoading) {
+            return (
+                <div className="orm-no-content">
+                    <div>
+                        <div className="orm-no-content-subtext">
+                            <div className="orm-loading">
+                                <LoadingPuff />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    if (props.basename === undefined) {
         return (
             <div className="orm-no-content">
                 <div>
@@ -127,28 +171,19 @@ export const ReferenceMapGraph = (props: {
                 </div>
             </div>
         )
-    } else if (isLoading) {
+    } else if (!(Array.isArray(data) && data.length === 0) || isLoading) {
         return (
-            <div className="orm-no-content">
-                <div>
-                    <div className="orm-no-content-subtext">
-                        <div className="orm-loading">
-                            <LoadingPuff />
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <PartialLoading isLoading={isLoading} />
+                <ForceGraph2D
+                    ref={fgRef}
+                    width={props.width}
+                    height={props.height}
+                    graphData={data}
+                    onNodeClick={handleNodeClick}
+                    linkColor={() => '#363636'}
+                />
             </div>
-        )
-    } else if (!(Array.isArray(data) && data.length === 0)) {
-        return (
-            <ForceGraph2D
-                ref={fgRef}
-                width={props.width}
-                height={props.height}
-                graphData={data}
-                onNodeClick={handleNodeClick}
-                linkColor={() => '#d3d3d3'}
-            />
         )
     } else {
         return (

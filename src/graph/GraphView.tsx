@@ -40,7 +40,13 @@ export class GraphView extends ItemView {
 
         this.registerEvent(
             this.app.workspace.on('active-leaf-change', (leaf) => {
-                if (leaf) this.openGraph()
+                if (leaf) {
+                    this.app.workspace.iterateRootLeaves((rootLeaf) => {
+                        if (rootLeaf === leaf) {
+                            this.openGraph()
+                        }
+                    })
+                }
             })
         )
 
@@ -73,14 +79,15 @@ export class GraphView extends ItemView {
 
     openGraph = async () => {
         const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+        const indexCards = await this.referenceMapData.getIndexCards(activeView)
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>
                 <ReferenceMapGraph
                     width={this.viewContent.innerWidth}
                     height={this.viewContent.innerHeight}
                     settings={this.plugin.settings}
-                    referenceMapData={this.referenceMapData}
-                    activeView={activeView}
+                    viewManager={this.referenceMapData.viewManager}
+                    indexCards={indexCards}
                     basename={activeView?.file?.basename}
                 />
             </AppContext.Provider>

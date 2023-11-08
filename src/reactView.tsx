@@ -31,7 +31,13 @@ export class ReferenceMapView extends ItemView {
 
 		this.registerEvent(
 			this.app.workspace.on('active-leaf-change', (leaf) => {
-				if (leaf) this.processReferences()
+				if (leaf) {
+					this.app.workspace.iterateRootLeaves((rootLeaf) => {
+						if (rootLeaf === leaf) {
+							this.processReferences()
+						}
+					})
+				}
 			})
 		)
 

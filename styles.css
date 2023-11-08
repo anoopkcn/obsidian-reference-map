@@ -201,7 +201,7 @@ body {
 	font-size: var(--font-ui-small);
 	font-weight: var(--font-medium);
 	color: var(--text-faint);
-	margin-top: 0.5rem;
+	/* margin-top: 0.5rem; */
 }
 
 /* ReferenceMapList */
@@ -341,10 +341,6 @@ body {
 	border-radius: 0.25rem;
 }
 
-.orm-loading-puff {
-	text-align: center;
-}
-
 .orm-paper-list-buttons {
 	display: flex;
 	align-items: center;
@@ -358,6 +354,7 @@ body {
 .orm-search-form {
 	width: 100%;
 	position: relative;
+	margin-bottom: 0.5rem;
 }
 
 .orm-search-input {
@@ -429,7 +426,10 @@ body {
 	display: block;
 	text-align: center;
 	width: 100%;
-	height: 20px;
+}
+
+.orm-loading-puff {
+	text-align: center;
 }
 
 /** Settings Dialog **/

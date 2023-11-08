@@ -299,34 +299,5 @@ export class ReferenceMapData {
         this.frontMatterString = frontMatterString
         this.fileNameString = fileNameString
     }
-
-
-    fetchData = async (indexCards: IndexPaper[]) => {
-        try {
-            if (!indexCards) return [];
-
-            const dataPromises = indexCards.map(async (paper) => {
-                const references = await this.viewManager.getReferences(paper.paper.paperId);
-                const filteredReferences = this.plugin.settings.filterRedundantReferences
-                    ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
-                    : references;
-                const citations = await this.viewManager.getCitations(paper.paper.paperId);
-                const filteredCitations = this.plugin.settings.filterRedundantReferences
-                    ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
-                    : citations;
-                return {
-                    paper: paper.paper,
-                    references: filteredReferences,
-                    citations: filteredCitations
-                };
-            });
-
-            const resolvedData = await Promise.all(dataPromises);
-            return resolvedData
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-    };
 }
 
