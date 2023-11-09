@@ -83,6 +83,7 @@ export class GraphView extends ItemView {
 
     onResize() {
         super.onResize();
+        this.openGraph() //trigger a re-render
     }
 
     async onOpen() {

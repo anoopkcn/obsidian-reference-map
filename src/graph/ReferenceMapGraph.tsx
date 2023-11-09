@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { MarkdownView } from 'obsidian';
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
 import EventBus from 'src/EventBus';
 import { LoadingPuff } from 'src/components/LoadingPuff';
@@ -21,7 +21,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
     let minCitationCount = 0;
 
     data.forEach((item, index) => {
-        const paperId = String(item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id);
+        const paperId = String(item.paper.id ? item.paper.id : item.paper.paper.paperId);
         maxCitationCount = Math.max(maxCitationCount, item.paper.paper.citationCount);
         minCitationCount = Math.min(minCitationCount, item.paper.paper.citationCount);
 
@@ -34,7 +34,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         });
 
         item.references.forEach((reference, refIndex) => {
-            const referenceId = String(reference.paperId ? reference.paperId : `reference${paperId}`);
+            const referenceId = String(reference.paperId ? reference.paperId : `reference${paperId}${refIndex}`);
             maxCitationCount = Math.max(maxCitationCount, reference.citationCount);
             minCitationCount = Math.min(minCitationCount, reference.citationCount);
 
@@ -51,7 +51,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         });
 
         item.citations.forEach((citation, citIndex) => {
-            const citationId = String(citation.paperId ? citation.paperId : `citation${paperId}`);
+            const citationId = String(citation.paperId ? citation.paperId : `citation${paperId}${citIndex}`);
             maxCitationCount = Math.max(maxCitationCount, citation.citationCount);
             minCitationCount = Math.min(minCitationCount, citation.citationCount);
 
@@ -93,7 +93,7 @@ export const ReferenceMapGraph = (props: {
     const basename = activeView?.file?.basename;
 
 
-    const fetchData = useCallback(async (indexCards: IndexPaper[]) => {
+    const fetchData = async (indexCards: IndexPaper[]) => {
         try {
             if (!indexCards) return [];
             const dataPromises = indexCards.map(async (paper) => {
@@ -118,8 +118,7 @@ export const ReferenceMapGraph = (props: {
             console.error(error);
             return [];
         }
-    }, [settings, viewManager]);
-
+    }
 
     const handleNodeClick = (node: NodeObject) => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
