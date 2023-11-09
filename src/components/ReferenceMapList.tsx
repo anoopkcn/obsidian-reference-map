@@ -5,7 +5,6 @@ import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/referenceData'
-import EventBus from 'src/EventBus'
 import { PartialLoading } from './PartialLoading'
 
 export const ReferenceMapList = (props: {
@@ -26,17 +25,18 @@ export const ReferenceMapList = (props: {
 	const fileName = props.updateChecker.fileName;
 	const frontmatter = props.updateChecker.frontmatter;
 
+	const fetchData = async () => {
+		setIsLoading(true)
+		const indexCards = await props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
+		setPapers(indexCards)
+		setIsLoading(false)
+	}
+
 	useEffect(() => {
-		const fetchData = async () => {
-			setIsLoading(true)
-			const indexCards = await props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
-			setPapers(indexCards)
-			setIsLoading(false)
-		}
 		fetchData()
-		EventBus.on('keys-changed', fetchData);
 	}, [
-		indexIds, citeKeyMap, fileName, frontmatter, basename,
+		indexIds, citeKeyMap, fileName, frontmatter,
+		basename,
 		props.plugin.settings,
 		props.referenceMapData.library.libraryData
 	])

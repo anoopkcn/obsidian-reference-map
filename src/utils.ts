@@ -787,10 +787,13 @@ export class UpdateChecker {
 		this.fileMetadataCache = fileMetadataCache
 	}
 
-	checkCiteKeysUpdate = (prefix = '@') => {
+	checkCiteKeysUpdate = (prefix = '@', checkOrder = false) => {
+	// checkOrder is used to force update (usually for reference map view order correction)
 		if (this.library === null) return false;
 		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
-		if (areSetsEqual(newCiteKeys, this.citeKeys)) return false;
+		if (!checkOrder) {
+			if (areSetsEqual(newCiteKeys, this.citeKeys)) return false;
+		}
 		this.citeKeys = newCiteKeys;
 		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)
 		return true;

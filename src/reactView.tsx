@@ -114,7 +114,7 @@ export class ReferenceMapView extends ItemView {
 			this.updateChecker.setCache(fileCache, fileMetadataCache)
 			const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
 			this.updateChecker.checkIndexIdsUpdate()
-			if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix)
+			if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix, true)
 			if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
 			if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
 		}

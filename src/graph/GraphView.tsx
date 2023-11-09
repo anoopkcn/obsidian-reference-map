@@ -37,12 +37,13 @@ export class GraphView extends ItemView {
             this.app.metadataCache.on('changed', async (file) => {
                 const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
                 if (activeView && file === activeView.file) {
-                    const cache = await this.app.vault.cachedRead(activeView.file)
+                    const fileCache = await this.app.vault.cachedRead(activeView.file)
                     this.updateChecker.basename = activeView?.file?.basename
-                    if (cache) {
-                        this.updateChecker.fileCache = cache
+                    if (fileCache) {
+                        this.updateChecker.fileCache = fileCache
                         const prefix = this.plugin.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
                         const updated = this.updateChecker.checkCiteKeysUpdate(prefix)
+                        console.log('updated', updated)
                         if (updated) {
                             EventBus.trigger('keys-changed');
                         }

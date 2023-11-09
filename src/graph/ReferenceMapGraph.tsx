@@ -93,6 +93,7 @@ export const ReferenceMapGraph = (props: {
     const { viewManager } = props.referenceMapData;
     const basename = props.updateChecker.basename;
     const indexIds = props.updateChecker.indexIds;
+    const citeKeys = props.updateChecker.citeKeys;
     const citeKeyMap = props.updateChecker.citeKeyMap;
     const fileName = props.updateChecker.fileName;
     const frontmatter = props.updateChecker.frontmatter;
@@ -124,6 +125,23 @@ export const ReferenceMapGraph = (props: {
             return [];
         }
     }
+    const fetchDataAndUpdate = async () => {
+        props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename).then(async (cards) => {
+            setIsLoading(true)
+            const graphData = await fetchData(cards)
+            const newSubgraph = formatData(graphData);
+            const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
+            setData(prevData => ({
+                nodes: _.uniqBy([...prevData.nodes, ...newSubgraph.nodes].filter(node => newNodeIds.has(node.id)), 'id'),
+                links: [...prevData.links, ...newSubgraph.links].filter(link => {
+                    const target = typeof link.target === 'object' && link.target !== null ? link.target.id : link.target;
+                    const source = typeof link.source === 'object' && link.source !== null ? link.source.id : link.source;
+                    return newNodeIds.has(source) && newNodeIds.has(target);
+                })
+            }))
+            setIsLoading(false)
+        });
+    }
 
     const handleNodeClick = (node: NodeObject) => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
@@ -141,29 +159,12 @@ export const ReferenceMapGraph = (props: {
     }, [data]);
 
     useEffect(() => {
-        const fetchDataAndUpdate = async () => {
-            props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename).then(async (cards) => {
-                setIsLoading(true)
-                const graphData = await fetchData(cards)
-                const newSubgraph = formatData(graphData);
-                const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
-                setData(prevData => ({
-                    nodes: _.uniqBy([...prevData.nodes, ...newSubgraph.nodes].filter(node => newNodeIds.has(node.id)), 'id'),
-                    links: [...prevData.links, ...newSubgraph.links].filter(link => {
-                        const target = typeof link.target === 'object' && link.target !== null ? link.target.id : link.target;
-                        const source = typeof link.source === 'object' && link.source !== null ? link.source.id : link.source;
-                        return newNodeIds.has(source) && newNodeIds.has(target);
-                    })
-                }))
-                setIsLoading(false)
-            });
-        }
-
         fetchDataAndUpdate();
+    }, [basename, settings]);
 
+    useEffect(() => {
         EventBus.on('keys-changed', fetchDataAndUpdate);
-
-    }, [indexIds, citeKeyMap, fileName, frontmatter, basename, settings]);
+    }, [indexIds, citeKeys]);
 
     if (!basename) {
         return (
