@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { MarkdownView } from 'obsidian';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
+import EventBus from 'src/EventBus';
 import { LoadingPuff } from 'src/components/LoadingPuff';
+import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
-import { ViewManager } from 'src/viewManager';
 
 interface MapGraphData {
     paper: IndexPaper
@@ -75,63 +77,55 @@ const formatData = (data: MapGraphData[]): GraphData => {
     };
 };
 
-const fetchData = async (indexCards: IndexPaper[], settings: ReferenceMapSettings, viewManager: ViewManager) => {
-    try {
-        if (!indexCards) return [];
-
-        const dataPromises = indexCards.map(async (paper) => {
-            const references = await viewManager.getReferences(paper.paper.paperId);
-            const filteredReferences = settings.filterRedundantReferences
-                ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
-                : references;
-            const citations = await viewManager.getCitations(paper.paper.paperId);
-            const filteredCitations = settings.filterRedundantReferences
-                ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
-                : citations;
-            return {
-                paper: paper,
-                references: filteredReferences,
-                citations: filteredCitations
-            };
-        });
-
-        const resolvedData = await Promise.all(dataPromises);
-        return resolvedData
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-};
-
 export const ReferenceMapGraph = (props: {
     width: number
     height: number
     settings: ReferenceMapSettings
-    viewManager: ViewManager
-    indexCards: IndexPaper[]
-    basename: string | undefined
+    referenceMapData: ReferenceMapData
+    activeView: MarkdownView | null
 }) => {
-    const [data, setData] = useState<GraphData>()
+    const [data, setData] = useState<GraphData>({ nodes: [], links: [] })
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const fgRef = useRef<any>();
+    const { settings, activeView } = props;
+    const { viewManager } = props.referenceMapData;
+    const basename = activeView?.file?.basename;
 
-    const gatherData = async () => {
-        setIsLoading(true)
-        const graphData = await fetchData(props.indexCards, props.settings, props.viewManager)
-        setData(formatData(graphData))
-        setIsLoading(false)
-    }
+
+    const fetchData = useCallback(async (indexCards: IndexPaper[]) => {
+        try {
+            if (!indexCards) return [];
+            const dataPromises = indexCards.map(async (paper) => {
+                const references = await viewManager.getReferences(paper.paper.paperId);
+                const filteredReferences = settings.filterRedundantReferences
+                    ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+                    : references;
+                const citations = await viewManager.getCitations(paper.paper.paperId);
+                const filteredCitations = settings.filterRedundantReferences
+                    ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
+                    : citations;
+                return {
+                    paper: paper,
+                    references: filteredReferences,
+                    citations: filteredCitations
+                };
+            });
+
+            const resolvedData = await Promise.all(dataPromises);
+            return resolvedData
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }, [settings, viewManager]);
+
 
     const handleNodeClick = (node: NodeObject) => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
-            fgRef.current.zoom(3.5, 400);
+            fgRef.current.zoom(2.0, 400);
             fgRef.current.centerAt(node.x, node.y, 400);
         }
     };
-
-    useEffect(() => {
-        gatherData()
-    }, [props.basename, props.settings, props.indexCards]);
 
     useEffect(() => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
@@ -140,6 +134,28 @@ export const ReferenceMapGraph = (props: {
             // fgRef.current.d3Force("charge").distanceMax(150);
         }
     }, [data]);
+
+    useEffect(() => {
+        props.referenceMapData.getIndexCards(activeView).then(async (cards) => {
+            setIsLoading(true)
+            const graphData = await fetchData(cards)
+            setData(formatData(graphData))
+            console.log('Cite keys have changed', graphData);
+            setIsLoading(false)
+        });
+    }, [basename, settings]);
+
+    useEffect(() => {
+        EventBus.on('keys-changed', () => {
+            props.referenceMapData.getIndexCards(activeView).then(async (cards) => {
+                setIsLoading(true)
+                const graphData = await fetchData(cards)
+                setData(formatData(graphData))
+                console.log('Cite keys have changed', graphData);
+                setIsLoading(false)
+            });
+        });
+    }, []);
 
     const PartialLoading = (props: { isLoading: boolean }) => {
         if (props.isLoading) {
@@ -159,7 +175,7 @@ export const ReferenceMapGraph = (props: {
         }
     }
 
-    if (props.basename === undefined) {
+    if (!basename) {
         return (
             <div className="orm-no-content">
                 <div>

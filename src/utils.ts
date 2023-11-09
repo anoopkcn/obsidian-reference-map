@@ -5,7 +5,7 @@ import doiRegex from 'doi-regex'
 import download from 'download';
 import { request } from 'http';
 import https from 'https';
-import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
+import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, ReferenceMapSettings, citeKeyLibrary } from './types'
 import {
 	// BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
@@ -758,4 +758,37 @@ export async function getCSLStyle(
 	fs.writeFileSync(outpath, str);
 	styleCache.set(url, str);
 	return str;
+}
+
+
+export class UpdateChecker {
+	citeKeys: Set<string>;
+	settings: ReferenceMapSettings
+	library: citeKeyLibrary[] | null;
+	cache = '';
+
+	constructor(citeKeys: Set<string>, settings: ReferenceMapSettings, library: citeKeyLibrary[] | null) {
+		this.citeKeys = citeKeys;
+		this.settings = settings;
+		this.library = library;
+	}
+
+	updateCache = (cache: string) => {
+		this.cache = cache;
+	}
+
+	getCache = () => {
+		return this.cache;
+	}
+
+	checkCiteKeysUpdate = () => {
+		const prefix = this.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
+		const newCiteKeys = getCiteKeys(this.library, this.cache, prefix)
+		// check if newCiteKeys is the same as this.citeKeys
+		if (areSetsEqual(newCiteKeys, this.citeKeys)) {
+			return false;
+		}
+		this.citeKeys = newCiteKeys;
+		return true;
+	}
 }

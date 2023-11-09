@@ -5,6 +5,8 @@ import { ReferenceMapGraph } from "./ReferenceMapGraph";
 import ReferenceMap from "src/main";
 import { AppContext } from "src/context";
 import { ReferenceMapData } from "src/referenceData";
+import { UpdateChecker } from "src/utils";
+import EventBus from "src/EventBus";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
@@ -14,6 +16,8 @@ export class GraphView extends ItemView {
     referenceMapData: ReferenceMapData
     rootEl: Root | null
     viewContent: HTMLElement;
+    updateChecker: UpdateChecker
+
 
     constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
@@ -28,12 +32,25 @@ export class GraphView extends ItemView {
             console.error("Could not find view content");
             return;
         }
+        //initialize UpdateChecker 
+        this.updateChecker = new UpdateChecker(
+            new Set<string>(),
+            this.plugin.settings,
+            this.referenceMapData.library.libraryData
+        )
 
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file) => {
                 const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
                 if (activeView && file === activeView.file) {
-                    this.openGraph()
+                    const cache = await this.app.vault.cachedRead(activeView.file)
+                    if (cache) {
+                        this.updateChecker.updateCache(cache)
+                        const updated = this.updateChecker.checkCiteKeysUpdate()
+                        if (updated) {
+                            EventBus.trigger('keys-changed');
+                        }
+                    }
                 }
             })
         )
@@ -50,7 +67,7 @@ export class GraphView extends ItemView {
             })
         )
 
-        this.openGraph()
+        // this.openGraph()
     }
 
     getViewType(): string {
@@ -72,6 +89,10 @@ export class GraphView extends ItemView {
         this.openGraph()
     }
 
+    onUnload = () => {
+        EventBus.off('keys-changed', () => { });
+    }
+
     async onClose() {
         this.rootEl?.unmount()
         return super.onClose()
@@ -79,16 +100,14 @@ export class GraphView extends ItemView {
 
     openGraph = async () => {
         const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-        const indexCards = await this.referenceMapData.getIndexCards(activeView)
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>
                 <ReferenceMapGraph
                     width={this.viewContent.innerWidth}
                     height={this.viewContent.innerHeight}
                     settings={this.plugin.settings}
-                    viewManager={this.referenceMapData.viewManager}
-                    indexCards={indexCards}
-                    basename={activeView?.file?.basename}
+                    referenceMapData={this.referenceMapData}
+                    activeView={activeView}
                 />
             </AppContext.Provider>
         )
