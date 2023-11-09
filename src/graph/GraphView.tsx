@@ -41,10 +41,8 @@ export class GraphView extends ItemView {
                     this.updateChecker.basename = activeView?.file?.basename
                     if (fileCache) {
                         const updated = await this.prepare(activeView)
-                        console.log('updated', updated)
                         if (updated) {
-                            console.log('triggering keys-changed', this.updateChecker.citeKeys)
-                            EventBus.trigger('keys-changed');
+                            EventBus.trigger('graph-index-updated');
                         }
                     }
                 }
@@ -85,7 +83,7 @@ export class GraphView extends ItemView {
     }
 
     onUnload = () => {
-        EventBus.off('keys-changed', () => { });
+        EventBus.off('graph-index-updated', () => { });
     }
 
     async onClose() {
@@ -97,6 +95,10 @@ export class GraphView extends ItemView {
         const settings = this.plugin.settings
         let isUpdate = false
         if (activeView?.file) {
+            let isfm = false
+            let isfn = false
+            let isIdx = false
+            let isCite = false
             this.updateChecker.basename = activeView.file.basename
             const fileCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
             const fileMetadataCache = this.app.metadataCache.getFileCache(activeView.file);
@@ -105,10 +107,11 @@ export class GraphView extends ItemView {
             this.updateChecker.setCache(fileCache, fileMetadataCache)
             const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
 
-            if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
-            if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
-            this.updateChecker.checkIndexIdsUpdate()
-            if (settings.searchCiteKey) isUpdate = this.updateChecker.checkCiteKeysUpdate(prefix)
+            if (settings.searchFrontMatter) isfm = this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
+            if (settings.searchTitle) isfn = this.updateChecker.checkFileNameUpdate()
+            if (settings.searchCiteKey) isCite = this.updateChecker.checkCiteKeysUpdate(prefix)
+            isIdx = this.updateChecker.checkIndexIdsUpdate()
+            isUpdate = isfm || isfn || isIdx || isCite
         }
         return isUpdate
     }

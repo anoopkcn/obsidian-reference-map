@@ -142,7 +142,8 @@ export const ReferenceMapGraph = (props: {
                 props.updateChecker.indexIds,
                 props.updateChecker.citeKeyMap,
                 props.updateChecker.fileName,
-                props.updateChecker.frontmatter, props.updateChecker.basename
+                props.updateChecker.frontmatter,
+                props.updateChecker.basename
             ).then(async (cards) => {
                 setIsLoading(true)
                 const graphData = await fetchData(cards)
@@ -158,16 +159,18 @@ export const ReferenceMapGraph = (props: {
                 }))
                 setIsLoading(false)
             });
-            console.log('inside the function', props.updateChecker.citeKeys)
         }
 
         fetchDataAndUpdate();
-        EventBus.on('keys-changed', fetchDataAndUpdate);
+        EventBus.on('graph-index-updated', fetchDataAndUpdate);
     }, [
         settings,
         props.updateChecker.basename,
         props.updateChecker.indexIds,
-        props.updateChecker.citeKeys]);
+        props.updateChecker.citeKeys,
+        props.updateChecker.fileName,
+        props.updateChecker.frontmatter,
+    ]);
 
     if (!props.updateChecker.basename) {
         return (
