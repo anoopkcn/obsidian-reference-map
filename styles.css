@@ -201,7 +201,7 @@ body {
 	font-size: var(--font-ui-small);
 	font-weight: var(--font-medium);
 	color: var(--text-faint);
-	/* margin-top: 0.5rem; */
+	margin-top: 0.5rem;
 }
 
 /* ReferenceMapList */

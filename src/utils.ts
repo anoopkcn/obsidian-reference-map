@@ -790,7 +790,6 @@ export class UpdateChecker {
 	checkCiteKeysUpdate = (prefix = '@') => {
 		if (this.library === null) return false;
 		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
-		console.log(newCiteKeys, this.citeKeys)
 		if (areSetsEqual(newCiteKeys, this.citeKeys)) return false;
 		this.citeKeys = newCiteKeys;
 		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)

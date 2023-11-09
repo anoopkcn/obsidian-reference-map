@@ -5,6 +5,8 @@ import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/referenceData'
+import EventBus from 'src/EventBus'
+import { PartialLoading } from './PartialLoading'
 
 export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
@@ -13,6 +15,7 @@ export const ReferenceMapList = (props: {
 	selection: string
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
+	const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
@@ -25,10 +28,13 @@ export const ReferenceMapList = (props: {
 
 	useEffect(() => {
 		const fetchData = async () => {
+			setIsLoading(true)
 			const indexCards = await props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
 			setPapers(indexCards)
+			setIsLoading(false)
 		}
 		fetchData()
+		EventBus.on('keys-changed', fetchData);
 	}, [
 		indexIds, citeKeyMap, fileName, frontmatter, basename,
 		props.plugin.settings,
@@ -92,6 +98,7 @@ export const ReferenceMapList = (props: {
 		return citeKeys
 	}
 
+
 	if (basename === undefined) {
 		return (
 			<div className="orm-no-content">
@@ -106,7 +113,7 @@ export const ReferenceMapList = (props: {
 				</div>
 			</div>
 		)
-	} else if (papers.length > 0) {
+	} else if (papers.length > 0 || isLoading) {
 		return (
 			<>
 				<div className="orm-reference-map">
@@ -145,6 +152,7 @@ export const ReferenceMapList = (props: {
 						</div>
 					</div>
 				}
+				<PartialLoading isLoading={isLoading} />
 			</>
 		)
 	} else {

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
 import EventBus from 'src/EventBus';
-import { LoadingPuff } from 'src/components/LoadingPuff';
+import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
 import { UpdateChecker } from 'src/utils';
@@ -164,24 +164,6 @@ export const ReferenceMapGraph = (props: {
         EventBus.on('keys-changed', fetchDataAndUpdate);
 
     }, [indexIds, citeKeyMap, fileName, frontmatter, basename, settings]);
-
-    const PartialLoading = (props: { isLoading: boolean }) => {
-        if (props.isLoading) {
-            return (
-                <div className="orm-no-content">
-                    <div>
-                        <div className="orm-no-content-subtext">
-                            <div className="orm-loading">
-                                <LoadingPuff />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        } else {
-            return (<></>)
-        }
-    }
 
     if (!basename) {
         return (

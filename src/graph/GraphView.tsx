@@ -22,7 +22,8 @@ export class GraphView extends ItemView {
         super(leaf);
         this.plugin = plugin;
         this.referenceMapData = this.plugin.referenceMapData
-        this.updateChecker = this.plugin.updateChecker
+        this.updateChecker = new UpdateChecker()
+        this.updateChecker.library = this.referenceMapData.library
         this.viewContent = this.containerEl.querySelector(
             ".view-content"
         ) as HTMLElement;
@@ -42,7 +43,6 @@ export class GraphView extends ItemView {
                         this.updateChecker.fileCache = cache
                         const prefix = this.plugin.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
                         const updated = this.updateChecker.checkCiteKeysUpdate(prefix)
-                        console.log('updated', updated)
                         if (updated) {
                             EventBus.trigger('keys-changed');
                         }
