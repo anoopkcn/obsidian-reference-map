@@ -1,32 +1,38 @@
-import { CiteKey, IndexPaper, Library } from 'src/types'
+import { IndexPaper } from 'src/types'
 import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
-import { ViewManager } from 'src/viewManager'
-import { indexSearch } from 'src/utils'
+import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
+import { ReferenceMapData } from 'src/referenceData'
 
 export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
-	library: Library
-	viewManager: ViewManager
-	basename: string | undefined
-	paperIDs: Set<string>
-	citeKeyMap: CiteKey[]
-	indexCards: IndexPaper[]
+	referenceMapData: ReferenceMapData
+	updateChecker: UpdateChecker
 	selection: string
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
+	const { viewManager } = props.referenceMapData;
+	const basename = props.updateChecker.basename;
+	const indexIds = props.updateChecker.indexIds;
+	const citeKeyMap = props.updateChecker.citeKeyMap;
+	const fileName = props.updateChecker.fileName;
+	const frontmatter = props.updateChecker.frontmatter;
+
 	useEffect(() => {
-		setPapers(props.indexCards)
+		const fetchData = async () => {
+			const indexCards = await props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
+			setPapers(indexCards)
+		}
+		fetchData()
 	}, [
+		indexIds, citeKeyMap, fileName, frontmatter, basename,
 		props.plugin.settings,
-		props.indexCards,
-		props.library.libraryData,
-		props.basename,
+		props.referenceMapData.library.libraryData
 	])
 
 	useEffect(() => {
@@ -80,13 +86,13 @@ export const ReferenceMapList = (props: {
 
 	const noContentItems = () => {
 		// in citekeyMap if items have citeKey and paperId are the same then return a new array with only citeKey
-		const items = props.citeKeyMap.filter((item) => item.citeKey === item.paperId)
+		const items = citeKeyMap.filter((item) => item.citeKey === item.paperId)
 		// convert the items to an array of strings
 		const citeKeys = items.map((item) => item.citeKey)
 		return citeKeys
 	}
 
-	if (props.basename === undefined) {
+	if (basename === undefined) {
 		return (
 			<div className="orm-no-content">
 				<div>
@@ -112,14 +118,14 @@ export const ReferenceMapList = (props: {
 						const ref = activeIndexCardClass ? activeRef : null
 						return (
 							<div
-								key={`${paper.paper.paperId}${index}${props.basename}`}
+								key={`${paper.paper.paperId}${index}${basename}`}
 								ref={ref}
 							>
 								<IndexPaperCard
 									className={activeIndexCardClass}
 									settings={props.plugin.settings}
 									rootPaper={paper}
-									viewManager={props.viewManager}
+									viewManager={viewManager}
 								/>
 							</div>
 						)

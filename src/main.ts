@@ -5,7 +5,7 @@ import { addIcons } from './ui/icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
-import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
+import { PromiseCapability, UpdateChecker, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
 import { ReferenceMapData } from './referenceData'
 import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
@@ -15,6 +15,7 @@ export default class ReferenceMap extends Plugin {
 	settings: ReferenceMapSettings
 	cacheDir: string;
 	referenceMapData: ReferenceMapData;
+	updateChecker: UpdateChecker;
 	_initPromise: PromiseCapability<void>;
 
 	get initPromise() {
@@ -28,13 +29,18 @@ export default class ReferenceMap extends Plugin {
 	async onload() {
 		this.cacheDir = path.join(getVaultRoot(), '.reference-map');
 		this.referenceMapData = new ReferenceMapData(this)
+		this.updateChecker = new UpdateChecker()
 		this.loadSettings().then(() => {
 			this.init()
 			this.initPromise.promise
 				.then(() => {
 					this.referenceMapData.loadLibrary(true);
 				})
-				.finally(() => this.referenceMapData.initPromise.resolve());
+				.finally(() => {
+					this.updateChecker.library = this.referenceMapData.library;
+					this.referenceMapData.initPromise.resolve()
+				}
+				);
 			this.initPromise.resolve();
 		})
 

@@ -420,23 +420,20 @@ body {
 
 .orm-loading {
 	text-align: center;
+	width: 70%;
+	margin: 0 auto;
 }
 
 .orm-loading-puff {
 	display: block;
 	text-align: center;
-	width: 100%;
-}
-
-.orm-loading-puff {
-	text-align: center;
+	width: 100%
 }
 
 /** Settings Dialog **/
 .d-none {
 	display: none;
 }
-
 .orm-PathLoading,
 .orm-PathError,
 .orm-PathSuccess {

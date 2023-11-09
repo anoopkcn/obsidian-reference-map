@@ -1,11 +1,11 @@
-import { App, FileSystemAdapter, MarkdownView, Notice, TFile } from 'obsidian'
+import { App, FileSystemAdapter, MarkdownView, Notice, TFile, CachedMetadata } from 'obsidian'
 import path from 'path'
 import fs from 'fs';
 import doiRegex from 'doi-regex'
 import download from 'download';
 import { request } from 'http';
 import https from 'https';
-import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, ReferenceMapSettings, citeKeyLibrary } from './types'
+import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
 import {
 	// BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
@@ -15,6 +15,7 @@ import {
 	PUNCTUATION,
 	SEARCH_PARAMETERS,
 	VALID_S2AG_API_URLS,
+	EXCLUDE_FILE_NAMES
 } from './constants'
 
 export function getVaultRoot() {
@@ -134,7 +135,7 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 }
 
 export const getCiteKeys = (
-	libraryData: citeKeyLibrary[] | null,
+	libraryData: citeKeyLibrary[] | null | undefined,
 	content: string,
 	prefix: string
 ): Set<string> => {
@@ -258,16 +259,16 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 		return paperId
 	}
 }
-export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library) => {
+export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null | undefined) => {
 	const citeKeysMap: CiteKey[] = []
 	let index = 1; // Initialize index variable outside the loop
 	if (citeKeys.size > 0) {
 		// Get DOI from CiteKeyData corresponding to each item in citeKeys
 		for (const citeKey of citeKeys) {
 			let entry: citeKeyLibrary | undefined;
-			if (citeLibrary.adapter === 'csl-json') {
+			if (citeLibrary?.adapter === 'csl-json') {
 				entry = citeLibrary.libraryData?.find((item) => item.id === citeKey);
-			} else if (citeLibrary.adapter === 'bibtex') {
+			} else if (citeLibrary?.adapter === 'bibtex') {
 				entry = citeLibrary.libraryData?.find((item) => item.key === citeKey);
 			}
 
@@ -763,32 +764,59 @@ export async function getCSLStyle(
 
 export class UpdateChecker {
 	citeKeys: Set<string>;
-	settings: ReferenceMapSettings
-	library: citeKeyLibrary[] | null;
-	cache = '';
+	citeKeyMap: CiteKey[]
+	indexIds: Set<string>;
+	library: Library | null | undefined;
+	fileMetadataCache: CachedMetadata | null;
+	fileCache = '';
+	frontmatter = '';
+	fileName = '';
+	basename = '';
 
-	constructor(citeKeys: Set<string>, settings: ReferenceMapSettings, library: citeKeyLibrary[] | null) {
-		this.citeKeys = citeKeys;
-		this.settings = settings;
-		this.library = library;
+	constructor() {
+		this.citeKeys = new Set<string>();
+		this.citeKeyMap = []
+		this.indexIds = new Set<string>();
+		this.frontmatter = '';
+		this.fileName = '';
+		this.basename = '';
 	}
 
-	updateCache = (cache: string) => {
-		this.cache = cache;
+	setCache = (fileCache: string, fileMetadataCache: CachedMetadata | null) => {
+		this.fileCache = fileCache
+		this.fileMetadataCache = fileMetadataCache
 	}
 
-	getCache = () => {
-		return this.cache;
-	}
-
-	checkCiteKeysUpdate = () => {
-		const prefix = this.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
-		const newCiteKeys = getCiteKeys(this.library, this.cache, prefix)
-		// check if newCiteKeys is the same as this.citeKeys
-		if (areSetsEqual(newCiteKeys, this.citeKeys)) {
-			return false;
-		}
+	checkCiteKeysUpdate = (prefix = '@') => {
+		if (this.library === null) return false;
+		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
+		console.log(newCiteKeys, this.citeKeys)
+		if (areSetsEqual(newCiteKeys, this.citeKeys)) return false;
 		this.citeKeys = newCiteKeys;
+		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)
 		return true;
+	}
+
+	checkIndexIdsUpdate = () => {
+		const newIds = getPaperIds(this.fileCache)
+		if (areSetsEqual(newIds, this.indexIds)) return false;
+		this.indexIds = newIds;
+		return true;
+	}
+
+	checkFrontmatterUpdate = (key = '') => {
+		if (!this.fileMetadataCache?.frontmatter) return false;
+		const keywords = this.fileMetadataCache?.frontmatter?.[key];
+		if (keywords) this.frontmatter = extractKeywords(keywords).unique().join("+");
+		return true;
+	}
+
+	checkFileNameUpdate = () => {
+		if (!this.basename) return false;
+		if (!EXCLUDE_FILE_NAMES.some((name) => this.basename.toLowerCase() === name.toLowerCase())) {
+			this.fileName = extractKeywords(this.basename).unique().join('+')
+			return true;
+		}
+		return false;
 	}
 }

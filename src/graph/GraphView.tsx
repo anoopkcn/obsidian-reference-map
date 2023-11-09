@@ -5,8 +5,8 @@ import { ReferenceMapGraph } from "./ReferenceMapGraph";
 import ReferenceMap from "src/main";
 import { AppContext } from "src/context";
 import { ReferenceMapData } from "src/referenceData";
-import { UpdateChecker } from "src/utils";
 import EventBus from "src/EventBus";
+import { UpdateChecker } from "src/utils";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
@@ -16,13 +16,13 @@ export class GraphView extends ItemView {
     referenceMapData: ReferenceMapData
     rootEl: Root | null
     viewContent: HTMLElement;
-    updateChecker: UpdateChecker
-
+    updateChecker: UpdateChecker;
 
     constructor(leaf: WorkspaceLeaf, plugin: ReferenceMap) {
         super(leaf);
         this.plugin = plugin;
         this.referenceMapData = this.plugin.referenceMapData
+        this.updateChecker = this.plugin.updateChecker
         this.viewContent = this.containerEl.querySelector(
             ".view-content"
         ) as HTMLElement;
@@ -32,21 +32,17 @@ export class GraphView extends ItemView {
             console.error("Could not find view content");
             return;
         }
-        //initialize UpdateChecker 
-        this.updateChecker = new UpdateChecker(
-            new Set<string>(),
-            this.plugin.settings,
-            this.referenceMapData.library.libraryData
-        )
-
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file) => {
                 const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
                 if (activeView && file === activeView.file) {
                     const cache = await this.app.vault.cachedRead(activeView.file)
+                    this.updateChecker.basename = activeView?.file?.basename
                     if (cache) {
-                        this.updateChecker.updateCache(cache)
-                        const updated = this.updateChecker.checkCiteKeysUpdate()
+                        this.updateChecker.fileCache = cache
+                        const prefix = this.plugin.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
+                        const updated = this.updateChecker.checkCiteKeysUpdate(prefix)
+                        console.log('updated', updated)
                         if (updated) {
                             EventBus.trigger('keys-changed');
                         }
@@ -66,8 +62,6 @@ export class GraphView extends ItemView {
                 }
             })
         )
-
-        // this.openGraph()
     }
 
     getViewType(): string {
@@ -101,6 +95,20 @@ export class GraphView extends ItemView {
 
     openGraph = async () => {
         const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+        const settings = this.plugin.settings
+        if (activeView?.file) {
+            this.updateChecker.basename = activeView.file.basename
+            const fileCache = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
+            const fileMetadataCache = this.app.metadataCache.getFileCache(activeView.file);
+            const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
+            if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
+            this.updateChecker.setCache(fileCache, fileMetadataCache)
+            const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
+            this.updateChecker.checkIndexIdsUpdate()
+            if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix)
+            if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
+            if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
+        }
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>
                 <ReferenceMapGraph
@@ -108,7 +116,7 @@ export class GraphView extends ItemView {
                     height={this.viewContent.innerHeight}
                     settings={this.plugin.settings}
                     referenceMapData={this.referenceMapData}
-                    activeView={activeView}
+                    updateChecker={this.updateChecker}
                 />
             </AppContext.Provider>
         )

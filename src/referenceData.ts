@@ -2,10 +2,6 @@ import * as fs from 'fs'
 import * as BibTeXParser from '@retorquere/bibtex-parser'
 import {
     PromiseCapability,
-    extractKeywords,
-    getCiteKeyIds,
-    getCiteKeys,
-    getPaperIds,
     getZBib,
     indexSort,
     removeNullReferences,
@@ -16,17 +12,12 @@ import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
 import ReferenceMap from './main';
 import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from './types';
 import { ViewManager } from './viewManager';
-import { CachedMetadata, MarkdownView } from 'obsidian';
 import _ from 'lodash';
 
 export class ReferenceMapData {
     plugin: ReferenceMap
     library: Library
     viewManager: ViewManager
-    paperIDs: Set<string>
-    citeKeyMap: CiteKey[]
-    frontMatterString: string
-    fileNameString: string
     initPromise: PromiseCapability<void>;
 
     constructor(plugin: ReferenceMap) {
@@ -34,10 +25,6 @@ export class ReferenceMapData {
         this.library = DEFAULT_LIBRARY
         this.viewManager = new ViewManager(plugin)
         this.initPromise = new PromiseCapability();
-        this.paperIDs = new Set()
-        this.citeKeyMap = []
-        this.frontMatterString = ''
-        this.fileNameString = ''
     }
 
     async reload(reloadType: Reload) {
@@ -46,10 +33,12 @@ export class ReferenceMapData {
             this.viewManager.clearCache()
             this.resetLibraryTime()
             await this.loadLibrary(false)
+            this.plugin.updateChecker.library = this.library;
             this.plugin.view?.processReferences()
             if (debug) console.log('ORM: Reloaded View and library')
         } else if (reloadType === RELOAD.SOFT) {
             await this.loadLibrary(false)
+            this.plugin.updateChecker.library = this.library;
             this.plugin.view?.processReferences()
             if (debug) console.log('ORM: Reloaded library')
         } else if (reloadType === RELOAD.VIEW) {
@@ -151,9 +140,11 @@ export class ReferenceMapData {
     loadLibrary = async (fromCache?: boolean) => {
         if (this.plugin.settings.searchCiteKey && this.plugin.settings.pullFromZotero) {
             await this.loadBibFileFromCache(fromCache);
+            this.plugin.updateChecker.library = this.library;
             return
         } else if (this.plugin.settings.searchCiteKey && this.plugin.settings.searchCiteKeyPath) {
             await this.loadBibFileFromUserPath();
+            this.plugin.updateChecker.library = this.library;
             return
         } else {
             this.library = DEFAULT_LIBRARY
@@ -162,21 +153,19 @@ export class ReferenceMapData {
 
 
     getIndexCards = async (
-        activeView: MarkdownView | null
-    ) => {
-        const basename = activeView?.file?.basename ? activeView.file.basename : ''
-        if (activeView?.file) {
-            const fileMetadataCache = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
-            const fileCache = app.metadataCache.getFileCache(activeView.file);
-            this.updatePaperIDs(activeView, fileMetadataCache, fileCache)
+        indexIds: Set<string>,
+        citeKeyMap: CiteKey[],
+        fileName: string,
+        frontmatter: string,
+        basename: string,
 
-        }
+    ) => {
         const indexCards: IndexPaper[] = [];
         const settings = this.plugin.settings
         // Get references using the paper IDs
-        if (this.paperIDs.size > 0) {
+        if (indexIds.size > 0) {
             await Promise.all(
-                _.map([...this.paperIDs], async (paperId) => {
+                _.map([...indexIds], async (paperId) => {
                     const paper = await this.viewManager.getIndexPaper(paperId);
                     if (paper !== null && typeof paper !== "number") {
                         const paperCiteId =
@@ -192,9 +181,9 @@ export class ReferenceMapData {
         }
 
         // Get references using the cite keys
-        if (this.citeKeyMap.length > 0 && settings.searchCiteKey) {
+        if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
-                _.map(this.citeKeyMap, async (item) => {
+                _.map(citeKeyMap, async (item) => {
                     if (item.paperId !== item.citeKey) {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
@@ -206,11 +195,11 @@ export class ReferenceMapData {
         }
 
         // Get references using the file name
-        if (settings.searchTitle && this.fileNameString && !EXCLUDE_FILE_NAMES.some(
+        if (settings.searchTitle && fileName && !EXCLUDE_FILE_NAMES.some(
             (name) => basename.toLowerCase() === name.toLowerCase())
         ) {
             const titleSearchPapers = await this.viewManager.searchIndexPapers(
-                this.fileNameString,
+                fileName,
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
@@ -219,9 +208,9 @@ export class ReferenceMapData {
         }
 
         // Get references using the front matter
-        if (settings.searchFrontMatter && this.frontMatterString) {
+        if (settings.searchFrontMatter && frontmatter) {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
-                this.frontMatterString, settings.searchFrontMatterLimit);
+                frontmatter, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
                 indexCards.push({ id: paper.paperId, location: null, paper });
             });
@@ -247,57 +236,6 @@ export class ReferenceMapData {
             this.plugin.settings.sortByIndex,
             this.plugin.settings.sortOrderIndex
         )
-    }
-
-
-    updatePaperIDs = (
-        activeView: MarkdownView,
-        fileMetadataCache = '',
-        fileCache: CachedMetadata | null = null,
-    ) => {
-        let paperIDs = new Set<string>()
-        let citeKeyMap: CiteKey[] = []
-        let frontMatterString = ''
-        let fileNameString = ''
-
-        const settings = this.plugin.settings
-        const isLibrary = settings.searchCiteKey && this.library.libraryData !== null
-        if (isLibrary && settings.autoUpdateCitekeyFile) this.loadLibrary(false)
-        const basename = activeView.file?.basename ? activeView.file.basename : ''
-
-        if (fileMetadataCache) paperIDs = getPaperIds(fileMetadataCache)
-
-        if (isLibrary) {
-            const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@'
-            const citeKeys = getCiteKeys(this.library.libraryData, fileMetadataCache, prefix)
-            citeKeyMap = getCiteKeyIds(citeKeys, this.library)
-        }
-
-        if (settings.searchFrontMatter) {
-            if (activeView.file && fileCache) {
-                if (fileCache?.frontmatter) {
-                    const keywords =
-                        fileCache?.frontmatter?.[
-                        settings.searchFrontMatterKey
-                        ];
-                    if (keywords)
-                        frontMatterString = extractKeywords(keywords).unique().join("+");
-                }
-            }
-        }
-
-        if (
-            settings.searchTitle &&
-            !EXCLUDE_FILE_NAMES.some(
-                (name) => basename.toLowerCase() === name.toLowerCase()
-            )
-        ) {
-            fileNameString = extractKeywords(basename).unique().join('+')
-        }
-        this.paperIDs = paperIDs
-        this.citeKeyMap = citeKeyMap
-        this.frontMatterString = frontMatterString
-        this.fileNameString = fileNameString
     }
 }
 
