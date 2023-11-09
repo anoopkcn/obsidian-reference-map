@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { MarkdownView } from 'obsidian';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
@@ -20,7 +21,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
     let minCitationCount = 0;
 
     data.forEach((item, index) => {
-        const paperId = item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id;
+        const paperId = String(item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id);
         maxCitationCount = Math.max(maxCitationCount, item.paper.paper.citationCount);
         minCitationCount = Math.min(minCitationCount, item.paper.paper.citationCount);
 
@@ -33,7 +34,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         });
 
         item.references.forEach((reference, refIndex) => {
-            const referenceId = reference.paperId ? reference.paperId : `reference${paperId}`;
+            const referenceId = String(reference.paperId ? reference.paperId : `reference${paperId}`);
             maxCitationCount = Math.max(maxCitationCount, reference.citationCount);
             minCitationCount = Math.min(minCitationCount, reference.citationCount);
 
@@ -50,7 +51,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         });
 
         item.citations.forEach((citation, citIndex) => {
-            const citationId = citation.paperId ? citation.paperId : `citation${paperId}`;
+            const citationId = String(citation.paperId ? citation.paperId : `citation${paperId}`);
             maxCitationCount = Math.max(maxCitationCount, citation.citationCount);
             minCitationCount = Math.min(minCitationCount, citation.citationCount);
 
@@ -61,8 +62,8 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 color: "#A15399"
             });
             links.push({
-                source: paperId,
-                target: citationId
+                source: citationId,
+                target: paperId
             });
         });
     });
@@ -72,7 +73,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
     });
 
     return {
-        nodes: nodes,
+        nodes: _.uniqBy(nodes, 'id'),
         links: links
     };
 };
@@ -140,7 +141,6 @@ export const ReferenceMapGraph = (props: {
             setIsLoading(true)
             const graphData = await fetchData(cards)
             setData(formatData(graphData))
-            console.log('Cite keys have changed', graphData);
             setIsLoading(false)
         });
     }, [basename, settings]);
@@ -150,8 +150,17 @@ export const ReferenceMapGraph = (props: {
             props.referenceMapData.getIndexCards(activeView).then(async (cards) => {
                 setIsLoading(true)
                 const graphData = await fetchData(cards)
-                setData(formatData(graphData))
-                console.log('Cite keys have changed', graphData);
+                const newSubgraph = formatData(graphData);
+                // Get the ids of the new nodes
+                const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
+                setData(prevData => ({
+                    nodes: _.uniqBy([...prevData.nodes, ...newSubgraph.nodes].filter(node => newNodeIds.has(node.id)), 'id'),
+                    links: [...prevData.links, ...newSubgraph.links].filter(link => {
+                        const target = typeof link.target === 'object' && link.target !== null ? link.target.id : link.target;
+                        const source = typeof link.source === 'object' && link.source !== null ? link.source.id : link.source;
+                        return newNodeIds.has(source) && newNodeIds.has(target);
+                    })
+                }))
                 setIsLoading(false)
             });
         });
@@ -196,8 +205,18 @@ export const ReferenceMapGraph = (props: {
                     width={props.width}
                     height={props.height}
                     graphData={data}
-                    onNodeClick={handleNodeClick}
                     linkColor={() => '#363636'}
+                    onNodeClick={handleNodeClick}
+                    linkDirectionalArrowRelPos={1}
+                    linkDirectionalArrowLength={10}
+                    onNodeDrag={(node) => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
+                    onNodeDragEnd={(node) => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
                 />
             </div>
         )
