@@ -40,11 +40,10 @@ export class GraphView extends ItemView {
                     const fileCache = await this.app.vault.cachedRead(activeView.file)
                     this.updateChecker.basename = activeView?.file?.basename
                     if (fileCache) {
-                        this.updateChecker.fileCache = fileCache
-                        const prefix = this.plugin.settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
-                        const updated = this.updateChecker.checkCiteKeysUpdate(prefix)
+                        const updated = await this.prepare(activeView)
                         console.log('updated', updated)
                         if (updated) {
+                            console.log('triggering keys-changed', this.updateChecker.citeKeys)
                             EventBus.trigger('keys-changed');
                         }
                     }
@@ -94,22 +93,30 @@ export class GraphView extends ItemView {
         return super.onClose()
     }
 
-    openGraph = async () => {
-        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+    prepare = async (activeView: MarkdownView | null) => {
         const settings = this.plugin.settings
+        let isUpdate = false
         if (activeView?.file) {
             this.updateChecker.basename = activeView.file.basename
-            const fileCache = activeView.file ? await app.vault.cachedRead(activeView.file) : ''
+            const fileCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
             const fileMetadataCache = this.app.metadataCache.getFileCache(activeView.file);
             const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
             if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
             this.updateChecker.setCache(fileCache, fileMetadataCache)
             const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
-            this.updateChecker.checkIndexIdsUpdate()
-            if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix)
+
             if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
             if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
+            this.updateChecker.checkIndexIdsUpdate()
+            if (settings.searchCiteKey) isUpdate = this.updateChecker.checkCiteKeysUpdate(prefix)
         }
+        return isUpdate
+    }
+
+    openGraph = async () => {
+        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+        await this.prepare(activeView)
+
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>
                 <ReferenceMapGraph

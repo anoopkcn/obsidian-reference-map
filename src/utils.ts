@@ -792,7 +792,9 @@ export class UpdateChecker {
 		if (this.library === null) return false;
 		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
 		if (!checkOrder) {
-			if (areSetsEqual(newCiteKeys, this.citeKeys)) return false;
+			if (areSetsEqual(newCiteKeys, this.citeKeys)) {
+				return false;
+			} 
 		}
 		this.citeKeys = newCiteKeys;
 		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)

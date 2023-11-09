@@ -19,15 +19,16 @@ export const ReferenceMapList = (props: {
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	const { viewManager } = props.referenceMapData;
-	const basename = props.updateChecker.basename;
-	const indexIds = props.updateChecker.indexIds;
-	const citeKeyMap = props.updateChecker.citeKeyMap;
-	const fileName = props.updateChecker.fileName;
-	const frontmatter = props.updateChecker.frontmatter;
 
 	const fetchData = async () => {
 		setIsLoading(true)
-		const indexCards = await props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
+		const indexCards = await props.referenceMapData.getIndexCards(
+			props.updateChecker.indexIds,
+			props.updateChecker.citeKeyMap,
+			props.updateChecker.fileName,
+			props.updateChecker.frontmatter,
+			props.updateChecker.basename
+		)
 		setPapers(indexCards)
 		setIsLoading(false)
 	}
@@ -35,8 +36,11 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		fetchData()
 	}, [
-		indexIds, citeKeyMap, fileName, frontmatter,
-		basename,
+		props.updateChecker.indexIds,
+		props.updateChecker.citeKeyMap,
+		props.updateChecker.fileName,
+		props.updateChecker.frontmatter,
+		props.updateChecker.basename,
 		props.plugin.settings,
 		props.referenceMapData.library.libraryData
 	])
@@ -92,14 +96,13 @@ export const ReferenceMapList = (props: {
 
 	const noContentItems = () => {
 		// in citekeyMap if items have citeKey and paperId are the same then return a new array with only citeKey
-		const items = citeKeyMap.filter((item) => item.citeKey === item.paperId)
+		const items = props.updateChecker.citeKeyMap.filter((item) => item.citeKey === item.paperId)
 		// convert the items to an array of strings
 		const citeKeys = items.map((item) => item.citeKey)
 		return citeKeys
 	}
 
-
-	if (basename === undefined) {
+	if (props.updateChecker.basename === undefined) {
 		return (
 			<div className="orm-no-content">
 				<div>
@@ -125,7 +128,7 @@ export const ReferenceMapList = (props: {
 						const ref = activeIndexCardClass ? activeRef : null
 						return (
 							<div
-								key={`${paper.paper.paperId}${index}${basename}`}
+								key={`${paper.paper.paperId}${index}${props.updateChecker.basename}`}
 								ref={ref}
 							>
 								<IndexPaperCard
