@@ -87,6 +87,7 @@ export const ReferenceMapGraph = (props: {
 }) => {
     const [data, setData] = useState<GraphData>({ nodes: [], links: [] })
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
     const { settings, activeView } = props;
     const { viewManager } = props.referenceMapData;
