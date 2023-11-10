@@ -475,6 +475,7 @@ function getGlobal() {
 		method: 'GET',
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const res: any = await Promise.race([
 		new Promise((resolve, reject) => {
 			const req = http.request(options, res => {
@@ -539,7 +540,7 @@ export async function getZBib(
 
 	const req = http.request(options);
 	req.end();
-
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const bib: any = await new Promise((resolve, reject) => {
 		req.on('response', (res) => {
 			let data = '';
