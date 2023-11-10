@@ -484,11 +484,11 @@ function getGlobal() {
 				res.on('end', () => resolve(data));
 			});
 			req.on('error', (error: NodeJS.ErrnoException) => {
-				if (error.code === 'ECONNREFUSED') {
-					resolve(null); // if connection is refused, return false
-				} else {
-					reject(error); // for other errors, reject the promise
-				}
+				// if (error.code === 'ECONNREFUSED') {
+				resolve(null); // if connection is refused, return false
+				// } else {
+				// 	reject(error); // for other errors, reject the promise
+				// }
 			});
 			req.end();
 		}),
@@ -818,13 +818,13 @@ export class UpdateChecker {
 	}
 
 	checkCiteKeysUpdate = (prefix = '@', checkOrder = false) => {
-	// checkOrder is used to force update (usually for reference map view order correction)
+		// checkOrder is used to force update (usually for reference map view order correction)
 		if (this.library === null) return false;
 		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
 		if (!checkOrder) {
 			if (areSetsEqual(newCiteKeys, this.citeKeys)) {
 				return false;
-			} 
+			}
 		}
 		this.citeKeys = newCiteKeys;
 		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)
