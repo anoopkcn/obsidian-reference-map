@@ -7,7 +7,7 @@ import { ReferenceMapList } from './components/ReferenceMapList'
 import { ReferenceMapData } from './referenceData'
 import { AppContext } from './context'
 import { UpdateChecker } from './utils'
-import EventBus from './EventBus'
+import EventBus, { EVENTS } from './EventBus'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -47,12 +47,12 @@ export class ReferenceMapView extends ItemView {
 
 		this.registerDomEvent(document, 'pointerup', (evt) => {
 			const selection = window.getSelection()?.toString().trim()
-			EventBus.trigger('graph-selection-updated', selection)
+			EventBus.trigger(EVENTS.SELECTION, selection)
 		})
 
 		this.registerDomEvent(document, 'keyup', (evt) => {
 			const selection = window.getSelection()?.toString().trim()
-			EventBus.trigger('graph-selection-updated', selection)
+			EventBus.trigger(EVENTS.SELECTION, selection)
 		})
 	}
 
@@ -78,7 +78,7 @@ export class ReferenceMapView extends ItemView {
 		return super.onClose()
 	}
 	onunload() {
-		EventBus.off('graph-selection-updated', () => { })
+		EventBus.off(EVENTS.SELECTION, () => { })
 	}
 
 	processReferences = async () => {

@@ -5,7 +5,7 @@ import { ReferenceMapGraph } from "./ReferenceMapGraph";
 import ReferenceMap from "src/main";
 import { AppContext } from "src/context";
 import { ReferenceMapData } from "src/referenceData";
-import EventBus from "src/EventBus";
+import EventBus, { EVENTS } from "src/EventBus";
 import { UpdateChecker } from "src/utils";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
@@ -40,7 +40,7 @@ export class GraphView extends ItemView {
                     if (fileCache) {
                         const updated = await this.prepare(activeView)
                         if (updated) {
-                            EventBus.trigger('graph-index-updated');
+                            EventBus.trigger(EVENTS.UPDATE);
                         }
                     }
                 }
@@ -81,7 +81,7 @@ export class GraphView extends ItemView {
     }
 
     onUnload = () => {
-        EventBus.off('graph-index-updated', () => { });
+        EventBus.off(EVENTS.UPDATE, () => { });
     }
 
     async onClose() {

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
-import EventBus from 'src/EventBus';
+import EventBus, { EVENTS } from 'src/EventBus';
 import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
@@ -172,7 +172,7 @@ export const ReferenceMapGraph = (props: {
             // fgRef.current.d3Force("collide", d3.forceCollide(7));
             fgRef.current.d3Force("charge").strength(-10);
             fgRef.current.d3Force("link").distance(100);
-            // fgRef.current.d3Force("charge").distanceMax(150);
+            // fgRef.current.d3Force("charge").distanceMax(500);
         }
     }, [data]);
 
@@ -203,7 +203,7 @@ export const ReferenceMapGraph = (props: {
         }
 
         fetchDataAndUpdate();
-        EventBus.on('graph-index-updated', fetchDataAndUpdate);
+        EventBus.on(EVENTS.UPDATE, fetchDataAndUpdate);
     }, [
         settings,
         props.updateChecker.basename,

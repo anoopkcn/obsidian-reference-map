@@ -5,7 +5,7 @@ import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/referenceData'
-import EventBus from 'src/EventBus'
+import EventBus, { EVENTS } from 'src/EventBus'
 // import { PartialLoading } from './PartialLoading'
 
 export const ReferenceMapList = (props: {
@@ -52,7 +52,7 @@ export const ReferenceMapList = (props: {
 				block: 'nearest',
 				behavior: 'smooth',
 			})
-		EventBus.on('graph-selection-updated', (sel) => setSelection(sel))
+		EventBus.on(EVENTS.SELECTION, (sel) => setSelection(sel))
 	}, [])
 
 	const userSearch = (isSearchList: boolean) => {
