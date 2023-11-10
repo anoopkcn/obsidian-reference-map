@@ -466,9 +466,8 @@ function getGlobal() {
 	if (window?.activeWindow) return activeWindow;
 	if (window) return window;
 	return global;
-}
 
-export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
+} export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
 	const options = {
 		hostname: '127.0.0.1',
 		port: port,
@@ -476,22 +475,25 @@ export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
 		method: 'GET',
 	};
 
-	const req = http.request(options);
-	req.end();
-
 	const res: any = await Promise.race([
 		new Promise((resolve, reject) => {
-			req.on('response', (res) => {
+			const req = http.request(options, res => {
 				let data = '';
-				res.on('data', (chunk) => data += chunk);
+				res.on('data', chunk => data += chunk);
 				res.on('end', () => resolve(data));
 			});
-			req.on('error', reject);
+			req.on('error', (error: NodeJS.ErrnoException) => {
+				if (error.code === 'ECONNREFUSED') {
+					resolve(null); // if connection is refused, return false
+				} else {
+					reject(error); // for other errors, reject the promise
+				}
+			});
+			req.end();
 		}),
 		new Promise((resolve) => {
 			getGlobal().setTimeout(() => {
 				resolve(null);
-				req.abort();
 			}, 150);
 		}),
 	]);
