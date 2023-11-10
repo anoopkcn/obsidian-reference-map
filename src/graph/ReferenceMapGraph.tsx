@@ -6,6 +6,7 @@ import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
 import { UpdateChecker } from 'src/utils';
+// import * as d3 from "d3";
 
 interface MapGraphData {
     paper: IndexPaper
@@ -126,7 +127,9 @@ export const ReferenceMapGraph = (props: {
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
     const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
+    const temptextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
     const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
+    const textColor = temptextColor ? temptextColor : 'black';
     // const accentColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent') ?
     // getComputedStyle(document.body).getPropertyValue('--interactive-accent') : '#835EEC';
 
@@ -166,6 +169,7 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
+            // fgRef.current.d3Force("collide", d3.forceCollide(7));
             fgRef.current.d3Force("charge").strength(-10);
             fgRef.current.d3Force("link").distance(100);
             // fgRef.current.d3Force("charge").distanceMax(150);
@@ -222,6 +226,12 @@ export const ReferenceMapGraph = (props: {
         ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
         ctx.fillStyle = node.color;
         ctx.fill();
+
+        if (node.isIndex) {
+            ctx.font = '12px Arial';
+            ctx.fillStyle = textColor;
+            ctx.fillText(node.id, node.x, node.y);
+        }
     }, [hoverNode]);
 
     const updateHighlight = () => {
