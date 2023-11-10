@@ -284,10 +284,10 @@ export const ReferenceMapGraph = (props: {
                     graphData={data}
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 4 : 1}
-                    linkDirectionalParticles={2}
-                    linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
-                    linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
-                    linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
+                    // linkDirectionalParticles={2}
+                    // linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
+                    // linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
+                    // linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
                     linkColor={() => lineColor}
                     // linkDirectionalArrowRelPos={1}
                     // linkDirectionalArrowLength={10}
