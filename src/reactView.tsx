@@ -1,4 +1,4 @@
-import { ItemView, MarkdownView, WorkspaceLeaf, debounce } from 'obsidian'
+import { ItemView, MarkdownView, WorkspaceLeaf } from 'obsidian'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
 import React from 'react'
@@ -7,6 +7,7 @@ import { ReferenceMapList } from './components/ReferenceMapList'
 import { ReferenceMapData } from './referenceData'
 import { AppContext } from './context'
 import { UpdateChecker } from './utils'
+import EventBus from './EventBus'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -45,11 +46,13 @@ export class ReferenceMapView extends ItemView {
 		)
 
 		this.registerDomEvent(document, 'pointerup', (evt) => {
-			this.idSelectionHandle()
+			const selection = window.getSelection()?.toString().trim()
+			EventBus.trigger('graph-selection-updated', selection)
 		})
 
 		this.registerDomEvent(document, 'keyup', (evt) => {
-			this.idSelectionHandle()
+			const selection = window.getSelection()?.toString().trim()
+			EventBus.trigger('graph-selection-updated', selection)
 		})
 	}
 
@@ -74,35 +77,11 @@ export class ReferenceMapView extends ItemView {
 		this.referenceMapData.viewManager.clearCache()
 		return super.onClose()
 	}
+	onunload() {
+		EventBus.off('graph-selection-updated', () => { })
+	}
 
-	idSelectionHandle = debounce(() => {
-		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-		if (!activeView || !activeView.file) return
-
-		const editor = activeView.editor
-		const selection =
-			activeView.getMode() === 'source'
-				? editor.getSelection().trim()
-				: window.getSelection()?.toString().trim()
-
-		const isInIDs = Array.from(this.updateChecker.indexIds).map((id: string) => {
-			id = id.replace('https://doi.org/', '');
-			return selection?.includes(id)
-		})
-		let isInCiteKeys = false
-		for (const key in this.updateChecker.citeKeyMap) {
-			const value = String(this.updateChecker.citeKeyMap[key])
-			if (selection?.includes(key) || selection?.includes(value)) {
-				isInCiteKeys = true
-				break
-			}
-		}
-		if (isInIDs || isInCiteKeys) {
-			this.processReferences(selection ?? '')
-		}
-	}, 300, true)
-
-	processReferences = async (selection = '') => {
+	processReferences = async () => {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
 		const settings = this.plugin.settings
 		if (activeView?.file) {
@@ -124,7 +103,6 @@ export class ReferenceMapView extends ItemView {
 					plugin={this.plugin}
 					referenceMapData={this.referenceMapData}
 					updateChecker={this.updateChecker}
-					selection={selection}
 				/>
 			</AppContext.Provider>
 		)

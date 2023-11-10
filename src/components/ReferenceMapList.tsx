@@ -5,15 +5,16 @@ import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/referenceData'
+import EventBus from 'src/EventBus'
 // import { PartialLoading } from './PartialLoading'
 
 export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
 	referenceMapData: ReferenceMapData
 	updateChecker: UpdateChecker
-	selection: string
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
+	const [selection, setSelection] = useState('')
 	// const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
@@ -51,7 +52,8 @@ export const ReferenceMapList = (props: {
 				block: 'nearest',
 				behavior: 'smooth',
 			})
-	}, [props.selection])
+		EventBus.on('graph-selection-updated', (sel) => setSelection(sel))
+	}, [])
 
 	const userSearch = (isSearchList: boolean) => {
 		const searchFieldName = isSearchList
@@ -123,8 +125,7 @@ export const ReferenceMapList = (props: {
 					{userSearch(true)}
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
-						const activeIndexCardClass =
-							props.selection.includes(paperId) ? 'orm-active-index' : '';
+						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
 						const ref = activeIndexCardClass ? activeRef : null
 						return (
 							<div
