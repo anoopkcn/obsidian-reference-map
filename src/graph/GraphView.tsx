@@ -24,9 +24,7 @@ export class GraphView extends ItemView {
         this.referenceMapData = this.plugin.referenceMapData
         this.updateChecker = new UpdateChecker()
         this.updateChecker.library = this.referenceMapData.library
-        this.viewContent = this.containerEl.querySelector(
-            ".view-content"
-        ) as HTMLElement;
+        this.viewContent = this.containerEl.querySelector(".view-content") as HTMLElement;
         if (this.viewContent) {
             this.rootEl = createRoot(this.viewContent)
         } else {
@@ -95,8 +93,8 @@ export class GraphView extends ItemView {
         const settings = this.plugin.settings
         let isUpdate = false
         if (activeView?.file) {
-            let isfm = false
-            let isfn = false
+            let isFm = false
+            let isFn = false
             let isIdx = false
             let isCite = false
             this.updateChecker.basename = activeView.file.basename
@@ -107,11 +105,11 @@ export class GraphView extends ItemView {
             this.updateChecker.setCache(fileCache, fileMetadataCache)
             const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
 
-            if (settings.searchFrontMatter) isfm = this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
-            if (settings.searchTitle) isfn = this.updateChecker.checkFileNameUpdate()
+            if (settings.searchFrontMatter) isFm = this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
+            if (settings.searchTitle) isFn = this.updateChecker.checkFileNameUpdate()
             if (settings.searchCiteKey) isCite = this.updateChecker.checkCiteKeysUpdate(prefix)
             isIdx = this.updateChecker.checkIndexIdsUpdate()
-            isUpdate = isfm || isfn || isIdx || isCite
+            isUpdate = isFm || isFn || isIdx || isCite
         }
         return isUpdate
     }
