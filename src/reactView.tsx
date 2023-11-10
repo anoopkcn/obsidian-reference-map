@@ -31,7 +31,7 @@ export class ReferenceMapView extends ItemView {
 					this.processReferences()
 				}
 			})
-		)
+		);
 
 		this.registerEvent(
 			this.app.workspace.on('active-leaf-change', (leaf) => {
@@ -43,17 +43,17 @@ export class ReferenceMapView extends ItemView {
 					})
 				}
 			})
-		)
+		);
 
 		this.registerDomEvent(document, 'pointerup', (evt) => {
 			const selection = window.getSelection()?.toString().trim()
 			EventBus.trigger(EVENTS.SELECTION, selection)
-		})
+		});
 
 		this.registerDomEvent(document, 'keyup', (evt) => {
 			const selection = window.getSelection()?.toString().trim()
 			EventBus.trigger(EVENTS.SELECTION, selection)
-		})
+		});
 	}
 
 	getViewType() {
