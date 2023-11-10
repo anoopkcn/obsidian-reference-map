@@ -125,7 +125,10 @@ export const ReferenceMapGraph = (props: {
 
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
-    const lineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30');
+    const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
+    const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
+    // const accentColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent') ?
+    // getComputedStyle(document.body).getPropertyValue('--interactive-accent') : '#835EEC';
 
     const fetchData = async (indexCards: IndexPaper[]) => {
         try {
@@ -210,7 +213,7 @@ export const ReferenceMapGraph = (props: {
     const paintRing = useCallback((node: NodeObject, ctx: any) => {
         // add ring just for highlighted nodes
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.val + 3, 0, 2 * Math.PI, false);
+        ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
         ctx.fillStyle = '#835EEC';
         ctx.fill();
 
@@ -283,11 +286,12 @@ export const ReferenceMapGraph = (props: {
                     height={props.height}
                     graphData={data}
                     autoPauseRedraw={false}
-                    linkWidth={link => highlightLinks.has(link) ? 4 : 1}
+                    linkWidth={link => highlightLinks.has(link) ? 3 : 1}
                     // linkDirectionalParticles={2}
                     // linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
                     // linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
                     // linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
+                    // linkColor={link => highlightLinks.has(link) ? accentColor : lineColor}
                     linkColor={() => lineColor}
                     // linkDirectionalArrowRelPos={1}
                     // linkDirectionalArrowLength={10}
