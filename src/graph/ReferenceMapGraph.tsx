@@ -206,10 +206,11 @@ export const ReferenceMapGraph = (props: {
         props.updateChecker.frontmatter,
     ]);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paintRing = useCallback((node: NodeObject, ctx: any) => {
         // add ring just for highlighted nodes
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.val + 4, 0, 2 * Math.PI, false);
+        ctx.arc(node.x, node.y, node.val + 3, 0, 2 * Math.PI, false);
         ctx.fillStyle = '#835EEC';
         ctx.fill();
 
@@ -230,10 +231,10 @@ export const ReferenceMapGraph = (props: {
         highlightLinks.clear();
         if (node) {
             highlightNodes.add(node);
-            if (!node.isIndex) {
-                node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
-                node.links.forEach((link: LinkObject) => highlightLinks.add(link));
-            }
+            // if (!node.isIndex) {
+            node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
+            node.links.forEach((link: LinkObject) => highlightLinks.add(link));
+            // }
         }
 
         setHoverNode(node || null);
@@ -252,6 +253,13 @@ export const ReferenceMapGraph = (props: {
 
         updateHighlight();
     };
+
+    const zoomOut = () => {
+        if (fgRef.current !== null && fgRef.current !== undefined) {
+            fgRef.current.zoom(0.5, 400);
+            fgRef.current.centerAt(0, 0, 400);
+        }
+    }
 
     if (!props.updateChecker.basename) {
         return (
@@ -276,7 +284,7 @@ export const ReferenceMapGraph = (props: {
                     graphData={data}
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 4 : 1}
-                    linkDirectionalParticles={4}
+                    linkDirectionalParticles={2}
                     linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
                     linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
                     linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
@@ -296,6 +304,7 @@ export const ReferenceMapGraph = (props: {
                     nodeCanvasObject={paintRing}
                     onNodeHover={handleNodeHover}
                     onLinkHover={handleLinkHover}
+                    onBackgroundRightClick={zoomOut}
                 />
             </div>
         )
