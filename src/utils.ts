@@ -2,12 +2,10 @@ import { App, FileSystemAdapter, MarkdownView, Notice, TFile, CachedMetadata } f
 import path from 'path'
 import fs from 'fs';
 import doiRegex from 'doi-regex'
-import download from 'download';
-import { request } from 'http';
+import http, { request } from 'http';
 import https from 'https';
 import { CSLList, CiteKey, IndexPaper, Library, MetaData, PartialCSLEntry, Reference, citeKeyLibrary } from './types'
 import {
-	// BIBTEX_STANDARD_TYPES,
 	COMMON_WORDS,
 	DEFAULT_HEADERS,
 	DEFAULT_ZOTERO_PORT,
@@ -471,15 +469,29 @@ function getGlobal() {
 }
 
 export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
-	const p = download(`http://127.0.0.1:${port}/better-bibtex/cayw?probe=true`);
+	const options = {
+		hostname: '127.0.0.1',
+		port: port,
+		path: '/better-bibtex/cayw?probe=true',
+		method: 'GET',
+	};
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const req = http.request(options);
+	req.end();
+
 	const res: any = await Promise.race([
-		p,
-		new Promise((res) => {
+		new Promise((resolve, reject) => {
+			req.on('response', (res) => {
+				let data = '';
+				res.on('data', (chunk) => data += chunk);
+				res.on('end', () => resolve(data));
+			});
+			req.on('error', reject);
+		}),
+		new Promise((resolve) => {
 			getGlobal().setTimeout(() => {
-				res(null);
-				p.destroy();
+				resolve(null);
+				req.abort();
 			}, 150);
 		}),
 	]);
@@ -493,7 +505,6 @@ function applyGroupID(list: CSLList, groupId: number) {
 		return item;
 	});
 }
-
 
 export async function getZBib(
 	port: string = DEFAULT_ZOTERO_PORT,
@@ -517,9 +528,24 @@ export async function getZBib(
 		}
 	}
 
-	const bib = await download(
-		`http://127.0.0.1:${port}/better-bibtex/export/library?/${groupId}/library.json`
-	);
+	const options = {
+		hostname: '127.0.0.1',
+		port: port,
+		path: `/better-bibtex/export/library?/${groupId}/library.json`,
+		method: 'GET',
+	};
+
+	const req = http.request(options);
+	req.end();
+
+	const bib: any = await new Promise((resolve, reject) => {
+		req.on('response', (res) => {
+			let data = '';
+			res.on('data', (chunk) => data += chunk);
+			res.on('end', () => resolve(data));
+		});
+		req.on('error', reject);
+	});
 
 	const str = bib.toString();
 
