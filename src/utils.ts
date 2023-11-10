@@ -165,6 +165,7 @@ export function removeNullReferences(references: IndexPaper[]) {
 
 // given a string of text, extract keywords from it excluding common words, punctuation, and numbers
 export function extractKeywords(text: string) {
+	if (!text) return []
 	const regex = new RegExp(`[${PUNCTUATION.join('')}]`, 'gmi')
 	const keywords = text.replace(regex, ' ').replace(/\s\s+/g, ' ').split(' ')
 	const result = keywords.filter((element) => {
@@ -809,14 +810,20 @@ export class UpdateChecker {
 	}
 
 	checkFrontmatterUpdate = (key = '') => {
-		if (!this.fileMetadataCache?.frontmatter) return false;
+		if (!this.fileMetadataCache?.frontmatter) {
+			this.frontmatter = '';
+			return false;
+		}
 		const keywords = this.fileMetadataCache?.frontmatter?.[key];
-		if (keywords) this.frontmatter = extractKeywords(keywords).unique().join("+");
+		this.frontmatter = extractKeywords(keywords).unique().join("+");
 		return true;
 	}
 
 	checkFileNameUpdate = () => {
-		if (!this.basename) return false;
+		if (!this.basename) {
+			this.fileName = '';
+			return false;
+		}
 		if (!EXCLUDE_FILE_NAMES.some((name) => this.basename.toLowerCase() === name.toLowerCase())) {
 			this.fileName = extractKeywords(this.basename).unique().join('+')
 			return true;
