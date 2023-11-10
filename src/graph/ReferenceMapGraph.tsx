@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
 import EventBus from 'src/EventBus';
 import { PartialLoading } from 'src/components/PartialLoading';
@@ -72,10 +72,39 @@ const formatData = (data: MapGraphData[]): GraphData => {
         node.val = 1 + (node.val - minCitationCount) * (20 - 1) / (maxCitationCount - minCitationCount);
     });
 
-    return {
+    links.forEach((link: LinkObject) => {
+
+        // Select nodes that have id as links.source or links.target
+        const a = nodes.find(node => node.id === link.source);
+        const b = nodes.find(node => node.id === link.target);
+
+        if (!a || !b) {
+            return;
+        }
+
+        a.neighbors = a.neighbors || [];
+        b.neighbors = b.neighbors || [];
+
+        a.neighbors.push(b);
+        b.neighbors.push(a);
+
+        if (!a.links) {
+            a.links = [];
+        }
+        if (!b.links) {
+            b.links = [];
+        }
+
+        a.links.push(link);
+        b.links.push(link);
+    });
+
+    const tempData: GraphData = {
         nodes: _.uniqBy(nodes, 'id'),
         links: links
-    };
+    }
+
+    return tempData
 };
 
 export const ReferenceMapGraph = (props: {
@@ -89,9 +118,14 @@ export const ReferenceMapGraph = (props: {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
+    const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
+    const [highlightNodes, setHighlightNodes] = useState(new Set());
+    const [highlightLinks, setHighlightLinks] = useState(new Set());
+
+
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
-
+    const lineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30');
 
     const fetchData = async (indexCards: IndexPaper[]) => {
         try {
@@ -172,6 +206,53 @@ export const ReferenceMapGraph = (props: {
         props.updateChecker.frontmatter,
     ]);
 
+    const paintRing = useCallback((node: NodeObject, ctx: any) => {
+        // add ring just for highlighted nodes
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.val + 4, 0, 2 * Math.PI, false);
+        ctx.fillStyle = '#835EEC';
+        ctx.fill();
+
+        // draw the original node on top
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
+        ctx.fillStyle = node.color;
+        ctx.fill();
+    }, [hoverNode]);
+
+    const updateHighlight = () => {
+        setHighlightNodes(highlightNodes);
+        setHighlightLinks(highlightLinks);
+    };
+
+    const handleNodeHover = (node: NodeObject) => {
+        highlightNodes.clear();
+        highlightLinks.clear();
+        if (node) {
+            highlightNodes.add(node);
+            if (!node.isIndex) {
+                node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
+                node.links.forEach((link: LinkObject) => highlightLinks.add(link));
+            }
+        }
+
+        setHoverNode(node || null);
+        updateHighlight();
+    };
+
+    const handleLinkHover = (link: LinkObject) => {
+        highlightNodes.clear();
+        highlightLinks.clear();
+
+        if (link) {
+            highlightLinks.add(link);
+            highlightNodes.add(link.source);
+            highlightNodes.add(link.target);
+        }
+
+        updateHighlight();
+    };
+
     if (!props.updateChecker.basename) {
         return (
             <div className="orm-no-content">
@@ -193,10 +274,15 @@ export const ReferenceMapGraph = (props: {
                     width={props.width}
                     height={props.height}
                     graphData={data}
-                    linkColor={() => '#363636'}
-                    onNodeClick={handleNodeClick}
-                    linkDirectionalArrowRelPos={1}
-                    linkDirectionalArrowLength={10}
+                    autoPauseRedraw={false}
+                    linkWidth={link => highlightLinks.has(link) ? 4 : 1}
+                    linkDirectionalParticles={4}
+                    linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
+                    linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
+                    linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
+                    linkColor={() => lineColor}
+                    // linkDirectionalArrowRelPos={1}
+                    // linkDirectionalArrowLength={10}
                     onNodeDrag={(node) => {
                         node.fx = node.x;
                         node.fy = node.y;
@@ -205,6 +291,11 @@ export const ReferenceMapGraph = (props: {
                         node.fx = node.x;
                         node.fy = node.y;
                     }}
+                    nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : undefined}
+                    onNodeClick={handleNodeClick}
+                    nodeCanvasObject={paintRing}
+                    onNodeHover={handleNodeHover}
+                    onLinkHover={handleLinkHover}
                 />
             </div>
         )
