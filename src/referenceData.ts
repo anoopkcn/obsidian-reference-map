@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import * as BibTeXParser from '@retorquere/bibtex-parser'
+import { parse } from '@retorquere/bibtex-parser'
 import {
     PromiseCapability,
     getZBib,
@@ -117,7 +117,11 @@ export class ReferenceMapData {
 
             let libraryData;
             try {
-                libraryData = isJson ? JSON.parse(rawData) : BibTeXParser.parse(rawData, { errorHandler: () => { } }).entries;
+                if (isJson) {
+                    libraryData = JSON.parse(rawData) as citeKeyLibrary[];
+                } else {
+                    libraryData = parse(rawData, { errorHandler: () => { } }).entries as citeKeyLibrary[];
+                }
             } catch (e) {
                 if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
                 return null;

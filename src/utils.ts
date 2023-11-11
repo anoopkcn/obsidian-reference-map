@@ -133,13 +133,19 @@ export const sanitizeCiteKey = (dirtyCiteKey: string) => {
 }
 
 export const getCiteKeys = (
-	libraryData: citeKeyLibrary[] | null | undefined,
+	library: Library | null | undefined,
 	content: string,
 	prefix: string
 ): Set<string> => {
-	const citekeys = libraryData?.map((item) => prefix + item.id) ?? []
+	if (!library) return new Set<string>()
+	let keys: string[] = []
+	if (library.adapter === 'bibtex') {
+		keys = library.libraryData?.map((item) => prefix + item.key) ?? []
+	} else {
+		keys = library.libraryData?.map((item) => prefix + item.id) ?? []
+	} 
 	// Collect all citekes from the content
-	const pattern = new RegExp(citekeys.join('|'), 'g');
+	const pattern = new RegExp(keys.join('|'), 'g');
 	const matches = content.match(pattern);
 	const output = matches?.map(match => match.startsWith('@') ? match.slice(1) : match);
 	return new Set(output)
@@ -831,7 +837,7 @@ export class UpdateChecker {
 	checkCiteKeysUpdate = (prefix = '@', checkOrder = false) => {
 		// checkOrder is used to force update (usually for reference map view order correction)
 		if (this.library === null) return false;
-		const newCiteKeys = getCiteKeys(this.library?.libraryData, this.fileCache, prefix)
+		const newCiteKeys = getCiteKeys(this.library, this.fileCache, prefix)
 		if (!checkOrder) {
 			if (areSetsEqual(newCiteKeys, this.citeKeys)) {
 				return false;
