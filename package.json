@@ -12,6 +12,7 @@
 	"author": "Anoop K. Chandran",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/d3": "^7.4.3",
 		"@types/doi-regex": "^0.1.0",
 		"@types/download": "^8.0.4",
 		"@types/lodash": "^4.14.191",
@@ -29,6 +30,7 @@
 	},
 	"dependencies": {
 		"@retorquere/bibtex-parser": "^6.4.7",
+		"d3": "^7.8.5",
 		"doi-regex": "^0.1.13",
 		"lodash": "^4.17.21",
 		"lru-cache": "^7.14.1",

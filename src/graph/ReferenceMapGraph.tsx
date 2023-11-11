@@ -7,6 +7,7 @@ import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
 import { UpdateChecker } from 'src/utils';
+import * as d3 from 'd3';
 
 interface MapGraphData {
     paper: IndexPaper
@@ -169,13 +170,12 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
-            // fgRef.current.d3Force("collide", d3.forceCollide(7));
-            fgRef.current.d3Force("charge").strength(-10);
-            fgRef.current.d3Force("link").distance(100);
-            // fgRef.current.d3Force("charge").distanceMax(250);
+            // fgRef.current.d3Force("charge").strength(-10);
+            // fgRef.current.d3Force("link").distance(100);
+            fgRef.current.d3Force("x", d3.forceX(props.width / 2).strength(0.1));
+            fgRef.current.d3Force("y", d3.forceY(props.height / 2).strength(0.1));
         }
-    }, [data]);
-
+    }, [data, props.width, props.height]);
 
     useEffect(() => {
         const fetchDataAndUpdate = async () => {
@@ -305,20 +305,19 @@ export const ReferenceMapGraph = (props: {
                     // linkColor={link => highlightLinks.has(link) ? accentColor : lineColor}
                     // linkDirectionalArrowRelPos={1}
                     // linkDirectionalArrowLength={10}
-                    // onNodeDrag={(node) => {
-                    //     node.fx = node.x;
-                    //     node.fy = node.y;
-                    // }}
-                    // onNodeDragEnd={(node) => {
-                    //     node.fx = node.x;
-                    //     node.fy = node.y;
-                    // }}
+                    onNodeDrag={(node) => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
+                    onNodeDragEnd={(node) => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
                     nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : undefined}
                     nodeCanvasObject={paintRing}
                     onNodeHover={handleNodeHover}
                     onLinkHover={handleLinkHover}
                     onNodeClick={handleNodeSelect}
-                    nodeColor={(node) => node.color}
                 />
             </div>
         )
