@@ -6,7 +6,6 @@ import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
 import { UpdateChecker } from 'src/utils';
-// import * as d3 from "d3";
 
 interface MapGraphData {
     paper: IndexPaper
@@ -160,12 +159,6 @@ export const ReferenceMapGraph = (props: {
         }
     }
 
-    const handleNodeClick = (node: NodeObject) => {
-        if (fgRef.current !== null && fgRef.current !== undefined) {
-            fgRef.current.zoom(2.0, 400);
-            fgRef.current.centerAt(node.x, node.y, 400);
-        }
-    };
 
     useEffect(() => {
         if (fgRef.current !== null && fgRef.current !== undefined) {
@@ -267,13 +260,6 @@ export const ReferenceMapGraph = (props: {
         updateHighlight();
     };
 
-    const zoomOut = () => {
-        if (fgRef.current !== null && fgRef.current !== undefined) {
-            fgRef.current.zoom(0.5, 400);
-            fgRef.current.centerAt(0, 0, 400);
-        }
-    }
-
     if (!props.updateChecker.basename) {
         return (
             <div className="orm-no-content">
@@ -297,12 +283,12 @@ export const ReferenceMapGraph = (props: {
                     graphData={data}
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 3 : 1}
+                    linkColor={() => lineColor}
                     // linkDirectionalParticles={2}
                     // linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
                     // linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
                     // linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
                     // linkColor={link => highlightLinks.has(link) ? accentColor : lineColor}
-                    linkColor={() => lineColor}
                     // linkDirectionalArrowRelPos={1}
                     // linkDirectionalArrowLength={10}
                     onNodeDrag={(node) => {
@@ -314,11 +300,9 @@ export const ReferenceMapGraph = (props: {
                         node.fy = node.y;
                     }}
                     nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : undefined}
-                    onNodeClick={handleNodeClick}
                     nodeCanvasObject={paintRing}
                     onNodeHover={handleNodeHover}
                     onLinkHover={handleLinkHover}
-                    onBackgroundRightClick={zoomOut}
                 />
             </div>
         )
