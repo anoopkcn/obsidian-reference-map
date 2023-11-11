@@ -96,6 +96,8 @@ export class ReferenceMapView extends ItemView {
 			if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix, true)
 			if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
 			if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
+		} else {
+			this.updateChecker.resetCache()
 		}
 		this.rootEl?.render(
 			<AppContext.Provider value={this.app}>

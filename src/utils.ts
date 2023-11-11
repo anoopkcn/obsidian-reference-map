@@ -812,6 +812,17 @@ export class UpdateChecker {
 		this.basename = '';
 	}
 
+	resetCache = () => {
+		this.citeKeys = new Set<string>();
+		this.citeKeyMap = []
+		this.indexIds = new Set<string>();
+		this.fileMetadataCache = null;
+		this.fileCache = '';
+		this.frontmatter = '';
+		this.fileName = '';
+		this.basename = '';
+	}
+
 	setCache = (fileCache: string, fileMetadataCache: CachedMetadata | null) => {
 		this.fileCache = fileCache
 		this.fileMetadataCache = fileMetadataCache
