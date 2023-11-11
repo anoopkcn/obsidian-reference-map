@@ -134,10 +134,10 @@ export const ReferenceMapGraph = (props: {
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
     const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
-    const temptextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
+    const tempTextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
     const tempHighlightColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
     const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
-    const textColor = temptextColor ? temptextColor : 'black';
+    const textColor = tempTextColor ? tempTextColor : 'black';
     const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
 
     const fetchData = async (indexCards: IndexPaper[]) => {
