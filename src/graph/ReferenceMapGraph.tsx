@@ -169,7 +169,7 @@ export const ReferenceMapGraph = (props: {
 
 
     useEffect(() => {
-        if (fgRef.current !== null && fgRef.current !== undefined) {
+        if (fgRef.current) {
             // fgRef.current.d3Force("charge").strength(-10);
             // fgRef.current.d3Force("link").distance(100);
             fgRef.current.d3Force("x", d3.forceX(props.width / 2).strength(0.1));
@@ -298,13 +298,6 @@ export const ReferenceMapGraph = (props: {
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 3 : 1}
                     linkColor={lineColor}
-                    // linkDirectionalParticles={2}
-                    // linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
-                    // linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
-                    // linkDirectionalParticleSpeed={link => highlightLinks.has(link) ? 0.007 : 0}
-                    // linkColor={link => highlightLinks.has(link) ? accentColor : lineColor}
-                    // linkDirectionalArrowRelPos={1}
-                    // linkDirectionalArrowLength={10}
                     onNodeDrag={(node) => {
                         node.fx = node.x;
                         node.fy = node.y;

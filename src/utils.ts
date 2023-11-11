@@ -264,6 +264,7 @@ export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
 		return paperId
 	}
 }
+
 export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null | undefined) => {
 	const citeKeysMap: CiteKey[] = []
 	let index = 1; // Initialize index variable outside the loop
@@ -299,27 +300,6 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
 	}
 	return citeKeysMap;
 }
-// export const standardizeBibtex = (bibtex: string) => {
-// 	const bibRegex = /(^@\[.*\]|@None)/gm
-// 	// Get words from group one
-// 	const matches = bibtex.matchAll(bibRegex)
-// 	if (matches) {
-// 		for (const match of matches) {
-// 			const possibleTypes = match[1]
-// 				.replace(/[@\\[\]'\s+]/g, '')
-// 				.split(',')
-// 			//check if any of the possible types are in the BIBTEX_STANDARD_TYPES
-// 			// if so return one type else type is 'misc'
-// 			let type =
-// 				possibleTypes.find((item) =>
-// 					BIBTEX_STANDARD_TYPES.includes(item.toLowerCase())
-// 				) || 'misc'
-// 			if (type === 'JournalArticle') type = 'article'
-// 			return bibtex.replace(match[1], `@${type.toLowerCase()}`)
-// 		}
-// 	}
-// 	return ''
-// }
 
 export const dataSearch = (data: Reference[], query: string) => {
 	return data.filter((item: Reference) =>

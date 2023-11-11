@@ -90,11 +90,11 @@ export default class ReferenceMap extends Plugin {
 			callback: () => this.createNewReferenceNote(),
 		});
 
-		// this.addCommand({
-		// 	id: "open-reference-map-graph",
-		// 	name: "Open Literature Graph",
-		// 	callback: () => this.openReferenceMapGraph(false),
-		// });
+		this.addCommand({
+			id: "open-reference-map-graph",
+			name: "Open Literature Graph",
+			callback: () => this.openReferenceMapGraph(false),
+		});
 
 		this.app.workspace.onLayoutReady(() => {
 			this.ensureLeafExists(false)
