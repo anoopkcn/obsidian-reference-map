@@ -110,10 +110,11 @@ export class GraphView extends ItemView {
             if (settings.searchCiteKey) isCite = this.updateChecker.checkCiteKeysUpdate(prefix)
             isIdx = this.updateChecker.checkIndexIdsUpdate()
             isUpdate = isFm || isFn || isIdx || isCite
-        } else {
-            this.updateChecker.resetCache()
-            isUpdate = true
-        }
+        } 
+        // else {
+        //     this.updateChecker.resetCache()
+        //     isUpdate = true
+        // }
         return isUpdate
     }
 

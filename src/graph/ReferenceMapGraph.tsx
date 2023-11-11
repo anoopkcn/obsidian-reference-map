@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
 import EventBus, { EVENTS } from 'src/EventBus';
+import { PaperCard } from 'src/components/PaperCard';
 import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
@@ -30,7 +31,8 @@ const formatData = (data: MapGraphData[]): GraphData => {
             name: item.paper.paper.title,
             val: item.paper.paper.citationCount,
             color: "#61C1E8",
-            isIndex: true
+            type: 'index',
+            data: item.paper
         });
 
         item.references.forEach((reference, refIndex) => {
@@ -42,7 +44,9 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 id: referenceId,
                 name: reference.title,
                 val: reference.citationCount,
-                color: "#7ABA57"
+                color: "#7ABA57",
+                type: 'reference',
+                data: { id: reference.paperId, location: null, paper: reference }
             });
             links.push({
                 source: paperId,
@@ -59,7 +63,9 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 id: citationId,
                 name: citation.title,
                 val: citation.citationCount,
-                color: "#A15399"
+                color: "#A15399",
+                type: 'citation',
+                data: { id: citation.paperId, location: null, paper: citation }
             });
             links.push({
                 source: citationId,
@@ -119,6 +125,7 @@ export const ReferenceMapGraph = (props: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
     const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
+    const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
     const [highlightNodes, setHighlightNodes] = useState(new Set());
     const [highlightLinks, setHighlightLinks] = useState(new Set());
 
@@ -127,10 +134,10 @@ export const ReferenceMapGraph = (props: {
     const { viewManager } = props.referenceMapData;
     const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
     const temptextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
+    const tempHighlightColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
     const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
     const textColor = temptextColor ? temptextColor : 'black';
-    // const accentColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent') ?
-    // getComputedStyle(document.body).getPropertyValue('--interactive-accent') : '#835EEC';
+    const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
 
     const fetchData = async (indexCards: IndexPaper[]) => {
         try {
@@ -165,7 +172,7 @@ export const ReferenceMapGraph = (props: {
             // fgRef.current.d3Force("collide", d3.forceCollide(7));
             fgRef.current.d3Force("charge").strength(-10);
             fgRef.current.d3Force("link").distance(100);
-            // fgRef.current.d3Force("charge").distanceMax(500);
+            // fgRef.current.d3Force("charge").distanceMax(250);
         }
     }, [data]);
 
@@ -191,10 +198,10 @@ export const ReferenceMapGraph = (props: {
                         return newNodeIds.has(source) && newNodeIds.has(target);
                     })
                 }))
+                setSelectedNode(null)
                 setIsLoading(false)
             });
         }
-
         fetchDataAndUpdate();
         EventBus.on(EVENTS.UPDATE, fetchDataAndUpdate);
     }, [
@@ -211,16 +218,10 @@ export const ReferenceMapGraph = (props: {
         // add ring just for highlighted nodes
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
-        ctx.fillStyle = '#835EEC';
+        ctx.fillStyle = highlightColor;
         ctx.fill();
 
-        // draw the original node on top
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
-        ctx.fillStyle = node.color;
-        ctx.fill();
-
-        if (node.isIndex) {
+        if (node.type === 'index') {
             ctx.font = '12px Arial';
             ctx.fillStyle = textColor;
             ctx.fillText(node.id, node.x, node.y);
@@ -237,10 +238,8 @@ export const ReferenceMapGraph = (props: {
         highlightLinks.clear();
         if (node) {
             highlightNodes.add(node);
-            // if (!node.isIndex) {
             node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
             node.links.forEach((link: LinkObject) => highlightLinks.add(link));
-            // }
         }
 
         setHoverNode(node || null);
@@ -260,6 +259,14 @@ export const ReferenceMapGraph = (props: {
         updateHighlight();
     };
 
+    const handleNodeSelect = (node: NodeObject) => {
+        if (selectedNode) {
+            selectedNode.color = node.color;
+        }
+        node.color = "red";
+        setSelectedNode(node);
+    }
+
     if (!props.updateChecker.basename) {
         return (
             <div className="orm-no-content">
@@ -275,7 +282,14 @@ export const ReferenceMapGraph = (props: {
     } else if (!(Array.isArray(data) && data.length === 0) || isLoading) {
         return (
             <div>
-                <PartialLoading isLoading={isLoading} />
+                <div className="orm-graph-content">
+                    <div className="orm-graph-paper-card">
+                        {selectedNode && (
+                            <PaperCard paper={selectedNode.data} settings={settings} showButtons={true} />
+                        )}
+                        <PartialLoading isLoading={isLoading} />
+                    </div>
+                </div>
                 <ForceGraph2D
                     ref={fgRef}
                     width={props.width}
@@ -283,7 +297,7 @@ export const ReferenceMapGraph = (props: {
                     graphData={data}
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 3 : 1}
-                    linkColor={() => lineColor}
+                    linkColor={lineColor}
                     // linkDirectionalParticles={2}
                     // linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
                     // linkDirectionalParticleColor={() => 'rgba(131, 94, 236, 0.2)'}
@@ -291,18 +305,20 @@ export const ReferenceMapGraph = (props: {
                     // linkColor={link => highlightLinks.has(link) ? accentColor : lineColor}
                     // linkDirectionalArrowRelPos={1}
                     // linkDirectionalArrowLength={10}
-                    onNodeDrag={(node) => {
-                        node.fx = node.x;
-                        node.fy = node.y;
-                    }}
-                    onNodeDragEnd={(node) => {
-                        node.fx = node.x;
-                        node.fy = node.y;
-                    }}
+                    // onNodeDrag={(node) => {
+                    //     node.fx = node.x;
+                    //     node.fy = node.y;
+                    // }}
+                    // onNodeDragEnd={(node) => {
+                    //     node.fx = node.x;
+                    //     node.fy = node.y;
+                    // }}
                     nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : undefined}
                     nodeCanvasObject={paintRing}
                     onNodeHover={handleNodeHover}
                     onLinkHover={handleLinkHover}
+                    onNodeClick={handleNodeSelect}
+                    nodeColor={(node) => node.color}
                 />
             </div>
         )

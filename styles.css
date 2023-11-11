@@ -537,3 +537,16 @@ body {
 .orm-group-toggle .setting-item-description {
 	padding-top: 0;
 }
+
+
+/* GRAPH */
+.orm-graph-content{
+	width: 100%;
+	position: relative;
+	z-index: 1;
+}
+.orm-graph-paper-card{
+	width: 100%;
+	position: absolute;
+	top: 0;
+}
