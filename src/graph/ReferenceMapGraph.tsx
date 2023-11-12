@@ -34,11 +34,11 @@ const formatData = (data: MapGraphData[]): GraphData => {
             val: indexCitationCount,
             color: "#61C1E8",
             type: 'index',
-            data: item.paper
+            data: { id: paperId, location: null, paper: item.paper.paper }
         });
 
         item.references.forEach((reference, refIndex) => {
-            const referenceId = String(reference.paperId ? reference.paperId : `reference${paperId}${refIndex}`);
+            const referenceId = String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`);
             const referenceCitationCount = reference.citationCount;
             maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
             minCitationCount = Math.min(minCitationCount, referenceCitationCount);
@@ -49,7 +49,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 val: referenceCitationCount,
                 color: "#7ABA57",
                 type: 'reference',
-                data: { id: reference.paperId, location: null, paper: reference }
+                data: { id: referenceId, location: null, paper: reference }
             });
             links.push({
                 source: paperId,
@@ -58,7 +58,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         });
 
         item.citations.forEach((citation, citIndex) => {
-            const citationId = String(citation.paperId ? citation.paperId : `citation${paperId}${citIndex}`);
+            const citationId = String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`);
             const citationCitationCount = citation.citationCount;
             maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
             minCitationCount = Math.min(minCitationCount, citationCitationCount);
@@ -69,7 +69,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 val: citationCitationCount,
                 color: "#A15399",
                 type: 'citation',
-                data: { id: citation.paperId, location: null, paper: citation }
+                data: { id: citationId, location: null, paper: citation }
             });
             links.push({
                 source: citationId,
