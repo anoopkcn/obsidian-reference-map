@@ -312,6 +312,7 @@ export const ReferenceMapGraph = (props: {
                     onNodeHover={handleNodeHover}
                     onLinkHover={handleLinkHover}
                     onNodeClick={handleNodeSelect}
+                    onBackgroundClick={() => setSelectedNode(null)}
                 />
             </div>
         )
