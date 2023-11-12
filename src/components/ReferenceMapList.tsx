@@ -6,7 +6,7 @@ import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/referenceData'
 import EventBus, { EVENTS } from 'src/EventBus'
-import { PartialLoading } from './PartialLoading'
+// import { PartialLoading } from './PartialLoading'
 
 interface NoContentProps {
 	children: ReactNode;
@@ -19,20 +19,20 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
+	// const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	const { viewManager } = props.referenceMapData;
 
 	const fetchData = async () => {
-		setIsLoading(true)
+		// setIsLoading(true)
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		const indexCards = await props.referenceMapData.getIndexCards(
 			indexIds, citeKeyMap, fileName, frontmatter, basename
 		)
 		setPapers(indexCards)
-		setIsLoading(false)
+		// setIsLoading(false)
 	}
 
 	useEffect(() => {
@@ -125,12 +125,12 @@ export const ReferenceMapList = (props: {
 		</NoContent>
 	}
 
-	if (papers.length > 0 || isLoading) {
+	if (papers.length > 0) {
 		return (
 			<>
 				<div className="orm-reference-map">
 					{userSearch(true)}
-					<PartialLoading isLoading={isLoading} />
+					{/* <PartialLoading isLoading={isLoading} /> */}
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
