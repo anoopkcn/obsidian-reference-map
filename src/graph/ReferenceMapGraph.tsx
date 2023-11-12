@@ -259,16 +259,7 @@ export const ReferenceMapGraph = (props: {
 
     const handleNodeSelect = (node: NodeObject) => {
         setSelectedNode(node);
-    }
-    const handleNodeDrag = useCallback((node: NodeObject) => {
-        node.fx = node.x;
-        node.fy = node.y;
-    }, []);
-
-    const handleNodeDragEnd = useCallback((node: NodeObject) => {
-        node.fx = node.x;
-        node.fy = node.y;
-    }, []);
+    };
 
     const nodeCanvasObjectMode = useCallback((node: NodeObject) => {
         return highlightNodes.has(node) ? 'before' : 'after';
@@ -306,8 +297,14 @@ export const ReferenceMapGraph = (props: {
                     autoPauseRedraw={false}
                     linkWidth={link => highlightLinks.has(link) ? 3 : 1}
                     linkColor={lineColor}
-                    onNodeDrag={handleNodeDrag}
-                    onNodeDragEnd={handleNodeDragEnd}
+                    onNodeDrag={node => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
+                    onNodeDragEnd={node => {
+                        node.fx = node.x;
+                        node.fy = node.y;
+                    }}
                     nodeCanvasObjectMode={nodeCanvasObjectMode}
                     nodeCanvasObject={paintRing}
                     onNodeHover={handleNodeHover}
