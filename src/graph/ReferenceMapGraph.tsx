@@ -177,10 +177,10 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         const fetchDataAndUpdate = () => {
+            setIsLoading(true)
             const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker;
             props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
                 .then(async (cards) => {
-                    setIsLoading(true)
                     const graphData = await fetchData(cards)
                     const newSubgraph = formatData(graphData);
                     const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
@@ -192,8 +192,8 @@ export const ReferenceMapGraph = (props: {
                             return newNodeIds.has(source) && newNodeIds.has(target);
                         })
                     }))
-                    setSelectedNode(null)
                     setIsLoading(false)
+                    setSelectedNode(null)
                 });
         }
         fetchDataAndUpdate();
@@ -275,7 +275,7 @@ export const ReferenceMapGraph = (props: {
     }, [highlightNodes]);
 
     //check if data is empty or not
-    if (!props.updateChecker.basename || data.nodes.length === 0) {
+    if (!props.updateChecker.basename) {
         return (
             <div className="orm-no-content">
                 <div>
