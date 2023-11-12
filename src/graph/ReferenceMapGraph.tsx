@@ -16,7 +16,7 @@ interface MapGraphData {
 }
 
 const formatData = (data: MapGraphData[]): GraphData => {
-    const nodes: NodeObject[] = [];
+    const nodes: Map<string, NodeObject> = new Map();
     const links: LinkObject[] = [];
 
     let maxCitationCount = 1;
@@ -24,13 +24,14 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
     data.forEach((item, index) => {
         const paperId = String(item.paper.id ? item.paper.id : item.paper.paper.paperId);
-        maxCitationCount = Math.max(maxCitationCount, item.paper.paper.citationCount);
-        minCitationCount = Math.min(minCitationCount, item.paper.paper.citationCount);
+        const citationCount = item.paper.paper.citationCount;
+        maxCitationCount = Math.max(maxCitationCount, citationCount);
+        minCitationCount = Math.min(minCitationCount, citationCount);
 
-        nodes.push({
+        nodes.set(paperId, {
             id: paperId,
             name: item.paper.paper.title,
-            val: item.paper.paper.citationCount,
+            val: citationCount,
             color: "#61C1E8",
             type: 'index',
             data: item.paper
@@ -38,13 +39,14 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
         item.references.forEach((reference, refIndex) => {
             const referenceId = String(reference.paperId ? reference.paperId : `reference${paperId}${refIndex}`);
-            maxCitationCount = Math.max(maxCitationCount, reference.citationCount);
-            minCitationCount = Math.min(minCitationCount, reference.citationCount);
+            const referenceCitationCount = reference.citationCount;
+            maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
+            minCitationCount = Math.min(minCitationCount, referenceCitationCount);
 
-            nodes.push({
+            nodes.set(referenceId, {
                 id: referenceId,
                 name: reference.title,
-                val: reference.citationCount,
+                val: referenceCitationCount,
                 color: "#7ABA57",
                 type: 'reference',
                 data: { id: reference.paperId, location: null, paper: reference }
@@ -57,13 +59,14 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
         item.citations.forEach((citation, citIndex) => {
             const citationId = String(citation.paperId ? citation.paperId : `citation${paperId}${citIndex}`);
-            maxCitationCount = Math.max(maxCitationCount, citation.citationCount);
-            minCitationCount = Math.min(minCitationCount, citation.citationCount);
+            const citationCitationCount = citation.citationCount;
+            maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
+            minCitationCount = Math.min(minCitationCount, citationCitationCount);
 
-            nodes.push({
+            nodes.set(citationId, {
                 id: citationId,
                 name: citation.title,
-                val: citation.citationCount,
+                val: citationCitationCount,
                 color: "#A15399",
                 type: 'citation',
                 data: { id: citation.paperId, location: null, paper: citation }
@@ -74,20 +77,17 @@ const formatData = (data: MapGraphData[]): GraphData => {
             });
         });
     });
+
     // Normalize the citation counts
     nodes.forEach(node => {
         node.val = 1 + (node.val - minCitationCount) * (20 - 1) / (maxCitationCount - minCitationCount);
     });
 
     links.forEach((link: LinkObject) => {
+        const a = typeof link.source === 'string' ? nodes.get(link.source) : undefined;
+        const b = typeof link.target === 'string' ? nodes.get(link.target) : undefined;
 
-        // Select nodes that have id as links.source or links.target
-        const a = nodes.find(node => node.id === link.source);
-        const b = nodes.find(node => node.id === link.target);
-
-        if (!a || !b) {
-            return;
-        }
+        if (!a || !b) return;
 
         a.neighbors = a.neighbors || [];
         b.neighbors = b.neighbors || [];
@@ -95,25 +95,19 @@ const formatData = (data: MapGraphData[]): GraphData => {
         a.neighbors.push(b);
         b.neighbors.push(a);
 
-        if (!a.links) {
-            a.links = [];
-        }
-        if (!b.links) {
-            b.links = [];
-        }
+        a.links = a.links || [];
+        b.links = b.links || [];
 
         a.links.push(link);
         b.links.push(link);
     });
 
-    const tempData: GraphData = {
-        nodes: _.uniqBy(nodes, 'id'),
+    return {
+        nodes: Array.from(nodes.values()),
         links: links
-    }
+    } as GraphData;
 
-    return tempData
 };
-
 export const ReferenceMapGraph = (props: {
     width: number
     height: number
@@ -140,33 +134,29 @@ export const ReferenceMapGraph = (props: {
     const textColor = tempTextColor ? tempTextColor : 'black';
     const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
 
-    const fetchData = async (indexCards: IndexPaper[]) => {
-        try {
-            if (!indexCards) return [];
-            const dataPromises = indexCards.map(async (paper) => {
-                const references = await viewManager.getReferences(paper.paper.paperId);
-                const filteredReferences = settings.filterRedundantReferences
-                    ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
-                    : references;
-                const citations = await viewManager.getCitations(paper.paper.paperId);
-                const filteredCitations = settings.filterRedundantReferences
-                    ? citations.filter((citation) => citation.referenceCount > 0 || citation.citationCount > 0)
-                    : citations;
-                return {
-                    paper: paper,
-                    references: filteredReferences,
-                    citations: filteredCitations
-                };
-            });
-
-            const resolvedData = await Promise.all(dataPromises);
-            return resolvedData
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
+    const filterReferences = (references: Reference[], settings: ReferenceMapSettings) => {
+        return settings.filterRedundantReferences
+            ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+            : references;
     }
 
+    const fetchData = async (indexCards: IndexPaper[]) => {
+        const dataPromises = indexCards.map(async (paper) => {
+            const references = await viewManager.getReferences(paper.paper.paperId);
+            const filteredReferences = filterReferences(references, settings);
+
+            const citations = await viewManager.getCitations(paper.paper.paperId);
+            const filteredCitations = filterReferences(citations, settings);
+
+            return {
+                paper: paper,
+                references: filteredReferences,
+                citations: filteredCitations
+            };
+        });
+
+        return await Promise.all(dataPromises);
+    }
 
     useEffect(() => {
         if (fgRef.current) {
@@ -178,7 +168,7 @@ export const ReferenceMapGraph = (props: {
     }, [data, props.width, props.height]);
 
     useEffect(() => {
-        const fetchDataAndUpdate = async () => {
+        const fetchDataAndUpdate = () => {
             props.referenceMapData.getIndexCards(
                 props.updateChecker.indexIds,
                 props.updateChecker.citeKeyMap,
