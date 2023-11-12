@@ -265,6 +265,16 @@ export const ReferenceMapGraph = (props: {
         return highlightNodes.has(node) ? 'before' : 'after';
     }, [highlightNodes]);
 
+    const toggleZoom = (node: NodeObject) => {
+        if (fgRef.current.zoom() < 1.0) {
+            fgRef.current.zoom(1.9, 200);
+            fgRef.current.centerAt(node.x, node.y, 200);
+        } else {
+            fgRef.current.zoom(0.9, 200);
+            fgRef.current.centerAt(node.x, node.y, 200);
+        }
+    }
+
     //check if data is empty or not
     if (!props.updateChecker.basename) {
         return (
@@ -311,6 +321,7 @@ export const ReferenceMapGraph = (props: {
                     onLinkHover={handleLinkHover}
                     onNodeClick={handleNodeSelect}
                     onBackgroundClick={() => setSelectedNode(null)}
+                    onNodeRightClick={toggleZoom}
                 />
             </div>
         )
