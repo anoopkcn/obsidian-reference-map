@@ -347,10 +347,7 @@ body {
 	justify-content: center;
 }
 
-.orm-paper-list .orm-references-2, 
-.orm-paper-list .orm-citations-2, 
-.orm-paper-list .orm-influential,
-.orm-influential
+.orm-button-disabled
 {
 	opacity: var(--orm-paper-disable-opacity)
 }

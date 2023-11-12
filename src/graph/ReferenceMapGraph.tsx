@@ -292,7 +292,7 @@ export const ReferenceMapGraph = (props: {
                 <div className="orm-graph-content">
                     <div className="orm-graph-paper-card">
                         {selectedNode && (
-                            <PaperCard paper={selectedNode.data} settings={settings} showButtons={true} />
+                            <PaperCard paper={selectedNode.data} settings={settings} showGraphButtons={true} />
                         )}
                         <PartialLoading isLoading={isLoading} />
                     </div>

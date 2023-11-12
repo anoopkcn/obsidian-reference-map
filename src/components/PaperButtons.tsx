@@ -17,6 +17,7 @@ import {
 type Props = {
 	settings: ReferenceMapSettings
 	paper: IndexPaper
+	showGraphButtons?: boolean
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>
 	showReferences?: boolean
 	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>
@@ -31,6 +32,7 @@ type Props = {
 export const PaperButtons = ({
 	settings,
 	paper,
+	showGraphButtons = false,
 	setShowReferences = undefined,
 	showReferences = false,
 	setShowCitations = undefined,
@@ -86,7 +88,15 @@ export const PaperButtons = ({
 	}
 
 	let citingCited = null
-	if (
+
+	if (showGraphButtons) {
+		citingCited = (
+			<>
+				<div className="orm-button-disabled">{metaData.referenceCount}</div>
+				<div className="orm-button-disabled">{metaData.citationCount}</div>
+			</>
+		)
+	} else if (
 		setShowReferences !== undefined &&
 		setShowCitations !== undefined &&
 		setIsButtonShown !== undefined
@@ -143,8 +153,8 @@ export const PaperButtons = ({
 	} else {
 		citingCited = (
 			<>
-				<div className="orm-references-2">{metaData.referenceCount}</div>
-				<div className="orm-citations-2">{metaData.citationCount}</div>
+				<div className="orm-button-disabled">{metaData.referenceCount}</div>
+				<div className="orm-button-disabled">{metaData.citationCount}</div>
 			</>
 		)
 	}
@@ -194,7 +204,7 @@ export const PaperButtons = ({
 			)}
 			{citingCited}
 			{settings.influentialCount && (
-				<div className="orm-influential">
+				<div className="orm-button-disabled">
 					{metaData.influentialCount}
 				</div>
 			)}
