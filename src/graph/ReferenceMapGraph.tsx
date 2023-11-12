@@ -127,8 +127,8 @@ export const ReferenceMapGraph = (props: {
     const fgRef = useRef<any>();
     const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
     const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
-    const [highlightNodes, setHighlightNodes] = useState(new Set());
-    const [highlightLinks, setHighlightLinks] = useState(new Set());
+    const [highlightNodes] = useState(new Set());
+    const [highlightLinks] = useState(new Set());
 
 
     const { settings } = props;
@@ -227,39 +227,32 @@ export const ReferenceMapGraph = (props: {
         }
     }, [hoverNode]);
 
-    const updateHighlight = () => {
-        setHighlightNodes(highlightNodes);
-        setHighlightLinks(highlightLinks);
+    const clearHighlights = () => {
+        highlightNodes.clear();
+        highlightLinks.clear();
     };
 
     const handleNodeHover = (node: NodeObject) => {
-        highlightNodes.clear();
-        highlightLinks.clear();
+        clearHighlights();
         if (node) {
             highlightNodes.add(node);
             node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
             node.links.forEach((link: LinkObject) => highlightLinks.add(link));
         }
-
         setHoverNode(node || null);
-        updateHighlight();
     };
 
     const handleLinkHover = (link: LinkObject) => {
-        highlightNodes.clear();
-        highlightLinks.clear();
-
+        clearHighlights();
         if (link) {
             highlightLinks.add(link);
             highlightNodes.add(link.source);
             highlightNodes.add(link.target);
         }
-
-        updateHighlight();
     };
 
     const handleNodeSelect = (node: NodeObject) => {
-        if (selectedNode) {
+        if (selectedNode && selectedNode !== node) {
             selectedNode.color = node.color;
         }
         node.color = "red";
