@@ -15,7 +15,7 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(false) 
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
@@ -118,11 +118,12 @@ export const ReferenceMapList = (props: {
 				</div>
 			</div>
 		)
-	} else if (papers.length > 0) {
+	} else if (papers.length > 0 || isLoading) {
 		return (
 			<>
 				<div className="orm-reference-map">
 					{userSearch(true)}
+					<PartialLoading isLoading={isLoading} />
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
@@ -156,7 +157,6 @@ export const ReferenceMapList = (props: {
 						</div>
 					</div>
 				}
-				<PartialLoading isLoading={isLoading} />
 			</>
 		)
 	} else {
