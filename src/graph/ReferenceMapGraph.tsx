@@ -128,7 +128,7 @@ export const ReferenceMapGraph = (props: {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
-    const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
+    // const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
     const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
     const [highlightNodes] = useState(new Set());
     const [highlightLinks] = useState(new Set());
@@ -138,10 +138,11 @@ export const ReferenceMapGraph = (props: {
     const { viewManager } = props.referenceMapData;
     const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
     const tempTextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
-    const tempHighlightColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
+    // const tempHighlightColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
     const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
     const textColor = tempTextColor ? tempTextColor : 'black';
-    const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
+    // const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
+    const selectionColor = '#ff7f0e'
 
     const filterReferences = (references: Reference[], settings: ReferenceMapSettings) => {
         return settings.filterRedundantReferences
@@ -179,20 +180,21 @@ export const ReferenceMapGraph = (props: {
             const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker;
             props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
                 .then(async (cards) => {
-                setIsLoading(true)
-                const graphData = await fetchData(cards)
-                const newSubgraph = formatData(graphData);
-                const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
-                setData(prevData => ({
-                    nodes: _.uniqBy([...prevData.nodes, ...newSubgraph.nodes].filter(node => newNodeIds.has(node.id)), 'id'),
-                    links: [...prevData.links, ...newSubgraph.links].filter(link => {
-                        const target = typeof link.target === 'object' && link.target !== null ? link.target.id : link.target;
-                        const source = typeof link.source === 'object' && link.source !== null ? link.source.id : link.source;
-                        return newNodeIds.has(source) && newNodeIds.has(target);
-                    })
-                }))
-                setIsLoading(false)
-            });
+                    setIsLoading(true)
+                    const graphData = await fetchData(cards)
+                    const newSubgraph = formatData(graphData);
+                    const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));
+                    setData(prevData => ({
+                        nodes: _.uniqBy([...prevData.nodes, ...newSubgraph.nodes].filter(node => newNodeIds.has(node.id)), 'id'),
+                        links: [...prevData.links, ...newSubgraph.links].filter(link => {
+                            const target = typeof link.target === 'object' && link.target !== null ? link.target.id : link.target;
+                            const source = typeof link.source === 'object' && link.source !== null ? link.source.id : link.source;
+                            return newNodeIds.has(source) && newNodeIds.has(target);
+                        })
+                    }))
+                    setSelectedNode(null)
+                    setIsLoading(false)
+                });
         }
         fetchDataAndUpdate();
         EventBus.on(EVENTS.UPDATE, fetchDataAndUpdate);
@@ -207,17 +209,29 @@ export const ReferenceMapGraph = (props: {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paintRing = useCallback((node: NodeObject, ctx: any) => {
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
-        ctx.fillStyle = highlightColor;
-        ctx.fill();
+        if (node.id === selectedNode?.id) {
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
+            ctx.fillStyle = selectionColor;
+            ctx.fill();
 
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
+            ctx.fillStyle = node.color;
+            ctx.fill();
+
+            if (node.type !== 'index') {
+                ctx.font = '12px Arial';
+                ctx.fillStyle = textColor;
+                ctx.fillText(node.name, node.x, node.y);
+            }
+        }
         if (node.type === 'index') {
             ctx.font = '12px Arial';
             ctx.fillStyle = textColor;
             ctx.fillText(node.id, node.x, node.y);
         }
-    }, [hoverNode]);
+    }, [selectedNode]);
 
     const clearHighlights = () => {
         highlightNodes.clear();
@@ -227,11 +241,11 @@ export const ReferenceMapGraph = (props: {
     const handleNodeHover = (node: NodeObject) => {
         clearHighlights();
         if (node) {
-            highlightNodes.add(node);
-            node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
+            // highlightNodes.add(node);
+            // node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
             node.links.forEach((link: LinkObject) => highlightLinks.add(link));
         }
-        setHoverNode(node || null);
+        // setHoverNode(node || null);
     };
 
     const handleLinkHover = (link: LinkObject) => {
@@ -244,10 +258,6 @@ export const ReferenceMapGraph = (props: {
     };
 
     const handleNodeSelect = (node: NodeObject) => {
-        if (selectedNode && selectedNode !== node) {
-            selectedNode.color = node.color;
-        }
-        node.color = "red";
         setSelectedNode(node);
     }
     const handleNodeDrag = useCallback((node: NodeObject) => {
@@ -261,7 +271,7 @@ export const ReferenceMapGraph = (props: {
     }, []);
 
     const nodeCanvasObjectMode = useCallback((node: NodeObject) => {
-        return highlightNodes.has(node) ? 'before' : undefined;
+        return highlightNodes.has(node) ? 'before' : 'after';
     }, [highlightNodes]);
 
     if (!props.updateChecker.basename) {
