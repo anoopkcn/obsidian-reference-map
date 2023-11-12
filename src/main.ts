@@ -110,7 +110,7 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	onunload() {
-		this.app.workspace.detachLeavesOfType(REFERENCE_MAP_GRAPH_VIEW_TYPE);
+		// this.app.workspace.detachLeavesOfType(REFERENCE_MAP_GRAPH_VIEW_TYPE);
 	}
 
 	ensureLeafExists(active = false): void {
