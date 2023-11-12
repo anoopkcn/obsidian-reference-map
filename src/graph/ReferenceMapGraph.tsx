@@ -198,7 +198,6 @@ export const ReferenceMapGraph = (props: {
                         return newNodeIds.has(source) && newNodeIds.has(target);
                     })
                 }))
-                setSelectedNode(null)
                 setIsLoading(false)
             });
         }

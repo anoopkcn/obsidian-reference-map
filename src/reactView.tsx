@@ -8,7 +8,6 @@ import { ReferenceMapData } from './referenceData'
 import { AppContext } from './context'
 import { UpdateChecker } from './utils'
 import EventBus, { EVENTS } from './EventBus'
-import { REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -28,7 +27,6 @@ export class ReferenceMapView extends ItemView {
 		this.registerEvent(
 			this.app.metadataCache.on('changed', (file) => {
 				const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-				if (activeView?.getViewType() === REFERENCE_MAP_GRAPH_VIEW_TYPE) return
 				if (activeView && file === activeView.file) {
 					this.processReferences()
 				}
@@ -40,8 +38,8 @@ export class ReferenceMapView extends ItemView {
 				if (leaf) {
 					this.app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							//if this leaf is a REFERENCE_MAP_GRAPH_VIEW_TYPE then don't do anything
-							if (rootLeaf.view.getViewType() !== REFERENCE_MAP_GRAPH_VIEW_TYPE) this.processReferences()
+							const viewType = rootLeaf.view.getViewType()
+							if (viewType === 'empty' || viewType === 'markdown') this.processReferences()
 						}
 					})
 				}
@@ -86,7 +84,6 @@ export class ReferenceMapView extends ItemView {
 
 	processReferences = async () => {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-		if (activeView?.getViewType() === REFERENCE_MAP_GRAPH_VIEW_TYPE) return
 		const settings = this.plugin.settings
 		if (activeView?.file) {
 			this.updateChecker.basename = activeView.file.basename

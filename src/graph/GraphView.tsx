@@ -7,7 +7,6 @@ import { AppContext } from "src/context";
 import { ReferenceMapData } from "src/referenceData";
 import EventBus, { EVENTS } from "src/EventBus";
 import { UpdateChecker } from "src/utils";
-import { REFERENCE_MAP_VIEW_TYPE } from "src/reactView";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
@@ -35,7 +34,6 @@ export class GraphView extends ItemView {
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file) => {
                 const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-                if (activeView?.getViewType() === REFERENCE_MAP_VIEW_TYPE) return
                 if (activeView && file === activeView.file) {
                     const fileCache = await this.app.vault.cachedRead(activeView.file)
                     this.updateChecker.basename = activeView?.file?.basename
@@ -54,7 +52,8 @@ export class GraphView extends ItemView {
                 if (leaf) {
                     this.app.workspace.iterateRootLeaves((rootLeaf) => {
                         if (rootLeaf === leaf) {
-                            if (rootLeaf.view.getViewType() !== REFERENCE_MAP_VIEW_TYPE) this.openGraph()
+                            const viewType = rootLeaf.view.getViewType()
+                            if (viewType === 'empty' || viewType === 'markdown') this.openGraph()
                         }
                     })
                 }
@@ -122,7 +121,6 @@ export class GraphView extends ItemView {
 
     openGraph = async () => {
         const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-        if (activeView?.getViewType() === REFERENCE_MAP_VIEW_TYPE) return
         await this.prepare(activeView)
 
         this.rootEl?.render(
