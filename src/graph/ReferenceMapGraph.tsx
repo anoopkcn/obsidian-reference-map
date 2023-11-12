@@ -16,7 +16,7 @@ interface MapGraphData {
 }
 
 const formatData = (data: MapGraphData[]): GraphData => {
-    const nodes: Map<string, NodeObject> = new Map();
+    const nodes: NodeObject[] = [];
     const links: LinkObject[] = [];
 
     let maxCitationCount = 1;
@@ -24,14 +24,14 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
     data.forEach((item, index) => {
         const paperId = String(item.paper.id ? item.paper.id : item.paper.paper.paperId);
-        const citationCount = item.paper.paper.citationCount;
-        maxCitationCount = Math.max(maxCitationCount, citationCount);
-        minCitationCount = Math.min(minCitationCount, citationCount);
+        const indexCitationCount = item.paper.paper.citationCount;
+        maxCitationCount = Math.max(maxCitationCount, indexCitationCount);
+        minCitationCount = Math.min(minCitationCount, indexCitationCount);
 
-        nodes.set(paperId, {
+        nodes.push({
             id: paperId,
             name: item.paper.paper.title,
-            val: citationCount,
+            val: indexCitationCount,
             color: "#61C1E8",
             type: 'index',
             data: item.paper
@@ -43,7 +43,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
             maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
             minCitationCount = Math.min(minCitationCount, referenceCitationCount);
 
-            nodes.set(referenceId, {
+            nodes.push({
                 id: referenceId,
                 name: reference.title,
                 val: referenceCitationCount,
@@ -63,7 +63,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
             maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
             minCitationCount = Math.min(minCitationCount, citationCitationCount);
 
-            nodes.set(citationId, {
+            nodes.push({
                 id: citationId,
                 name: citation.title,
                 val: citationCitationCount,
@@ -77,17 +77,20 @@ const formatData = (data: MapGraphData[]): GraphData => {
             });
         });
     });
-
     // Normalize the citation counts
     nodes.forEach(node => {
         node.val = 1 + (node.val - minCitationCount) * (20 - 1) / (maxCitationCount - minCitationCount);
     });
 
     links.forEach((link: LinkObject) => {
-        const a = typeof link.source === 'string' ? nodes.get(link.source) : undefined;
-        const b = typeof link.target === 'string' ? nodes.get(link.target) : undefined;
 
-        if (!a || !b) return;
+        // Select nodes that have id as links.source or links.target
+        const a = nodes.find(node => node.id === link.source);
+        const b = nodes.find(node => node.id === link.target);
+
+        if (!a || !b) {
+            return;
+        }
 
         a.neighbors = a.neighbors || [];
         b.neighbors = b.neighbors || [];
@@ -95,19 +98,25 @@ const formatData = (data: MapGraphData[]): GraphData => {
         a.neighbors.push(b);
         b.neighbors.push(a);
 
-        a.links = a.links || [];
-        b.links = b.links || [];
+        if (!a.links) {
+            a.links = [];
+        }
+        if (!b.links) {
+            b.links = [];
+        }
 
         a.links.push(link);
         b.links.push(link);
     });
 
-    return {
-        nodes: Array.from(nodes.values()),
+    const tempData: GraphData = {
+        nodes: _.uniqBy(nodes, 'id'),
         links: links
-    } as GraphData;
+    }
 
+    return tempData
 };
+
 export const ReferenceMapGraph = (props: {
     width: number
     height: number
@@ -160,8 +169,6 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         if (fgRef.current) {
-            // fgRef.current.d3Force("charge").strength(-10);
-            // fgRef.current.d3Force("link").distance(100);
             fgRef.current.d3Force("x", d3.forceX(props.width / 2).strength(0.1));
             fgRef.current.d3Force("y", d3.forceY(props.height / 2).strength(0.1));
         }
@@ -169,13 +176,9 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         const fetchDataAndUpdate = () => {
-            props.referenceMapData.getIndexCards(
-                props.updateChecker.indexIds,
-                props.updateChecker.citeKeyMap,
-                props.updateChecker.fileName,
-                props.updateChecker.frontmatter,
-                props.updateChecker.basename
-            ).then(async (cards) => {
+            const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker;
+            props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
+                .then(async (cards) => {
                 setIsLoading(true)
                 const graphData = await fetchData(cards)
                 const newSubgraph = formatData(graphData);
@@ -204,7 +207,6 @@ export const ReferenceMapGraph = (props: {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paintRing = useCallback((node: NodeObject, ctx: any) => {
-        // add ring just for highlighted nodes
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
         ctx.fillStyle = highlightColor;
