@@ -274,7 +274,8 @@ export const ReferenceMapGraph = (props: {
         return highlightNodes.has(node) ? 'before' : 'after';
     }, [highlightNodes]);
 
-    if (!props.updateChecker.basename) {
+    //check if data is empty or not
+    if (!props.updateChecker.basename || data.nodes.length === 0) {
         return (
             <div className="orm-no-content">
                 <div>
@@ -286,7 +287,7 @@ export const ReferenceMapGraph = (props: {
                 </div>
             </div>
         )
-    } else if (!(Array.isArray(data) && data.length === 0) || isLoading) {
+    } else if (data.nodes.length > 0 || isLoading) {
         return (
             <div>
                 <div className="orm-graph-content">
