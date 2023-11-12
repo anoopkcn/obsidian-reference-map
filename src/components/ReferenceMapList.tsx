@@ -1,5 +1,5 @@
 import { IndexPaper } from 'src/types'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, ReactNode } from 'react'
 import { IndexPaperCard } from './IndexPaperCard'
 import { UpdateChecker, indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
@@ -8,6 +8,10 @@ import { ReferenceMapData } from 'src/referenceData'
 import EventBus, { EVENTS } from 'src/EventBus'
 import { PartialLoading } from './PartialLoading'
 
+interface NoContentProps {
+	children: ReactNode;
+}
+
 export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
 	referenceMapData: ReferenceMapData
@@ -15,7 +19,7 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
-	const [isLoading, setIsLoading] = useState(false) 
+	const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
@@ -23,12 +27,9 @@ export const ReferenceMapList = (props: {
 
 	const fetchData = async () => {
 		setIsLoading(true)
+		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		const indexCards = await props.referenceMapData.getIndexCards(
-			props.updateChecker.indexIds,
-			props.updateChecker.citeKeyMap,
-			props.updateChecker.fileName,
-			props.updateChecker.frontmatter,
-			props.updateChecker.basename
+			indexIds, citeKeyMap, fileName, frontmatter, basename
 		)
 		setPapers(indexCards)
 		setIsLoading(false)
@@ -104,21 +105,27 @@ export const ReferenceMapList = (props: {
 		return citeKeys
 	}
 
-	if (props.updateChecker.basename === undefined) {
-		return (
-			<div className="orm-no-content">
-				<div>
-					{userSearch(false)}
-					<div className="orm-no-content-subtext">
-						No Active Markdown File.
-						<br />
-						Click on a file to view its references.
-					</div>
-					<SetKeyInfo />
-				</div>
+	const NoContent: React.FC<NoContentProps> = ({ children }) => (
+		<div className="orm-no-content">
+			<div>
+				{userSearch(false)}
+				{children}
+				<SetKeyInfo />
 			</div>
-		)
-	} else if (papers.length > 0 || isLoading) {
+		</div>
+	);
+
+	if (!props.updateChecker.basename) {
+		return <NoContent>
+			<div className="orm-no-content-subtext">
+				No Active Markdown File.
+				<br />
+				Click on a file to view its references.
+			</div>
+		</NoContent>
+	}
+
+	if (papers.length > 0 || isLoading) {
 		return (
 			<>
 				<div className="orm-reference-map">
@@ -144,50 +151,31 @@ export const ReferenceMapList = (props: {
 					})}
 				</div>
 				{(noContentItems().length > 0 && props.plugin.settings.showInvalidItems) &&
-					<div className="orm-no-content">
-						<div>
-							{noContentItems().map((item) => {
-								return (
-									<div className="orm-no-content-subtext" key={item}>
-										<code>{item.substring(1)}</code> has no DOI or URL in the Library.
-									</div>
-								)
-							})}
-							<SetKeyInfo />
-						</div>
-					</div>
+					<NoContent>
+						{noContentItems().map((item) => (
+							<div className="orm-no-content-subtext" key={item}>
+								<code>{item.substring(1)}</code> has no DOI or URL in the Library.
+							</div>
+						))}
+					</NoContent>
 				}
 			</>
 		)
-	} else {
-		if (noContentItems().length > 0 && props.plugin.settings.showInvalidItems) {
-			return (
-				<div className="orm-no-content">
-					<div>
-						{userSearch(false)}
-						{noContentItems().map((item) => {
-							return (
-								<div className="orm-no-content-subtext" key={item}>
-									<code>{item.substring(1)}</code> has no DOI or URL in the Library.
-								</div>
-							)
-						})}
-						<SetKeyInfo />
-					</div>
-				</div>
-			)
-		} else {
-			return (
-				<div className="orm-no-content">
-					<div>
-						{userSearch(false)}
-						<div className="orm-no-content-subtext">
-							No Valid References Found.
-						</div>
-						<SetKeyInfo />
-					</div>
-				</div>
-			)
-		}
 	}
+
+	if (noContentItems().length > 0 && props.plugin.settings.showInvalidItems) {
+		return <NoContent>
+			{noContentItems().map((item) => (
+				<div className="orm-no-content-subtext" key={item}>
+					<code>{item.substring(1)}</code> has no DOI or URL in the Library.
+				</div>
+			))}
+		</NoContent>
+	}
+
+	return <NoContent>
+		<div className="orm-no-content-subtext">
+			No Valid References Found.
+		</div>
+	</NoContent>
 }
