@@ -8,6 +8,8 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
 
 **More information is available on the [Wiki](https://github.com/anoopkcn/obsidian-reference-map/wiki) page.**
 
+![ORM-demo](./images/orm-demo.png)
+
 <!-- TOC -->
 ## Contents
 1. [Requirements](#requirements)
@@ -19,6 +21,7 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
         - [Static Reference List](#static-reference-list)
         - [Dynamic Reference List](#dynamic-reference-list)
     - [Reference Map Search](#reference-map-search)
+    - [Reference Map Graph](#reference-map-graph)
 4. [Configuration](#configuration)
 <!-- /TOC -->
 
@@ -144,6 +147,11 @@ If you select a text in the current document and then issue the command the sele
 | Reference Map: Search and Create | Search for references online to create a new markdown file using the details | - |
 
 You can configure the template for both commands in the settings tab.
+
+
+### Reference Map Graph
+![ORM-graph-demo](./images/orm-graph-demo.png)
+Open command palatte and run `Reference Map: Open Literature Graph` to open the graph view. Reveal connection between the entries. Size of each node indicating the citations it received, Click on a node to show the details on top of the graph, hover to show the title. pan to zoom in/out (you can also use node right click to zoom in/out)
 
 ## Configuration
 
