@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import ForceGraph2D, { GraphData, LinkObject, NodeObject } from 'react-force-graph-2d';
+import ForceGraph2D, { GraphData, NodeObject } from 'react-force-graph-2d';
 import EventBus, { EVENTS } from 'src/EventBus';
 import { PaperCard } from 'src/components/PaperCard';
 import { PartialLoading } from 'src/components/PartialLoading';
@@ -14,99 +14,77 @@ interface MapGraphData {
     references: Reference[]
     citations: Reference[]
 }
-
 const formatData = (data: MapGraphData[]): GraphData => {
-    const nodes: NodeObject[] = [];
-    const links: LinkObject[] = [];
-
     let maxCitationCount = 1;
     let minCitationCount = 0;
 
-    data.forEach((item, index) => {
+    const nodesAndLinks = data.flatMap((item, index) => {
         const paperId = String(item.paper.id ? item.paper.id : item.paper.paper.paperId);
         const indexCitationCount = item.paper.paper.citationCount;
         maxCitationCount = Math.max(maxCitationCount, indexCitationCount);
         minCitationCount = Math.min(minCitationCount, indexCitationCount);
 
-        nodes.push({
-            id: paperId,
-            name: item.paper.paper.title,
-            val: indexCitationCount,
-            color: "#61C1E8",
-            type: 'index',
-            data: { id: paperId, location: null, paper: item.paper.paper }
-        });
+        const nodes = [
+            {
+                id: paperId,
+                name: item.paper.paper.title,
+                val: indexCitationCount,
+                color: "#61C1E8",
+                type: 'index',
+                data: { id: paperId, location: null, paper: item.paper.paper }
+            },
+            ...item.references.map((reference, refIndex) => {
+                const referenceId = String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`);
+                const referenceCitationCount = reference.citationCount;
+                maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
+                minCitationCount = Math.min(minCitationCount, referenceCitationCount);
 
-        item.references.forEach((reference, refIndex) => {
-            const referenceId = String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`);
-            const referenceCitationCount = reference.citationCount;
-            maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
-            minCitationCount = Math.min(minCitationCount, referenceCitationCount);
+                return {
+                    id: referenceId,
+                    name: reference.title,
+                    val: referenceCitationCount,
+                    color: "#7ABA57",
+                    type: 'reference',
+                    data: { id: referenceId, location: null, paper: reference }
+                };
+            }),
+            ...item.citations.map((citation, citIndex) => {
+                const citationId = String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`);
+                const citationCitationCount = citation.citationCount;
+                maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
+                minCitationCount = Math.min(minCitationCount, citationCitationCount);
 
-            nodes.push({
-                id: referenceId,
-                name: reference.title,
-                val: referenceCitationCount,
-                color: "#7ABA57",
-                type: 'reference',
-                data: { id: referenceId, location: null, paper: reference }
-            });
-            links.push({
+                return {
+                    id: citationId,
+                    name: citation.title,
+                    val: citationCitationCount,
+                    color: "#A15399",
+                    type: 'citation',
+                    data: { id: citationId, location: null, paper: citation }
+                };
+            })
+        ];
+
+        const links = [
+            ...item.references.map((reference, refIndex) => ({
                 source: paperId,
-                target: referenceId
-            });
-        });
-
-        item.citations.forEach((citation, citIndex) => {
-            const citationId = String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`);
-            const citationCitationCount = citation.citationCount;
-            maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
-            minCitationCount = Math.min(minCitationCount, citationCitationCount);
-
-            nodes.push({
-                id: citationId,
-                name: citation.title,
-                val: citationCitationCount,
-                color: "#A15399",
-                type: 'citation',
-                data: { id: citationId, location: null, paper: citation }
-            });
-            links.push({
-                source: citationId,
+                target: String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`)
+            })),
+            ...item.citations.map((citation, citIndex) => ({
+                source: String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`),
                 target: paperId
-            });
-        });
+            }))
+        ];
+
+        return { nodes, links };
     });
+
+    const nodes = nodesAndLinks.flatMap(({ nodes }) => nodes);
+    const links = nodesAndLinks.flatMap(({ links }) => links);
+
     // Normalize the citation counts
     nodes.forEach(node => {
-        node.val = 1 + (node.val - minCitationCount) * (20 - 1) / (maxCitationCount - minCitationCount);
-    });
-
-    links.forEach((link: LinkObject) => {
-
-        // Select nodes that have id as links.source or links.target
-        const a = nodes.find(node => node.id === link.source);
-        const b = nodes.find(node => node.id === link.target);
-
-        if (!a || !b) {
-            return;
-        }
-
-        a.neighbors = a.neighbors || [];
-        b.neighbors = b.neighbors || [];
-
-        a.neighbors.push(b);
-        b.neighbors.push(a);
-
-        if (!a.links) {
-            a.links = [];
-        }
-        if (!b.links) {
-            b.links = [];
-        }
-
-        a.links.push(link);
-        b.links.push(link);
+        node.val = 3 + (node.val - minCitationCount) * 20 / (maxCitationCount - minCitationCount);
     });
 
     const tempData: GraphData = {
@@ -114,7 +92,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
         links: links
     }
 
-    return tempData
+    return tempData;
 };
 
 export const ReferenceMapGraph = (props: {
@@ -128,10 +106,7 @@ export const ReferenceMapGraph = (props: {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
-    // const [hoverNode, setHoverNode] = useState<NodeObject | null>(null);
     const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
-    const [highlightNodes] = useState(new Set());
-    const [highlightLinks] = useState(new Set());
 
 
     const { settings } = props;
@@ -209,17 +184,21 @@ export const ReferenceMapGraph = (props: {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const paintRing = useCallback((node: NodeObject, ctx: any) => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
+        ctx.fillStyle = node.color;
+        ctx.fill();
+
         if (node.id === selectedNode?.id) {
             ctx.beginPath();
-            ctx.arc(node.x, node.y, node.val + 5, 0, 2 * Math.PI, false);
+            ctx.arc(node.x, node.y, node.val + 3, 0, 2 * Math.PI, false);
             ctx.fillStyle = selectionColor;
             ctx.fill();
-
+            //redraw original
             ctx.beginPath();
             ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
             ctx.fillStyle = node.color;
             ctx.fill();
-
             if (node.type !== 'index') {
                 ctx.font = '12px Arial';
                 ctx.fillStyle = textColor;
@@ -233,37 +212,9 @@ export const ReferenceMapGraph = (props: {
         }
     }, [selectedNode]);
 
-    const clearHighlights = () => {
-        highlightNodes.clear();
-        highlightLinks.clear();
-    };
-
-    const handleNodeHover = (node: NodeObject) => {
-        clearHighlights();
-        if (node) {
-            // highlightNodes.add(node);
-            // node.neighbors.forEach((neighbor: NodeObject) => highlightNodes.add(neighbor));
-            node.links.forEach((link: LinkObject) => highlightLinks.add(link));
-        }
-        // setHoverNode(node || null);
-    };
-
-    const handleLinkHover = (link: LinkObject) => {
-        clearHighlights();
-        if (link) {
-            highlightLinks.add(link);
-            highlightNodes.add(link.source);
-            highlightNodes.add(link.target);
-        }
-    };
-
     const handleNodeSelect = (node: NodeObject) => {
         setSelectedNode(node);
     };
-
-    const nodeCanvasObjectMode = useCallback((node: NodeObject) => {
-        return highlightNodes.has(node) ? 'before' : 'after';
-    }, [highlightNodes]);
 
     const toggleZoom = (node: NodeObject) => {
         if (fgRef.current.zoom() < 1.0) {
@@ -305,7 +256,6 @@ export const ReferenceMapGraph = (props: {
                     height={props.height}
                     graphData={data}
                     autoPauseRedraw={false}
-                    linkWidth={link => highlightLinks.has(link) ? 3 : 1}
                     linkColor={lineColor}
                     onNodeDrag={node => {
                         node.fx = node.x;
@@ -315,10 +265,7 @@ export const ReferenceMapGraph = (props: {
                         node.fx = node.x;
                         node.fy = node.y;
                     }}
-                    nodeCanvasObjectMode={nodeCanvasObjectMode}
                     nodeCanvasObject={paintRing}
-                    onNodeHover={handleNodeHover}
-                    onLinkHover={handleLinkHover}
                     onNodeClick={handleNodeSelect}
                     onBackgroundClick={() => setSelectedNode(null)}
                     onNodeRightClick={toggleZoom}
