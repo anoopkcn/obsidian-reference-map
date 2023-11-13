@@ -108,15 +108,13 @@ export const ReferenceMapGraph = (props: {
     const fgRef = useRef<any>();
     const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
 
-
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
-    const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
     const tempTextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
-    // const tempHighlightColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
-    const lineColor = tempLineColor ? tempLineColor : '#3f3f3f';
+    const tempAccentColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
+    // const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
+    const lineColor = tempAccentColor ? tempAccentColor : '#3f3f3f';
     const textColor = tempTextColor ? tempTextColor : 'black';
-    // const highlightColor = tempHighlightColor ? tempHighlightColor : '#835EEC';
     const selectionColor = '#ff7f0e'
 
     const filterReferences = (references: Reference[], settings: ReferenceMapSettings) => {
@@ -183,11 +181,13 @@ export const ReferenceMapGraph = (props: {
     ]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const paintRing = useCallback((node: NodeObject, ctx: any) => {
+    const nodeObject = useCallback((node: NodeObject, ctx: any) => {
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
         ctx.fillStyle = node.color;
         ctx.fill();
+
+        ctx.linkColor = lineColor;
 
         if (node.id === selectedNode?.id) {
             ctx.beginPath();
@@ -211,6 +211,17 @@ export const ReferenceMapGraph = (props: {
             ctx.fillText(node.id, node.x, node.y);
         }
     }, [selectedNode]);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const linkObject = useCallback((link: any, ctx: any) => {
+        ctx.beginPath();
+        ctx.strokeStyle = lineColor;
+        ctx.globalAlpha = 0.2;
+        ctx.lineWidth = 1;
+        ctx.moveTo(link.source.x, link.source.y);
+        ctx.lineTo(link.target.x, link.target.y);
+        ctx.stroke();
+    }, []);
 
     const handleNodeSelect = (node: NodeObject) => {
         setSelectedNode(node);
@@ -255,8 +266,8 @@ export const ReferenceMapGraph = (props: {
                     width={props.width}
                     height={props.height}
                     graphData={data}
+                    linkCanvasObject={linkObject}
                     autoPauseRedraw={false}
-                    linkColor={lineColor}
                     onNodeDrag={node => {
                         node.fx = node.x;
                         node.fy = node.y;
@@ -265,10 +276,11 @@ export const ReferenceMapGraph = (props: {
                         node.fx = node.x;
                         node.fy = node.y;
                     }}
-                    nodeCanvasObject={paintRing}
+                    nodeCanvasObject={nodeObject}
                     onNodeClick={handleNodeSelect}
                     onBackgroundClick={() => setSelectedNode(null)}
                     onNodeRightClick={toggleZoom}
+
                 />
             </div>
         )
