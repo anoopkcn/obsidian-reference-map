@@ -4,7 +4,7 @@ import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference
 import { addIcons } from './icons'
 import { SidebarView, REFERENCE_MAP_VIEW_TYPE } from './sidebar/SidebarView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
-import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
+import { ReferenceSearchModal, ReferenceSuggestModal } from './search/modals'
 import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
 import { ReferenceMapData } from './data/data'
@@ -171,6 +171,7 @@ export default class ReferenceMap extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings)
 	}
+
 	async createNewReferenceNote(): Promise<void> {
 		try {
 			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);

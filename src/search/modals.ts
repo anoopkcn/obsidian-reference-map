@@ -1,8 +1,8 @@
 import { ButtonComponent, Modal, Setting, TextComponent, Notice, SuggestModal, App } from 'obsidian';
-import ReferenceMap from './main';
-import { ViewManager } from './data/viewManager';
-import { MetaData, Reference } from './types';
-import { makeMetaData, getPaperIds } from './utils';
+import ReferenceMap from '../main';
+import { ViewManager } from '../data/viewManager';
+import { MetaData, Reference } from '../types';
+import { makeMetaData, getPaperIds } from '../utils';
 
 export class ReferenceSearchModal extends Modal {
   private isBusy = false;
@@ -23,7 +23,7 @@ export class ReferenceSearchModal extends Modal {
     this.okBtnRef?.setButtonText(busy ? 'Requesting...' : 'Search');
   }
 
-  async searchReference() { 
+  async searchReference() {
     if (!this.query) {
       throw new Error('ORM: No query entered.');
     }
@@ -70,7 +70,7 @@ export class ReferenceSearchModal extends Modal {
     const { contentEl } = this;
 
     const search_heading = contentEl.createDiv({ cls: 'orm-search-modal-input-heading', text: 'Search References' });
-    search_heading.createDiv({ cls: 'orm-search-modal-input-heading-mode', text: `${this.mode}` });  
+    search_heading.createDiv({ cls: 'orm-search-modal-input-heading-mode', text: `${this.mode}` });
 
     contentEl.createDiv({ cls: 'orm-search-modal-input' }, settingItem => {
       new TextComponent(settingItem)
@@ -83,13 +83,13 @@ export class ReferenceSearchModal extends Modal {
     new Setting(contentEl)
       .setClass('orm-search-modal-input-button')
       .addButton(btn => {
-      return (this.okBtnRef = btn
-        .setButtonText('Search')
-        .setCta()
-        .onClick(() => {
-          this.searchReference();
-        }));
-    });
+        return (this.okBtnRef = btn
+          .setButtonText('Search')
+          .setCta()
+          .onClick(() => {
+            this.searchReference();
+          }));
+      });
   }
 
   onClose() {
