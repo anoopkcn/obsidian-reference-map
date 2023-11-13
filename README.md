@@ -59,13 +59,13 @@ Main features:
 
 ![ORM-demo](./images/orm-demo-0.7.5.png)
 
-Reference Map View contains Index cards and Reference Cards.
+Reference Map View contains Index cards and citing/cited cards.
 
 **Index Cards** are detected from the markdown document using ID's(see the _Static Reference List_ section below)
 
-**Reference Cards** show a searchable and sortable list of cited and citing papers of a reference contained in the index card.
+**Citing/cited cards** show a searchable and sortable list of cited and citing papers of a reference contained in the index card.
 
-Each Index/Reference card in the view will show the following information:
+Each Index card or citing/cited card in the view will show the following information:
 
 | Button | Section                    | Description                                                                                                                                                                    | On Click                                                                                                            |
 | ------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
@@ -105,9 +105,10 @@ The following types of IDs are supported:
 | `URL:<url>`     | URL from sites                                           | `URL:https://arxiv.org/abs/2003.05991`                 |
 | `CorpusId:<id>` | Semantic Scholar numerical ID                            | `CorpusId:215416146`                                   |
 
-\*To enable CiteKey support(for Zotero or for other reference managers), one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file or `BibTeX` file with `.bib` extension. Once enabled in the settings, the plugin can recognize the Pandoc citation format.
+\*To enable CiteKey support(for Zotero or for other reference managers), Activate `Pull from zotero` option and select a library OR one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file or `BibTeX` file with `.bib` extension. Once enabled in the settings, the plugin can recognize the `citekey` entries.
 
-**Note**: CiteKey's should NOT contain `spaces`, `[`, `(` or `*`. Also make sure in Zotero library DOI field contains a valid ID.
+> [!IMPORTANT]  
+> Make sure in Zotero library DOI field contains a valid ID.
 
 For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map view.
 
