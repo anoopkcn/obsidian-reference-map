@@ -1,7 +1,7 @@
 //Solution copied from obsidian-kanban: https://github.com/mgmeyers/obsidian-kanban/blob/44118e25661bff9ebfe54f71ae33805dc88ffa53/src/lang/helpers.ts
 
 import { moment } from 'obsidian'
-import { errorlog } from 'src/utils'
+import { errorlog } from 'src/utils/functions'
 import ar from './locale/ar'
 import cz from './locale/cz'
 import da from './locale/da'

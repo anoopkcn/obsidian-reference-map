@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ReferenceMapSettings, Reference } from 'src/types'
 import { PaperCard } from './PaperCard'
-import { dataSearch, dataSort } from 'src/utils'
+import { dataSearch, dataSort } from 'src/utils/postprocess'
 import { BsSearch } from 'react-icons/bs'
 
 interface Props {

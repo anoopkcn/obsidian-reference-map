@@ -1,7 +1,7 @@
 import { IndexPaper } from 'src/types'
 import React, { useEffect, useState, useRef, ReactNode } from 'react'
 import { IndexPaperCard } from '../components/IndexPaperCard'
-import { indexSearch } from 'src/utils'
+import { indexSearch } from 'src/utils/postprocess'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
 import { ReferenceMapData } from 'src/data/data'

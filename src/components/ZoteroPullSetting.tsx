@@ -1,7 +1,7 @@
 import React from 'react';
 import { t } from 'src/lang/helpers';
 import { DEFAULT_ZOTERO_PORT } from 'src/constants';
-import { getZUserGroups } from 'src/utils';
+import { getZUserGroups } from 'src/utils/zotero';
 import { SettingItem } from './SettingItem';
 import ReferenceMap from 'src/main';
 import { RELOAD } from 'src/types';

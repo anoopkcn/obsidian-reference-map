@@ -1,6 +1,7 @@
 import { IndexPaper, ReferenceMapSettings, Reference } from 'src/types'
 import React, { useEffect, useState } from 'react'
-import { isEmpty, makeMetaData, templateReplace } from 'src/utils'
+import { isEmpty } from 'src/utils/functions'
+import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 import { PaperList } from './PaperList'
 import { PaperHeading } from './PaperHeading'
 import { PaperButtons } from './PaperButtons'

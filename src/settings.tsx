@@ -1,7 +1,7 @@
 import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
-import { fragWithHTML, resolvePath } from './utils'
+import { fragWithHTML, resolvePath } from './utils/functions'
 import { RELOAD } from './types'
 import React from 'react';
 import { ZoteroPullSetting } from './components/ZoteroPullSetting'

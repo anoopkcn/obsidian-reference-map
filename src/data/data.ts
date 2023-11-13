@@ -1,13 +1,12 @@
 import * as fs from 'fs'
 import { parse } from '@retorquere/bibtex-parser'
 import {
-    PromiseCapability,
-    getZBib,
-    indexSort,
     removeNullReferences,
-    resolvePath,
-    setCiteKeyId
-} from '../utils'
+    resolvePath
+} from '../utils/functions'
+import { indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { PromiseCapability } from 'src/promise';
+import { getZBib } from 'src/utils/zotero';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from '../constants';
 import ReferenceMap from '../main';
 import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from '../types';

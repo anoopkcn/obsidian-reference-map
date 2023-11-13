@@ -2,7 +2,8 @@ import { ButtonComponent, Modal, Setting, TextComponent, Notice, SuggestModal, A
 import ReferenceMap from '../main';
 import { ViewManager } from '../data/viewManager';
 import { MetaData, Reference } from '../types';
-import { makeMetaData, getPaperIds } from '../utils';
+import { makeMetaData } from 'src/utils/postprocess';
+import { getPaperIds } from 'src/utils/parser';
 
 export class ReferenceSearchModal extends Modal {
   private isBusy = false;

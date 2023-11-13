@@ -10,9 +10,11 @@ import {
 import { IndexPaper, ReferenceMapSettings } from 'src/types'
 import {
 	copyElToClipboard,
+} from 'src/utils/functions'
+import {
 	makeMetaData,
-	templateReplace,
-} from 'src/utils'
+	templateReplace
+} from 'src/utils/postprocess'
 
 type Props = {
 	settings: ReferenceMapSettings

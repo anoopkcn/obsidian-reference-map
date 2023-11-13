@@ -1,6 +1,10 @@
 import { CachedMetadata } from "obsidian";
 import { CiteKey, Library } from "../types";
-import { areSetsEqual, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds } from "../utils";
+import { areSetsEqual } from "../utils/functions";
+import { getCiteKeyIds } from 'src/utils/postprocess';
+import { extractKeywords } from 'src/utils/parser';
+import { getCiteKeys } from 'src/utils/parser';
+import { getPaperIds } from 'src/utils/parser';
 import { EXCLUDE_FILE_NAMES } from "../constants";
 
 
