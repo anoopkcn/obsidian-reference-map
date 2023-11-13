@@ -1,6 +1,6 @@
 import { ButtonComponent, Modal, Setting, TextComponent, Notice, SuggestModal, App } from 'obsidian';
 import ReferenceMap from './main';
-import { ViewManager } from './viewManager';
+import { ViewManager } from './data/viewManager';
 import { MetaData, Reference } from './types';
 import { makeMetaData, getPaperIds } from './utils';
 

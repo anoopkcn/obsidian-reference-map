@@ -4,7 +4,7 @@ import { isEmpty, makeMetaData, templateReplace } from 'src/utils'
 import { PaperList } from './PaperList'
 import { PaperHeading } from './PaperHeading'
 import { PaperButtons } from './PaperButtons'
-import { ViewManager } from 'src/viewManager'
+import { ViewManager } from 'src/data/viewManager'
 import { LoadingPuff } from './LoadingPuff'
 
 interface Props {

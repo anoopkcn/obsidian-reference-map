@@ -4,9 +4,9 @@ import { Root, createRoot } from "react-dom/client";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
 import ReferenceMap from "src/main";
 import { AppContext } from "src/context";
-import { ReferenceMapData } from "src/referenceData";
-import EventBus, { EVENTS } from "src/EventBus";
-import { UpdateChecker } from "src/updateChecker";
+import { ReferenceMapData } from "src/data/data";
+import EventBus, { EVENTS } from "src/events";
+import { UpdateChecker } from "src/data/updateChecker";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 

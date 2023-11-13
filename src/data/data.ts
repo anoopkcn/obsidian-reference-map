@@ -7,10 +7,10 @@ import {
     removeNullReferences,
     resolvePath,
     setCiteKeyId
-} from './utils'
-import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from './constants';
-import ReferenceMap from './main';
-import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from './types';
+} from '../utils'
+import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from '../constants';
+import ReferenceMap from '../main';
+import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from '../types';
 import { ViewManager } from './viewManager';
 import _ from 'lodash';
 

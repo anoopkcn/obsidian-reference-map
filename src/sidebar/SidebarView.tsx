@@ -1,17 +1,17 @@
 import { ItemView, MarkdownView, WorkspaceLeaf } from 'obsidian'
-import ReferenceMap from './main'
-import { t } from './lang/helpers'
+import ReferenceMap from '../main'
+import { t } from '../lang/helpers'
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
-import { ReferenceMapList } from './components/ReferenceMapList'
-import { ReferenceMapData } from './referenceData'
-import { AppContext } from './context'
-import EventBus, { EVENTS } from './EventBus'
-import { UpdateChecker } from './updateChecker'
+import { ReferenceMapList } from './ReferenceMapList'
+import { ReferenceMapData } from '../data/data'
+import { AppContext } from '../context'
+import EventBus, { EVENTS } from '../events'
+import { UpdateChecker } from '../data/updateChecker'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
-export class ReferenceMapView extends ItemView {
+export class SidebarView extends ItemView {
 	plugin: ReferenceMap
 	referenceMapData: ReferenceMapData
 	rootEl: Root | null

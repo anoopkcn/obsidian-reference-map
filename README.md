@@ -17,7 +17,7 @@ Reference Map is a plugin for [Obsidian](https://obsidian.md/) that helps you ma
     - [From Community Plugins](#from-community-plugins)
     - [Manual Installation](#manual-installation)
 3. [Usage](#usage)
-    - [Reference Map View](#reference-map-view)
+    - [Reference Map Sidebar](#reference-map-sidebar)
         - [Static Reference List](#static-reference-list)
         - [Dynamic Reference List](#dynamic-reference-list)
     - [Reference Map Search](#reference-map-search)
@@ -51,15 +51,15 @@ This `README.md` file contains the basic description of the plugin. For a detail
 
 Main features:
 
-- **Reference Map View** - View details of your references in the current document.
+- **Reference Map Sidebar** - View details of your references in the current document.
 - **Reference Map Search** - Search for references online to create or insert details.
 - **Reference Map Graph** - A graph view showing all the references and their citing/cited references and connection between them.
 
-### Reference Map View
+### Reference Map Sidebar
 
 ![ORM-demo](./images/orm-demo-0.7.5.png)
 
-Reference Map View contains Index cards and citing/cited cards.
+Reference Map Sidebar View contains Index cards and citing/cited cards.
 
 **Index Cards** are detected from the markdown document using ID's(see the _Static Reference List_ section below)
 
@@ -110,11 +110,11 @@ The following types of IDs are supported:
 > [!IMPORTANT]  
 > Make sure in Zotero library DOI field contains a valid ID.
 
-For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map view.
+For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map Sidebar view.
 
 #### Dynamic Reference List
 
-The Reference Map view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords.
+The Reference Map Sidebar view can also be configured to show a list of references that correspond to the filename of the note or frontmatter keywords.
 _Check out the settings tab to configure the plugin behaviour_
 
 **Example:** For a file named `Attention is all you need.md` cards will be displayed for references that match `Attention+all+need`.

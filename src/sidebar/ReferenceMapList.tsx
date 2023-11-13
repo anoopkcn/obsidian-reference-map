@@ -1,12 +1,12 @@
 import { IndexPaper } from 'src/types'
 import React, { useEffect, useState, useRef, ReactNode } from 'react'
-import { IndexPaperCard } from './IndexPaperCard'
+import { IndexPaperCard } from '../components/IndexPaperCard'
 import { indexSearch } from 'src/utils'
 import { BsSearch } from 'react-icons/bs'
 import ReferenceMap from 'src/main'
-import { ReferenceMapData } from 'src/referenceData'
-import EventBus, { EVENTS } from 'src/EventBus'
-import { UpdateChecker } from 'src/updateChecker'
+import { ReferenceMapData } from 'src/data/data'
+import EventBus, { EVENTS } from 'src/events'
+import { UpdateChecker } from 'src/data/updateChecker'
 // import { PartialLoading } from './PartialLoading'
 
 interface NoContentProps {

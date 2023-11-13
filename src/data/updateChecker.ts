@@ -1,7 +1,7 @@
 import { CachedMetadata } from "obsidian";
-import { CiteKey, Library } from "./types";
-import { areSetsEqual, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds } from "./utils";
-import { EXCLUDE_FILE_NAMES } from "./constants";
+import { CiteKey, Library } from "../types";
+import { areSetsEqual, extractKeywords, getCiteKeyIds, getCiteKeys, getPaperIds } from "../utils";
+import { EXCLUDE_FILE_NAMES } from "../constants";
 
 
 export class UpdateChecker {

@@ -2,14 +2,14 @@ import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
 import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference } from './types'
 import { addIcons } from './icons'
-import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
+import { SidebarView, REFERENCE_MAP_VIEW_TYPE } from './sidebar/SidebarView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
 import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
-import { ReferenceMapData } from './referenceData'
+import { ReferenceMapData } from './data/data'
 import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
-import { UpdateChecker } from './updateChecker'
+import { UpdateChecker } from './data/updateChecker'
 
 
 export default class ReferenceMap extends Plugin {
@@ -53,7 +53,7 @@ export default class ReferenceMap extends Plugin {
 
 		this.registerView(
 			REFERENCE_MAP_VIEW_TYPE,
-			(leaf: WorkspaceLeaf) => new ReferenceMapView(leaf, this)
+			(leaf: WorkspaceLeaf) => new SidebarView(leaf, this)
 		)
 
 		this.registerView(
@@ -157,7 +157,7 @@ export default class ReferenceMap extends Plugin {
 	get view() {
 		const leaves = this.app.workspace.getLeavesOfType(REFERENCE_MAP_VIEW_TYPE)
 		if (!leaves?.length) return null
-		return leaves[0].view as ReferenceMapView
+		return leaves[0].view as SidebarView
 	}
 
 	async loadSettings() {
