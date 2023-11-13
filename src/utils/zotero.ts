@@ -1,7 +1,6 @@
 // Following functions are copied from 
 // https://github.com/mgmeyers/obsidian-pandoc-reference-list/blob/main/src/bib/helpers.ts
 // with some modifications
-
 import fs from "fs";
 import http, { request } from "http";
 import https from "https";

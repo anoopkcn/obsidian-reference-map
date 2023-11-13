@@ -1,12 +1,9 @@
 import { CachedMetadata } from "obsidian";
-import { CiteKey, Library } from "../types";
-import { areSetsEqual } from "../utils/functions";
+import { CiteKey, Library } from "src/types";
+import { EXCLUDE_FILE_NAMES } from "src/constants";
+import { areSetsEqual } from "src/utils/functions";
 import { getCiteKeyIds } from 'src/utils/postprocess';
-import { extractKeywords } from 'src/utils/parser';
-import { getCiteKeys } from 'src/utils/parser';
-import { getPaperIds } from 'src/utils/parser';
-import { EXCLUDE_FILE_NAMES } from "../constants";
-
+import { getCiteKeys, getPaperIds, extractKeywords } from 'src/utils/parser';
 
 export class UpdateChecker {
     citeKeys: Set<string>;

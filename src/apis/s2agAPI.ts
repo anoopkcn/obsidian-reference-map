@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { requestUrl } from 'obsidian'
-import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 import { Reference } from 'src/types'
+import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
 
 export const SEMANTIC_SCHOLAR_BATCH_URL = 'https://api.semanticscholar.org/graph/v1/paper/batch'
 // Get details for multiple papers at once

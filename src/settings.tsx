@@ -1,11 +1,11 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client'
 import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
+import { RELOAD } from './types'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
-import { fragWithHTML, resolvePath } from './utils/functions'
-import { RELOAD } from './types'
-import React from 'react';
 import { ZoteroPullSetting } from './components/ZoteroPullSetting'
-import { createRoot } from 'react-dom/client'
+import { fragWithHTML, resolvePath } from './utils/functions'
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap

@@ -1,9 +1,9 @@
 import { ButtonComponent, Modal, Setting, TextComponent, Notice, SuggestModal, App } from 'obsidian';
-import ReferenceMap from '../main';
-import { ViewManager } from '../data/viewManager';
-import { MetaData, Reference } from '../types';
+import { MetaData, Reference } from 'src/types';
+import { ViewManager } from 'src/data/viewManager';
 import { makeMetaData } from 'src/utils/postprocess';
 import { getPaperIds } from 'src/utils/parser';
+import ReferenceMap from 'src/main';
 
 export class ReferenceSearchModal extends Modal {
   private isBusy = false;

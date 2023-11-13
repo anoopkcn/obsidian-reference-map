@@ -1,10 +1,5 @@
 import { ReferenceMapSettings, ZoteroGroup } from './types'
 
-// There are customizable metadata template
-// METADATA_COPY_TEMPLATE_ONE     correspond to button one
-// METADATA_COPY_TEMPLATE_TWO     correspond to button two
-// METADATA_COPY_TEMPLATE_THREE  correspond to button three
-
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
 export const METADATA_COPY_TEMPLATE_TWO = `# {{title}}
@@ -39,7 +34,6 @@ export const DEFAULT_HEADERS = {
 };
 
 export const DEFAULT_ZOTERO_GROUPS: ZoteroGroup[] = [];
-
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
@@ -121,6 +115,7 @@ export const SEMANTIC_FIELDS = [
 	'year',
 	'citationStyles',
 ]
+
 export const SEARCH_PARAMETERS = [
 	'paperId',
 	'externalIds',
@@ -144,132 +139,16 @@ export const SEARCH_PARAMETERS = [
 
 export const SEMANTICSCHOLAR_API_URL =
 	'https://api.semanticscholar.org/graph/v1'
+
 export const SEMANTICSCHOLAR_PARTNER_API_URL =
 	'https://partner.semanticscholar.org/graph/v1'
+
 export const SEMANTICSCHOLAR_URL = 'https://www.semanticscholar.org'
 
-export const COMMON_WORDS = [
-	'a',
-	'able',
-	'about',
-	'across',
-	'after',
-	'all',
-	'almost',
-	'also',
-	'am',
-	'among',
-	'an',
-	'and',
-	'any',
-	'are',
-	'as',
-	'at',
-	'be',
-	'because',
-	'been',
-	'but',
-	'by',
-	'can',
-	'cannot',
-	'could',
-	'dear',
-	'did',
-	'do',
-	'does',
-	'either',
-	'else',
-	'ever',
-	'every',
-	'for',
-	'from',
-	'get',
-	'got',
-	'had',
-	'has',
-	'have',
-	'he',
-	'her',
-	'hers',
-	'him',
-	'his',
-	'how',
-	'however',
-	'i',
-	'if',
-	'in',
-	'into',
-	'is',
-	'it',
-	'its',
-	'just',
-	'least',
-	'let',
-	'like',
-	'likely',
-	'may',
-	'me',
-	'might',
-	'most',
-	'must',
-	'my',
-	'neither',
-	'no',
-	'nor',
-	'not',
-	'of',
-	'off',
-	'often',
-	'on',
-	'only',
-	'or',
-	'other',
-	'our',
-	'own',
-	'rather',
-	'said',
-	'say',
-	'says',
-	'she',
-	'should',
-	'since',
-	'so',
-	'some',
-]
-export const PUNCTUATION = [
-	'!',
-	'"',
-	'#',
-	'$',
-	'%',
-	'&',
-	"'",
-	'(',
-	')',
-	'*',
-	'+',
-	',',
-	'-',
-	'.',
-	'/',
-	':',
-	';',
-	'<',
-	'=',
-	'>',
-	'?',
-	'@',
-	'[',
-	'\\',
-	']',
-	'^',
-	'_',
-	'`',
-	'{',
-	'|',
-	'}',
-	'~',
-]
+export const COMMON_WORDS = ['a', 'able', 'about', 'across', 'after', 'all', 'almost', 'also', 'am', 'among', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'because', 'been', 'but', 'by', 'can', 'cannot', 'could', 'dear', 'did', 'do', 'does', 'either', 'else', 'ever', 'every', 'for', 'from', 'get', 'got', 'had', 'has', 'have', 'he', 'her', 'hers', 'him', 'his', 'how', 'however', 'i', 'if', 'in', 'into', 'is', 'it', 'its', 'just', 'least', 'let', 'like', 'likely', 'may', 'me', 'might', 'most', 'must', 'my', 'neither', 'no', 'nor', 'not', 'of', 'off', 'often', 'on', 'only', 'or', 'other', 'our', 'own', 'rather', 'said', 'say', 'says', 'she', 'should', 'since', 'so', 'some',]
+
+export const PUNCTUATION = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~',]
+
 export const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 export const EXCLUDE_FILE_NAMES = ['LICENSE', 'README', 'TEST', 'UNTITLED']

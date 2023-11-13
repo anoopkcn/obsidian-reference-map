@@ -1,12 +1,12 @@
-import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { ReferenceMapGraph } from "./ReferenceMapGraph";
-import ReferenceMap from "src/main";
+import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
 import { AppContext } from "src/context";
-import { ReferenceMapData } from "src/data/data";
 import EventBus, { EVENTS } from "src/events";
+import { ReferenceMapData } from "src/data/data";
 import { UpdateChecker } from "src/data/updateChecker";
+import ReferenceMap from "src/main";
+import { ReferenceMapGraph } from "./ReferenceMapGraph";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 

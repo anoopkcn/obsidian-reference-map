@@ -1,12 +1,12 @@
 import _ from 'lodash';
+import * as d3 from 'd3';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ForceGraph2D, { GraphData, NodeObject } from 'react-force-graph-2d';
 import EventBus, { EVENTS } from 'src/events';
+import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
 import { PaperCard } from 'src/components/PaperCard';
 import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/data/data';
-import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
-import * as d3 from 'd3';
 import { UpdateChecker } from 'src/data/updateChecker';
 
 interface MapGraphData {

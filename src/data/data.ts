@@ -1,17 +1,14 @@
 import * as fs from 'fs'
 import { parse } from '@retorquere/bibtex-parser'
-import {
-    removeNullReferences,
-    resolvePath
-} from '../utils/functions'
+import _ from 'lodash';
+import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from 'src/types';
+import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
+import { removeNullReferences, resolvePath } from 'src/utils/functions'
 import { indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
-import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from '../constants';
-import ReferenceMap from '../main';
-import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from '../types';
+import ReferenceMap from 'src/main';
 import { ViewManager } from './viewManager';
-import _ from 'lodash';
 
 export class ReferenceMapData {
     plugin: ReferenceMap

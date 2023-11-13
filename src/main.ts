@@ -1,16 +1,16 @@
+import path from 'path'
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
-import { ReferenceMapSettingTab } from './settings'
 import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference } from './types'
+import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
+import { ReferenceMapSettingTab } from './settings'
+import { PromiseCapability } from './promise'
 import { addIcons } from './icons'
 import { SidebarView, REFERENCE_MAP_VIEW_TYPE } from './sidebar/SidebarView'
-import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
+import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
 import { ReferenceSearchModal, ReferenceSuggestModal } from './search/modals'
 import { getVaultRoot, makeFileName } from './utils/functions'
 import { templateReplace } from './utils/postprocess'
-import { PromiseCapability } from './promise'
-import path from 'path'
 import { ReferenceMapData } from './data/data'
-import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
 import { UpdateChecker } from './data/updateChecker'
 
 

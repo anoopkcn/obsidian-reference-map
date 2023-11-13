@@ -2,19 +2,10 @@ import React from 'react'
 import { FiPaperclip, FiClipboard } from 'react-icons/fi'
 import { SiOpenaccess } from 'react-icons/si'
 import { BsClipboardData } from 'react-icons/bs'
-import {
-	METADATA_COPY_TEMPLATE_ONE,
-	METADATA_COPY_TEMPLATE_THREE,
-	METADATA_COPY_TEMPLATE_TWO,
-} from 'src/constants'
+import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
 import { IndexPaper, ReferenceMapSettings } from 'src/types'
-import {
-	copyElToClipboard,
-} from 'src/utils/functions'
-import {
-	makeMetaData,
-	templateReplace
-} from 'src/utils/postprocess'
+import { copyElToClipboard } from 'src/utils/functions'
+import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 
 type Props = {
 	settings: ReferenceMapSettings

@@ -1,6 +1,6 @@
 import { FileSystemAdapter, Notice } from 'obsidian'
 import path from 'path'
-import { IndexPaper, MetaData, Reference } from '../types'
+import { IndexPaper, MetaData, Reference } from 'src/types'
 import { templateReplace } from './postprocess';
 
 export function getVaultRoot() {
