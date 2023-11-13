@@ -6,8 +6,8 @@ import { Root, createRoot } from 'react-dom/client'
 import { ReferenceMapList } from './components/ReferenceMapList'
 import { ReferenceMapData } from './referenceData'
 import { AppContext } from './context'
-import { UpdateChecker } from './utils'
 import EventBus, { EVENTS } from './EventBus'
+import { UpdateChecker } from './updateChecker'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 

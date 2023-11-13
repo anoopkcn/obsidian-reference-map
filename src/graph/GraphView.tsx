@@ -6,7 +6,7 @@ import ReferenceMap from "src/main";
 import { AppContext } from "src/context";
 import { ReferenceMapData } from "src/referenceData";
 import EventBus, { EVENTS } from "src/EventBus";
-import { UpdateChecker } from "src/utils";
+import { UpdateChecker } from "src/updateChecker";
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 

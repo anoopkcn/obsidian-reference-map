@@ -1,4 +1,4 @@
-import { App, FileSystemAdapter, MarkdownView, Notice, TFile, CachedMetadata } from 'obsidian'
+import { FileSystemAdapter, Notice } from 'obsidian'
 import path from 'path'
 import fs from 'fs';
 import doiRegex from 'doi-regex'
@@ -13,7 +13,6 @@ import {
 	PUNCTUATION,
 	SEARCH_PARAMETERS,
 	VALID_S2AG_API_URLS,
-	EXCLUDE_FILE_NAMES
 } from './constants'
 
 export function getVaultRoot() {
@@ -374,33 +373,6 @@ export const indexSort = (
 		}
 	});
 };
-
-export async function useTemplaterPluginInFile(app: App, file: TFile) {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const templater = (app as any).plugins.plugins['templater-obsidian'];
-	if (templater && !templater?.settings['trigger_on_file_creation']) {
-		await templater.templater.overwrite_file_commands(file);
-	}
-}
-
-export class CursorJumper {
-	constructor(private app: App) { }
-
-	async jumpToNextCursorLocation(): Promise<void> {
-		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-		if (!activeView) {
-			return;
-		}
-		if (!activeView.file) {
-			return;
-		}
-		const content = await this.app.vault.cachedRead(activeView.file);
-		const indexOffset = content.length + 1;
-		const editor = activeView.editor;
-		editor.focus();
-		editor.setCursor(indexOffset, 0);
-	}
-}
 
 export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 	let output;
@@ -775,107 +747,4 @@ export async function getCSLStyle(
 	fs.writeFileSync(outpath, str);
 	styleCache.set(url, str);
 	return str;
-}
-
-
-export class UpdateChecker {
-	citeKeys: Set<string>;
-	citeKeyMap: CiteKey[]
-	indexIds: Set<string>;
-	library: Library | null | undefined;
-	fileMetadataCache: CachedMetadata | null;
-	fileCache = '';
-	frontmatter = '';
-	fileName = '';
-	basename = '';
-
-	constructor() {
-		this.citeKeys = new Set<string>();
-		this.citeKeyMap = []
-		this.indexIds = new Set<string>();
-		this.frontmatter = '';
-		this.fileName = '';
-		this.basename = '';
-	}
-
-	resetCache = () => {
-		this.citeKeys = new Set<string>();
-		this.citeKeyMap = []
-		this.indexIds = new Set<string>();
-		this.fileMetadataCache = null;
-		this.fileCache = '';
-		this.frontmatter = '';
-		this.fileName = '';
-		this.basename = '';
-	}
-
-	setCache = (fileCache: string, fileMetadataCache: CachedMetadata | null) => {
-		this.fileCache = fileCache
-		this.fileMetadataCache = fileMetadataCache
-	}
-
-	checkCiteKeysUpdate = (prefix = '@', checkOrder = false) => {
-		// checkOrder is used to force update (usually for reference map view order correction)
-		if (this.library === null) return false;
-		const newCiteKeys = getCiteKeys(this.library, this.fileCache, prefix)
-		if (!checkOrder) {
-			if (areSetsEqual(newCiteKeys, this.citeKeys)) {
-				return false;
-			}
-		}
-		this.citeKeys = newCiteKeys;
-		this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)
-		return true;
-	}
-
-	checkIndexIdsUpdate = () => {
-		const newIds = getPaperIds(this.fileCache)
-		if (areSetsEqual(newIds, this.indexIds)) return false;
-		this.indexIds = newIds;
-		return true;
-	}
-
-	checkFrontmatterUpdate = (key = '') => {
-		if (!this.fileMetadataCache?.frontmatter) {
-			this.frontmatter = '';
-			return false;
-		}
-		const keywords = this.fileMetadataCache?.frontmatter?.[key];
-		this.frontmatter = extractKeywords(keywords).unique().join("+");
-		return true;
-	}
-
-	checkFileNameUpdate = () => {
-		if (!this.basename) {
-			this.fileName = '';
-			return false;
-		}
-		if (!EXCLUDE_FILE_NAMES.some((name) => this.basename.toLowerCase() === name.toLowerCase())) {
-			this.fileName = extractKeywords(this.basename).unique().join('+')
-			return true;
-		}
-		return false;
-	}
-}
-
-export function addAlpha(color: string, alpha: number): string {
-	//check what type the color is Hex, rgb, hsl
-	//add alpha to the color
-	//return the color
-	// alpha is given between 0-1
-	const hex = color.match(/^#([0-9a-f]{6})$/i);
-	const rgb = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-	const hsl = color.match(/^hsl\((\d+),\s*(\d+),\s*(\d+)\)$/);
-	if (hex) {
-		return `rgba(${parseInt(hex[1].substring(0, 2), 16)}, ${parseInt(
-			hex[1].substring(2, 4),
-			16
-		)}, ${parseInt(hex[1].substring(4, 6), 16)}, ${alpha})`;
-	} else if (rgb) {
-		return `rgba(${rgb[1]}, ${rgb[2]}, ${rgb[3]}, ${alpha})`;
-	} else if (hsl) {
-		return `hsla(${hsl[1]}, ${hsl[2]}, ${hsl[3]}, ${alpha})`;
-	} else {
-		return color;
-	}
 }

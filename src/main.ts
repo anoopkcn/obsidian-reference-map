@@ -1,14 +1,15 @@
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
 import { ReferenceMapSettingTab } from './settings'
 import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference } from './types'
-import { addIcons } from './ui/icons'
+import { addIcons } from './icons'
 import { ReferenceMapView, REFERENCE_MAP_VIEW_TYPE } from './reactView'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceSearchModal, ReferenceSuggestModal } from './modals'
-import { PromiseCapability, UpdateChecker, getVaultRoot, makeFileName, templateReplace } from './utils'
+import { PromiseCapability, getVaultRoot, makeFileName, templateReplace } from './utils'
 import path from 'path'
 import { ReferenceMapData } from './referenceData'
 import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
+import { UpdateChecker } from './updateChecker'
 
 
 export default class ReferenceMap extends Plugin {
@@ -24,7 +25,6 @@ export default class ReferenceMap extends Plugin {
 		}
 		return this._initPromise;
 	}
-
 
 	async onload() {
 		this.cacheDir = path.join(getVaultRoot(), '.reference-map');

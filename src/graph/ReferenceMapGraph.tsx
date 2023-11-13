@@ -6,8 +6,8 @@ import { PaperCard } from 'src/components/PaperCard';
 import { PartialLoading } from 'src/components/PartialLoading';
 import { ReferenceMapData } from 'src/referenceData';
 import { IndexPaper, Reference, ReferenceMapSettings } from 'src/types';
-import { UpdateChecker } from 'src/utils';
 import * as d3 from 'd3';
+import { UpdateChecker } from 'src/updateChecker';
 
 interface MapGraphData {
     paper: IndexPaper

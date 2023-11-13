@@ -1,4 +1,4 @@
-import { clipBoard, clipboardData, papeClip } from 'src/ui/icons'
+import { clipBoard, clipboardData, papeClip } from 'src/icons'
 
 // English
 export default {
