@@ -53,6 +53,7 @@ Main features:
 
 - **Reference Map View** - View details of your references in the current document.
 - **Reference Map Search** - Search for references online to create or insert details.
+- **Reference Map Graph** - A graph view showing all the references and their citing/cited references and connection between them.
 
 ### Reference Map View
 
@@ -151,7 +152,13 @@ You can configure the template for both commands in the settings tab.
 
 ### Reference Map Graph
 ![ORM-graph-demo](./images/orm-graph-demo.png)
-Open command palatte and run `Reference Map: Open Literature Graph` to open the graph view. Reveal connection between the entries. Size of each node indicating the citations it received, Click on a node to show the details on top of the graph, hover to show the title. pan to zoom in/out (you can also use node right click to zoom in/out)
+Open command palette and run `Reference Map: Open Literature Graph` to open the graph view. Reveal connection between the entries. Size of each node indicating the citations it received
+
+- Click on a node to show the details on top of the graph
+- Hover to show the title. 
+- Pan to zoom in/out (you can also use node right click to zoom in/out)
+- Drag to move the graph
+- Drag a node to move it around and fix it in place
 
 ## Configuration
 
