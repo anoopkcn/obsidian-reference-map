@@ -111,9 +111,8 @@ export const ReferenceMapGraph = (props: {
     const { settings } = props;
     const { viewManager } = props.referenceMapData;
     const tempTextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
-    const tempAccentColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
-    // const tempLineColor = getComputedStyle(document.body).getPropertyValue('--color-base-30')
-    const lineColor = tempAccentColor ? tempAccentColor : '#3f3f3f';
+    // const tempAccentColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
+    const lineColor = 'rgba(147, 117, 239, 0.2)' //tempAccentColor ? addAlpha(tempAccentColor, 0.2) : '#3f3f3f';
     const textColor = tempTextColor ? tempTextColor : 'black';
     const selectionColor = '#ff7f0e'
 
@@ -215,15 +214,14 @@ export const ReferenceMapGraph = (props: {
     }, [selectedNode]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const linkObject = useCallback((link: any, ctx: any) => {
+    const linkObject = (link: any, ctx: CanvasRenderingContext2D) => {
         ctx.beginPath();
         ctx.strokeStyle = lineColor;
-        ctx.globalAlpha = 0.2;
         ctx.lineWidth = 1;
         ctx.moveTo(link.source.x, link.source.y);
         ctx.lineTo(link.target.x, link.target.y);
         ctx.stroke();
-    }, []);
+    }
 
     const handleNodeSelect = (node: NodeObject) => {
         setSelectedNode(node);

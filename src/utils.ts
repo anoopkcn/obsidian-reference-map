@@ -857,3 +857,25 @@ export class UpdateChecker {
 		return false;
 	}
 }
+
+export function addAlpha(color: string, alpha: number): string {
+	//check what type the color is Hex, rgb, hsl
+	//add alpha to the color
+	//return the color
+	// alpha is given between 0-1
+	const hex = color.match(/^#([0-9a-f]{6})$/i);
+	const rgb = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	const hsl = color.match(/^hsl\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	if (hex) {
+		return `rgba(${parseInt(hex[1].substring(0, 2), 16)}, ${parseInt(
+			hex[1].substring(2, 4),
+			16
+		)}, ${parseInt(hex[1].substring(4, 6), 16)}, ${alpha})`;
+	} else if (rgb) {
+		return `rgba(${rgb[1]}, ${rgb[2]}, ${rgb[3]}, ${alpha})`;
+	} else if (hsl) {
+		return `hsla(${hsl[1]}, ${hsl[2]}, ${hsl[3]}, ${alpha})`;
+	} else {
+		return color;
+	}
+}
