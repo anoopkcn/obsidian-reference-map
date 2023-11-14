@@ -213,15 +213,6 @@ export const ReferenceMapGraph = (props: {
         }
     }, [selectedNode]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const linkObject = (link: any, ctx: CanvasRenderingContext2D) => {
-        ctx.beginPath();
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 1;
-        ctx.moveTo(link.source.x, link.source.y);
-        ctx.lineTo(link.target.x, link.target.y);
-        ctx.stroke();
-    }
 
     const handleNodeSelect = (node: NodeObject) => {
         setSelectedNode(node);
@@ -266,8 +257,6 @@ export const ReferenceMapGraph = (props: {
                     width={props.width}
                     height={props.height}
                     graphData={data}
-                    linkCanvasObject={linkObject}
-                    autoPauseRedraw={false}
                     onNodeDrag={node => {
                         node.fx = node.x;
                         node.fy = node.y;
@@ -280,7 +269,7 @@ export const ReferenceMapGraph = (props: {
                     onNodeClick={handleNodeSelect}
                     onBackgroundClick={() => setSelectedNode(null)}
                     onNodeRightClick={toggleZoom}
-
+                    linkColor={(link) => lineColor}
                 />
             </div>
         )
