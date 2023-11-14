@@ -113,7 +113,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 			)
 
-		containerEl.createEl('h2', { text: 'Sort Settings' })
 		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
 			.setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
@@ -160,7 +159,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				// .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
 				.addDropdown((dropdown) =>
 					dropdown
-						.addOption('desc', t('SORT_ORDER_DESCE'))
+						.addOption('desc', t('SORT_ORDER_DESC'))
 						.addOption('asc', t('SORT_ORDER_ASC'))
 						.setValue(this.plugin.settings.sortOrderIndex)
 						.onChange(async (value) => {
@@ -219,7 +218,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				// .setDesc(fragWithHTML(t('SORT_ORDER_DESC')))
 				.addDropdown((dropdown) =>
 					dropdown
-						.addOption('desc', t('SORT_ORDER_DESCE'))
+						.addOption('desc', t('SORT_ORDER_DESC'))
 						.addOption('asc', t('SORT_ORDER_ASC'))
 						.setValue(this.plugin.settings.sortOrderReference)
 						.onChange(async (value) => {
