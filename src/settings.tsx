@@ -142,6 +142,21 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
+			.setName(t('LOOKUP_ENTRIES_LINKED_FILES'))
+			.setDesc(fragWithHTML(t('LOOKUP_ENTRIES_LINKED_FILES_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.lookupLinkedFiles)
+					.onChange(async (value) => {
+						this.plugin.settings.lookupLinkedFiles = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+
+		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
 			.setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
 			.addToggle((toggle) =>

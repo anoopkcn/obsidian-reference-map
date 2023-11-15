@@ -140,6 +140,11 @@ export const ReferenceMapGraph = (props: {
         return await Promise.all(dataPromises);
     }
 
+    //unset data when basename is changed
+    useEffect(() => {
+        setData({ nodes: [], links: [] })
+    }, [props.updateChecker.basename]);
+
     useEffect(() => {
         if (fgRef.current) {
             // avoid collition 
@@ -173,12 +178,12 @@ export const ReferenceMapGraph = (props: {
         fetchDataAndUpdate();
         EventBus.on(EVENTS.UPDATE, fetchDataAndUpdate);
     }, [
-        settings,
-        props.updateChecker.basename,
+        props.settings,
         props.updateChecker.indexIds,
         props.updateChecker.citeKeys,
         props.updateChecker.fileName,
         props.updateChecker.frontmatter,
+        props.referenceMapData.library.libraryData
     ]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

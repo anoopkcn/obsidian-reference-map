@@ -1,7 +1,18 @@
-import { FileSystemAdapter, Notice } from 'obsidian'
+import { FileSystemAdapter, Notice, TFile } from 'obsidian'
 import path from 'path'
 import { IndexPaper, MetaData, Reference } from 'src/types'
 import { templateReplace } from './postprocess';
+
+export const getLinkedFiles = (file: TFile) => {
+	if (file) {
+		const links = app.metadataCache.getFileCache(file)?.links
+		// IF this links exist in the vault as markdown files then get the file path
+		if (links) {
+			return links.map((link) => app.metadataCache.getFirstLinkpathDest(link.link, ''))
+		}
+	}
+	return []
+}
 
 export function getVaultRoot() {
 	// This is a desktop only plugin, so assume adapter is FileSystemAdapter

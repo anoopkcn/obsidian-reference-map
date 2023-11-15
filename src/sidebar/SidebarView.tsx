@@ -1,6 +1,6 @@
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
-import { ItemView, MarkdownView, WorkspaceLeaf } from 'obsidian'
+import { ItemView, WorkspaceLeaf } from 'obsidian'
 import ReferenceMap from 'src/main'
 import { t } from 'src/lang/helpers'
 import { AppContext } from 'src/context'
@@ -8,6 +8,7 @@ import EventBus, { EVENTS } from 'src/events'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { ReferenceMapList } from './ReferenceMapList'
+import { getLinkedFiles } from 'src/utils/functions'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -26,8 +27,8 @@ export class SidebarView extends ItemView {
 
 		this.registerEvent(
 			this.app.metadataCache.on('changed', (file) => {
-				const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-				if (activeView && file === activeView.file) {
+				const activeFile = this.app.workspace.getActiveFile()
+				if (activeFile && file === activeFile) {
 					this.processReferences()
 				}
 			})
@@ -38,8 +39,7 @@ export class SidebarView extends ItemView {
 				if (leaf) {
 					this.app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							const viewType = rootLeaf.view.getViewType()
-							if (viewType === 'empty' || viewType === 'markdown') this.processReferences()
+							this.processReferences()
 						}
 					})
 				}
@@ -83,12 +83,21 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
-		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
+		const activeFile = this.app.workspace.getActiveFile();
 		const settings = this.plugin.settings
-		if (activeView?.file) {
-			this.updateChecker.basename = activeView.file.basename
-			const fileCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
-			const fileMetadataCache = this.app.metadataCache.getFileCache(activeView.file);
+		if (activeFile) {
+			let fileCache = await this.app.vault.cachedRead(activeFile)
+			if (settings.lookupLinkedFiles) {
+				const linkedFiles = getLinkedFiles(activeFile)
+				for (const file of linkedFiles) {
+					if (file) {
+						const cache = await this.app.vault.cachedRead(file)
+						fileCache += cache
+					}
+				}
+			}
+			this.updateChecker.basename = activeFile.basename
+			const fileMetadataCache = this.app.metadataCache.getFileCache(activeFile);
 			const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
 			if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
 			this.updateChecker.setCache(fileCache, fileMetadataCache)

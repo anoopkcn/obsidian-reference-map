@@ -36,6 +36,12 @@ export const ReferenceMapList = (props: {
 		// setIsLoading(false)
 	}
 
+	// unset paper when basename is changed 
+
+	useEffect(() => {
+		setPapers([])
+	}, [props.updateChecker.basename])
+
 	useEffect(() => {
 		fetchData()
 	}, [
@@ -43,7 +49,6 @@ export const ReferenceMapList = (props: {
 		props.updateChecker.citeKeyMap,
 		props.updateChecker.fileName,
 		props.updateChecker.frontmatter,
-		props.updateChecker.basename,
 		props.plugin.settings,
 		props.referenceMapData.library.libraryData
 	])

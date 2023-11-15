@@ -42,6 +42,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	showAuthors: false,
 	showInvalidItems: false,
 	filterRedundantReferences: false,
+	lookupLinkedFiles: false,
 	searchTitle: false,
 	searchLimit: 3,
 	searchFrontMatter: false,

@@ -35,6 +35,12 @@ export default {
 		'Show or Hide references with no cited and citation count<br>' +
 		'<b> Toggle ON:</b> Redundant entries will be hidden<br>' +
 		'<b> Toggle OFF:</b> Redundant entries will be listed',
+	LOOKUP_ENTRIES_LINKED_FILES: 'Lookup Entries in Linked Files',
+	LOOKUP_ENTRIES_LINKED_FILES_DESC:
+		'Include entries fround in the linked files.<br>' +
+		'Enabling will also hide the location indicators. This feature is not included for canvas<br>' +
+		'<b>Toggle ON:</b> Enable lookup in linked files<br>' +
+		'<b>Toggle OFF:</b> Disable lookup in linked files',
 	SEARCH_TITLE: 'Get Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references using the markdown file name in addition to entries in the file.<br>' +

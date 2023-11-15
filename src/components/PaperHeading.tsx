@@ -17,7 +17,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	return (
 		<div className="orm-paper-heading">
 			<div className="orm-paper-title">
-				{paper.location &&
+				{(paper.location && !settings.lookupLinkedFiles) &&
 					<span className="cardLocation">{paper.location}</span>
 				}
 				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>

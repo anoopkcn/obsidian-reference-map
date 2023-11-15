@@ -1,12 +1,13 @@
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { ItemView, MarkdownView, WorkspaceLeaf } from "obsidian";
+import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
 import { AppContext } from "src/context";
 import EventBus, { EVENTS } from "src/events";
 import { ReferenceMapData } from "src/data/data";
 import { UpdateChecker } from "src/data/updateChecker";
 import ReferenceMap from "src/main";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
+import { getLinkedFiles } from 'src/utils/functions'
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
@@ -33,16 +34,12 @@ export class GraphView extends ItemView {
         }
         this.registerEvent(
             this.app.metadataCache.on('changed', async (file) => {
-                const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-                if (activeView && file === activeView.file) {
-                    const fileCache = await this.app.vault.cachedRead(activeView.file)
-                    this.updateChecker.basename = activeView?.file?.basename
-                    if (fileCache) {
-                        const updated = await this.prepare(activeView)
+                const activeFile = this.app.workspace.getActiveFile()
+                if (activeFile && file === activeFile) {
+                    const updated = await this.prepare(activeFile)
                         if (updated) {
                             EventBus.trigger(EVENTS.UPDATE);
                         }
-                    }
                 }
             })
         )
@@ -52,8 +49,7 @@ export class GraphView extends ItemView {
                 if (leaf) {
                     this.app.workspace.iterateRootLeaves((rootLeaf) => {
                         if (rootLeaf === leaf) {
-                            const viewType = rootLeaf.view.getViewType()
-                            if (viewType === 'empty' || viewType === 'markdown') this.openGraph()
+                            this.openGraph()
                         }
                     })
                 }
@@ -90,17 +86,26 @@ export class GraphView extends ItemView {
         return super.onClose()
     }
 
-    prepare = async (activeView: MarkdownView | null) => {
+    prepare = async (activeFile: TFile | null) => {
         const settings = this.plugin.settings
         let isUpdate = false
-        if (activeView?.file) {
+        if (activeFile) {
             let isFm = false
             let isFn = false
             let isIdx = false
             let isCite = false
-            this.updateChecker.basename = activeView.file.basename
-            const fileCache = activeView.file ? await this.app.vault.cachedRead(activeView.file) : ''
-            const fileMetadataCache = this.app.metadataCache.getFileCache(activeView.file);
+            this.updateChecker.basename = activeFile.basename
+            let fileCache = await this.app.vault.cachedRead(activeFile)
+            if (settings.lookupLinkedFiles) {
+                const linkedFiles = getLinkedFiles(activeFile)
+                for (const file of linkedFiles) {
+                    if (file) {
+                        const cache = await this.app.vault.cachedRead(file)
+                        fileCache += cache
+                    }
+                }
+            }
+            const fileMetadataCache = this.app.metadataCache.getFileCache(activeFile);
             const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
             if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
             this.updateChecker.setCache(fileCache, fileMetadataCache)
@@ -120,8 +125,8 @@ export class GraphView extends ItemView {
     }
 
     openGraph = async () => {
-        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView)
-        await this.prepare(activeView)
+        const activeFile = this.app.workspace.getActiveFile()
+        await this.prepare(activeFile)
 
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>
