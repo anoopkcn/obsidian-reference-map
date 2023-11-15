@@ -19,11 +19,39 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		this.plugin = plugin
 	}
 
+	async checkCitationExportPath(filePath: string): Promise<boolean> {
+		this.citationPathLoadingEl.addClass('d-none')
+		if (filePath.endsWith('.json') || filePath.endsWith('.bib')) {
+			try {
+				await FileSystemAdapter.readLocalFile(resolvePath(filePath))
+				this.citationPathErrorEl.addClass('d-none')
+			} catch (e) {
+				this.citationPathSuccessEl.addClass('d-none')
+				this.citationPathErrorEl.removeClass('d-none')
+				return false
+			}
+		} else {
+			this.citationPathSuccessEl.addClass('d-none')
+			this.citationPathErrorEl.removeClass('d-none')
+			return false
+		}
+		return true
+	}
+
+	showCitationExportPathSuccess(): void {
+		if (!this.plugin.view?.referenceMapData.library.active) return
+
+		this.citationPathSuccessEl.setText(
+			`Successfully Loaded Library Containing References.`
+		)
+		this.citationPathSuccessEl.removeClass('d-none')
+	}
+
 	display(): void {
 		const { containerEl } = this
 		containerEl.empty()
 
-		containerEl.createEl('h1', { text: t('GENERAL_SETTINGS') })
+		containerEl.createEl('h2', { text: t('GENERAL_SETTINGS') })
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_ABSTRACT'))
@@ -231,7 +259,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h1', { text: 'Static List Settings' })
+		containerEl.createEl('h2', { text: 'Static List Settings' })
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('SEARCH_CITEKEY')))
 			.setDesc(fragWithHTML(t('SEARCH_CITEKEY_DESC')))
@@ -355,107 +383,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h1', { text: 'Dynamic List Settings' })
 
-		new Setting(containerEl)
-			.setName(t('SEARCH_TITLE'))
-			.setDesc(fragWithHTML(t('SEARCH_TITLE_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.searchTitle)
-					.onChange(async (value) => {
-						this.plugin.settings.searchTitle = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-						this.display()
-					})
-			)
-
-		let zoomText: HTMLDivElement
-		if (this.plugin.settings.searchTitle) {
-			new Setting(containerEl)
-				.setName(t('SEARCH_LIMIT'))
-				.setDesc(fragWithHTML(t('SEARCH_LIMIT_DESC')))
-				.addSlider((slider) =>
-					slider
-						.setLimits(1, 10, 1)
-						.setValue(this.plugin.settings.searchLimit)
-						.onChange(async (value) => {
-							zoomText.innerText = ` ${value.toString()}`
-							this.plugin.settings.searchLimit = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-				.settingEl.createDiv('', (el) => {
-					zoomText = el
-					el.style.minWidth = '2.3em'
-					el.style.textAlign = 'right'
-					el.innerText = ` ${this.plugin.settings.searchLimit.toString()}`
-				})
-		}
-
-		new Setting(containerEl)
-			.setName(t('SEARCH_FRONT_MATTER'))
-			.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.searchFrontMatter)
-					.onChange(async (value) => {
-						this.plugin.settings.searchFrontMatter = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-						this.display()
-					})
-			)
-
-		let zoomText2: HTMLDivElement
-		if (this.plugin.settings.searchFrontMatter) {
-			new Setting(containerEl)
-				.setName(t('SEARCH_FRONT_MATTER_KEY'))
-				.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_KEY_DESC')))
-				.addText((text) =>
-					text
-						.setValue(this.plugin.settings.searchFrontMatterKey)
-						.onChange(async (value) => {
-							this.plugin.settings.searchFrontMatterKey = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-			new Setting(containerEl)
-				.setName(t('SEARCH_FRONT_MATTER_LIMIT'))
-				.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_LIMIT_DESC')))
-				.addSlider((slider) =>
-					slider
-						.setLimits(1, 10, 1)
-						.setValue(this.plugin.settings.searchFrontMatterLimit)
-						.onChange(async (value) => {
-							zoomText2.innerText = ` ${value.toString()}`
-							this.plugin.settings.searchFrontMatterLimit = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-				.settingEl.createDiv('', (el) => {
-					zoomText2 = el
-					el.style.minWidth = '2.3em'
-					el.style.textAlign = 'right'
-					el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`
-				})
-		}
-
-		containerEl.createEl('h1', { text: 'Buttons Settings' })
+		containerEl.createEl('h2', { text: 'Buttons Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('FORMAT_METADATA_COPY_ONE')))
@@ -602,7 +531,9 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		containerEl.createEl('h1', { text: 'Search Settings' })
+		containerEl.createEl('h2', { text: 'Search Settings' })
+
+		let zoomText: HTMLDivElement
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_LIMIT')))
@@ -674,11 +605,109 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.modalInsertTemplate = value
 						this.plugin.saveSettings()
 					})
-			}
+			})
+
+		containerEl.createEl('h2', { text: 'Dynamic List Settings(Experimental)' })
+
+		new Setting(containerEl)
+			.setName(t('SEARCH_TITLE'))
+			.setDesc(fragWithHTML(t('SEARCH_TITLE_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.searchTitle)
+					.onChange(async (value) => {
+						this.plugin.settings.searchTitle = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
+						})
+						this.display()
+					})
 			)
 
+		let zoomText2: HTMLDivElement
+		if (this.plugin.settings.searchTitle) {
+			new Setting(containerEl)
+				.setName(t('SEARCH_LIMIT'))
+				.setDesc(fragWithHTML(t('SEARCH_LIMIT_DESC')))
+				.addSlider((slider) =>
+					slider
+						.setLimits(1, 10, 1)
+						.setValue(this.plugin.settings.searchLimit)
+						.onChange(async (value) => {
+							zoomText2.innerText = ` ${value.toString()}`
+							this.plugin.settings.searchLimit = value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+							})
+						})
+				)
+				.settingEl.createDiv('', (el) => {
+					zoomText2 = el
+					el.style.minWidth = '2.3em'
+					el.style.textAlign = 'right'
+					el.innerText = ` ${this.plugin.settings.searchLimit.toString()}`
+				})
+		}
 
-		containerEl.createEl('h1', { text: 'Debug Settings' })
+		new Setting(containerEl)
+			.setName(t('SEARCH_FRONT_MATTER'))
+			.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.searchFrontMatter)
+					.onChange(async (value) => {
+						this.plugin.settings.searchFrontMatter = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
+						})
+						this.display()
+					})
+			)
+
+		let zoomText3: HTMLDivElement
+		if (this.plugin.settings.searchFrontMatter) {
+			new Setting(containerEl)
+				.setName(t('SEARCH_FRONT_MATTER_KEY'))
+				.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_KEY_DESC')))
+				.addText((text) =>
+					text
+						.setValue(this.plugin.settings.searchFrontMatterKey)
+						.onChange(async (value) => {
+							this.plugin.settings.searchFrontMatterKey = value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+							})
+						})
+				)
+			new Setting(containerEl)
+				.setName(t('SEARCH_FRONT_MATTER_LIMIT'))
+				.setDesc(fragWithHTML(t('SEARCH_FRONT_MATTER_LIMIT_DESC')))
+				.addSlider((slider) =>
+					slider
+						.setLimits(1, 10, 1)
+						.setValue(this.plugin.settings.searchFrontMatterLimit)
+						.onChange(async (value) => {
+							zoomText3.innerText = ` ${value.toString()}`
+							this.plugin.settings.searchFrontMatterLimit = value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+							})
+						})
+				)
+				.settingEl.createDiv('', (el) => {
+					zoomText3 = el
+					el.style.minWidth = '2.3em'
+					el.style.textAlign = 'right'
+					el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`
+				})
+		}
+
+		containerEl.createEl('h2', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('DEBUG_MODE')))
@@ -699,32 +728,5 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		containerEl.createEl('p', {
 			text: fragWithHTML(t('SEE_DOCUMENTATION_DESC')),
 		})
-	}
-	async checkCitationExportPath(filePath: string): Promise<boolean> {
-		this.citationPathLoadingEl.addClass('d-none')
-		if (filePath.endsWith('.json') || filePath.endsWith('.bib')) {
-			try {
-				await FileSystemAdapter.readLocalFile(resolvePath(filePath))
-				this.citationPathErrorEl.addClass('d-none')
-			} catch (e) {
-				this.citationPathSuccessEl.addClass('d-none')
-				this.citationPathErrorEl.removeClass('d-none')
-				return false
-			}
-		} else {
-			this.citationPathSuccessEl.addClass('d-none')
-			this.citationPathErrorEl.removeClass('d-none')
-			return false
-		}
-		return true
-	}
-
-	showCitationExportPathSuccess(): void {
-		if (!this.plugin.view?.referenceMapData.library.active) return
-
-		this.citationPathSuccessEl.setText(
-			`Successfully Loaded Library Containing References.`
-		)
-		this.citationPathSuccessEl.removeClass('d-none')
 	}
 }
