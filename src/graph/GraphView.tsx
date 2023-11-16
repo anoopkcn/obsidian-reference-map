@@ -7,7 +7,7 @@ import { ReferenceMapData } from "src/data/data";
 import { UpdateChecker } from "src/data/updateChecker";
 import ReferenceMap from "src/main";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
-import { getLinkedFiles } from 'src/utils/functions'
+import { getCanvasContent, getLinkedFiles } from 'src/utils/functions'
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
 
@@ -89,13 +89,21 @@ export class GraphView extends ItemView {
     prepare = async (activeFile: TFile | null) => {
         const settings = this.plugin.settings
         let isUpdate = false
+        let fileCache = ''
         if (activeFile) {
             let isFm = false
             let isFn = false
             let isIdx = false
             let isCite = false
             this.updateChecker.basename = activeFile.basename
-            let fileCache = await this.app.vault.cachedRead(activeFile)
+            try {
+                fileCache = await this.app.vault.read(activeFile);
+            } catch (e) {
+                fileCache = await this.app.vault.cachedRead(activeFile);
+            }
+            if (activeFile.extension === 'canvas') {
+                fileCache += await getCanvasContent(fileCache)
+            }
             if (settings.lookupLinkedFiles) {
                 const linkedFiles = getLinkedFiles(activeFile)
                 for (const file of linkedFiles) {

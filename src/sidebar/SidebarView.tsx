@@ -8,7 +8,7 @@ import EventBus, { EVENTS } from 'src/events'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { ReferenceMapList } from './ReferenceMapList'
-import { getLinkedFiles } from 'src/utils/functions'
+import { getCanvasContent, getLinkedFiles } from 'src/utils/functions'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -83,10 +83,19 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
+		// if (!this.plugin.initPromise.settled) return null;
 		const activeFile = this.app.workspace.getActiveFile();
 		const settings = this.plugin.settings
+		let fileCache = ''
 		if (activeFile) {
-			let fileCache = await this.app.vault.cachedRead(activeFile)
+			try {
+				fileCache = await this.app.vault.read(activeFile);
+			} catch (e) {
+				fileCache = await this.app.vault.cachedRead(activeFile);
+			}
+			if (activeFile.extension === 'canvas') {
+				fileCache += await getCanvasContent(fileCache)
+			}
 			if (settings.lookupLinkedFiles) {
 				const linkedFiles = getLinkedFiles(activeFile)
 				for (const file of linkedFiles) {

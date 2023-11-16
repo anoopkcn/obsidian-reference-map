@@ -1,7 +1,8 @@
 import { FileSystemAdapter, Notice, TFile } from 'obsidian'
 import path from 'path'
-import { IndexPaper, MetaData, Reference } from 'src/types'
+import { CardSpecType, IndexPaper, MetaData, Reference } from 'src/types'
 import { templateReplace } from './postprocess';
+import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
 
 export const getLinkedFiles = (file: TFile) => {
 	if (file) {
@@ -80,4 +81,43 @@ export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 
 export function replaceIllegalFileNameCharactersInString(text: string) {
 	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
+}
+
+
+export async function getCanvasContent(fileCache: string) {
+	let content = '';
+	const canvasJson: CanvasData = JSON.parse(fileCache);
+	const nodes = canvasJson?.nodes as CanvasNodeData[];
+	if (nodes) {
+		for (const node of nodes) {
+			switch (node.type as CardSpecType) {
+				case 'text': {
+					content += node?.text ? node?.text : '';
+					break;
+				}
+				case 'link': {
+					content += node?.url ? node?.url : '';
+					break;
+				}
+				case 'file': {
+					if (node.file) {
+						try {
+							const file = this.app.vault.getAbstractFileByPath(node.file);
+							if (file instanceof TFile) {
+								const temContent = await app.vault.read(file);
+								content += temContent;
+							} else {
+								content += node?.file ? node?.file : '';
+							}
+						} catch (err) {
+							content += '';
+						}
+					}
+					break;
+				}
+			}
+		}
+		fileCache += content;
+	}
+	return fileCache;
 }

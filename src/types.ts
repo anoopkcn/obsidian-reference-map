@@ -170,3 +170,5 @@ export interface ZoteroGroup {
 }
 
 export type CSLList = PartialCSLEntry[];
+
+export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
