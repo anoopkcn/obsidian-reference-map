@@ -56,7 +56,7 @@ export const getPaperIds = (content: string): Set<string> => {
     }
     if (doi_matches) {
         for (const match of doi_matches) {
-            output.push(match.replace(/\)+$|\]+$|\*+$|_+$|`+$/, ''));
+            output.push(match.replace(/\)+$|\]+$|\*+$|_+$|`+$|\.+$|,+$/, ''));
         }
     }
     return new Set(output.sort());

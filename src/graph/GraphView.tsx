@@ -78,7 +78,7 @@ export class GraphView extends ItemView {
     }
 
     onUnload = () => {
-        EventBus.off(EVENTS.UPDATE, () => { });
+        EventBus.off(EVENTS.UPDATE, () => this.openGraph());
     }
 
     async onClose() {
