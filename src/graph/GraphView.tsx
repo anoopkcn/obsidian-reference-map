@@ -37,9 +37,9 @@ export class GraphView extends ItemView {
                 const activeFile = this.app.workspace.getActiveFile()
                 if (activeFile && file === activeFile) {
                     const updated = await this.prepare(activeFile)
-                        if (updated) {
-                            EventBus.trigger(EVENTS.UPDATE);
-                        }
+                    if (updated) {
+                        EventBus.trigger(EVENTS.UPDATE);
+                    }
                 }
             })
         )
@@ -49,7 +49,9 @@ export class GraphView extends ItemView {
                 if (leaf) {
                     this.app.workspace.iterateRootLeaves((rootLeaf) => {
                         if (rootLeaf === leaf) {
-                            this.openGraph()
+                            if (leaf.view.getViewType() !== REFERENCE_MAP_GRAPH_VIEW_TYPE) {
+                                this.openGraph()
+                            }
                         }
                     })
                 }
@@ -91,10 +93,7 @@ export class GraphView extends ItemView {
         let isUpdate = false
         let fileCache = ''
         if (activeFile) {
-            let isFm = false
-            let isFn = false
-            let isIdx = false
-            let isCite = false
+            let isFm = false, isFn = false, isIdx = false, isCite = false;
             this.updateChecker.basename = activeFile.basename
             try {
                 fileCache = await this.app.vault.read(activeFile);
@@ -124,7 +123,7 @@ export class GraphView extends ItemView {
             if (settings.searchCiteKey) isCite = this.updateChecker.checkCiteKeysUpdate(prefix)
             isIdx = this.updateChecker.checkIndexIdsUpdate()
             isUpdate = isFm || isFn || isIdx || isCite
-        } 
+        }
         else {
             this.updateChecker.resetCache()
             isUpdate = true
