@@ -19,28 +19,30 @@ const formatData = (data: MapGraphData[]): GraphData => {
     let minCitationCount = 0;
 
     const nodesAndLinks = data.flatMap((item, index) => {
-        const paperId = String(item.paper.id ? item.paper.id : item.paper.paper.paperId);
+        const indexId = item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id
         const indexCitationCount = item.paper.paper.citationCount;
         maxCitationCount = Math.max(maxCitationCount, indexCitationCount);
         minCitationCount = Math.min(minCitationCount, indexCitationCount);
 
         const nodes = [
             {
-                id: paperId,
+                id: indexId,
+                paperId: item.paper.id,
                 name: item.paper.paper.title,
                 val: indexCitationCount,
                 color: "#61C1E8",
                 type: 'index',
-                data: { id: paperId, location: null, paper: item.paper.paper }
+                data: { id: indexId, location: null, paper: item.paper.paper }
             },
             ...item.references.map((reference, refIndex) => {
-                const referenceId = String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`);
+                const referenceId = String(reference.paperId ? reference.paperId : `${indexId}-cited-${refIndex}`);
                 const referenceCitationCount = reference.citationCount;
                 maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
                 minCitationCount = Math.min(minCitationCount, referenceCitationCount);
 
                 return {
                     id: referenceId,
+                    paperId: reference.paperId,
                     name: reference.title,
                     val: referenceCitationCount,
                     color: "#7ABA57",
@@ -49,13 +51,14 @@ const formatData = (data: MapGraphData[]): GraphData => {
                 };
             }),
             ...item.citations.map((citation, citIndex) => {
-                const citationId = String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`);
+                const citationId = String(citation.paperId ? citation.paperId : `${indexId}-citing-${citIndex}`);
                 const citationCitationCount = citation.citationCount;
                 maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
                 minCitationCount = Math.min(minCitationCount, citationCitationCount);
 
                 return {
                     id: citationId,
+                    paperId: citation.paperId,
                     name: citation.title,
                     val: citationCitationCount,
                     color: "#A15399",
@@ -67,12 +70,12 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
         const links = [
             ...item.references.map((reference, refIndex) => ({
-                source: paperId,
-                target: String(reference.paperId ? reference.paperId : `${paperId}-cited-${refIndex}`)
+                source: indexId,
+                target: String(reference.paperId ? reference.paperId : `${indexId}-cited-${refIndex}`)
             })),
             ...item.citations.map((citation, citIndex) => ({
-                source: String(citation.paperId ? citation.paperId : `${paperId}-citing-${citIndex}`),
-                target: paperId
+                source: String(citation.paperId ? citation.paperId : `${indexId}-citing-${citIndex}`),
+                target: indexId
             }))
         ];
 
@@ -143,6 +146,7 @@ export const ReferenceMapGraph = (props: {
     //unset data when basename is changed
     useEffect(() => {
         setData({ nodes: [], links: [] })
+        setSelectedNode(null)
     }, [props.updateChecker.basename]);
 
     useEffect(() => {
@@ -214,9 +218,14 @@ export const ReferenceMapGraph = (props: {
         if (node.type === 'index') {
             ctx.font = '12px Arial';
             ctx.fillStyle = textColor;
-            ctx.fillText(node.id, node.x, node.y);
+            ctx.fillText(node.paperId, node.x, node.y);
         }
-    }, [selectedNode]);
+    }, [selectedNode,
+        props.updateChecker.indexIds,
+        props.updateChecker.citeKeys,
+        props.updateChecker.fileName,
+        props.updateChecker.frontmatter
+    ]);
 
 
     const handleNodeSelect = (node: NodeObject) => {
@@ -272,7 +281,7 @@ export const ReferenceMapGraph = (props: {
                     }}
                     nodeCanvasObject={nodeObject}
                     onNodeClick={handleNodeSelect}
-                    onBackgroundClick={() => setSelectedNode(null)}
+                    // onBackgroundClick={() => setSelectedNode(null)}
                     onNodeRightClick={toggleZoom}
                     linkColor={(link) => lineColor}
                 />
