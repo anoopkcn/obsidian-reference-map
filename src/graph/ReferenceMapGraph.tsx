@@ -228,7 +228,7 @@ export const ReferenceMapGraph = (props: {
             fgRef.current.zoom(1.9, 200);
             fgRef.current.centerAt(node.x, node.y, 200);
         } else {
-            fgRef.current.zoom(0.9, 200);
+            fgRef.current.zoom(0.7, 200);
             fgRef.current.centerAt(node.x, node.y, 200);
         }
     }
