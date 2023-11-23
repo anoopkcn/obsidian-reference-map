@@ -41,6 +41,11 @@ export default {
 		'Enabling will also hide the location indicators.<br>' +
 		'<b>Toggle ON:</b> Enable lookup in linked files<br>' +
 		'<b>Toggle OFF:</b> Disable lookup in linked files',
+	REMOVE_DUPLICATE_IDS: 'Remove Duplicate Cards',
+	REMOVE_DUPLICATE_IDS_DESC:
+		'Remove duplicated cards from the reference map sidebar.<br>' +
+		'<b>Toggle ON:</b> Remove duplicate cards<br>' +
+		'<b>Toggle OFF:</b> Keep duplicate cards',
 	SEARCH_TITLE: 'Get Using File Name',
 	SEARCH_TITLE_DESC:
 		'Find references using the markdown file name in addition to entries in the file.<br>' +

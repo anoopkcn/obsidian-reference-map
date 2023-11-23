@@ -5,6 +5,7 @@ export interface ReferenceMapSettings {
 	showAuthors: boolean
 	showInvalidItems: boolean
 	filterRedundantReferences: boolean
+	removeDuplicateIds: boolean
 	lookupLinkedFiles: boolean
 	searchTitle: boolean
 	searchLimit: number

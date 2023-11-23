@@ -157,6 +157,21 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
+			.setName(t('REMOVE_DUPLICATE_IDS'))
+			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.removeDuplicateIds)
+					.onChange(async (value) => {
+						this.plugin.settings.removeDuplicateIds = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+
+		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
 			.setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
 			.addToggle((toggle) =>

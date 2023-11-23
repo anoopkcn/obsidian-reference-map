@@ -29,8 +29,13 @@ export const ReferenceMapList = (props: {
 	const fetchData = async () => {
 		// setIsLoading(true)
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
+		let updatedIndexIds = indexIds;
+		if (props.plugin.settings.removeDuplicateIds) {
+			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId === id));
+			updatedIndexIds = new Set(updatedIndexIdsArray);
+		}
 		const indexCards = await props.referenceMapData.getIndexCards(
-			indexIds, citeKeyMap, fileName, frontmatter, basename
+			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
 		setPapers(indexCards)
 		// setIsLoading(false)
