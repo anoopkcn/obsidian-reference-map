@@ -104,6 +104,7 @@ export const PaperButtons = ({
 		}
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const renderButton = (showCondition: boolean, clickHandler: any, count: number, className: string, isEnabled: boolean) => (
 		<div
 			className={isEnabled ? className : 'orm-button-disabled'}
