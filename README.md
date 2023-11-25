@@ -162,7 +162,7 @@ Open command palette and run `Reference Map: Open Literature Graph` to open the 
 - Drag a node to move it around and fix it in place
 
 > [!IMPORTANT]  
-> Reference map graph is only show details of published papers. It is not available for entries such as videos, webpages, twitter, etc.
+> Reference map graph will show details of published papers. It will not show details for entries corresponding to videos, webpages, twitter, etc,. in your local library but it is shown in the sidebar view.
 
 ## Configuration
 
