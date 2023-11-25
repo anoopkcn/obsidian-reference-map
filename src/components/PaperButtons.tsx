@@ -10,7 +10,7 @@ import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 type Props = {
 	settings: ReferenceMapSettings
 	paper: IndexPaper
-	showGraphButtons?: boolean
+	showCountButtons?: boolean
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>
 	showReferences?: boolean
 	setShowCitations?: React.Dispatch<React.SetStateAction<boolean>>
@@ -25,7 +25,7 @@ type Props = {
 export const PaperButtons = ({
 	settings,
 	paper,
-	showGraphButtons = false,
+	showCountButtons = true,
 	setShowReferences = undefined,
 	showReferences = false,
 	setShowCitations = undefined,
@@ -81,76 +81,52 @@ export const PaperButtons = ({
 	}
 
 	let citingCited = null
+	const isReferenceCount = metaData.referenceCount > 0
+	const isCitationCount = metaData.citationCount > 0
 
-	if (showGraphButtons) {
-		citingCited = (
-			<>
-				<div className="orm-button-disabled">{metaData.referenceCount}</div>
-				<div className="orm-button-disabled">{metaData.citationCount}</div>
-			</>
-		)
-	} else if (
-		setShowReferences !== undefined &&
-		setShowCitations !== undefined &&
-		setIsButtonShown !== undefined
-	) {
-		const handleShowReferencesClick = () => {
-			setShowReferences(!showReferences)
-			setShowCitations(false)
+	const handleShowReferencesClick = () => {
+		if (setShowReferences && setShowCitations && setIsButtonShown) {
+			setShowReferences(!showReferences);
+			setShowCitations(false);
 			if (showReferences || showCitations) {
-				setIsButtonShown(true)
+				setIsButtonShown(true);
 			}
 		}
+	};
 
-		const handleShowCitationsClick = () => {
-			setShowCitations(!showCitations)
-			setShowReferences(false)
+	const handleShowCitationsClick = () => {
+		if (setShowCitations && setShowReferences && setIsButtonShown) {
+			setShowCitations(!showCitations);
+			setShowReferences(false);
 			if (showReferences || showCitations) {
-				setIsButtonShown(true)
+				setIsButtonShown(true);
 			}
 		}
-		citingCited = (
-			<>
-				<div
-					className="orm-references"
-					style={
-						showReferences
-							? {
-								fontWeight: 'bold',
-								color: 'var(--text-accent)',
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
-							: {}
+	};
+
+	const renderButton = (showCondition: boolean, clickHandler: any, count: number, className: string, isEnabled: boolean) => (
+		<div
+			className={isEnabled ? className : 'orm-button-disabled'}
+			style={
+				showCondition && isEnabled
+					? {
+						fontWeight: 'bold',
+						color: 'var(--text-accent)',
 					}
-					onClick={() => handleShowReferencesClick()}
-				>
-					{metaData.referenceCount}
-				</div>
-				<div
-					className="orm-citations"
-					style={
-						showCitations
-							? {
-								fontWeight: 'bold',
-								color: 'var(--text-accent)',
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
-							: {}
-					}
-					onClick={() => handleShowCitationsClick()}
-				>
-					{metaData.citationCount}
-				</div>
-			</>
-		)
-	} else {
-		citingCited = (
-			<>
-				<div className="orm-button-disabled">{metaData.referenceCount}</div>
-				<div className="orm-button-disabled">{metaData.citationCount}</div>
-			</>
-		)
-	}
+					: {}
+			}
+			onClick={isEnabled ? clickHandler : null}
+		>
+			{count}
+		</div>
+	);
+
+	citingCited = (
+		<>
+			{renderButton(showReferences, handleShowReferencesClick, metaData.referenceCount, "orm-button-references", isReferenceCount && showCountButtons)}
+			{renderButton(showCitations, handleShowCitationsClick, metaData.citationCount, "orm-button-citations", isCitationCount && showCountButtons)}
+		</>
+	);
 
 	return (
 		<div className="orm-paper-buttons">

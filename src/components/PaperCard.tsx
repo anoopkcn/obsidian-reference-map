@@ -6,7 +6,7 @@ import { IndexPaper, ReferenceMapSettings } from 'src/types'
 export const PaperCard = (props: {
 	paper: IndexPaper
 	settings: ReferenceMapSettings
-	showGraphButtons?: boolean
+	showCountButtons?: boolean
 }) => {
 	const paper = props.paper
 	const [isButtonShown, setIsButtonShown] = useState(!props.settings.hideButtonsOnHover)
@@ -22,8 +22,8 @@ export const PaperCard = (props: {
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
 			<PaperHeading paper={paper} settings={props.settings} />
-			{(isButtonShown || props.showGraphButtons) && (
-				<PaperButtons settings={props.settings} paper={paper} showGraphButtons={props.showGraphButtons} />
+			{(isButtonShown || props.showCountButtons) && (
+				<PaperButtons settings={props.settings} paper={paper} showCountButtons={props.showCountButtons} />
 			)}
 		</div>
 	)

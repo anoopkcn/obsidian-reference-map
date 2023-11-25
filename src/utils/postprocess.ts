@@ -14,9 +14,9 @@ export const makeMetaData = (paper: Reference): MetaData => {
     const pages = paper.journal?.pages?.trim() || 'Could not recover Pages';
     const abstract = paper.abstract?.trim() || 'No abstract available';
     const bibTex = paper.citationStyles?.bibtex || 'No BibTex available';
-    const referenceCount = paper.referenceCount?.toString() || '0';
-    const citationCount = paper.citationCount?.toString() || '0';
-    const influentialCount = paper.influentialCitationCount?.toString() || '0';
+    const referenceCount = paper.referenceCount || 0;
+    const citationCount = paper.citationCount || 0;
+    const influentialCount = paper.influentialCitationCount || 0;
     const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
     const paperURL = paper.url || 'Could not recover URL';
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';

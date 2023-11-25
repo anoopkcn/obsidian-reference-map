@@ -4,6 +4,12 @@ import { CardSpecType, IndexPaper, MetaData, Reference } from 'src/types'
 import { templateReplace } from './postprocess';
 import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
 
+export function splitString(str: string | undefined, length: number) {
+	if (!str) return ''
+	const regex = new RegExp("(\\S{" + length + "})", "g");
+	return str.replace(regex, "$1 ");
+}
+
 export const getLinkedFiles = (file: TFile) => {
 	if (file) {
 		const links = app.metadataCache.getFileCache(file)?.links

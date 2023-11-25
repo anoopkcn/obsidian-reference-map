@@ -231,6 +231,10 @@ body {
 	cursor: pointer;
 	padding-bottom: 0.25rem;
 }
+.orm-paper-title-disabled {
+	cursor: default;
+	opacity: var(--orm-paper-disable-opacity)
+}
 
 .orm-paper-title a {
 	color: var(--orm-paper-title-link-color);
@@ -311,16 +315,16 @@ body {
 .orm-paper-buttons > .orm-copy-metadata-one,
 .orm-copy-metadata-two,
 .orm-copy-metadata-three,
-.orm-references,
-.orm-citations {
+.orm-button-references,
+.orm-button-citations {
 	cursor: pointer;
 }
 
 .orm-paper-buttons > .orm-copy-metadata-one:hover,
 .orm-copy-metadata-two:hover,
 .orm-copy-metadata-three:hover,
-.orm-references:hover,
-.orm-citations:hover {
+.orm-button-references:hover,
+.orm-button-citations:hover {
 	color: var(--orm-paper-buttons-hover-color);
 }
 
