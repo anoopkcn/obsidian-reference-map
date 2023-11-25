@@ -108,9 +108,9 @@ The following types of IDs are supported:
 \*To enable CiteKey support(for Zotero or for other reference managers), Activate `Pull from zotero` option and select a library OR one has to provide a `Bibtex CSL JSON`(Better BibTex Zotero Plugin feature, auto updates with changes in the library) or `CSL JSON`(Generic CSL library from any reference manager) file or `BibTeX` file with `.bib` extension. Once enabled in the settings, the plugin can recognize the `citekey` entries.
 
 > [!IMPORTANT]  
-> Make sure in Zotero library DOI field contains a valid ID.
+> Make sure in Zotero library DOI field(or the URL field) contains a valid ID. Otherwise metadata from the local Library is shown in the sidebar(with no metadata from online sources)
 
-For Static Reference List, selecting the ID in the markdown file will highlight the corresponding card in the Reference Map Sidebar view.
+For Static Reference List, **selecting the ID in the markdown file will highlight the corresponding card** in the Reference Map Sidebar view.
 
 #### Dynamic Reference List
 
@@ -160,6 +160,9 @@ Open command palette and run `Reference Map: Open Literature Graph` to open the 
 - Pan to zoom in/out (you can also use node right click to zoom in/out)
 - Drag to move the graph
 - Drag a node to move it around and fix it in place
+
+> [!IMPORTANT]  
+> Reference map graph is only show details of published papers. It is not available for entries such as videos, webpages, twitter, etc.
 
 ## Configuration
 
