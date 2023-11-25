@@ -148,7 +148,7 @@ export const ReferenceMapList = (props: {
 						const ref = activeIndexCardClass ? activeRef : null
 						return (
 							<div
-								key={`${paper.paper.paperId}${index}${props.updateChecker.basename}`}
+								key={`${paper.id}${index}${props.updateChecker.basename}`}
 								ref={ref}
 							>
 								<IndexPaperCard

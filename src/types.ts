@@ -1,3 +1,5 @@
+import { CiteKeyEntry } from "./apis/bibTypes"
+
 export interface ReferenceMapSettings {
 	hideButtonsOnHover: boolean
 	influentialCount: boolean
@@ -46,64 +48,50 @@ export interface ReferenceMapSettings {
 
 export interface Reference {
 	paperId: string
-	externalIds: ExternalIds
-	url: string
-	title: string
-	abstract: string
-	venue: string
-	year: number
-	referenceCount: number
-	citationCount: number
-	influentialCitationCount: number
-	isOpenAccess: boolean
-	openAccessPdf: OpenAccessPdf
-	fieldsOfStudy: string[]
-	publicationTypes: string[]
-	publicationDate: string
-	journal: Journal
-	citationStyles: CitationStyles
-	authors: Author[]
+	externalIds?: ExternalIds
+	url?: string
+	title?: string
+	abstract?: string
+	venue?: string
+	year?: string
+	referenceCount?: number
+	citationCount?: number
+	influentialCitationCount?: number
+	isOpenAccess?: boolean
+	openAccessPdf?: OpenAccessPdf
+	fieldsOfStudy?: string[]
+	publicationTypes?: string[]
+	publicationDate?: string
+	journal?: Journal
+	citationStyles?: CitationStyles
+	authors?: Author[]
 }
 
 export interface ExternalIds {
-	ArXiv: string
-	DBLP: string
-	PubMedCentral: string
-	DOI: string
+	ArXiv?: string
+	DBLP?: string
+	PubMedCentral?: string
+	DOI?: string
 }
 
 export interface OpenAccessPdf {
-	url: string
-	status: string
+	url?: string
+	status?: string
 }
 
 export interface Journal {
-	name: string
-	pages: string
-	volume: string
+	name?: string
+	pages?: string
+	volume?: string
 }
 
 export interface CitationStyles {
-	bibtex: string
+	bibtex?: string
 }
 
 export interface Author {
-	authorId: string
-	name: string
-}
-
-export interface citeKeyLibrary {
-	key?: string
-	id?: string
-	DOI?: string | null
-	fields?: BibFields
-	title?: string | null
-	URL?: string | null
-}
-
-export interface BibFields {
-	doi?: string[]
-	url?: string[]
+	authorId?: string
+	name?: string
 }
 
 export interface MetaData {
@@ -127,6 +115,7 @@ export interface MetaData {
 export interface IndexPaper {
 	id: string
 	location: number | null
+	isLocal?: boolean
 	paper: Reference
 }
 
@@ -139,7 +128,7 @@ export interface CiteKey {
 export interface Library {
 	active: boolean
 	adapter: string
-	libraryData: citeKeyLibrary[] | null
+	libraryData: CiteKeyEntry[] | null
 	mtime: number
 }
 

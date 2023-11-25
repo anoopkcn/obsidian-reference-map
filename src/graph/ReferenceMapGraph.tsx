@@ -20,7 +20,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
 
     const nodesAndLinks = data.flatMap((item, index) => {
         const indexId = item.paper.paper.paperId ? item.paper.paper.paperId : item.paper.id
-        const indexCitationCount = item.paper.paper.citationCount;
+        const indexCitationCount = item.paper.paper.citationCount ? item.paper.paper.citationCount : 0;
         maxCitationCount = Math.max(maxCitationCount, indexCitationCount);
         minCitationCount = Math.min(minCitationCount, indexCitationCount);
 
@@ -36,7 +36,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
             },
             ...item.references.map((reference, refIndex) => {
                 const referenceId = String(reference.paperId ? reference.paperId : `${indexId}-cited-${refIndex}`);
-                const referenceCitationCount = reference.citationCount;
+                const referenceCitationCount = reference.citationCount ? reference.citationCount : 0;
                 maxCitationCount = Math.max(maxCitationCount, referenceCitationCount);
                 minCitationCount = Math.min(minCitationCount, referenceCitationCount);
 
@@ -52,7 +52,7 @@ const formatData = (data: MapGraphData[]): GraphData => {
             }),
             ...item.citations.map((citation, citIndex) => {
                 const citationId = String(citation.paperId ? citation.paperId : `${indexId}-citing-${citIndex}`);
-                const citationCitationCount = citation.citationCount;
+                const citationCitationCount = citation.citationCount ? citation.citationCount : 0;
                 maxCitationCount = Math.max(maxCitationCount, citationCitationCount);
                 minCitationCount = Math.min(minCitationCount, citationCitationCount);
 
@@ -121,7 +121,7 @@ export const ReferenceMapGraph = (props: {
 
     const filterReferences = (references: Reference[], settings: ReferenceMapSettings) => {
         return settings.filterRedundantReferences
-            ? references.filter((reference) => reference.referenceCount > 0 || reference.citationCount > 0)
+            ? references.filter((reference) => (reference.referenceCount && reference.referenceCount > 0) || (reference.citationCount && reference.citationCount > 0))
             : references;
     }
 
@@ -164,6 +164,8 @@ export const ReferenceMapGraph = (props: {
             const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker;
             props.referenceMapData.getIndexCards(indexIds, citeKeyMap, fileName, frontmatter, basename)
                 .then(async (cards) => {
+                    //filter out local cards which has isLocal: true property 
+                    cards = cards.filter(card => !card.isLocal);
                     const graphData = await fetchData(cards)
                     const newSubgraph = formatData(graphData);
                     const newNodeIds = new Set(newSubgraph.nodes.map(node => node.id));

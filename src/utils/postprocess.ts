@@ -1,6 +1,7 @@
 import doiRegex from "doi-regex";
+import { CiteKeyEntry } from "src/apis/bibTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
-import { Reference, MetaData, Library, CiteKey, citeKeyLibrary, IndexPaper } from "src/types";
+import { Reference, MetaData, Library, CiteKey, IndexPaper } from "src/types";
 
 
 export const makeMetaData = (paper: Reference): MetaData => {
@@ -88,7 +89,7 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
     if (citeKeys.size > 0) {
         // Get DOI from CiteKeyData corresponding to each item in citeKeys
         for (const citeKey of citeKeys) {
-            let entry: citeKeyLibrary | undefined;
+            let entry: CiteKeyEntry | undefined;
             if (citeLibrary?.adapter === 'csl-json') {
                 entry = citeLibrary.libraryData?.find((item) => item.id === citeKey);
             } else if (citeLibrary?.adapter === 'bibtex') {
@@ -118,10 +119,43 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
     return citeKeysMap;
 };
 
+//convert citeKeyEntry to Reference
+export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
+    const reference: Reference = {
+        // map the properties of citeKeyEntry to the properties of Reference
+        paperId: citeKeyEntry.id,
+        externalIds: undefined,
+        url: citeKeyEntry.URL,
+        title: citeKeyEntry.title,
+        abstract: citeKeyEntry.abstract,
+        venue: undefined,
+        year: citeKeyEntry.issued?.['date-parts']?.[0]?.[0],
+        referenceCount: undefined,
+        citationCount: undefined,
+        influentialCitationCount: undefined,
+        isOpenAccess: undefined,
+        openAccessPdf: undefined,
+        journal: {
+            name: citeKeyEntry['container-title'],
+            volume: citeKeyEntry.volume,
+            pages: citeKeyEntry.page,
+        },
+        authors: citeKeyEntry.author?.map((author) => {
+            return {
+                name: author.literal,
+            };
+        }),
+        citationStyles: {
+            bibtex: citeKeyEntry.key,
+        },
+    };
+    return reference;
+}
+
 export const dataSearch = (data: Reference[], query: string) => {
     return data.filter((item: Reference) => SEARCH_PARAMETERS.some((parameter) => {
         if (parameter === 'authors') {
-            return item.authors.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
+            return item.authors?.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
             );
         } else {
             return item[parameter as keyof typeof item]
@@ -156,7 +190,7 @@ export const dataSort = (
 export const indexSearch = (data: IndexPaper[], query: string) => {
     return data.filter((item: IndexPaper) => SEARCH_PARAMETERS.some((parameter) => {
         if (parameter === 'authors') {
-            return item.paper.authors.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
+            return item.paper?.authors?.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
             );
         } else {
             return item.paper[parameter as keyof typeof item.paper]

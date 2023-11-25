@@ -1,14 +1,15 @@
 import * as fs from 'fs'
 import { parse } from '@retorquere/bibtex-parser'
 import _ from 'lodash';
-import { CiteKey, IndexPaper, Library, RELOAD, Reload, citeKeyLibrary } from 'src/types';
+import { CiteKey, IndexPaper, Library, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { convertToReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
 import { ViewManager } from './viewManager';
+import { CiteKeyEntry } from 'src/apis/bibTypes';
 
 export class ReferenceMapData {
     plugin: ReferenceMap
@@ -62,7 +63,7 @@ export class ReferenceMapData {
         const { settings, cacheDir } = this.plugin;
         if (!settings.zoteroGroups?.length) return;
 
-        const bib: citeKeyLibrary[] = [];
+        const bib: CiteKeyEntry[] = [];
         for (const group of settings.zoteroGroups) {
             try {
                 const list = await getZBib(
@@ -114,9 +115,10 @@ export class ReferenceMapData {
             let libraryData;
             try {
                 if (isJson) {
-                    libraryData = JSON.parse(rawData) as citeKeyLibrary[];
+                    libraryData = JSON.parse(rawData) as CiteKeyEntry[];
                 } else {
-                    libraryData = parse(rawData, { errorHandler: () => { } }).entries as citeKeyLibrary[];
+                    // the key property in Entry and id property in CiteKeyEntry are the same
+                    libraryData = (parse(rawData, { errorHandler: () => { } }).entries as unknown) as CiteKeyEntry[];
                 }
             } catch (e) {
                 if (debugMode) console.warn('ORM: Warnings associated with loading the library file.');
@@ -174,7 +176,7 @@ export class ReferenceMapData {
                                 settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
-                        indexCards.push({ id: paperCiteId, location: null, paper });
+                        indexCards.push({ id: paperCiteId, location: null, isLocal: false, paper });
                     }
                 })
             );
@@ -183,11 +185,16 @@ export class ReferenceMapData {
         // Get references using the cite keys
         if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
-                _.map(citeKeyMap, async (item) => {
-                    if (item.paperId !== item.citeKey) {
+                _.map(citeKeyMap, async (item): Promise<void> => {
+                    if (item.citeKey === item.paperId) {
+                        const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+                        if (localPaper) {
+                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                        }
+                    } else {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
-                            indexCards.push({ id: item.citeKey, location: item.location, paper });
+                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
                         }
                     }
                 })
@@ -203,7 +210,7 @@ export class ReferenceMapData {
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
-                indexCards.push({ id: paper.paperId, location: null, paper });
+                indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
 
@@ -212,7 +219,7 @@ export class ReferenceMapData {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
                 frontmatter, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
-                indexCards.push({ id: paper.paperId, location: null, paper });
+                indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
         return this.preProcessReferences(indexCards);
