@@ -66,7 +66,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 		if (isLocal) {
 			if (!all) {
 				return (
-					<span className="orm-paper-title-disabled ">
+					<span className="orm-paper-title-disabled">
 						{(authors && authors.length > 0 ? authors[0].name : '') + ' '}
 						{(directors && directors.length > 0 ? directors[0].name : '') + ' '}
 						{(editors && editors.length > 0 ? editors[0].name : '') + ' '}
@@ -75,13 +75,11 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 				)
 			} else {
 				return (
-					<span className="orm-paper-authors">
-						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
-							{(authors || []).map((author) => author.name).join(', ') + ' '}
-							{(directors || []).map((director) => director.name).join(', ') + ' '}
-							{(editors || []).map((editor) => editor.name).join(', ') + ' '}
-							{year}
-						</a>
+					<span className="orm-paper-title-disabled">
+						{(authors || []).map((author) => author.name).join(', ') + ' '}
+						{(directors || []).map((director) => director.name).join(', ') + ' '}
+						{(editors || []).map((editor) => editor.name).join(', ') + ' '}
+						{year}
 					</span>
 				);
 			}
