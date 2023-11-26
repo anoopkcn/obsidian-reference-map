@@ -32,12 +32,12 @@ export default {
 		'<b> Toggle OFF:</b> Hide notice about invalid entry',
 	HIDE_SHOW_REDUNDANT_REFERENCES: 'Show or hide redundant items',
 	HIDE_SHOW_REDUNDANT_REFERENCES_DESC:
-		'Show or Hide references with no cited and citation count<br>' +
+		'Show or Hide references with <b>no cited/citation</b> count<br>' +
 		'<b> Toggle ON:</b> Redundant entries will be hidden<br>' +
 		'<b> Toggle OFF:</b> Redundant entries will be listed',
 	LOOKUP_ENTRIES_LINKED_FILES: 'Lookup entries in linked files',
 	LOOKUP_ENTRIES_LINKED_FILES_DESC:
-		'Include entries fround in the linked files.<br>' +
+		'Include entries fround in the linked files(wiki links).<br>' +
 		'Enabling will also hide the location indicators.<br>' +
 		'<b>Toggle ON:</b> Enable lookup in linked files<br>' +
 		'<b>Toggle OFF:</b> Disable lookup in linked files',
@@ -68,7 +68,7 @@ export default {
 	SEARCH_CITEKEY: 'Get references using <code>citeKey</code>',
 	SEARCH_CITEKEY_DESC:
 		'Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs.<br>' +
-		'Make sure to give a <b>valid Library File Path</b> which is exported from reference manager<br>' +
+		'Make sure to give a <b>valid library file path</b> which is exported from reference manager<br>' +
 		'<b>Toggle ON:</b> Enable citekey detection<br>' +
 		'<b>Toggle OFF:</b> Disable citekey detection',
 	SEARCH_CITEKEY_PATH: 'Library file path',
@@ -113,13 +113,13 @@ export default {
 	ENABLE_SORTING_REFERENCE_CARDS: 'Sort citing/cited cards',
 	ENABLE_SORTING_REFERENCE_CARDS_DESC:
 		'Enable or Disable sorting of reference/citation cards. <br>' +
-		'<b>Toggle ON:</b> Enable Sorting<br>' +
-		'<b>Toggle OFF:</b> Default sorting, as appear in the markdown',
+		'<b>Toggle ON:</b> Enable sorting<br>' +
+		'<b>Toggle OFF:</b> Default sorting, as it is retrieved from database',
 	ENABLE_SORTING_INDEX_CARDS: 'Sort index cards',
 	ENABLE_SORTING_INDEX_CARDS_DESC:
 		'Enable or Disable sorting of index cards.<br>' +
 		'<b>Toggle ON:</b> Enable sorting of the Index cards<br>' +
-		'<b>Toggle OFF:</b> Default, as it is retrieved from database',
+		'<b>Toggle OFF:</b> Default sorting, as appear in the markdown',
 	SORT_BY: 'Sort By',
 	// SORT_BY_DESC: "Sort references and citations by the selected value",
 	SORT_BY_YEAR: 'Year',
