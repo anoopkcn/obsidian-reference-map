@@ -1,7 +1,8 @@
 import doiRegex from "doi-regex";
 import { CiteKeyEntry } from "src/apis/bibTypes";
+import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
-import { Reference, MetaData, Library, CiteKey, IndexPaper } from "src/types";
+import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
 
 
 export const makeMetaData = (paper: Reference): MetaData => {

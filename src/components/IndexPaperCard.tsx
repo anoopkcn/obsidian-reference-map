@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IndexPaper, ReferenceMapSettings, Reference } from 'src/types'
+import { IndexPaper, ReferenceMapSettings } from 'src/types'
 import { isEmpty } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 import { PaperList } from './PaperList'
@@ -7,6 +7,7 @@ import { PaperHeading } from './PaperHeading'
 import { PaperButtons } from './PaperButtons'
 import { ViewManager } from 'src/data/viewManager'
 import { LoadingPuff } from './LoadingPuff'
+import { Reference } from 'src/apis/s2agTypes'
 
 interface Props {
 	className?: string

@@ -1,8 +1,9 @@
 import { FileSystemAdapter, Notice, TFile } from 'obsidian'
 import path from 'path'
-import { CardSpecType, IndexPaper, MetaData, Reference } from 'src/types'
+import { CardSpecType, IndexPaper, MetaData } from 'src/types'
 import { templateReplace } from './postprocess';
 import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
+import { Reference } from 'src/apis/s2agTypes';
 
 export function splitString(str: string | undefined, length: number) {
 	if (!str) return ''

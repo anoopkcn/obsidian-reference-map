@@ -1,5 +1,4 @@
 import LRUCache from 'lru-cache'
-import { Reference } from 'src/types'
 import ReferenceMap from 'src/main'
 import {
 	getIndexItem,
@@ -8,6 +7,7 @@ import {
 	getSearchItems,
 	getBatchItems,
 } from 'src/apis/s2agAPI'
+import { Reference } from 'src/apis/s2agTypes'
 
 export class ViewManager {
 	private indexCache = new LRUCache<string, Reference | number | null>({ max: 150 })

@@ -1,6 +1,6 @@
 import path from 'path'
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian'
-import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings, Reference } from './types'
+import { DIRECTION, Direction, MetaData, RELOAD, ReferenceMapSettings } from './types'
 import { DEFAULT_SETTINGS, METADATA_MODAL_CREATE_TEMPLATE, METADATA_MODAL_INSERT_TEMPLATE } from './constants'
 import { ReferenceMapSettingTab } from './settings'
 import { PromiseCapability } from './promise'
@@ -12,6 +12,7 @@ import { getVaultRoot, makeFileName } from './utils/functions'
 import { templateReplace } from './utils/postprocess'
 import { ReferenceMapData } from './data/data'
 import { UpdateChecker } from './data/updateChecker'
+import { Reference } from './apis/s2agTypes'
 
 
 export default class ReferenceMap extends Plugin {

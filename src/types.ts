@@ -1,4 +1,5 @@
 import { CiteKeyEntry } from "./apis/bibTypes"
+import { Reference } from "./apis/s2agTypes"
 
 export interface ReferenceMapSettings {
 	hideButtonsOnHover: boolean
@@ -44,55 +45,6 @@ export interface ReferenceMapSettings {
 	metadataCopyThreeBatch: boolean
 	debugMode: boolean
 }
-
-export interface Reference {
-	paperId: string
-	externalIds?: ExternalIds
-	url?: string
-	title?: string
-	abstract?: string
-	venue?: string
-	year?: string
-	referenceCount?: number
-	citationCount?: number
-	influentialCitationCount?: number
-	isOpenAccess?: boolean
-	openAccessPdf?: OpenAccessPdf
-	fieldsOfStudy?: string[]
-	publicationTypes?: string[]
-	publicationDate?: string
-	journal?: Journal
-	citationStyles?: CitationStyles
-	authors?: Author[]
-}
-
-export interface ExternalIds {
-	ArXiv?: string
-	DBLP?: string
-	PubMedCentral?: string
-	DOI?: string
-}
-
-export interface OpenAccessPdf {
-	url?: string
-	status?: string
-}
-
-export interface Journal {
-	name?: string
-	pages?: string
-	volume?: string
-}
-
-export interface CitationStyles {
-	bibtex?: string
-}
-
-export interface Author {
-	authorId?: string
-	name?: string
-}
-
 export interface MetaData {
 	bibtex: string
 	title: string
@@ -134,17 +86,16 @@ export interface Library {
 export const RELOAD = {
 	HARD: 'hard',
 	SOFT: 'soft',
-	VIEW: 'view',
+	VIEW: 'view'
 } as const
 
 export type Reload = typeof RELOAD[keyof typeof RELOAD]
 
-export const DIRECTION = {
-	LEFT: 'left',
-	RIGHT: 'right',
-} as const
+export const DIRECTION = { LEFT: 'left', RIGHT: 'right' } as const
 
 export type Direction = typeof DIRECTION[keyof typeof DIRECTION]
+
+export type CSLList = PartialCSLEntry[];
 
 export interface PartialCSLEntry {
 	id: string;
@@ -157,7 +108,5 @@ export interface ZoteroGroup {
 	name: string;
 	lastUpdate?: number;
 }
-
-export type CSLList = PartialCSLEntry[];
 
 export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
