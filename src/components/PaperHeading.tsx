@@ -55,23 +55,33 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	}
 
 	const Authors = (all = false) => {
-		const className = isLocal ? "orm-paper-title-disabled " : "orm-paper-authors"
-		if (all) {
-			<span className={className}>
-				<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
-					{(authors?.[0]?.name || 'Unknown Author') + ', ' + year}
-				</a>
+		if (isLocal) {
+			<span className="orm-paper-title-disabled ">
+				<span>
+					{(authors?.[0]?.name || 'Unknown Author') + ' ' + year}
+				</span>
 			</span>
 
 		} else {
-			return (
-				<span className={className}>
-					<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
-						{(authors || []).map((author) => author.name).join(', ') + ', ' + year}
-					</a>
-				</span>
-			);
+			if (!all) {
+				return (
+					<span className="orm-paper-authors">
+						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+							{(authors?.[0]?.name || 'Unknown Author') + ' ' + year}
+						</a>
+					</span>
+				)
+			} else {
+				return (
+					<span className="orm-paper-authors">
+						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+							{(authors || []).map((author) => author.name).join(', ') + ' ' + year}
+						</a>
+					</span>
+				);
+			}
 		}
+
 	}
 
 	const ZoteroLink = () => {
@@ -91,10 +101,10 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 				<Abstract />
 			)}
 			{settings.showAuthors && (
-				Authors()
+				Authors(true)
 			)}
 			{!settings.showAuthors && (
-				Authors(true)
+				Authors()
 			)}
 			{showCitekey && (
 				<ZoteroLink />
