@@ -27,7 +27,14 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 					{' ' + (spliTitle || 'Unknown Title') + ' '}
 				</a>
 			)
+		} else if (paper.paper.url) {
+			formatTitle = (
+				<a href={paper.paper.url}>
+					{' ' + (spliTitle || 'Unknown Title') + ' '}
+				</a>
+			)
 		}
+
 		return (
 			<div className="orm-paper-title">
 				{(paper.location && !settings.lookupLinkedFiles) &&
