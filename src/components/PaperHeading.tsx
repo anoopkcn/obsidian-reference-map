@@ -2,6 +2,8 @@ import React from 'react';
 import { SEMANTICSCHOLAR_URL } from 'src/constants';
 import { IndexPaper, ReferenceMapSettings } from 'src/types';
 import { splitString } from 'src/utils/functions';
+import { BsInfoCircle } from "react-icons/bs";
+import { Notice } from 'obsidian';
 
 interface Props {
 	paper: IndexPaper;
@@ -20,7 +22,21 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	const splitAbstract = splitString(abstract, 20);
 
 	const Title = () => {
-		let formatTitle = (<span className="orm-paper-title-disabled "> {spliTitle} </span>)
+		let formatTitle = (
+			<>
+				<div className='orm-paper-info'>
+					{(isLocal &&
+						<BsInfoCircle
+							size={16}
+							onClick={() => { new Notice('Could not recover metadata. Check the validity of DOI/URL in the local library') }}
+						/>
+					)}
+				</div>
+				<span className="orm-paper-title-disabled ">
+					{spliTitle}
+				</span>
+			</>
+		)
 		if (!isLocal) {
 			formatTitle = (
 				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>

@@ -57,13 +57,14 @@ export class ViewManager {
 			this.indexCache.set(paperId, paper)
 			return paper
 		} catch (e) {
+			const errorCode = e.status as number
 			if (debugMode) {
-				console.log('ORM: S2AG API Index Card request error', e)
+				console.log(`ORM: S2AG API index card request error with status ${errorCode}. Fallback library is used to show metadata. Check your internet connection, Validity of DOI/URL in the local library`)
 			}
-			if (e.status as number === 404) {
-				this.indexCache.set(paperId, e.status)
+			if (errorCode === 404) {
+				this.indexCache.set(paperId, errorCode)
 			}
-			return e.status as number
+			return errorCode
 		}
 	}
 
@@ -83,7 +84,7 @@ export class ViewManager {
 			return indexCardsList
 		} catch (e) {
 			if (debugMode) {
-				console.log('ORM: S2AG API SEARCH request error', e)
+				console.log(`ORM: S2AG API index card request error with status ${e.status as number}`)
 			}
 			return []
 		}
@@ -102,7 +103,7 @@ export class ViewManager {
 			return references
 		} catch (e) {
 			if (debugMode) {
-				console.log('ORM: S2AG API GET references request error', e)
+				console.log(`ORM: S2AG API reference card request error with status ${e.status as number}`)
 			}
 			return []
 		}
@@ -121,7 +122,7 @@ export class ViewManager {
 			return citations
 		} catch (e) {
 			if (debugMode) {
-				console.log('ORM: S2AG API  GET citations request error', e)
+				console.log(`ORM: S2AG API citation card request error with status ${e.status as number}`)
 			}
 			return []
 		}

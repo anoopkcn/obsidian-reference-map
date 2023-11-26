@@ -225,6 +225,12 @@ body {
 }
 
 /* Paper Heading */
+.orm-paper-info{
+	position: absolute;
+	top: 1.0rem;
+	right: 0.5rem;
+	color: var(--orm-paper-title-link-color);
+}
 .orm-paper-title {
 	font-size: var(--orm-paper-title-font-size);
 	font-weight: var(--orm-paper-title-font-weight);
