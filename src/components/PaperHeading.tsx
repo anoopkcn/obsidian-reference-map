@@ -47,9 +47,13 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const Abstract = () => {
 		const className = isLocal ? "orm-paper-title-disabled " : "orm-paper-abstract"
+		let truncatedAbstract = splitAbstract
+		if (settings.abstractTruncateLength > 0 && truncatedAbstract.length > settings.abstractTruncateLength) {
+			truncatedAbstract = splitAbstract.slice(0, settings.abstractTruncateLength) + ' ...'
+		}
 		return (
 			<div className={className}>
-				{' ' + (splitAbstract || '') + ' '}
+				{' ' + (truncatedAbstract || '') + ' '}
 			</div >
 		);
 	}
@@ -97,18 +101,19 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	return (
 		<div className="orm-paper-heading">
 			<Title />
-			{settings.showAbstract && (
-				<Abstract />
-			)}
 			{settings.showAuthors && (
 				Authors(true)
 			)}
 			{!settings.showAuthors && (
 				Authors()
 			)}
+			{settings.showAbstract && (
+				<Abstract />
+			)}
 			{showCitekey && (
 				<ZoteroLink />
 			)}
+
 		</div>
 	);
 };

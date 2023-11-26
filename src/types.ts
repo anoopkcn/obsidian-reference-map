@@ -6,6 +6,7 @@ export interface ReferenceMapSettings {
 	influentialCount: boolean
 	showAbstract: boolean
 	showAuthors: boolean
+	abstractTruncateLength: number
 	filterRedundantReferences: boolean
 	removeDuplicateIds: boolean
 	lookupLinkedFiles: boolean

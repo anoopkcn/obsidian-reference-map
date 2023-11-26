@@ -65,8 +65,35 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 							if (this.plugin.view)
 								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 						})
+						this.display()
 					})
 			)
+		let truncateLength: HTMLDivElement
+		if (this.plugin.settings.showAbstract) {
+			new Setting(containerEl)
+				.setName(t('ABSTRACT_TRUNCATE_LENGTH'))
+				.setDesc(fragWithHTML(t('ABSTRACT_TRUNCATE_LENGTH_DESC')))
+				.addSlider((slider) =>
+					slider
+						.setLimits(0, 1000, 20)
+						.setValue(this.plugin.settings.abstractTruncateLength)
+						.onChange(async (value) => {
+							truncateLength.innerText = ` ${value.toString()}`
+							this.plugin.settings.abstractTruncateLength = value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+							})
+						})
+				)
+				.settingEl.createDiv('', (el) => {
+					truncateLength = el
+					el.style.minWidth = '2.3em'
+					el.style.textAlign = 'right'
+					el.innerText = ` ${this.plugin.settings.abstractTruncateLength.toString()}`
+				})
+
+		}
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_AUTHORS'))
 			.setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))

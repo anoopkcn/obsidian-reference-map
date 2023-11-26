@@ -39,6 +39,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
 	influentialCount: false,
 	showAbstract: false,
+	abstractTruncateLength: 250,
 	showAuthors: false,
 	filterRedundantReferences: false,
 	removeDuplicateIds: false,

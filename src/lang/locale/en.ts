@@ -10,6 +10,11 @@ export default {
 		'Show or hide the abstract.<br>' +
 		'<b>Toggle ON:</b> Show abstract<br>' +
 		'<b>Toggle OFF:</b> Hide abstract',
+	ABSTRACT_TRUNCATE_LENGTH: 'Abstract truncate length',
+	ABSTRACT_TRUNCATE_LENGTH_DESC:
+		'Number of characters to truncate the abstract.<br>' +
+		'Abstract will be truncated to this length and appended with <code>...</code><br>' +
+		'If set to 0, abstract will NOT be truncated',
 	HIDE_SHOW_AUTHORS: 'Show or hide all authors',
 	HIDE_SHOW_AUTHORS_DESC:
 		'Show or hide the author(s) names.<br>' +
