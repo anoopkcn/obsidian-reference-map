@@ -249,7 +249,6 @@ body {
 	display: block;
 	font-size: var(--orm-paper-abstract-font-size);
 	color: var(--orm-paper-abstract-color);
-	margin-top: 0.25rem;
 	margin-bottom: 0.25rem;
 }
 
@@ -257,6 +256,7 @@ body {
 	font-size: var(--orm-paper-author-font-size);
 	font-weight: var(--orm-paper-author-font-weight);
 	display: block;
+	margin-bottom: 0.25rem;
 }
 
 .orm-paper-authors a {
@@ -269,11 +269,17 @@ body {
 }
 
 .orm-paper-link-citekey {
-	font-size: var(--orm-paper-citekey-font-size);
-	font-weight: var(--orm-paper-citekey-font-weight);
-	display: block;
-	padding-top: 0.25rem;
 	word-break: break-all;
+	width: max-content;
+	text-decoration: none;
+	color: var(--text-muted);
+	padding: var(--size-4-1) var(--size-4-2);
+	border-radius: 0.25rem;
+	background-color: rgba(var(--mono-rgb-100), 0.05);
+	line-height: 1;
+	font-size: var(--font-ui-smaller);
+	margin-right: 0.25rem;
+	margin-bottom: 0.25rem;
 }
 
 .orm-paper-link-citekey a {

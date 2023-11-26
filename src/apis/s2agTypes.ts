@@ -18,6 +18,9 @@ export interface Reference {
     journal?: Journal
     citationStyles?: CitationStyles
     authors?: Author[]
+    // from other sources
+    type?: string
+    
 }
 
 export interface ExternalIds {

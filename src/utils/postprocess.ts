@@ -127,6 +127,7 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
         paperId: citeKeyEntry.id,
         externalIds: undefined,
         url: citeKeyEntry.URL,
+        type: citeKeyEntry.type,
         title: citeKeyEntry.title,
         abstract: citeKeyEntry.abstract,
         venue: undefined,

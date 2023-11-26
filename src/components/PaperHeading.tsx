@@ -61,11 +61,8 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	const Authors = (all = false) => {
 		if (isLocal) {
 			<span className="orm-paper-title-disabled ">
-				<span>
-					{(authors?.[0]?.name || 'Unknown Author') + ' ' + year}
-				</span>
+				{(authors && authors.length > 0 ? authors[0].name : 'Unknown Author') + ' ' + year}
 			</span>
-
 		} else {
 			if (!all) {
 				return (
@@ -90,11 +87,26 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const ZoteroLink = () => {
 		return (
-			<span className="orm-paper-link-citekey">
-				<a href={`zotero://select/items/${paper?.id}`}>
-					{paper?.id}
-				</a>
-			</span>
+			<>
+				<span className="orm-paper-link-citekey">
+					<a href={`zotero://select/items/${paper?.id}`}>
+						{paper?.id}
+					</a>
+				</span>
+				{paper.paper.publicationTypes && paper.paper.publicationTypes.map((type, index) => (
+					<span key={`z${index}`} className="orm-paper-link-citekey">
+						<a href={`zotero://select/items/${paper?.id}`}>
+							{type}
+						</a>
+					</span>
+				))}
+				{(isLocal && paper.paper.type) && <span className="orm-paper-link-citekey">
+					<a href={`zotero://select/items/${paper?.id}`}>
+						{paper.paper.type}
+					</a>
+				</span>
+				}
+			</>
 		);
 	}
 
