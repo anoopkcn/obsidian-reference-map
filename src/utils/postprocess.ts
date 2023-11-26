@@ -143,8 +143,33 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             pages: citeKeyEntry.page,
         },
         authors: citeKeyEntry.author?.map((author) => {
+            if (author.literal) {
+                return {
+                    name: author.literal,
+                };
+            }
             return {
-                name: author.literal,
+                name: author.given + ' ' + author.family,
+            };
+        }),
+        directors: citeKeyEntry.director?.map((author) => {
+            if (author.literal) {
+                return {
+                    name: author.literal,
+                };
+            }
+            return {
+                name: author.given + ' ' + author.family,
+            };
+        }),
+        editors: citeKeyEntry.editor?.map((author) => {
+            if (author.literal) {
+                return {
+                    name: author.literal,
+                };
+            }
+            return {
+                name: author.given + ' ' + author.family,
             };
         }),
         citationStyles: {

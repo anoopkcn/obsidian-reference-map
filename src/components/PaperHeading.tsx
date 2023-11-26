@@ -2,8 +2,6 @@ import React from 'react';
 import { SEMANTICSCHOLAR_URL } from 'src/constants';
 import { IndexPaper, ReferenceMapSettings } from 'src/types';
 import { splitString } from 'src/utils/functions';
-import { BsInfoCircle } from "react-icons/bs";
-import { Notice } from 'obsidian';
 
 interface Props {
 	paper: IndexPaper;
@@ -12,41 +10,31 @@ interface Props {
 
 export const PaperHeading = ({ paper, settings }: Props) => {
 	const { paper: paperData } = paper;
-	const { authors, title, year, abstract, paperId } = paperData || {};
+	const { authors, directors, editors, title, year, abstract, paperId } = paperData || {};
 	const authorID = authors?.[0]?.authorId;
 	const isCitekey = paper?.id?.includes('@');
 	const showCitekey = settings.linkCiteKey && isCitekey;
 	const isLocal = paper.isLocal;
 
-	const spliTitle = splitString(title, 20);
+	const splitTitle = splitString(title, 20);
 	const splitAbstract = splitString(abstract, 20);
 
 	const Title = () => {
 		let formatTitle = (
-			<>
-				<div className='orm-paper-info'>
-					{(isLocal &&
-						<BsInfoCircle
-							size={16}
-							onClick={() => { new Notice('Could not recover metadata. Check the validity of DOI/URL in the local library') }}
-						/>
-					)}
-				</div>
-				<span className="orm-paper-title-disabled ">
-					{spliTitle}
-				</span>
-			</>
+			<span className="orm-paper-title-disabled ">
+				{splitTitle}
+			</span>
 		)
 		if (!isLocal) {
 			formatTitle = (
 				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>
-					{' ' + (spliTitle || 'Unknown Title') + ' '}
+					{' ' + (splitTitle || 'Unknown Title') + ' '}
 				</a>
 			)
 		} else if (paper.paper.url) {
 			formatTitle = (
 				<a href={paper.paper.url}>
-					{' ' + (spliTitle || 'Unknown Title') + ' '}
+					{' ' + (splitTitle || 'Unknown Title') + ' '}
 				</a>
 			)
 		}
@@ -76,9 +64,27 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const Authors = (all = false) => {
 		if (isLocal) {
-			<span className="orm-paper-title-disabled ">
-				{(authors && authors.length > 0 ? authors[0].name : 'Unknown Author') + ' ' + year}
-			</span>
+			if (!all) {
+				return (
+					<span className="orm-paper-title-disabled ">
+						{(authors && authors.length > 0 ? authors[0].name : '') + ' '}
+						{(directors && directors.length > 0 ? directors[0].name : '') + ' '}
+						{(editors && editors.length > 0 ? editors[0].name : '') + ' '}
+						{year}
+					</span>
+				)
+			} else {
+				return (
+					<span className="orm-paper-authors">
+						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+							{(authors || []).map((author) => author.name).join(', ') + ' '}
+							{(directors || []).map((director) => director.name).join(', ') + ' '}
+							{(editors || []).map((editor) => editor.name).join(', ') + ' '}
+							{year}
+						</a>
+					</span>
+				);
+			}
 		} else {
 			if (!all) {
 				return (

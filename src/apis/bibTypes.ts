@@ -45,12 +45,15 @@ export interface Issued {
 }
 
 export interface Director {
-    literal: string
+    literal?: string
+    family?: string
+    given?: string
 }
 
 export interface Editor {
-    family: string
-    given: string
+    literal?: string
+    family?: string
+    given?: string
 }
 
 export interface BibFields {

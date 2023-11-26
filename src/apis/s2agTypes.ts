@@ -20,6 +20,8 @@ export interface Reference {
     authors?: Author[]
     // from other sources
     type?: string
+    directors?: Author[]
+    editors?: Author[]
     
 }
 
