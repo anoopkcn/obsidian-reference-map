@@ -40,7 +40,6 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	influentialCount: false,
 	showAbstract: false,
 	showAuthors: false,
-	showInvalidItems: false,
 	filterRedundantReferences: false,
 	removeDuplicateIds: false,
 	lookupLinkedFiles: false,

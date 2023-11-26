@@ -108,14 +108,6 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
-	const noContentItems = () => {
-		// in citekeyMap if items have citeKey and paperId are the same then return a new array with only citeKey
-		const items = props.updateChecker.citeKeyMap.filter((item) => item.citeKey === item.paperId)
-		// convert the items to an array of strings
-		const citeKeys = items.map((item) => item.citeKey)
-		return citeKeys
-	}
-
 	const NoContent: React.FC<NoContentProps> = ({ children }) => (
 		<div className="orm-no-content">
 			<div>
@@ -161,27 +153,8 @@ export const ReferenceMapList = (props: {
 						)
 					})}
 				</div>
-				{(noContentItems().length > 0 && props.plugin.settings.showInvalidItems) &&
-					<NoContent>
-						{noContentItems().map((item) => (
-							<div className="orm-no-content-subtext" key={item}>
-								<code>{item.substring(1)}</code> has no DOI or URL in the Library.
-							</div>
-						))}
-					</NoContent>
-				}
 			</>
 		)
-	}
-
-	if (noContentItems().length > 0 && props.plugin.settings.showInvalidItems) {
-		return <NoContent>
-			{noContentItems().map((item) => (
-				<div className="orm-no-content-subtext" key={item}>
-					<code>{item.substring(1)}</code> has no DOI or URL in the Library.
-				</div>
-			))}
-		</NoContent>
 	}
 
 	return <NoContent>

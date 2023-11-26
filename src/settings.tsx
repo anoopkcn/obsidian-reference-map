@@ -113,20 +113,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
-			.setName(t('HIDE_SHOW_INVALID_ITEMS'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_INVALID_ITEMS_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.showInvalidItems)
-					.onChange(async (value) => {
-						this.plugin.settings.showInvalidItems = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-					})
-			)
-		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
 			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
 			.addToggle((toggle) =>
