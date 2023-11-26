@@ -195,6 +195,11 @@ export class ReferenceMapData {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
                             indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
+                        } else if (typeof paper === "number") {
+                            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+                            if (localPaper) {
+                                indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                            }
                         }
                     }
                 })

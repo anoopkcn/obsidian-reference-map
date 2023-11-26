@@ -46,7 +46,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	}
 
 	const Abstract = () => {
-		const className = isLocal ? "orm-paper-title-disabled " : "orm-paper-abstract"
+		const className = isLocal ? "orm-paper-title-disabled orm-paper-abstract-disabled" : "orm-paper-abstract"
 		let truncatedAbstract = splitAbstract
 		if (settings.abstractTruncateLength > 0 && truncatedAbstract.length > settings.abstractTruncateLength) {
 			truncatedAbstract = splitAbstract.slice(0, settings.abstractTruncateLength) + ' ...'

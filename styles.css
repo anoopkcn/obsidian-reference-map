@@ -233,7 +233,10 @@ body {
 }
 .orm-paper-title-disabled {
 	cursor: default;
-	opacity: var(--orm-paper-disable-opacity)
+	opacity: var(--orm-paper-disable-opacity);
+	font-size: var(--orm-paper-title-font-size);
+	font-weight: var(--orm-paper-title-font-weight);
+	padding-bottom: 0.25rem;
 }
 
 .orm-paper-title a {
@@ -249,6 +252,11 @@ body {
 	display: block;
 	font-size: var(--orm-paper-abstract-font-size);
 	color: var(--orm-paper-abstract-color);
+	margin-bottom: 0.25rem;
+}
+.orm-paper-abstract-disabled {
+	display: block;
+	font-size: var(--orm-paper-abstract-font-size);
 	margin-bottom: 0.25rem;
 }
 

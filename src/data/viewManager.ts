@@ -60,10 +60,10 @@ export class ViewManager {
 			if (debugMode) {
 				console.log('ORM: S2AG API Index Card request error', e)
 			}
-			if (e.status === 404) {
+			if (e.status as number === 404) {
 				this.indexCache.set(paperId, e.status)
 			}
-			return e.status
+			return e.status as number
 		}
 	}
 
