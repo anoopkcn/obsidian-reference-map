@@ -110,9 +110,9 @@ export default {
 		' If found the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>' +
 		'<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>' +
 		'<b>Toggle OFF:</b> Do not lookup citekey from ID',
-	ENABLE_SORTING_REFERENCE_CARDS: 'Sort Reference Cards',
+	ENABLE_SORTING_REFERENCE_CARDS: 'Sort Citing/Cited Cards',
 	ENABLE_SORTING_REFERENCE_CARDS_DESC:
-		'Enable or Disable sorting of reference cards. <br>' +
+		'Enable or Disable sorting of reference/citation cards. <br>' +
 		'<b>Toggle ON:</b> Enable Sorting<br>' +
 		'<b>Toggle OFF:</b> Default sorting, as appear in the markdown',
 	ENABLE_SORTING_INDEX_CARDS: 'Sort Index Cards',
