@@ -15,11 +15,11 @@ export default {
 		'Number of characters to truncate the abstract.<br>' +
 		'Abstract will be truncated to this length and appended with <code>...</code><br>' +
 		'If set to 0, abstract will NOT be truncated',
-	HIDE_SHOW_AUTHORS: 'Show or hide all authors',
+	HIDE_SHOW_AUTHORS: 'Show or hide all authors/directors/editors',
 	HIDE_SHOW_AUTHORS_DESC:
-		'Show or hide the author(s) names.<br>' +
-		'<b>Toggle ON:</b> Show all author names<br>' +
-		'<b>Toggle OFF:</b> Show only the first author',
+		'Show or hide the names of authors/directors/editors names.<br>' +
+		'<b>Toggle ON:</b> Show all contributors<br>' +
+		'<b>Toggle OFF:</b> Show one contributor',
 	HIDE_SHOW_BUTTONS_ON_HOVER: 'Show or hide buttons on hover',
 	HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
 		'Automatically show and hide buttons<br>' +
