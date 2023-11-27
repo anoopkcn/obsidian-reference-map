@@ -28,9 +28,13 @@ Steps to reproduce the behavior:
 
 **Console output**
 
-If applicable, please include the console output.
-Go to Reference Map Settings and turn on **Debug Mode**. Then Refresh the Reference Map in the settings(button at the top of settings page).
-Please open the Obsidian developer console (view->Toggle Developer Tools). Then reproduce the issue you're describing. Please include any relevant error messages that appear in the console in your report here. Reference Map logs will start with the prefix `ORM: `.
+If applicable, please include the console output:
+
+Step 1: Go to Reference Map Settings and turn on **Debug Mode**.
+Step 2: Please open the Obsidian developer console (view->Toggle Developer Tools). 
+Step 3: Then reproduce the issue you're describing. 
+Step 4: Please include any relevant error messages that appear in the console in your report here. Reference Map logs will start with the prefix `ORM: `.
+Step 5: Copy and paste the console output here.
 
 **Expected behavior**
 

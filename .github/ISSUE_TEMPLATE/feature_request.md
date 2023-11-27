@@ -6,6 +6,9 @@ labels: enhancement
 assignees: ''
 ---
 
+<!-- This is a general guideline. You don't have to follow the template.
+But this would avoid additional questions from the developers-->
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
