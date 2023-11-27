@@ -73,7 +73,7 @@ export default class ReferenceMap extends Plugin {
 		})
 		this.addCommand({
 			id: 'reload-reference-map-library',
-			name: 'Refresh View',
+			name: 'Refresh View and Library',
 			callback: () => {
 				if (this.view) {
 					this.referenceMapData.reload(RELOAD.HARD)
@@ -83,13 +83,13 @@ export default class ReferenceMap extends Plugin {
 
 		this.addCommand({
 			id: 'open-reference-map-search-modal-to-insert',
-			name: 'Search and Insert',
+			name: 'Search Online and Insert',
 			callback: () => this.insertMetadata(),
 		});
 
 		this.addCommand({
 			id: 'open-reference-map-search-modal-to-create',
-			name: 'Search and Create',
+			name: 'Search Online and Create',
 			callback: () => this.createNewReferenceNote(),
 		});
 
