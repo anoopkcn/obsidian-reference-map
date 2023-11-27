@@ -66,7 +66,7 @@ export default class ReferenceMap extends Plugin {
 
 		this.addCommand({
 			id: 'show-reference-map-sidebar-view',
-			name: 'Show View',
+			name: 'Show Sidebar View',
 			callback: () => {
 				this.ensureLeafExists(true)
 			},

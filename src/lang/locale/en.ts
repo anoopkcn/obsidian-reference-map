@@ -20,6 +20,11 @@ export default {
 		'Show or hide the names of authors/directors/editors names.<br>' +
 		'<b>Toggle ON:</b> Show all contributors<br>' +
 		'<b>Toggle OFF:</b> Show one contributor',
+	HIDE_SHOW_JOURNAL: 'Show or hide journal, volume and pages',
+	HIDE_SHOW_JOURNAL_DESC:
+		'Show or hide the journal name, volume and pages.<br>' +
+		'<b>Toggle ON:</b> Show journal name, volume and pages<br>' +
+		'<b>Toggle OFF:</b> Hide journal name, volume and pages',
 	HIDE_SHOW_BUTTONS_ON_HOVER: 'Show or hide buttons on hover',
 	HIDE_SHOW_BUTTONS_ON_HOVER_DESC:
 		'Automatically show and hide buttons<br>' +

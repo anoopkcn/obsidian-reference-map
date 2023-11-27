@@ -42,7 +42,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 		return (
 			<div className="orm-paper-title">
 				{(paper.location && !settings.lookupLinkedFiles) &&
-					<span className="cardLocation">{paper.location}</span>
+					<span className="orm-paper-tag">{paper.location}</span>
 				}
 				{formatTitle}
 			</div>
@@ -105,25 +105,39 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	}
 
-	const ZoteroLink = () => {
+	const Journal = () => {
+		const className = "orm-paper-title-disabled"
+		const journalParts = [
+			paper.paper.journal?.name,
+			paper.paper.journal?.volume,
+			paper.paper.journal?.pages
+		];
+		const journal = journalParts.filter(Boolean).join(', ');
+		return (
+			<div className={className}>
+				{journal}
+			</div >
+		);
+
+	}
+
+	const CardTags = () => {
 		return (
 			<div className='orm-paper-tags'>
-				<span className="orm-paper-link-citekey">
-					<a href={`zotero://select/items/${paper?.id}`}>
-						{paper?.id}
-					</a>
-				</span>
-				{paper.paper.publicationTypes && paper.paper.publicationTypes.map((type, index) => (
-					<span key={`z${index}`} className="orm-paper-link-citekey">
+				{showCitekey && (
+					<span className="orm-paper-tag">
 						<a href={`zotero://select/items/${paper?.id}`}>
-							{type}
+							{paper?.id}
 						</a>
 					</span>
+				)}
+				{paper.paper.publicationTypes && paper.paper.publicationTypes.map((type, index) => (
+					<span key={`z${index}`} className="orm-paper-tag">
+						{type}
+					</span>
 				))}
-				{(isLocal && paper.paper.type) && <span className="orm-paper-link-citekey">
-					<a href={`zotero://select/items/${paper?.id}`}>
-						{paper.paper.type}
-					</a>
+				{(isLocal && paper.paper.type) && <span className="orm-paper-tag">
+					{paper.paper.type}
 				</span>
 				}
 			</div>
@@ -139,13 +153,13 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			{!settings.showAuthors && (
 				Authors()
 			)}
+			{settings.showJournal && (
+				<Journal />
+			)}
 			{settings.showAbstract && (
 				<Abstract />
 			)}
-			{showCitekey && (
-				<ZoteroLink />
-			)}
-
+			<CardTags />
 		</div>
 	);
 };

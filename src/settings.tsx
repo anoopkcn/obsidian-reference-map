@@ -110,6 +110,21 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_JOURNAL'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_JOURNAL_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.showJournal)
+					.onChange(async (value) => {
+						this.plugin.settings.showJournal = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
+						})
+					})
+			)
+
+		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
 			.setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
 			.addToggle((toggle) =>

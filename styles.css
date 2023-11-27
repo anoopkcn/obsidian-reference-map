@@ -281,30 +281,29 @@ body {
 .orm-paper-authors a:hover {
 	color: var(--orm-paper-author-link-hover-color);
 }
-.orm-paper-tags{
+/* .orm-paper-tags{
 	margin-top: 0.5rem;
-}
+} */
 
-.orm-paper-link-citekey {
+.orm-paper-tag {
 	word-break: break-all;
 	width: max-content;
 	text-decoration: none;
 	color: var(--text-muted);
 	padding: var(--size-4-1) var(--size-4-2);
-	border-radius: 0.25rem;
+	border-radius: 0.2rem;
 	background-color: rgba(var(--mono-rgb-100), 0.05);
 	line-height: 1;
 	font-size: var(--font-ui-smaller);
-	margin-right: 0.25rem;
-	margin-bottom: 0.25rem;
+	margin-right: 0.2rem;
 }
 
-.orm-paper-link-citekey a {
+.orm-paper-tag a {
 	color: var(--orm-paper-citekey-link-color);
 	text-decoration: none;
 }
 
-.orm-paper-link-citekey a:hover {
+.orm-paper-tag a:hover {
 	color: var(--orm-paper-citekey-link-hover-color);
 }
 
@@ -435,15 +434,6 @@ body {
 	font-weight: var(--font-normal);
 	line-height: 1;
 	font-size: var(--font-ui-smaller);
-}
-.cardLocation{
-	color: var(--text-muted);
-	padding: var(--size-4-1) var(--size-4-2);
-	/* border-radius: var(--tag-radius); */
-	background-color: rgba(var(--mono-rgb-100), 0.05);
-	font-weight: var(--font-normal);
-	font-size: var(--font-ui-smaller);
-	
 }
 
 .orm-loading {

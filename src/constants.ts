@@ -41,6 +41,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	showAbstract: false,
 	abstractTruncateLength: 160,
 	showAuthors: false,
+	showJournal: true,
 	filterRedundantReferences: false,
 	removeDuplicateIds: false,
 	lookupLinkedFiles: false,
