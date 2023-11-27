@@ -42,7 +42,7 @@ export default {
 		'<b> Toggle OFF:</b> Redundant entries will be listed',
 	LOOKUP_ENTRIES_LINKED_FILES: 'Lookup entries in linked files',
 	LOOKUP_ENTRIES_LINKED_FILES_DESC:
-		'Include entries fround in the linked files(wiki links).<br>' +
+		'Include entries found in the linked files(wiki links).<br>' +
 		'Enabling will also hide the location indicators.<br>' +
 		'<b>Toggle ON:</b> Enable lookup in linked files<br>' +
 		'<b>Toggle OFF:</b> Disable lookup in linked files',
@@ -73,7 +73,7 @@ export default {
 	SEARCH_CITEKEY: 'Get references using <code>citeKey</code>',
 	SEARCH_CITEKEY_DESC:
 		'Find references using the <code>@citekey</code> included in the markdown file in addition to reference IDs.<br>' +
-		'Make sure to give a <b>valid library file path</b> which is exported from reference manager<br>' +
+		'Make sure to enable <b>Pull bibliography from Zotero</b> option OR give a <b>valid library file</b><br>' +
 		'<b>Toggle ON:</b> Enable citekey detection<br>' +
 		'<b>Toggle OFF:</b> Disable citekey detection',
 	SEARCH_CITEKEY_PATH: 'Library file path',
@@ -83,15 +83,15 @@ export default {
 		'Path must be relative to the vault\'s root. This option is redundant if <Code>Pull Bibliography From Zotero</code> is enabled.<br>',
 	CITEKEY_PATH_ERROR: 'The citation export file can\'t be found. Please check the path.<br>' +
 		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
-	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library',
+	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library file',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
 		'Auto detect changes to the Library and update the reference map.<br>' +
-		'You can also use <code>Refresh Map</code> in the Command Palette manually do the same<br>' +
+		'You can also use <code>Refresh Map</code> in the command palette to manually do the same<br>' +
 		'<b>Toggle ON:</b> Enable auto detection changes in the Library<br>' +
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
 	// Zotero Pull Settings
 	ZOTERO_PULL: 'Pull bibliography from Zotero',
-	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better Bibtex plugin.',
+	ZOTERO_PULL_DESC: 'Pull data from Zotero. Zotero must have Better BibTex plugin.',
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
 	ZOTERO_PORT: 'Zotero port',

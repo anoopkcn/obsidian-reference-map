@@ -321,25 +321,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		if (this.plugin.settings.searchCiteKey) {
 			new Setting(containerEl)
-				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY')))
-				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(
-							this.plugin.settings
-								.autoUpdateCitekeyFile
-						)
-						.onChange(async (value) => {
-							this.plugin.settings.autoUpdateCitekeyFile =
-								value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.SOFT)
-							})
-						})
-				)
-
-			new Setting(containerEl)
 				.setName(fragWithHTML(t('SEARCH_CITEKEY_PATH')))
 				.setDesc(fragWithHTML(t('SEARCH_CITEKEY_PATH_DESC')))
 				.addText((text) => {
@@ -359,6 +340,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 				})
 
+
 			this.citationPathLoadingEl = containerEl.createEl('p', {
 				cls: 'orm-PathLoading d-none',
 				text: 'Loading citation database...',
@@ -371,6 +353,26 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				cls: 'orm-PathSuccess d-none',
 				text: 'Successfully Loaded Library Containing References.',
 			})
+
+			new Setting(containerEl)
+				.setName(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY')))
+				.setDesc(fragWithHTML(t('AUTO_DETECT_UPDATE_TO_CITEKEY_DESC')))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(
+							this.plugin.settings
+								.autoUpdateCitekeyFile
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.autoUpdateCitekeyFile =
+								value
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view)
+									this.plugin.referenceMapData.reload(RELOAD.SOFT)
+							})
+						})
+				)
+
 
 			containerEl.createDiv('setting-item orm-setting-item-wrapper', (el) => {
 				createRoot(el).render(
