@@ -281,6 +281,9 @@ body {
 .orm-paper-authors a:hover {
 	color: var(--orm-paper-author-link-hover-color);
 }
+.orm-paper-tags{
+	margin-top: 0.5rem;
+}
 
 .orm-paper-link-citekey {
 	word-break: break-all;

@@ -107,7 +107,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const ZoteroLink = () => {
 		return (
-			<>
+			<div className='orm-paper-tags'>
 				<span className="orm-paper-link-citekey">
 					<a href={`zotero://select/items/${paper?.id}`}>
 						{paper?.id}
@@ -126,7 +126,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 					</a>
 				</span>
 				}
-			</>
+			</div>
 		);
 	}
 
