@@ -186,19 +186,18 @@ export class ReferenceMapData {
         if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
                 _.map(citeKeyMap, async (item): Promise<void> => {
-                    if (item.citeKey === item.paperId) {
-                        const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
-                        if (localPaper) {
-                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
-                        }
-                    } else {
+                    const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+                    if (localPaper) {
+                        indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                    }
+                    if (item.citeKey !== item.paperId) {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
-                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
-                        } else if (typeof paper === "number") {
-                            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
-                            if (localPaper) {
-                                indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                            const index = _.findIndex(indexCards, { id: item.citeKey });
+                            if (index !== -1) {
+                                indexCards.splice(index, 1, { id: item.citeKey, location: item.location, isLocal: false, paper })
+                            } else {
+                                indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
                             }
                         }
                     }
