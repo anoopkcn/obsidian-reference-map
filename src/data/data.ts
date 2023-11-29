@@ -176,7 +176,13 @@ export class ReferenceMapData {
                                 settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
-                        indexCards.push({ id: paperCiteId, location: null, isLocal: false, paper });
+                        indexCards.push({
+                            id: paperCiteId,
+                            location: null,
+                            isLocal: false,
+                            paper: paper,
+                            cslEntry: undefined
+                        });
                     }
                 })
             );
@@ -188,16 +194,34 @@ export class ReferenceMapData {
                 _.map(citeKeyMap, async (item): Promise<void> => {
                     const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
                     if (localPaper) {
-                        indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                        indexCards.push({
+                            id: item.citeKey,
+                            location: item.location,
+                            isLocal: true,
+                            paper: convertToReference(localPaper),
+                            cslEntry: localPaper
+                        });
                     }
                     if (item.citeKey !== item.paperId) {
                         const paper = await this.viewManager.getIndexPaper(item.paperId);
                         if (paper !== null && typeof paper !== "number") {
                             const index = _.findIndex(indexCards, { id: item.citeKey });
                             if (index !== -1) {
-                                indexCards.splice(index, 1, { id: item.citeKey, location: item.location, isLocal: false, paper })
+                                indexCards.splice(index, 1, {
+                                    id: item.citeKey,
+                                    location: item.location,
+                                    isLocal: false,
+                                    paper: paper,
+                                    cslEntry: localPaper
+                                })
                             } else {
-                                indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
+                                indexCards.push({
+                                    id: item.citeKey,
+                                    location: item.location,
+                                    isLocal: false,
+                                    paper,
+                                    cslEntry: localPaper
+                                });
                             }
                         }
                     }

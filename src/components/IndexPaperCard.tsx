@@ -79,7 +79,7 @@ export const IndexPaperCard = (props: Props) => {
 	const batchCopyMetadata = metadataTemplates.flatMap(({ format, template, batch }) => {
 		if (batch && format) {
 			return references.map((paper) => {
-				const metaData = makeMetaData(paper)
+				const metaData = makeMetaData({ id: paper.paperId, location: null, paper: paper })
 				return templateReplace(template, metaData) + '\n'
 			})
 		}

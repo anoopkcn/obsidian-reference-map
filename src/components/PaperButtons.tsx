@@ -50,7 +50,7 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE
 
-	const metaData = makeMetaData(paper.paper, cacheDir)
+	const metaData = makeMetaData(paper, cacheDir)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''

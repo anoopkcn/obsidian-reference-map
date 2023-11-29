@@ -115,7 +115,7 @@ export class ReferenceSuggestModal extends SuggestModal<Reference> {
 
   // Renders each suggestion item.
   renderSuggestion(reference: Reference, el: HTMLElement) {
-    const data = makeMetaData(reference)
+    const data = makeMetaData({ id: reference.paperId, location: null, paper: reference })
     el.createEl('div', { cls: 'orm-modal-paper-title', text: data.title });
     el.createEl('div', { cls: 'orm-modal-paper-authors', text: data.authors });
     el.createEl('div', { cls: 'orm-modal-paper-year', text: `${data.year}, ${data.journal}, ${data.volume}, ${data.pages}` });
@@ -123,6 +123,6 @@ export class ReferenceSuggestModal extends SuggestModal<Reference> {
 
   // Perform action on the selected suggestion.
   onChooseSuggestion(reference: Reference) {
-    this.onChoose(null, makeMetaData(reference));
+    this.onChoose(null, makeMetaData({ id: reference.paperId, location: null, paper: reference }));
   }
 }

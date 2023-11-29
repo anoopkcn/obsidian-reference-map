@@ -5,7 +5,8 @@ import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
 import { getFormattedCitation } from "./zotero";
 
-export const makeMetaData = (paper: Reference, cacheDir: string | null = null): MetaData => {
+export const makeMetaData = (data: IndexPaper, cacheDir: string | null = null): MetaData => {
+    const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
     const authors = paper.authors?.map(author => author.name).join(', ') || 'Could not recover Authors';
@@ -23,7 +24,9 @@ export const makeMetaData = (paper: Reference, cacheDir: string | null = null): 
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
     let csl = 'Could Not Recover CSL';
 
-    if (cacheDir) {
+    if (cacheDir && data.cslEntry) {
+        csl = getFormattedCitation(data.cslEntry, cacheDir)[1]
+    } else if (cacheDir) {
         csl = getFormattedCitation(convertToCiteKeyEntry(paper), cacheDir)[1]
     }
 
@@ -138,7 +141,7 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
         title: citeKeyEntry.title,
         abstract: citeKeyEntry.abstract,
         venue: undefined,
-        year: citeKeyEntry.issued?.['date-parts']?.[0]?.[0],
+        year: citeKeyEntry.issued?.['date-parts']?.[0] as number,
         referenceCount: undefined,
         citationCount: undefined,
         influentialCitationCount: undefined,
@@ -187,15 +190,24 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
 }
 
 export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {
+    // convert YYYY-MM-DD numbers [YYYY, MM, DD]
+    let issued: [number, number, number] = [0, 0, 0];
+    if (reference.publicationDate) {
+        const dateParts = reference.publicationDate.split('-').map(Number);
+        if (dateParts.length === 3) {
+            issued = [dateParts[0], dateParts[1], dateParts[2]] as [number, number, number];
+        }
+    }
     const citeKeyEntry: CiteKeyEntry = {
         // map the properties of Reference to the properties of CiteKeyEntry
         id: reference.paperId,
         URL: reference.url,
+        DOI: reference.externalIds?.DOI,
         type: reference.type,
         title: reference.title,
         abstract: reference.abstract,
         issued: {
-            'date-parts': reference.year ? [[reference.year.toString(), 0, 0]] : [],
+            'date-parts': issued,
         },
         'container-title': reference.journal?.name,
         volume: reference.journal?.volume,

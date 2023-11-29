@@ -71,6 +71,7 @@ export interface IndexPaper {
 	location: number | null
 	isLocal?: boolean
 	paper: Reference
+	cslEntry?: CiteKeyEntry
 }
 
 export interface CiteKey {
