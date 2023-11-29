@@ -22,7 +22,6 @@ export interface Reference {
     type?: string
     directors?: Author[]
     editors?: Author[]
-    
 }
 
 export interface ExternalIds {
