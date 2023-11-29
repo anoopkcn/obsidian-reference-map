@@ -68,7 +68,7 @@ export function copyElToClipboard(el: string) {
 
 export function removeNullReferences(references: IndexPaper[]) {
 	const result = references.filter((element) => {
-		if (element.paper.paperId !== null) {
+		if (element.paper && element.paper.paperId !== null) {
 			return true
 		}
 		return false
