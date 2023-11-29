@@ -103,6 +103,7 @@ export const ReferenceMapGraph = (props: {
     width: number
     height: number
     settings: ReferenceMapSettings
+    cacheDir: string
     referenceMapData: ReferenceMapData
     updateChecker: UpdateChecker
 }) => {
@@ -112,7 +113,7 @@ export const ReferenceMapGraph = (props: {
     const fgRef = useRef<any>();
     const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
 
-    const { settings } = props;
+    const { settings, cacheDir } = props;
     const { viewManager } = props.referenceMapData;
     const tempTextColor = getComputedStyle(document.body).getPropertyValue('--text-normal')
     // const tempAccentColor = getComputedStyle(document.body).getPropertyValue('--text-accent')
@@ -264,7 +265,7 @@ export const ReferenceMapGraph = (props: {
                 <div className="orm-graph-content">
                     <div className="orm-graph-paper-card">
                         {selectedNode && (
-                            <PaperCard paper={selectedNode.data} settings={settings} showCountButtons={false} />
+                            <PaperCard paper={selectedNode.data} cacheDir={cacheDir} settings={settings} showCountButtons={false} />
                         )}
                         <PartialLoading isLoading={isLoading} />
                     </div>

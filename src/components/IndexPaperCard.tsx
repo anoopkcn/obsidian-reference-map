@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IndexPaper, ReferenceMapSettings } from 'src/types'
+import { IndexPaper } from 'src/types'
 import { isEmpty } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 import { PaperList } from './PaperList'
@@ -8,10 +8,11 @@ import { PaperButtons } from './PaperButtons'
 import { ViewManager } from 'src/data/viewManager'
 import { LoadingPuff } from './LoadingPuff'
 import { Reference } from 'src/apis/s2agTypes'
+import ReferenceMap from 'src/main'
 
 interface Props {
 	className?: string
-	settings: ReferenceMapSettings
+	plugin: ReferenceMap
 	rootPaper: IndexPaper
 	viewManager: ViewManager
 }
@@ -21,9 +22,14 @@ export const IndexPaperCard = (props: Props) => {
 	const [citations, setCitations] = useState<Reference[]>([])
 	const [showReferences, setShowReferences] = useState(false)
 	const [showCitations, setShowCitations] = useState(false)
-	const [isButtonShown, setIsButtonShown] = useState(!props.settings.hideButtonsOnHover)
+	const [isButtonShown, setIsButtonShown] = useState(!props.plugin.settings.hideButtonsOnHover)
 	const [isReferenceLoading, setIsReferenceLoading] = useState(false)
 	const [isCitationLoading, setIsCitationLoading] = useState(false)
+
+	const { settings, cacheDir } = props.plugin
+
+	// const bib = getFormattedCitation(convertToCiteKeyEntry(props.rootPaper.paper), cacheDir)
+	// console.log(bib)
 
 	useEffect(() => {
 		if (!isEmpty(props.rootPaper.paper) && !props.rootPaper.isLocal) {
@@ -33,11 +39,11 @@ export const IndexPaperCard = (props: Props) => {
 	}, [])
 
 	useEffect(() => {
-		setIsButtonShown(!props.settings.hideButtonsOnHover)
-	}, [props.settings.hideButtonsOnHover])
+		setIsButtonShown(!settings.hideButtonsOnHover)
+	}, [settings.hideButtonsOnHover])
 
 	const handleHoverButtons = (isShow: boolean) => {
-		if (!props.settings.hideButtonsOnHover || showReferences || showCitations) {
+		if (!settings.hideButtonsOnHover || showReferences || showCitations) {
 			setIsButtonShown(true);
 			return;
 		}
@@ -47,7 +53,7 @@ export const IndexPaperCard = (props: Props) => {
 	const getReferences = async () => {
 		setIsReferenceLoading(true);
 		const references = await props.viewManager.getReferences(props.rootPaper.paper.paperId);
-		const filteredReferences = props.settings.filterRedundantReferences
+		const filteredReferences = settings.filterRedundantReferences
 			? references.filter((reference) => (reference.referenceCount && reference.referenceCount > 0) || (reference.citationCount && reference.citationCount > 0))
 			: references;
 		setReferences(filteredReferences);
@@ -57,7 +63,7 @@ export const IndexPaperCard = (props: Props) => {
 	const getCitations = async () => {
 		setIsCitationLoading(true);
 		const citations = await props.viewManager.getCitations(props.rootPaper.paper.paperId);
-		const filteredCitations = props.settings.filterRedundantReferences
+		const filteredCitations = settings.filterRedundantReferences
 			? citations.filter((citation) => (citation.referenceCount && citation.referenceCount > 0) || (citation.citationCount && citation.citationCount > 0))
 			: citations;
 		setCitations(filteredCitations);
@@ -65,9 +71,9 @@ export const IndexPaperCard = (props: Props) => {
 	};
 
 	const metadataTemplates = [
-		{ format: props.settings.formatMetadataCopyOne, template: props.settings.metadataCopyTemplateOne, batch: props.settings.metadataCopyOneBatch },
-		{ format: props.settings.formatMetadataCopyTwo, template: props.settings.metadataCopyTemplateTwo, batch: props.settings.metadataCopyTwoBatch },
-		{ format: props.settings.formatMetadataCopyThree, template: props.settings.metadataCopyTemplateThree, batch: props.settings.metadataCopyThreeBatch },
+		{ format: settings.formatMetadataCopyOne, template: settings.metadataCopyTemplateOne, batch: settings.metadataCopyOneBatch },
+		{ format: settings.formatMetadataCopyTwo, template: settings.metadataCopyTemplateTwo, batch: settings.metadataCopyTwoBatch },
+		{ format: settings.formatMetadataCopyThree, template: settings.metadataCopyTemplateThree, batch: settings.metadataCopyThreeBatch },
 	]
 
 	const batchCopyMetadata = metadataTemplates.flatMap(({ format, template, batch }) => {
@@ -86,10 +92,11 @@ export const IndexPaperCard = (props: Props) => {
 			onMouseEnter={() => handleHoverButtons(true)}
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
-			<PaperHeading paper={props.rootPaper} settings={props.settings} />
+			<PaperHeading paper={props.rootPaper} settings={settings} />
 			{isButtonShown && (
 				<PaperButtons
-					settings={props.settings}
+					settings={settings}
+					cacheDir={cacheDir}
 					paper={props.rootPaper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
@@ -108,10 +115,10 @@ export const IndexPaperCard = (props: Props) => {
 				</div>
 			)}
 			{showReferences && (
-				<PaperList settings={props.settings} papers={references} type={'References'} />
+				<PaperList settings={settings} cacheDir={cacheDir} papers={references} type={'References'} />
 			)}
 			{showCitations && (
-				<PaperList settings={props.settings} papers={citations} type={'Citations'} />
+				<PaperList settings={settings} cacheDir={cacheDir} papers={citations} type={'Citations'} />
 			)}
 		</div>
 	)

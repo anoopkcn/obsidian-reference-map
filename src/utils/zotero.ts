@@ -5,8 +5,10 @@ import fs from "fs";
 import http, { request } from "http";
 import https from "https";
 import path from "path";
+import { CiteKeyEntry } from "src/apis/bibTypes";
 import { DEFAULT_HEADERS, DEFAULT_ZOTERO_PORT } from "src/constants";
 import { CSLList, PartialCSLEntry } from "src/types";
+import CSL from 'citeproc';
 
 
 function ensureDir(dir: string) {
@@ -342,4 +344,23 @@ export async function getCSLStyle(
     fs.writeFileSync(outpath, str);
     styleCache.set(url, str);
     return str;
+}
+
+
+export function getFormattedCitation(
+    reference: CiteKeyEntry | undefined,
+    cacheDir: string,
+) {
+    if (!reference) return null;
+    const citationStyle = fs.readFileSync(path.join(cacheDir, `ieee.csl`), 'utf8');
+    const citationLocale = fs.readFileSync(path.join(cacheDir, `locales-en-US.xml`), 'utf8');
+
+    const citeprocSys = {
+        retrieveLocale: () => citationLocale,
+        retrieveItem: (id: string) => { return reference },
+    };
+    const citeproc = new CSL.Engine(citeprocSys, citationStyle);
+    citeproc.updateItems([reference.id])
+    const bib = citeproc.makeBibliography();
+    return bib
 }

@@ -63,6 +63,7 @@ export interface MetaData {
 	referenceCount: number
 	citationCount: number
 	influentialCount: number
+	csl?: string
 }
 
 export interface IndexPaper {

@@ -61,9 +61,7 @@ export class ViewManager {
 			if (debugMode) {
 				console.log(`ORM: S2AG API index card request error with status ${errorCode}. Fallback library is used to show metadata. Check your internet connection, Validity of DOI/URL in the local library`)
 			}
-			if (errorCode === 404) {
-				this.indexCache.set(paperId, errorCode)
-			}
+			this.indexCache.set(paperId, errorCode)
 			return errorCode
 		}
 	}

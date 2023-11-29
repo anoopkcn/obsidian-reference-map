@@ -21,7 +21,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const Title = () => {
 		let formatTitle = (
-			<span className="orm-paper-title-disabled ">
+			<span className="orm-paper-title orm-paper-title-disabled">
 				{splitTitle}
 			</span>
 		)
@@ -50,7 +50,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	}
 
 	const Abstract = () => {
-		const className = isLocal ? "orm-paper-title-disabled orm-paper-abstract-disabled" : "orm-paper-abstract"
+		const className = isLocal ? "orm-paper-abstract orm-paper-abstract-disabled" : "orm-paper-abstract"
 		let truncatedAbstract = splitAbstract
 		if (settings.abstractTruncateLength > 0 && truncatedAbstract.length > settings.abstractTruncateLength) {
 			truncatedAbstract = splitAbstract.slice(0, settings.abstractTruncateLength) + ' ...'
@@ -66,7 +66,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 		if (isLocal) {
 			if (!all) {
 				return (
-					<span className="orm-paper-title-disabled">
+					<span className="orm-paper-authors orm-paper-authors-disabled">
 						{(authors && authors.length > 0 ? authors[0].name : '') + ' '}
 						{(directors && directors.length > 0 ? directors[0].name : '') + ' '}
 						{(editors && editors.length > 0 ? editors[0].name : '') + ' '}
@@ -75,7 +75,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 				)
 			} else {
 				return (
-					<span className="orm-paper-title-disabled">
+					<span className="orm-paper-authors orm-paper-authors-disabled">
 						{(authors || []).map((author) => author.name).join(', ') + ' '}
 						{(directors || []).map((director) => director.name).join(', ') + ' '}
 						{(editors || []).map((editor) => editor.name).join(', ') + ' '}
@@ -106,7 +106,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	}
 
 	const Journal = () => {
-		const className = "orm-paper-title-disabled"
+		const className = "orm-paper-journal orm-paper-journal-disabled"
 		const journalParts = [
 			paper.paper.journal?.name,
 			paper.paper.journal?.volume,

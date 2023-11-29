@@ -8,10 +8,11 @@ import { Reference } from 'src/apis/s2agTypes'
 interface Props {
 	papers: Reference[]
 	settings: ReferenceMapSettings
+	cacheDir: string
 	type: string
 }
 
-export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
+export const PaperList: React.FC<Props> = ({ papers, settings, cacheDir, type }) => {
 	const [query, setQuery] = useState('')
 
 	const sortedPapers = settings.enableReferenceSorting
@@ -27,6 +28,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 			key={`${paper.paperId}-${index}`}
 			paper={{ id: paper.paperId, location: null, paper }}
 			settings={settings}
+			cacheDir={cacheDir}
 		/>
 	))
 

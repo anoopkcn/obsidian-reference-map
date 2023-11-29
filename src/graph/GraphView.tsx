@@ -141,6 +141,7 @@ export class GraphView extends ItemView {
                     width={this.viewContent.innerWidth}
                     height={this.viewContent.innerHeight}
                     settings={this.plugin.settings}
+                    cacheDir={this.plugin.cacheDir}
                     referenceMapData={this.referenceMapData}
                     updateChecker={this.updateChecker}
                 />

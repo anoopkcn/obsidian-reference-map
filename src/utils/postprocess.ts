@@ -3,9 +3,9 @@ import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
+import { getFormattedCitation } from "./zotero";
 
-
-export const makeMetaData = (paper: Reference): MetaData => {
+export const makeMetaData = (paper: Reference, cacheDir: string | null = null): MetaData => {
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
     const authors = paper.authors?.map(author => author.name).join(', ') || 'Could not recover Authors';
@@ -21,6 +21,11 @@ export const makeMetaData = (paper: Reference): MetaData => {
     const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
     const paperURL = paper.url || 'Could not recover URL';
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
+    let csl = 'Could Not Recover CSL';
+
+    if (cacheDir) {
+        csl = getFormattedCitation(convertToCiteKeyEntry(paper), cacheDir)[1]
+    }
 
     return {
         bibtex: bibTex,
@@ -38,6 +43,7 @@ export const makeMetaData = (paper: Reference): MetaData => {
         referenceCount,
         citationCount,
         influentialCount,
+        csl
     };
 };
 
@@ -56,7 +62,8 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll('{{abstract}}', data.abstract)
         .replaceAll('{{url}}', data.url)
         .replaceAll('{{pdfurl}}', data.pdfurl)
-        .replaceAll('{{doi}}', data.doi);
+        .replaceAll('{{doi}}', data.doi)
+        .replaceAll('{{csl}}', data.csl?.toString() || 'Could not recover CSL');
 };
 
 export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
@@ -177,6 +184,46 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
         },
     };
     return reference;
+}
+
+export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {
+    const citeKeyEntry: CiteKeyEntry = {
+        // map the properties of Reference to the properties of CiteKeyEntry
+        id: reference.paperId,
+        URL: reference.url,
+        type: reference.type,
+        title: reference.title,
+        abstract: reference.abstract,
+        issued: {
+            'date-parts': reference.year ? [[reference.year.toString(), 0, 0]] : [],
+        },
+        'container-title': reference.journal?.name,
+        volume: reference.journal?.volume,
+        page: reference.journal?.pages,
+        author: reference.authors?.map((author) => {
+            const nameParts = author.name ? author.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        director: reference.directors?.map((director) => {
+            const nameParts = director.name ? director.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        editor: reference.editors?.map((editor) => {
+            const nameParts = editor.name ? editor.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        key: reference.citationStyles?.bibtex,
+    };
+    return citeKeyEntry;
 }
 
 export const dataSearch = (data: Reference[], query: string) => {
