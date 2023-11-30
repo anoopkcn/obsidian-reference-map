@@ -21,12 +21,18 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	const Title = () => {
 		let formatTitle = (
 			<span className="orm-paper-title orm-paper-title-disabled">
+				{(paper.location && !settings.lookupLinkedFiles) &&
+					<span className="orm-paper-tag">{paper.location}</span>
+				}
 				{' ' + (splitTitle || 'Unknown Title') + ' '}
 			</span>
 		)
 		if (!isLocal) {
 			formatTitle = (
 				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>
+					{(paper.location && !settings.lookupLinkedFiles) &&
+						<span className="orm-paper-tag">{paper.location}</span>
+					}
 					{' ' + (splitTitle || 'Unknown Title') + ' '}
 				</a>
 			)
@@ -34,6 +40,9 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			formatTitle = (
 				<span className="orm-paper-title">
 					{<a href={url}>
+						{(paper.location && !settings.lookupLinkedFiles) &&
+							<span className="orm-paper-tag">{paper.location}</span>
+						}
 						{' ' + (splitTitle || 'Unknown Title') + ' '}
 					</a>
 					}
@@ -43,9 +52,6 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 		return (
 			<div className="orm-paper-title">
-				{(paper.location && !settings.lookupLinkedFiles) &&
-					<span className="orm-paper-tag">{paper.location}</span>
-				}
 				{formatTitle}
 			</div>
 		);
