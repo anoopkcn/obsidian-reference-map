@@ -21,10 +21,10 @@ export const ReferenceMapList = (props: {
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
-	const { viewManager, library, getLocalReferences } = props.referenceMapData;
-	const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
+	const { viewManager, getLocalReferences } = props.referenceMapData;
 
 	const fetchData = async () => {
+		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		if (props.plugin.settings.removeDuplicateIds) {
 			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId === id));
@@ -38,13 +38,21 @@ export const ReferenceMapList = (props: {
 
 	useEffect(() => {
 		setPapers([]);
-		const initialPapers = getLocalReferences(citeKeyMap);
+		const initialPapers = getLocalReferences(props.updateChecker.citeKeyMap);
 		setPapers(initialPapers);
-	}, [basename])
+	}, [props.updateChecker.basename])
 
 	useEffect(() => {
 		fetchData()
-	}, [indexIds, citeKeyMap, fileName, frontmatter, props.plugin.settings, library.libraryData])
+	}, [
+		props.updateChecker.basename,
+		props.updateChecker.indexIds,
+		props.updateChecker.citeKeyMap,
+		props.updateChecker.fileName,
+		props.updateChecker.frontmatter,
+		props.plugin.settings,
+		props.referenceMapData.library.libraryData
+	])
 
 	useEffect(() => {
 		if (activeRef.current !== null)

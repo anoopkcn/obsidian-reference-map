@@ -1,6 +1,6 @@
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
-import { ItemView, WorkspaceLeaf } from 'obsidian'
+import { ItemView, MarkdownView, WorkspaceLeaf } from 'obsidian'
 import ReferenceMap from 'src/main'
 import { t } from 'src/lang/helpers'
 import { AppContext } from 'src/context'
@@ -83,7 +83,8 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
-		const activeFile = this.app.workspace.getActiveFile();
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		const activeFile = activeView?.file
 		const settings = this.plugin.settings
 		let fileCache = ''
 		if (activeFile) {

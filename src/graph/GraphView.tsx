@@ -1,6 +1,6 @@
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, TFile, WorkspaceLeaf } from "obsidian";
 import { AppContext } from "src/context";
 import EventBus, { EVENTS } from "src/events";
 import { ReferenceMapData } from "src/data/data";
@@ -88,7 +88,8 @@ export class GraphView extends ItemView {
         return super.onClose()
     }
 
-    prepare = async (activeFile: TFile | null) => {
+    prepare = async (activeFile: TFile | null | undefined) => {
+        if (!activeFile) return false
         const settings = this.plugin.settings
         let isUpdate = false
         let fileCache = ''
@@ -132,7 +133,8 @@ export class GraphView extends ItemView {
     }
 
     openGraph = async () => {
-        const activeFile = this.app.workspace.getActiveFile()
+        const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+        const activeFile = activeView?.file
         await this.prepare(activeFile)
 
         this.rootEl?.render(
