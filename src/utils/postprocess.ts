@@ -148,7 +148,7 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
         reference.type = reference.type ?? citeKeyEntry.type;
         reference.title = reference.title ?? citeKeyEntry.title;
         reference.abstract = reference.abstract ?? citeKeyEntry.abstract;
-        reference.year = reference.year ?? citeKeyEntry.issued?.['date-parts']?.[0] as number;
+        reference.year = reference.year ?? citeKeyEntry.issued?.['date-parts'].flat().join('-') //.toString();
         reference.journal = reference.journal ?? {
             name: citeKeyEntry['container-title'],
             volume: citeKeyEntry.volume,
