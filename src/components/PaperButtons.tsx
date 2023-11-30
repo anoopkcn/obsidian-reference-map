@@ -131,8 +131,22 @@ export const PaperButtons = ({
 
 	citingCited = (
 		<>
-			{renderButton(showReferences, handleShowReferencesClick, metaData.referenceCount, "orm-button-references", isReferenceCount && showCountButtons)}
-			{renderButton(showCitations, handleShowCitationsClick, metaData.citationCount, "orm-button-citations", isCitationCount && showCountButtons)}
+			{!paper.isLocal &&
+				<>
+				{renderButton(showReferences, handleShowReferencesClick, metaData.referenceCount, "orm-button-references", isReferenceCount && showCountButtons)}
+				{renderButton(showCitations, handleShowCitationsClick, metaData.citationCount, "orm-button-citations", isCitationCount && showCountButtons)}
+					{settings.influentialCount && (
+						<div className="orm-button-disabled">
+							{metaData.influentialCount}
+						</div>
+					)}
+				</>
+			}
+			{paper.isLocal &&
+				<div className="orm-is-local orm-button-disabled">
+					Local Library
+				</div>
+			}
 		</>
 	);
 
@@ -155,7 +169,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataTwo)
 					}}
 				>
-					<CopyIconTwo size={15} />
+					<CopyIconTwo size={16} />
 				</div>
 			)}
 			{settings.formatMetadataCopyThree && (
@@ -165,7 +179,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataThree)
 					}}
 				>
-					<CopyIconThree size={15} />
+					<CopyIconThree size={16} />
 				</div>
 			)}
 			{paper.paper?.isOpenAccess ? (
@@ -180,11 +194,6 @@ export const PaperButtons = ({
 				</div>
 			)}
 			{citingCited}
-			{settings.influentialCount && (
-				<div className="orm-button-disabled">
-					{metaData.influentialCount}
-				</div>
-			)}
 		</div>
 	)
 }

@@ -366,6 +366,10 @@ body {
 	color: var(--orm-paper-buttons-hover-color);
 }
 
+.orm-is-local{
+	font-size: var(--font-ui-smaller);
+}
+
 /* Paper List */
 .orm-paper-list {
 	margin: 0.5rem 0;
