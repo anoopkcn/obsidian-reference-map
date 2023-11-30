@@ -72,6 +72,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateOne = e.target.value;
                                     plugin.saveSettings();
+                                    plugin.referenceMapData?.reload(RELOAD.VIEW);
                                 }}
                                 spellCheck={false}
                                 defaultValue={plugin.settings.metadataCopyTemplateOne ?? METADATA_COPY_TEMPLATE_ONE}
@@ -152,6 +153,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateTwo = e.target.value;
                                     plugin.saveSettings();
+                                    plugin.referenceMapData?.reload(RELOAD.VIEW)
                                 }}
                                 spellCheck={false}
                                 defaultValue={plugin.settings.metadataCopyTemplateTwo ?? METADATA_COPY_TEMPLATE_TWO}
@@ -231,6 +233,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateThree = e.target.value;
                                     plugin.saveSettings();
+                                    plugin.referenceMapData?.reload(RELOAD.VIEW)
                                 }}
                                 spellCheck={false}
                                 defaultValue={plugin.settings.metadataCopyTemplateThree ?? METADATA_COPY_TEMPLATE_THREE}
