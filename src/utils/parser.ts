@@ -3,6 +3,19 @@ import { COMMON_WORDS, NUMBERS, PUNCTUATION, VALID_S2AG_API_URLS } from "src/con
 import { Library } from "src/types";
 // Given a markdown file contents regex match the DOI's from the file
 
+export const sanitizeDOI = (dirtyDOI: string) => {
+    const doi_matches = dirtyDOI.match(doiRegex());
+    if (doi_matches) {
+        for (const match of doi_matches) {
+            return match
+                .replace(/\)+$|\]+$|\*+$|_+$|`+$/, '')
+                .replace(/\s+/g, '');
+        }
+    }
+    return dirtyDOI.replace(/\s+/g, '');
+};
+
+
 export const getPaperIds = (content: string): Set<string> => {
     const modContent = content.replaceAll('](', ' ');
     const output: string[] = [];

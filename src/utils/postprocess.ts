@@ -1,9 +1,9 @@
-import doiRegex from "doi-regex";
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
 import { getFormattedCitation } from "./zotero";
+import { sanitizeDOI } from "./parser";
 
 export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatCSL = false): MetaData => {
     const paper = data.paper;
@@ -310,16 +310,3 @@ export const indexSort = (
         }
     });
 };
-
-export const sanitizeDOI = (dirtyDOI: string) => {
-    const doi_matches = dirtyDOI.match(doiRegex());
-    if (doi_matches) {
-        for (const match of doi_matches) {
-            return match
-                .replace(/\)+$|\]+$|\*+$|_+$|`+$/, '')
-                .replace(/\s+/g, '');
-        }
-    }
-    return dirtyDOI.replace(/\s+/g, '');
-};
-
