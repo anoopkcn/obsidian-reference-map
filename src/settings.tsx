@@ -56,7 +56,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_ABSTRACT'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showAbstract)
@@ -97,7 +97,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		}
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_AUTHORS'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showAuthors)
@@ -112,7 +112,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_JOURNAL'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_JOURNAL_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_JOURNAL_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showJournal)
@@ -127,7 +127,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.influentialCount)
@@ -142,7 +142,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_BUTTONS_ON_HOVER'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.hideButtonsOnHover)
@@ -156,23 +156,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
-			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.filterRedundantReferences)
-					.onChange(async (value) => {
-						this.plugin.settings.filterRedundantReferences = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-
-		new Setting(containerEl)
 			.setName(t('LOOKUP_ENTRIES_LINKED_FILES'))
-			.setDesc(fragWithHTML(t('LOOKUP_ENTRIES_LINKED_FILES_DESC')))
+			// .setDesc(fragWithHTML(t('LOOKUP_ENTRIES_LINKED_FILES_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.lookupLinkedFiles)
@@ -186,23 +171,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
-			.setName(t('REMOVE_DUPLICATE_IDS'))
-			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.removeDuplicateIds)
-					.onChange(async (value) => {
-						this.plugin.settings.removeDuplicateIds = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-
-		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
-			.setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
+			// .setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.enableIndexSorting)
@@ -261,7 +231,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_REFERENCE_CARDS'))
-			.setDesc(fragWithHTML(t('ENABLE_SORTING_REFERENCE_CARDS_DESC')))
+			// .setDesc(fragWithHTML(t('ENABLE_SORTING_REFERENCE_CARDS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.enableReferenceSorting)
@@ -526,7 +496,37 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 			})
 
-		containerEl.createEl('h2', { text: 'Dynamic List Settings(Experimental)' })
+		containerEl.createEl('h2', { text: 'Misc' })
+
+		new Setting(containerEl)
+			.setName(t('REMOVE_DUPLICATE_IDS'))
+			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.removeDuplicateIds)
+					.onChange(async (value) => {
+						this.plugin.settings.removeDuplicateIds = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.filterRedundantReferences)
+					.onChange(async (value) => {
+						this.plugin.settings.filterRedundantReferences = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
 
 		new Setting(containerEl)
 			.setName(t('SEARCH_TITLE'))
@@ -625,8 +625,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`
 				})
 		}
-
-		containerEl.createEl('h2', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('DEBUG_MODE')))

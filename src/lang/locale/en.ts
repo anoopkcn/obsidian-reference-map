@@ -8,14 +8,14 @@ export default {
 		'Show or hide the abstract.<br>' +
 		'<b>Toggle ON:</b> Show abstract<br>' +
 		'<b>Toggle OFF:</b> Hide abstract',
-	ABSTRACT_TRUNCATE_LENGTH: 'Abstract truncate length',
+	ABSTRACT_TRUNCATE_LENGTH: 'Abstract characters truncate length',
 	ABSTRACT_TRUNCATE_LENGTH_DESC:
-		'Number of characters to truncate the abstract.<br>' +
-		'Abstract will be truncated to this length and appended with <code>...</code><br>' +
-		'If set to 0, abstract will NOT be truncated',
-	HIDE_SHOW_AUTHORS: 'Show or hide all authors/directors/editors',
+		// 'Number of characters to truncate the abstract.<br>' +
+		// 'Abstract will be truncated to this length and appended with <code>...</code><br>' +
+		'If set to 0, abstract will NOT be truncated (default 160)',
+	HIDE_SHOW_AUTHORS: 'Show or hide the names of all authors',
 	HIDE_SHOW_AUTHORS_DESC:
-		'Show or hide the names of authors/directors/editors names.<br>' +
+		'Show or hide the names of all authors.<br>' +
 		'<b>Toggle ON:</b> Show all contributors<br>' +
 		'<b>Toggle OFF:</b> Show one contributor',
 	HIDE_SHOW_JOURNAL: 'Show or hide journal, volume and pages',
@@ -88,7 +88,7 @@ export default {
 		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
 	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library file',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
-		'Auto detect changes to the Library and update the reference map.<br>' +
+		'Auto detect changes to the Library file given above and update the reference map.<br>' +
 		'You can also use <code>Refresh Map</code> in the command palette to manually do the same<br>' +
 		'<b>Toggle ON:</b> Enable auto detection changes in the Library<br>' +
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
@@ -118,12 +118,12 @@ export default {
 		' If found the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>' +
 		'<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>' +
 		'<b>Toggle OFF:</b> Do not lookup citekey from ID',
-	ENABLE_SORTING_REFERENCE_CARDS: 'Sort citing/cited cards',
+	ENABLE_SORTING_REFERENCE_CARDS: 'Sort sidebar citing and cited cards',
 	ENABLE_SORTING_REFERENCE_CARDS_DESC:
 		'Enable or Disable sorting of reference/citation cards. <br>' +
 		'<b>Toggle ON:</b> Enable sorting<br>' +
 		'<b>Toggle OFF:</b> Default sorting, as it is retrieved from database',
-	ENABLE_SORTING_INDEX_CARDS: 'Sort index cards',
+	ENABLE_SORTING_INDEX_CARDS: 'Sort sidebar index cards',
 	ENABLE_SORTING_INDEX_CARDS_DESC:
 		'Enable or Disable sorting of index cards.<br>' +
 		'<b>Toggle ON:</b> Enable sorting of the Index cards<br>' +
