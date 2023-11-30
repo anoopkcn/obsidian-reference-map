@@ -1,5 +1,3 @@
-import { clipBoard, clipboardData, papeClip } from 'src/icons'
-
 // English
 export default {
 	GENERAL_SETTINGS: 'General Settings',
@@ -10,14 +8,14 @@ export default {
 		'Show or hide the abstract.<br>' +
 		'<b>Toggle ON:</b> Show abstract<br>' +
 		'<b>Toggle OFF:</b> Hide abstract',
-	ABSTRACT_TRUNCATE_LENGTH: 'Abstract truncate length',
+	ABSTRACT_TRUNCATE_LENGTH: 'Abstract characters truncate length',
 	ABSTRACT_TRUNCATE_LENGTH_DESC:
-		'Number of characters to truncate the abstract.<br>' +
-		'Abstract will be truncated to this length and appended with <code>...</code><br>' +
-		'If set to 0, abstract will NOT be truncated',
-	HIDE_SHOW_AUTHORS: 'Show or hide all authors/directors/editors',
+		// 'Number of characters to truncate the abstract.<br>' +
+		// 'Abstract will be truncated to this length and appended with <code>...</code><br>' +
+		'If set to 0, abstract will NOT be truncated (default 160)',
+	HIDE_SHOW_AUTHORS: 'Show or hide the names of all authors',
 	HIDE_SHOW_AUTHORS_DESC:
-		'Show or hide the names of authors/directors/editors names.<br>' +
+		'Show or hide the names of all authors.<br>' +
 		'<b>Toggle ON:</b> Show all contributors<br>' +
 		'<b>Toggle OFF:</b> Show one contributor',
 	HIDE_SHOW_JOURNAL: 'Show or hide journal, volume and pages',
@@ -90,7 +88,7 @@ export default {
 		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
 	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library file',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
-		'Auto detect changes to the Library and update the reference map.<br>' +
+		'Auto detect changes to the Library file given above and update the reference map.<br>' +
 		'You can also use <code>Refresh Map</code> in the command palette to manually do the same<br>' +
 		'<b>Toggle ON:</b> Enable auto detection changes in the Library<br>' +
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
@@ -120,12 +118,12 @@ export default {
 		' If found the <code>{{id}}</code> metadata field is substituted by <code>{{citekey}}</code>.<br>' +
 		'<b>Toggle ON:</b> Find citekey from ID and set ID to citekey<br>' +
 		'<b>Toggle OFF:</b> Do not lookup citekey from ID',
-	ENABLE_SORTING_REFERENCE_CARDS: 'Sort citing/cited cards',
+	ENABLE_SORTING_REFERENCE_CARDS: 'Sort sidebar citing and cited cards',
 	ENABLE_SORTING_REFERENCE_CARDS_DESC:
 		'Enable or Disable sorting of reference/citation cards. <br>' +
 		'<b>Toggle ON:</b> Enable sorting<br>' +
 		'<b>Toggle OFF:</b> Default sorting, as it is retrieved from database',
-	ENABLE_SORTING_INDEX_CARDS: 'Sort index cards',
+	ENABLE_SORTING_INDEX_CARDS: 'Sort sidebar index cards',
 	ENABLE_SORTING_INDEX_CARDS_DESC:
 		'Enable or Disable sorting of index cards.<br>' +
 		'<b>Toggle ON:</b> Enable sorting of the Index cards<br>' +
@@ -141,51 +139,50 @@ export default {
 	SORT_ORDER_ASC: 'Ascending',
 	SORT_ORDER_DESC: 'Descending',
 	// metadata copy
-	FORMAT_METADATA_COPY_ONE: `${clipBoard} Metadata button one`,
+	FORMAT_METADATA_COPY_ONE: `Metadata button one`,
 	FORMAT_METADATA_COPY_ONE_DESC:
-		'Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata One button</b> is pressed.<br>' +
-		'<b>Toggle ON:</b> Copy to clipboard button is shown <br>' +
-		'<b>Toggle OFF:</b> Copy to clipboard button is hidden',
-	FORMAT_METADATA_COPY_TWO: `${papeClip} Metadata button two`,
+		'Change the format of the metadata to be copied to the clipboard',
+	FORMAT_METADATA_COPY_ONE_ON: 'Copy to clipboard button is shown',
+	FORMAT_METADATA_COPY_ONE_OFF: 'Copy to clipboard button is hidden',
+	FORMAT_METADATA_COPY_TWO: `Metadata button two`,
 	FORMAT_METADATA_COPY_TWO_DESC:
-		'Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Two button</b> is pressed.<br>' +
-		'<b>Toggle ON:</b> Copy to clipboard button is shown <br>' +
-		'<b>Toggle OFF:</b> Copy to clipboard button is hidden',
-	FORMAT_METADATA_COPY_THREE: `${clipboardData} Metadata button three`,
+		'Change the format of the metadata to be copied to the clipboard',
+	FORMAT_METADATA_COPY_TWO_ON: 'Copy to clipboard button is shown',
+	FORMAT_METADATA_COPY_TWO_OFF: 'Copy to clipboard button is hidden',
+	FORMAT_METADATA_COPY_THREE: `Metadata button three`,
 	FORMAT_METADATA_COPY_THREE_DESC:
-		'Change the format of the metadata to be copied to the clipboard when the <b>Copy Metadata Three button</b> is pressed.<br>' +
-		'<b>Toggle ON:</b> Copy to clipboard button is shown <br>' +
-		'<b>Toggle OFF:</b> Copy to clipboard button is hidden',
-	METADATA_COPY_TEMPLATE_ONE: `${clipBoard} Metadata template one`,
+		'Change the format of the metadata to be copied to the clipboard',
+	FORMAT_METADATA_COPY_THREE_ON: 'Copy to clipboard button is shown',
+	FORMAT_METADATA_COPY_THREE_OFF: 'Copy to clipboard button is hidden',
+	METADATA_COPY_TEMPLATE_ONE: `Metadata template one`,
 	METADATA_COPY_TEMPLATE_ONE_DESC:
-		'Template of the metadata to be copied to the clipboard.<br>' +
-		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
-	METADATA_COPY_TEMPLATE_TWO: `${papeClip} Metadata template two`,
+		'Template of the metadata to be copied to the clipboard. ' +
+		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
+	METADATA_COPY_TEMPLATE_TWO: `Metadata template two`,
 	METADATA_COPY_TEMPLATE_TWO_DESC:
 		'Template of the metadata to be copied to the clipboard.<br>' +
-		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
-	METADATA_COPY_TEMPLATE_THREE: `${clipboardData} Metadata template three`,
+		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
+	METADATA_COPY_TEMPLATE_THREE: `Metadata template three`,
 	METADATA_COPY_TEMPLATE_THREE_DESC:
 		'Template of the metadata to be copied to the clipboard.<br>' +
-		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
-	METADATA_COPY_ONE_BATCH: `${clipBoard} Metadata batch one`,
+		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
+	METADATA_COPY_ONE_BATCH: `Metadata batch one`,
 	METADATA_COPY_ONE_BATCH_DESC:
-		'Copy metadata for all the references(cited papers) to the clipboard.<br>' +
-		'<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>' +
-		'<b>Toggle ON:</b> Copy metadata for all references <br>' +
-		'<b>Toggle OFF:</b> Copy metadata for the individual index/reference card',
-	METADATA_COPY_TWO_BATCH: `${papeClip} Metadata batch two`,
+		'Copy metadata for all the references(cited papers) to the clipboard. This option only applies to index card button and template variable {{id}} will return empty',
+	METADATA_COPY_ONE_BATCH_ON: 'Copy metadata for all references',
+	METADATA_COPY_ONE_BATCH_OFF: 'Copy metadata for the individual index/reference card',
+
+	METADATA_COPY_TWO_BATCH: `Metadata batch two`,
 	METADATA_COPY_TWO_BATCH_DESC:
-		'Copy metadata for all the references(cited papers) to the clipboard.<br>' +
-		'<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>' +
-		'<b>Toggle ON:</b> Copy metadata for all references <br>' +
-		'<b>Toggle OFF:</b> Copy metadata for the individual index/reference card',
-	METADATA_COPY_THREE_BATCH: `${clipboardData} Metadata batch three`,
+		'Copy metadata for all the references(cited papers) to the clipboard. This option only applies to index card button and template variable {{id}} will return empty',
+	METADATA_COPY_TWO_BATCH_ON: 'Copy metadata for all references',
+	METADATA_COPY_TWO_BATCH_OFF: 'Copy metadata for the individual index/reference card',
+
+	METADATA_COPY_THREE_BATCH: `Metadata batch three`,
 	METADATA_COPY_THREE_BATCH_DESC:
-		'Copy metadata for all the references(cited papers) to the clipboard.<br>' +
-		'<b>This option only applies to index card button and template variable {{id}} will return empty</b>.<br>' +
-		'<b>Toggle ON:</b> Copy metadata for all references <br>' +
-		'<b>Toggle OFF:</b> Copy metadata for the individual index/reference card',
+		'Copy metadata for all the references(cited papers) to the clipboard. This option only applies to index card button and template variable {{id}} will return empty',
+	METADATA_COPY_THREE_BATCH_ON: 'Copy metadata for all references',
+	METADATA_COPY_THREE_BATCH_OFF: 'Copy metadata for the individual index/reference card',
 	// modal settings
 	MODAL_SEARCH_LIMIT: 'Search limit',
 	MODAL_SEARCH_LIMIT_DESC: 'Number of references to show in the modal search. Default is set to 10. Maximum is 100.',

@@ -46,6 +46,9 @@ export interface ReferenceMapSettings {
 	metadataCopyTwoBatch: boolean
 	metadataCopyThreeBatch: boolean
 	debugMode: boolean
+	citationStyle: string
+	citationLocale: string
+	formatCSL: boolean
 }
 export interface MetaData {
 	bibtex: string
@@ -63,6 +66,7 @@ export interface MetaData {
 	referenceCount: number
 	citationCount: number
 	influentialCount: number
+	csl?: string
 }
 
 export interface IndexPaper {
@@ -70,6 +74,7 @@ export interface IndexPaper {
 	location: number | null
 	isLocal?: boolean
 	paper: Reference
+	cslEntry?: CiteKeyEntry
 }
 
 export interface CiteKey {
@@ -112,3 +117,9 @@ export interface ZoteroGroup {
 }
 
 export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
+
+export type LocalCache = {
+	cacheDirPath: string;
+	citationStyle: string;
+	citationLocale: string;
+}

@@ -41,7 +41,7 @@ export interface Author {
 }
 
 export interface Issued {
-    "date-parts": [string, number, number][]
+    "date-parts": [number, number, number]
 }
 
 export interface Director {

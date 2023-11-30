@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, ReactNode } from 'react'
-import { BsSearch } from 'react-icons/bs'
 import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
@@ -7,7 +6,7 @@ import { IndexPaperCard } from 'src/components/IndexPaperCard'
 import { indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
-// import { PartialLoading } from './PartialLoading'
+import { SearchIcon } from 'src/icons'
 
 interface NoContentProps {
 	children: ReactNode;
@@ -20,14 +19,11 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
-	// const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
-
-	const { viewManager } = props.referenceMapData;
+	const { viewManager, getLocalReferences } = props.referenceMapData;
 
 	const fetchData = async () => {
-		// setIsLoading(true)
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		if (props.plugin.settings.removeDuplicateIds) {
@@ -38,18 +34,18 @@ export const ReferenceMapList = (props: {
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
 		setPapers(indexCards)
-		// setIsLoading(false)
 	}
 
-	// unset paper when basename is changed 
-
 	useEffect(() => {
-		setPapers([])
+		setPapers([]);
+		const initialPapers = getLocalReferences(props.updateChecker.citeKeyMap);
+		setPapers(initialPapers);
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
 		fetchData()
 	}, [
+		props.updateChecker.basename,
 		props.updateChecker.indexIds,
 		props.updateChecker.citeKeyMap,
 		props.updateChecker.fileName,
@@ -76,7 +72,7 @@ export const ReferenceMapList = (props: {
 				<div className="orm-search-form">
 					<div className="index-search">
 						<div className="orm-plugin-global-search">
-							<BsSearch size={15} className="global-search-icon" />
+							<SearchIcon size={15} className="global-search-icon" />
 						</div>
 						<input
 							type="search"
@@ -85,7 +81,6 @@ export const ReferenceMapList = (props: {
 							onChange={(e) => setQuery(e.target.value)}
 							style={{ padding: '0 35px 0 35px' }}
 						/>
-						{/* <BsSearch size={15} className="search-icon" /> */}
 						{isSearchList &&
 							<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
 						}
@@ -133,7 +128,6 @@ export const ReferenceMapList = (props: {
 			<>
 				<div className="orm-reference-map">
 					{userSearch(true)}
-					{/* <PartialLoading isLoading={isLoading} /> */}
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
@@ -145,7 +139,7 @@ export const ReferenceMapList = (props: {
 							>
 								<IndexPaperCard
 									className={activeIndexCardClass}
-									settings={props.plugin.settings}
+									plugin={props.plugin}
 									rootPaper={paper}
 									viewManager={viewManager}
 								/>

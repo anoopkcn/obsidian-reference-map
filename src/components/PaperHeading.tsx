@@ -1,5 +1,5 @@
 import React from 'react';
-import { SEMANTICSCHOLAR_URL } from 'src/constants';
+import { SEMANTIC_SCHOLAR_URL } from 'src/constants';
 import { IndexPaper, ReferenceMapSettings } from 'src/types';
 import { splitString } from 'src/utils/functions';
 
@@ -9,8 +9,7 @@ interface Props {
 }
 
 export const PaperHeading = ({ paper, settings }: Props) => {
-	const { paper: paperData } = paper;
-	const { authors, directors, editors, title, year, abstract, paperId } = paperData || {};
+	const { authors, directors, editors, title, year, abstract, paperId, url } = paper.paper;
 	const authorID = authors?.[0]?.authorId;
 	const isCitekey = paper?.id?.includes('@');
 	const showCitekey = settings.linkCiteKey && isCitekey;
@@ -21,36 +20,45 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 
 	const Title = () => {
 		let formatTitle = (
-			<span className="orm-paper-title-disabled ">
-				{splitTitle}
+			<span className="orm-paper-title orm-paper-title-disabled">
+				{(paper.location && !settings.lookupLinkedFiles) &&
+					<span className="orm-paper-tag">{paper.location}</span>
+				}
+				{' ' + (splitTitle || 'Unknown Title') + ' '}
 			</span>
 		)
 		if (!isLocal) {
 			formatTitle = (
-				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>
+				<a href={`${SEMANTIC_SCHOLAR_URL}/paper/${paperId}`}>
+					{(paper.location && !settings.lookupLinkedFiles) &&
+						<span className="orm-paper-tag">{paper.location}</span>
+					}
 					{' ' + (splitTitle || 'Unknown Title') + ' '}
 				</a>
 			)
-		} else if (paper.paper.url) {
+		} else if (url) {
 			formatTitle = (
-				<a href={paper.paper.url}>
-					{' ' + (splitTitle || 'Unknown Title') + ' '}
-				</a>
+				<span className="orm-paper-title">
+					{<a href={url}>
+						{(paper.location && !settings.lookupLinkedFiles) &&
+							<span className="orm-paper-tag">{paper.location}</span>
+						}
+						{' ' + (splitTitle || 'Unknown Title') + ' '}
+					</a>
+					}
+				</span>
 			)
 		}
 
 		return (
 			<div className="orm-paper-title">
-				{(paper.location && !settings.lookupLinkedFiles) &&
-					<span className="orm-paper-tag">{paper.location}</span>
-				}
 				{formatTitle}
 			</div>
 		);
 	}
 
 	const Abstract = () => {
-		const className = isLocal ? "orm-paper-title-disabled orm-paper-abstract-disabled" : "orm-paper-abstract"
+		const className = isLocal ? "orm-paper-abstract orm-paper-abstract-disabled" : "orm-paper-abstract"
 		let truncatedAbstract = splitAbstract
 		if (settings.abstractTruncateLength > 0 && truncatedAbstract.length > settings.abstractTruncateLength) {
 			truncatedAbstract = splitAbstract.slice(0, settings.abstractTruncateLength) + ' ...'
@@ -66,7 +74,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 		if (isLocal) {
 			if (!all) {
 				return (
-					<span className="orm-paper-title-disabled">
+					<span className="orm-paper-authors orm-paper-authors-disabled">
 						{(authors && authors.length > 0 ? authors[0].name : '') + ' '}
 						{(directors && directors.length > 0 ? directors[0].name : '') + ' '}
 						{(editors && editors.length > 0 ? editors[0].name : '') + ' '}
@@ -75,7 +83,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 				)
 			} else {
 				return (
-					<span className="orm-paper-title-disabled">
+					<span className="orm-paper-authors orm-paper-authors-disabled">
 						{(authors || []).map((author) => author.name).join(', ') + ' '}
 						{(directors || []).map((director) => director.name).join(', ') + ' '}
 						{(editors || []).map((editor) => editor.name).join(', ') + ' '}
@@ -87,7 +95,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			if (!all) {
 				return (
 					<span className="orm-paper-authors">
-						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+						<a href={`${SEMANTIC_SCHOLAR_URL}/author/${authorID}`}>
 							{(authors?.[0]?.name || 'Unknown Author') + ' ' + year}
 						</a>
 					</span>
@@ -95,7 +103,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			} else {
 				return (
 					<span className="orm-paper-authors">
-						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+						<a href={`${SEMANTIC_SCHOLAR_URL}/author/${authorID}`}>
 							{(authors || []).map((author) => author.name).join(', ') + ' ' + year}
 						</a>
 					</span>
@@ -106,7 +114,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	}
 
 	const Journal = () => {
-		const className = "orm-paper-title-disabled"
+		const className = "orm-paper-journal orm-paper-journal-disabled"
 		const journalParts = [
 			paper.paper.journal?.name,
 			paper.paper.journal?.volume,

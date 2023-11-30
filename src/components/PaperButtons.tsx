@@ -1,14 +1,13 @@
 import React from 'react'
-import { FiPaperclip, FiClipboard } from 'react-icons/fi'
-import { SiOpenaccess } from 'react-icons/si'
-import { BsClipboardData } from 'react-icons/bs'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
-import { IndexPaper, ReferenceMapSettings } from 'src/types'
+import { OpenAccessIcon, CopyIconOne, CopyIconTwo, CopyIconThree } from 'src/icons'
+import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
 import { copyElToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 
 type Props = {
 	settings: ReferenceMapSettings
+	cacheDir: string
 	paper: IndexPaper
 	showCountButtons?: boolean
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>
@@ -24,6 +23,7 @@ type Props = {
 
 export const PaperButtons = ({
 	settings,
+	cacheDir,
 	paper,
 	showCountButtons = true,
 	setShowReferences = undefined,
@@ -48,7 +48,14 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE
 
-	const metaData = makeMetaData(paper.paper)
+
+	const cache: LocalCache = {
+		cacheDirPath: cacheDir,
+		citationStyle: settings.citationStyle,
+		citationLocale: settings.citationLocale
+	}
+
+	const metaData = makeMetaData(paper, cache, settings.formatCSL)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''
@@ -124,8 +131,22 @@ export const PaperButtons = ({
 
 	citingCited = (
 		<>
-			{renderButton(showReferences, handleShowReferencesClick, metaData.referenceCount, "orm-button-references", isReferenceCount && showCountButtons)}
-			{renderButton(showCitations, handleShowCitationsClick, metaData.citationCount, "orm-button-citations", isCitationCount && showCountButtons)}
+			{!paper.isLocal &&
+				<>
+				{renderButton(showReferences, handleShowReferencesClick, metaData.referenceCount, "orm-button-references", isReferenceCount && showCountButtons)}
+				{renderButton(showCitations, handleShowCitationsClick, metaData.citationCount, "orm-button-citations", isCitationCount && showCountButtons)}
+					{settings.influentialCount && (
+						<div className="orm-button-disabled">
+							{metaData.influentialCount}
+						</div>
+					)}
+				</>
+			}
+			{paper.isLocal &&
+				<div className="orm-is-local orm-button-disabled">
+					Local Library
+				</div>
+			}
 		</>
 	);
 
@@ -138,7 +159,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataOne)
 					}}
 				>
-					<FiClipboard size={16} />
+					<CopyIconOne size={16} />
 				</div>
 			)}
 			{settings.formatMetadataCopyTwo && (
@@ -148,7 +169,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataTwo)
 					}}
 				>
-					<FiPaperclip size={15} />
+					<CopyIconTwo size={16} />
 				</div>
 			)}
 			{settings.formatMetadataCopyThree && (
@@ -158,26 +179,21 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataThree)
 					}}
 				>
-					<BsClipboardData size={15} />
+					<CopyIconThree size={16} />
 				</div>
 			)}
 			{paper.paper?.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${metaData.pdfurl}`}>
-						<SiOpenaccess size={15} />
+						<OpenAccessIcon size={15} />
 					</a>
 				</div>
 			) : (
 				<div className="orm-button-disable">
-					<SiOpenaccess size={15} />
+						<OpenAccessIcon size={15} />
 				</div>
 			)}
 			{citingCited}
-			{settings.influentialCount && (
-				<div className="orm-button-disabled">
-					{metaData.influentialCount}
-				</div>
-			)}
 		</div>
 	)
 }

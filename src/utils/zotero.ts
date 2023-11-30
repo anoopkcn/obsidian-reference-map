@@ -5,21 +5,24 @@ import fs from "fs";
 import http, { request } from "http";
 import https from "https";
 import path from "path";
+import { CiteKeyEntry } from "src/apis/bibTypes";
 import { DEFAULT_HEADERS, DEFAULT_ZOTERO_PORT } from "src/constants";
 import { CSLList, PartialCSLEntry } from "src/types";
-
+import CSL from 'citeproc';
 
 function ensureDir(dir: string) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 }
+
 function getGlobal() {
     if (window?.activeWindow) return activeWindow;
     if (window) return window;
     return global;
 
 }
+
 export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
     const options = {
         hostname: '127.0.0.1',
@@ -57,6 +60,7 @@ export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
 
     return res?.toString() === 'ready';
 }
+
 function applyGroupID(list: CSLList, groupId: number) {
     return list.map((item) => {
         item.groupID = groupId;
@@ -158,10 +162,12 @@ export async function getZUserGroups(
         postRequest.end();
     });
 }
+
 function panNum(n: number) {
     if (n < 10) return `0${n}`;
     return n.toString();
 }
+
 function timestampToZDate(ts: number) {
     const d = new Date(ts);
     return `${d.getUTCFullYear()}-${panNum(d.getUTCMonth() + 1)}-${panNum(
@@ -219,7 +225,6 @@ export async function getZModified(
         postRequest.end();
     });
 }
-
 
 export async function refreshZBib(
     port: string = DEFAULT_ZOTERO_PORT,
@@ -282,6 +287,66 @@ export async function refreshZBib(
     };
 }
 
+export function getFormattedCitation(
+    reference: CiteKeyEntry | undefined,
+    citationStyle: string,
+    citationLocale: string
+) {
+    if (!reference) return null;
+    const citeprocSys = {
+        retrieveLocale: () => citationLocale,
+        retrieveItem: (id: string) => { return reference },
+    };
+    const citeproc = new CSL.Engine(citeprocSys, citationStyle);
+    citeproc.updateItems([reference.id])
+    const bib = citeproc.makeBibliography();
+    return bib
+}
+
+
+export async function getCSLLocale(
+    localeCache: Map<string, string>,
+    cacheDir: string,
+    lang: string
+) {
+    if (localeCache.has(lang)) {
+        return localeCache.get(lang);
+    }
+
+    const url = `https://raw.githubusercontent.com/citation-style-language/locales/master/locales-${lang}.xml`;
+    const outPath = path.join(cacheDir, `locales-${lang}.xml`);
+
+    ensureDir(cacheDir);
+    if (fs.existsSync(outPath)) {
+        const localeData = fs.readFileSync(outPath).toString();
+        localeCache.set(lang, localeData);
+        return localeData;
+    }
+
+    const str = await new Promise<string>((res, rej) => {
+        https.get(url, (result) => {
+            let output = '';
+
+            result.setEncoding('utf8');
+            result.on('data', (chunk) => (output += chunk));
+            result.on('error', (e) => rej(`Downloading locale: ${e}`));
+            result.on('close', () => {
+                rej(new Error('Error: cannot download locale'));
+            });
+            result.on('end', () => {
+                if (/^404: Not Found/.test(output)) {
+                    rej(new Error('Error downloading locale: 404: Not Found'));
+                } else {
+                    res(output);
+                }
+            });
+        });
+    });
+
+    fs.writeFileSync(outPath, str);
+    localeCache.set(lang, str);
+    return str;
+}
 
 export async function getCSLStyle(
     styleCache: Map<string, string>,
@@ -310,11 +375,11 @@ export async function getCSLStyle(
     }
 
     const fileFromURL = url.split('/').pop();
-    const outpath = path.join(cacheDir, fileFromURL ?? '');
+    const outPath = path.join(cacheDir, fileFromURL ?? '');
 
     ensureDir(cacheDir);
-    if (fs.existsSync(outpath)) {
-        const styleData = fs.readFileSync(outpath).toString();
+    if (fs.existsSync(outPath)) {
+        const styleData = fs.readFileSync(outPath).toString();
         styleCache.set(url, styleData);
         return styleData;
     }
@@ -339,7 +404,7 @@ export async function getCSLStyle(
         });
     });
 
-    fs.writeFileSync(outpath, str);
+    fs.writeFileSync(outPath, str);
     styleCache.set(url, str);
     return str;
 }

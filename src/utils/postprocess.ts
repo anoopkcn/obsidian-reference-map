@@ -1,11 +1,12 @@
-import doiRegex from "doi-regex";
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
-import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
+import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
+import { getFormattedCitation } from "./zotero";
+import { sanitizeDOI } from "./parser";
 
-
-export const makeMetaData = (paper: Reference): MetaData => {
+export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatCSL = false): MetaData => {
+    const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
     const authors = paper.authors?.map(author => author.name).join(', ') || 'Could not recover Authors';
@@ -21,6 +22,21 @@ export const makeMetaData = (paper: Reference): MetaData => {
     const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
     const paperURL = paper.url || 'Could not recover URL';
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
+    let csl = 'Could Not Recover CSL';
+
+    if (formatCSL) {
+        if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
+            csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
+        }
+        else if (cache && cache.citationStyle && cache.citationLocale && paper) {
+            csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
+        }
+        else {
+            csl = 'Could Not Recover CSL'
+        }
+    } else {
+        csl = 'Enable CSL Formatting from Settings'
+    }
 
     return {
         bibtex: bibTex,
@@ -38,6 +54,7 @@ export const makeMetaData = (paper: Reference): MetaData => {
         referenceCount,
         citationCount,
         influentialCount,
+        csl
     };
 };
 
@@ -56,7 +73,8 @@ export const templateReplace = (template: string, data: MetaData, id = '') => {
         .replaceAll('{{abstract}}', data.abstract)
         .replaceAll('{{url}}', data.url)
         .replaceAll('{{pdfurl}}', data.pdfurl)
-        .replaceAll('{{doi}}', data.doi);
+        .replaceAll('{{doi}}', data.doi)
+        .replaceAll('{{csl}}', data.csl?.toString() || 'Could not recover CSL');
 };
 
 export const setCiteKeyId = (paperId: string, citeLibrary: Library): string => {
@@ -121,28 +139,22 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
 };
 
 //convert citeKeyEntry to Reference
-export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
-    const reference: Reference = {
-        // map the properties of citeKeyEntry to the properties of Reference
-        paperId: citeKeyEntry.id,
-        externalIds: undefined,
-        url: citeKeyEntry.URL,
-        type: citeKeyEntry.type,
-        title: citeKeyEntry.title,
-        abstract: citeKeyEntry.abstract,
-        venue: undefined,
-        year: citeKeyEntry.issued?.['date-parts']?.[0]?.[0],
-        referenceCount: undefined,
-        citationCount: undefined,
-        influentialCitationCount: undefined,
-        isOpenAccess: undefined,
-        openAccessPdf: undefined,
-        journal: {
+export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, reference: Reference = { paperId: '' }): Reference {
+    // map the properties of citeKeyEntry to the properties of Reference
+    if (citeKeyEntry) {
+        reference.paperId = reference.paperId ?? citeKeyEntry.id;
+        reference.externalIds = reference.externalIds ?? { DOI: citeKeyEntry.DOI };
+        reference.url = reference.url ?? citeKeyEntry.URL;
+        reference.type = reference.type ?? citeKeyEntry.type;
+        reference.title = reference.title ?? citeKeyEntry.title;
+        reference.abstract = reference.abstract ?? citeKeyEntry.abstract;
+        reference.year = reference.year ?? citeKeyEntry.issued?.['date-parts'].flat().join('-') //.toString();
+        reference.journal = reference.journal ?? {
             name: citeKeyEntry['container-title'],
             volume: citeKeyEntry.volume,
             pages: citeKeyEntry.page,
-        },
-        authors: citeKeyEntry.author?.map((author) => {
+        };
+        reference.authors = reference.authors ?? citeKeyEntry.author?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -151,8 +163,8 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        directors: citeKeyEntry.director?.map((author) => {
+        });
+        reference.directors = reference.directors ?? citeKeyEntry.director?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -161,8 +173,8 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        editors: citeKeyEntry.editor?.map((author) => {
+        });
+        reference.editors = reference.editors ?? citeKeyEntry.editor?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -171,12 +183,62 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        citationStyles: {
+        });
+        reference.citationStyles = reference.citationStyles ?? {
             bibtex: citeKeyEntry.key,
-        },
     };
+    }
+
     return reference;
+}
+
+export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {
+    // convert YYYY-MM-DD numbers [YYYY, MM, DD]
+    let issued: [number, number, number] = [0, 0, 0];
+    if (reference.publicationDate) {
+        const dateParts = reference.publicationDate.split('-').map(Number);
+        if (dateParts.length === 3) {
+            issued = [dateParts[0], dateParts[1], dateParts[2]] as [number, number, number];
+        }
+    }
+    const citeKeyEntry: CiteKeyEntry = {
+        // map the properties of Reference to the properties of CiteKeyEntry
+        id: reference.paperId,
+        URL: reference.url,
+        DOI: reference.externalIds?.DOI,
+        type: reference.type,
+        title: reference.title,
+        abstract: reference.abstract,
+        issued: {
+            'date-parts': issued,
+        },
+        'container-title': reference.journal?.name,
+        volume: reference.journal?.volume,
+        page: reference.journal?.pages,
+        author: reference.authors?.map((author) => {
+            const nameParts = author.name ? author.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        director: reference.directors?.map((director) => {
+            const nameParts = director.name ? director.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        editor: reference.editors?.map((editor) => {
+            const nameParts = editor.name ? editor.name.split(' ') : [''];
+            return {
+                given: nameParts.slice(0, -1).join(' '),
+                family: nameParts.slice(-1).join(' '),
+            };
+        }),
+        key: reference.citationStyles?.bibtex,
+    };
+    return citeKeyEntry;
 }
 
 export const dataSearch = (data: Reference[], query: string) => {
@@ -247,15 +309,4 @@ export const indexSort = (
             return left < right ? 1 : -1;
         }
     });
-}; export const sanitizeDOI = (dirtyDOI: string) => {
-    const doi_matches = dirtyDOI.match(doiRegex());
-    if (doi_matches) {
-        for (const match of doi_matches) {
-            return match
-                .replace(/\)+$|\]+$|\*+$|_+$|`+$/, '')
-                .replace(/\s+/g, '');
-        }
-    }
-    return dirtyDOI.replace(/\s+/g, '');
 };
-

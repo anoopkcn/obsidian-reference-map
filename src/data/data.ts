@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { CiteKey, IndexPaper, Library, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { convertToReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
@@ -153,6 +153,24 @@ export class ReferenceMapData {
         }
     };
 
+    getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
+        const indexCards: IndexPaper[] = [];
+        if (!citeKeyMap) return indexCards;
+        _.map(citeKeyMap, (item) => {
+            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+            if (localPaper) {
+                indexCards.push({
+                    id: item.citeKey,
+                    location: item.location,
+                    isLocal: true,
+                    paper: fillMissingReference(localPaper),
+                    cslEntry: localPaper
+                });
+            }
+        });
+        return indexCards;
+    }
+
 
     getIndexCards = async (
         indexIds: Set<string>,
@@ -176,7 +194,13 @@ export class ReferenceMapData {
                                 settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
-                        indexCards.push({ id: paperCiteId, location: null, isLocal: false, paper });
+                        indexCards.push({
+                            id: paperCiteId,
+                            location: null,
+                            isLocal: false,
+                            paper: paper,
+                            cslEntry: undefined
+                        });
                     }
                 })
             );
@@ -186,20 +210,36 @@ export class ReferenceMapData {
         if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
                 _.map(citeKeyMap, async (item): Promise<void> => {
-                    if (item.citeKey === item.paperId) {
-                        const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
-                        if (localPaper) {
-                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
-                        }
-                    } else {
-                        const paper = await this.viewManager.getIndexPaper(item.paperId);
-                        if (paper !== null && typeof paper !== "number") {
-                            indexCards.push({ id: item.citeKey, location: item.location, isLocal: false, paper });
-                        } else if (typeof paper === "number") {
-                            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
-                            if (localPaper) {
-                                indexCards.push({ id: item.citeKey, location: item.location, isLocal: true, paper: convertToReference(localPaper) });
+                    const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+                    if (localPaper) {
+                        if (item.citeKey !== item.paperId) {
+                            const paper = await this.viewManager.getIndexPaper(item.paperId);
+                            if (paper && typeof paper !== "number" && paper.paperId) {
+                                const paper_ = fillMissingReference(localPaper, paper);
+                                indexCards.push({
+                                    id: item.citeKey,
+                                    location: item.location,
+                                    isLocal: false,
+                                    paper: paper_,
+                                    cslEntry: localPaper
+                                });
+                            } else {
+                                indexCards.push({
+                                    id: item.citeKey,
+                                    location: item.location,
+                                    isLocal: true,
+                                    paper: fillMissingReference(localPaper),
+                                    cslEntry: localPaper
+                                });
                             }
+                        } else {
+                            indexCards.push({
+                                id: item.citeKey,
+                                location: item.location,
+                                isLocal: true,
+                                paper: fillMissingReference(localPaper),
+                                cslEntry: localPaper
+                            });
                         }
                     }
                 })

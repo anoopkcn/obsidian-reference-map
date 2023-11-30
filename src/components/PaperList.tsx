@@ -2,16 +2,17 @@ import React, { useState } from 'react'
 import { ReferenceMapSettings } from 'src/types'
 import { PaperCard } from './PaperCard'
 import { dataSearch, dataSort } from 'src/utils/postprocess'
-import { BsSearch } from 'react-icons/bs'
 import { Reference } from 'src/apis/s2agTypes'
+import { SearchIcon } from 'src/icons'
 
 interface Props {
 	papers: Reference[]
 	settings: ReferenceMapSettings
+	cacheDir: string
 	type: string
 }
 
-export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
+export const PaperList: React.FC<Props> = ({ papers, settings, cacheDir, type }) => {
 	const [query, setQuery] = useState('')
 
 	const sortedPapers = settings.enableReferenceSorting
@@ -27,6 +28,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 			key={`${paper.paperId}-${index}`}
 			paper={{ id: paper.paperId, location: null, paper }}
 			settings={settings}
+			cacheDir={cacheDir}
 		/>
 	))
 
@@ -42,7 +44,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, type }) => {
 							onChange={(e) => setQuery(e.target.value)}
 							style={{ padding: '0 30px 0 30px' }}
 						/>
-						<BsSearch size={15} className="search-icon" />
+						<SearchIcon size={15} className="search-icon" />
 					</div>
 				</div>
 			</div>

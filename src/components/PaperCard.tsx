@@ -6,6 +6,7 @@ import { IndexPaper, ReferenceMapSettings } from 'src/types'
 export const PaperCard = (props: {
 	paper: IndexPaper
 	settings: ReferenceMapSettings
+	cacheDir: string
 	showCountButtons?: boolean
 }) => {
 	const paper = props.paper
@@ -23,7 +24,7 @@ export const PaperCard = (props: {
 		>
 			<PaperHeading paper={paper} settings={props.settings} />
 			{(isButtonShown || props.showCountButtons) && (
-				<PaperButtons settings={props.settings} paper={paper} showCountButtons={props.showCountButtons} />
+				<PaperButtons settings={props.settings} cacheDir={props.cacheDir} paper={paper} showCountButtons={props.showCountButtons} />
 			)}
 		</div>
 	)

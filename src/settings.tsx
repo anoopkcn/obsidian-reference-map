@@ -4,8 +4,9 @@ import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
 import { RELOAD } from './types'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
-import { ZoteroPullSetting } from './components/ZoteroPullSetting'
+import { ZoteroPullSetting } from './components/ZoteroPullSettings'
 import { fragWithHTML, resolvePath } from './utils/functions'
+import { ButtonSettings } from './components/ButtonSettings';
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -55,7 +56,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_ABSTRACT'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_ABSTRACT_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showAbstract)
@@ -96,7 +97,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		}
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_AUTHORS'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_AUTHORS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showAuthors)
@@ -111,7 +112,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_JOURNAL'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_JOURNAL_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_JOURNAL_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.showJournal)
@@ -126,7 +127,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_INFLUENTIAL_COUNT'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_INFLUENTIAL_COUNT_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.influentialCount)
@@ -141,7 +142,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_BUTTONS_ON_HOVER'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
+			// .setDesc(fragWithHTML(t('HIDE_SHOW_BUTTONS_ON_HOVER_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.hideButtonsOnHover)
@@ -155,23 +156,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
-			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
-			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.filterRedundantReferences)
-					.onChange(async (value) => {
-						this.plugin.settings.filterRedundantReferences = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-
-		new Setting(containerEl)
 			.setName(t('LOOKUP_ENTRIES_LINKED_FILES'))
-			.setDesc(fragWithHTML(t('LOOKUP_ENTRIES_LINKED_FILES_DESC')))
+			// .setDesc(fragWithHTML(t('LOOKUP_ENTRIES_LINKED_FILES_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.lookupLinkedFiles)
@@ -185,23 +171,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			)
 
 		new Setting(containerEl)
-			.setName(t('REMOVE_DUPLICATE_IDS'))
-			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.removeDuplicateIds)
-					.onChange(async (value) => {
-						this.plugin.settings.removeDuplicateIds = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-
-		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_INDEX_CARDS'))
-			.setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
+			// .setDesc(fragWithHTML(t('ENABLE_SORTING_INDEX_CARDS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.enableIndexSorting)
@@ -260,7 +231,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('ENABLE_SORTING_REFERENCE_CARDS'))
-			.setDesc(fragWithHTML(t('ENABLE_SORTING_REFERENCE_CARDS_DESC')))
+			// .setDesc(fragWithHTML(t('ENABLE_SORTING_REFERENCE_CARDS_DESC')))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.enableReferenceSorting)
@@ -445,156 +416,14 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 
 		containerEl.createEl('h2', { text: 'Buttons Settings' })
-
-		new Setting(containerEl)
-			.setName(fragWithHTML(t('FORMAT_METADATA_COPY_ONE')))
-			.setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_ONE_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.formatMetadataCopyOne)
-					.onChange(async (value) => {
-						this.plugin.settings.formatMetadataCopyOne = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-						this.display()
-					})
-			)
-
-		if (this.plugin.settings.formatMetadataCopyOne) {
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_ONE_DESC')))
-				.addTextArea((text) => {
-					text.setValue(
-						this.plugin.settings.metadataCopyTemplateOne
-					).onChange(async (value) => {
-						this.plugin.settings.metadataCopyTemplateOne = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-					})
-				})
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_ONE_BATCH')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_ONE_BATCH_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(this.plugin.settings.metadataCopyOneBatch)
-						.onChange(async (value) => {
-							this.plugin.settings.metadataCopyOneBatch = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-		}
-
-		new Setting(containerEl)
-			.setName(fragWithHTML(t('FORMAT_METADATA_COPY_TWO')))
-			.setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_TWO_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.formatMetadataCopyTwo)
-					.onChange(async (value) => {
-						this.plugin.settings.formatMetadataCopyTwo = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-						this.display()
-					})
-			)
-
-		if (this.plugin.settings.formatMetadataCopyTwo) {
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_TWO_DESC')))
-				.addTextArea((text) => {
-					text.inputEl.rows = 7
-					text.setValue(
-						this.plugin.settings.metadataCopyTemplateTwo
-					).onChange(async (value) => {
-						this.plugin.settings.metadataCopyTemplateTwo = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-					})
-				})
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_TWO_BATCH')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_TWO_BATCH_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(this.plugin.settings.metadataCopyTwoBatch)
-						.onChange(async (value) => {
-							this.plugin.settings.metadataCopyTwoBatch = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-		}
-
-		new Setting(containerEl)
-			.setName(fragWithHTML(t('FORMAT_METADATA_COPY_THREE')))
-			.setDesc(fragWithHTML(t('FORMAT_METADATA_COPY_THREE_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.formatMetadataCopyThree)
-					.onChange(async (value) => {
-						this.plugin.settings.formatMetadataCopyThree = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-						this.display()
-					})
-			)
-
-		if (this.plugin.settings.formatMetadataCopyThree) {
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_TEMPLATE_THREE')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_TEMPLATE_THREE_DESC')))
-				.addTextArea((text) =>
-					text
-						.setValue(
-							this.plugin.settings.metadataCopyTemplateThree
-						)
-						.onChange(async (value) => {
-							this.plugin.settings.metadataCopyTemplateThree =
-								value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-			new Setting(containerEl)
-				.setName(fragWithHTML(t('METADATA_COPY_THREE_BATCH')))
-				.setDesc(fragWithHTML(t('METADATA_COPY_THREE_BATCH_DESC')))
-				.addToggle((toggle) =>
-					toggle
-						.setValue(this.plugin.settings.metadataCopyThreeBatch)
-						.onChange(async (value) => {
-							this.plugin.settings.metadataCopyThreeBatch = value
-							this.plugin.saveSettings().then(() => {
-								if (this.plugin.view)
-									this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							})
-						})
-				)
-		}
+		containerEl.createDiv('setting-item orm-setting-item-wrapper', (el) => {
+			createRoot(el).render(
+				<ButtonSettings plugin={this.plugin} />,
+			);
+		})
 
 		containerEl.createEl('h2', { text: 'Search Settings' })
-
 		let zoomText: HTMLDivElement
-
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_LIMIT')))
 			.setDesc(fragWithHTML(t('MODAL_SEARCH_LIMIT_DESC')))
@@ -667,7 +496,37 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					})
 			})
 
-		containerEl.createEl('h2', { text: 'Dynamic List Settings(Experimental)' })
+		containerEl.createEl('h2', { text: 'Misc' })
+
+		new Setting(containerEl)
+			.setName(t('REMOVE_DUPLICATE_IDS'))
+			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.removeDuplicateIds)
+					.onChange(async (value) => {
+						this.plugin.settings.removeDuplicateIds = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+
+		new Setting(containerEl)
+			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
+			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.filterRedundantReferences)
+					.onChange(async (value) => {
+						this.plugin.settings.filterRedundantReferences = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
 
 		new Setting(containerEl)
 			.setName(t('SEARCH_TITLE'))
@@ -766,8 +625,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					el.innerText = ` ${this.plugin.settings.searchFrontMatterLimit.toString()}`
 				})
 		}
-
-		containerEl.createEl('h2', { text: 'Debug Settings' })
 
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('DEBUG_MODE')))
