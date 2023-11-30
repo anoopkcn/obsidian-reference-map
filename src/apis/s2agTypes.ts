@@ -6,7 +6,7 @@ export interface Reference {
     title?: string
     abstract?: string
     venue?: string
-    year?: number
+    year?: string
     referenceCount?: number
     citationCount?: number
     influentialCitationCount?: number
