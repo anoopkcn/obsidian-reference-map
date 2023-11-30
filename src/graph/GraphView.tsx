@@ -49,7 +49,11 @@ export class GraphView extends ItemView {
                 if (leaf) {
                     this.app.workspace.iterateRootLeaves((rootLeaf) => {
                         if (rootLeaf === leaf) {
-                            if (leaf.view.getViewType() !== REFERENCE_MAP_GRAPH_VIEW_TYPE) {
+                            if (
+                                leaf.view.getViewType() === 'markdown' ||
+                                leaf.view.getViewType() === 'canvas' ||
+                                leaf.view.getViewType() === 'empty'
+                            ) {
                                 this.openGraph()
                             }
                         }

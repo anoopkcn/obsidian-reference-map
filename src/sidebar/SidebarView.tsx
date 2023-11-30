@@ -39,7 +39,13 @@ export class SidebarView extends ItemView {
 				if (leaf) {
 					this.app.workspace.iterateRootLeaves((rootLeaf) => {
 						if (rootLeaf === leaf) {
-							this.processReferences()
+							if (
+								leaf.view.getViewType() === 'markdown' ||
+								leaf.view.getViewType() === 'canvas' ||
+								leaf.view.getViewType() === 'empty'
+							) {
+								this.processReferences()
+							}
 						}
 					})
 				}
