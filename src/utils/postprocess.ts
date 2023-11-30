@@ -139,28 +139,22 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
 };
 
 //convert citeKeyEntry to Reference
-export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
-    const reference: Reference = {
-        // map the properties of citeKeyEntry to the properties of Reference
-        paperId: citeKeyEntry.id,
-        externalIds: undefined,
-        url: citeKeyEntry.URL,
-        type: citeKeyEntry.type,
-        title: citeKeyEntry.title,
-        abstract: citeKeyEntry.abstract,
-        venue: undefined,
-        year: citeKeyEntry.issued?.['date-parts']?.[0] as number,
-        referenceCount: undefined,
-        citationCount: undefined,
-        influentialCitationCount: undefined,
-        isOpenAccess: undefined,
-        openAccessPdf: undefined,
-        journal: {
+export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, reference: Reference = { paperId: '' }): Reference {
+    // map the properties of citeKeyEntry to the properties of Reference
+    if (citeKeyEntry) {
+        reference.paperId = reference.paperId ?? citeKeyEntry.id;
+        reference.externalIds = reference.externalIds ?? { DOI: citeKeyEntry.DOI };
+        reference.url = reference.url ?? citeKeyEntry.URL;
+        reference.type = reference.type ?? citeKeyEntry.type;
+        reference.title = reference.title ?? citeKeyEntry.title;
+        reference.abstract = reference.abstract ?? citeKeyEntry.abstract;
+        reference.year = reference.year ?? citeKeyEntry.issued?.['date-parts']?.[0] as number;
+        reference.journal = reference.journal ?? {
             name: citeKeyEntry['container-title'],
             volume: citeKeyEntry.volume,
             pages: citeKeyEntry.page,
-        },
-        authors: citeKeyEntry.author?.map((author) => {
+        };
+        reference.authors = reference.authors ?? citeKeyEntry.author?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -169,8 +163,8 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        directors: citeKeyEntry.director?.map((author) => {
+        });
+        reference.directors = reference.directors ?? citeKeyEntry.director?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -179,8 +173,8 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        editors: citeKeyEntry.editor?.map((author) => {
+        });
+        reference.editors = reference.editors ?? citeKeyEntry.editor?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -189,11 +183,12 @@ export function convertToReference(citeKeyEntry: CiteKeyEntry): Reference {
             return {
                 name: author.given + ' ' + author.family,
             };
-        }),
-        citationStyles: {
+        });
+        reference.citationStyles = reference.citationStyles ?? {
             bibtex: citeKeyEntry.key,
-        },
     };
+    }
+
     return reference;
 }
 

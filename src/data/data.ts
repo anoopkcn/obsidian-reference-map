@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { CiteKey, IndexPaper, Library, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { convertToReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
@@ -198,30 +198,32 @@ export class ReferenceMapData {
                             id: item.citeKey,
                             location: item.location,
                             isLocal: true,
-                            paper: convertToReference(localPaper),
+                            paper: fillMissingReference(localPaper),
                             cslEntry: localPaper
                         });
-                    }
-                    if (item.citeKey !== item.paperId) {
-                        const paper = await this.viewManager.getIndexPaper(item.paperId);
-                        if (paper !== null && typeof paper !== "number") {
-                            const index = _.findIndex(indexCards, { id: item.citeKey });
-                            if (index !== -1) {
-                                indexCards.splice(index, 1, {
-                                    id: item.citeKey,
-                                    location: item.location,
-                                    isLocal: false,
-                                    paper: paper,
-                                    cslEntry: localPaper
-                                })
-                            } else {
-                                indexCards.push({
-                                    id: item.citeKey,
-                                    location: item.location,
-                                    isLocal: false,
-                                    paper,
-                                    cslEntry: localPaper
-                                });
+                        if (item.citeKey !== item.paperId) {
+                            const paper = await this.viewManager.getIndexPaper(item.paperId);
+                            if (paper !== null && typeof paper !== "number") {
+                                const isLocal_ = paper ? false : true
+                                const paper_ = fillMissingReference(localPaper, paper);
+                                const index = _.findIndex(indexCards, { id: item.citeKey });
+                                if (index !== -1) {
+                                    indexCards.splice(index, 1, {
+                                        id: item.citeKey,
+                                        location: item.location,
+                                        isLocal: isLocal_,
+                                        paper: paper_,
+                                        cslEntry: localPaper
+                                    })
+                                } else {
+                                    indexCards.push({
+                                        id: item.citeKey,
+                                        location: item.location,
+                                        isLocal: isLocal_,
+                                        paper: paper_,
+                                        cslEntry: localPaper
+                                    });
+                                }
                             }
                         }
                     }

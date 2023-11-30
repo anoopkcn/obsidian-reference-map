@@ -4,7 +4,7 @@ import { CiteKey, IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { convertToReference, indexSearch } from 'src/utils/postprocess'
+import { fillMissingReference, indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import _ from 'lodash'
@@ -35,7 +35,7 @@ export const ReferenceMapList = (props: {
 					id: item.citeKey,
 					location: item.location,
 					isLocal: true,
-					paper: convertToReference(localPaper),
+					paper: fillMissingReference(localPaper),
 					cslEntry: localPaper
 				});
 			}
