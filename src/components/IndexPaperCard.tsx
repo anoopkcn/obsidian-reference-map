@@ -25,11 +25,7 @@ export const IndexPaperCard = (props: Props) => {
 	const [isButtonShown, setIsButtonShown] = useState(!props.plugin.settings.hideButtonsOnHover)
 	const [isReferenceLoading, setIsReferenceLoading] = useState(false)
 	const [isCitationLoading, setIsCitationLoading] = useState(false)
-
 	const { settings, cacheDir } = props.plugin
-
-	// const bib = getFormattedCitation(convertToCiteKeyEntry(props.rootPaper.paper), cacheDir)
-	// console.log(bib)
 
 	useEffect(() => {
 		if (!isEmpty(props.rootPaper.paper) && !props.rootPaper.isLocal) {

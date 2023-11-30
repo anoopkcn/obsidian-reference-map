@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef, ReactNode } from 'react'
 import { BsSearch } from 'react-icons/bs'
-import { IndexPaper } from 'src/types'
+import { CiteKey, IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { indexSearch } from 'src/utils/postprocess'
+import { convertToReference, indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
+import _ from 'lodash'
 
 interface NoContentProps {
 	children: ReactNode;
@@ -21,11 +22,29 @@ export const ReferenceMapList = (props: {
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
+	const { viewManager, library } = props.referenceMapData;
+	const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 
-	const { viewManager } = props.referenceMapData;
+	const getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
+		const indexCards: IndexPaper[] = [];
+		if (!citeKeyMap) return indexCards;
+		_.map(citeKeyMap, (item) => {
+			const localPaper = library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+			if (localPaper) {
+				indexCards.push({
+					id: item.citeKey,
+					location: item.location,
+					isLocal: true,
+					paper: convertToReference(localPaper),
+					cslEntry: localPaper
+				});
+			}
+		});
+		return indexCards;
+	}
 
 	const fetchData = async () => {
-		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
+		// const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		if (props.plugin.settings.removeDuplicateIds) {
 			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId === id));
@@ -37,21 +56,21 @@ export const ReferenceMapList = (props: {
 		setPapers(indexCards)
 	}
 
-	// unset paper when basename is changed 
-
 	useEffect(() => {
-		setPapers([])
-	}, [props.updateChecker.basename])
+		setPapers([]);
+		const initialPapers = getLocalReferences(citeKeyMap);
+		setPapers(initialPapers);
+	}, [basename])
 
 	useEffect(() => {
 		fetchData()
 	}, [
-		props.updateChecker.indexIds,
-		props.updateChecker.citeKeyMap,
-		props.updateChecker.fileName,
-		props.updateChecker.frontmatter,
+		indexIds,
+		citeKeyMap,
+		fileName,
+		frontmatter,
 		props.plugin.settings,
-		props.referenceMapData.library.libraryData
+		library.libraryData
 	])
 
 	useEffect(() => {
@@ -81,7 +100,6 @@ export const ReferenceMapList = (props: {
 							onChange={(e) => setQuery(e.target.value)}
 							style={{ padding: '0 35px 0 35px' }}
 						/>
-						{/* <BsSearch size={15} className="search-icon" /> */}
 						{isSearchList &&
 							<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
 						}
