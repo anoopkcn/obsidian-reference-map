@@ -9,8 +9,7 @@ interface Props {
 }
 
 export const PaperHeading = ({ paper, settings }: Props) => {
-	const { paper: paperData } = paper;
-	const { authors, directors, editors, title, year, abstract, paperId } = paperData || {};
+	const { authors, directors, editors, title, year, abstract, paperId, url } = paper.paper;
 	const authorID = authors?.[0]?.authorId;
 	const isCitekey = paper?.id?.includes('@');
 	const showCitekey = settings.linkCiteKey && isCitekey;
@@ -22,7 +21,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 	const Title = () => {
 		let formatTitle = (
 			<span className="orm-paper-title orm-paper-title-disabled">
-				{splitTitle}
+				{' ' + (splitTitle || 'Unknown Title') + ' '}
 			</span>
 		)
 		if (!isLocal) {
@@ -31,11 +30,14 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 					{' ' + (splitTitle || 'Unknown Title') + ' '}
 				</a>
 			)
-		} else if (paper.paper.url) {
+		} else if (url) {
 			formatTitle = (
-				<a href={paper.paper.url}>
-					{' ' + (splitTitle || 'Unknown Title') + ' '}
-				</a>
+				<span className="orm-paper-title">
+					{<a href={url}>
+						{' ' + (splitTitle || 'Unknown Title') + ' '}
+					</a>
+					}
+				</span>
 			)
 		}
 
