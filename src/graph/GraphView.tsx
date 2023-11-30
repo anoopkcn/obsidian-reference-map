@@ -93,7 +93,7 @@ export class GraphView extends ItemView {
     }
 
     prepare = async (activeFile: TFile | null | undefined) => {
-        if (!activeFile) return false
+        if (activeFile === undefined) return false
         const settings = this.plugin.settings
         let isUpdate = false
         let fileCache = ''

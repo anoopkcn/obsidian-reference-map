@@ -296,7 +296,7 @@ export const ReferenceMapGraph = (props: {
             <div className="orm-no-content">
                 <div>
                     <div className="orm-no-content-subtext">
-                        No Valid References Found.
+                        No Valid References Found (Rendering from Local Library is not supported).
                     </div>
                 </div>
             </div>
