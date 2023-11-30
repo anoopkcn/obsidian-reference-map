@@ -2,10 +2,10 @@ import doiRegex from "doi-regex";
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
-import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
+import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
 import { getFormattedCitation } from "./zotero";
 
-export const makeMetaData = (data: IndexPaper, cacheDir: string | null = null): MetaData => {
+export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null): MetaData => {
     const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
@@ -24,10 +24,10 @@ export const makeMetaData = (data: IndexPaper, cacheDir: string | null = null): 
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
     let csl = 'Could Not Recover CSL';
 
-    if (cacheDir && data.cslEntry) {
-        csl = getFormattedCitation(data.cslEntry, cacheDir)[1]
-    } else if (cacheDir) {
-        csl = getFormattedCitation(convertToCiteKeyEntry(paper), cacheDir)[1]
+    if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
+        csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
+    } else if (cache && cache.citationStyle && cache.citationLocale && paper) {
+        csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
     }
 
     return {

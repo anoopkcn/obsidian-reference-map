@@ -46,6 +46,8 @@ export interface ReferenceMapSettings {
 	metadataCopyTwoBatch: boolean
 	metadataCopyThreeBatch: boolean
 	debugMode: boolean
+	citationStyle: string
+	citationLocale: string
 }
 export interface MetaData {
 	bibtex: string
@@ -114,3 +116,9 @@ export interface ZoteroGroup {
 }
 
 export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
+
+export type LocalCache = {
+	cacheDirPath: string;
+	citationStyle: string;
+	citationLocale: string;
+}

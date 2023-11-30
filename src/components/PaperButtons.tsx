@@ -3,7 +3,7 @@ import { FiPaperclip, FiClipboard } from 'react-icons/fi'
 import { SiOpenaccess } from 'react-icons/si'
 import { BsClipboardData } from 'react-icons/bs'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
-import { IndexPaper, ReferenceMapSettings } from 'src/types'
+import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
 import { copyElToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 
@@ -50,7 +50,14 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE
 
-	const metaData = makeMetaData(paper, cacheDir)
+
+	const cache: LocalCache = {
+		cacheDirPath: cacheDir,
+		citationStyle: settings.citationStyle,
+		citationLocale: settings.citationLocale
+	}
+
+	const metaData = makeMetaData(paper, cache)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''

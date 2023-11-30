@@ -289,12 +289,10 @@ export async function refreshZBib(
 
 export function getFormattedCitation(
     reference: CiteKeyEntry | undefined,
-    cacheDir: string,
+    citationStyle: string,
+    citationLocale: string
 ) {
     if (!reference) return null;
-    const citationStyle = fs.readFileSync(path.join(cacheDir, `ieee.csl`), 'utf8');
-    const citationLocale = fs.readFileSync(path.join(cacheDir, `locales-en-US.xml`), 'utf8');
-
     const citeprocSys = {
         retrieveLocale: () => citationLocale,
         retrieveItem: (id: string) => { return reference },

@@ -7,7 +7,6 @@ import { IndexPaperCard } from 'src/components/IndexPaperCard'
 import { indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
-// import { PartialLoading } from './PartialLoading'
 
 interface NoContentProps {
 	children: ReactNode;
@@ -20,14 +19,12 @@ export const ReferenceMapList = (props: {
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
-	// const [isLoading, setIsLoading] = useState(false)
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
 
 	const { viewManager } = props.referenceMapData;
 
 	const fetchData = async () => {
-		// setIsLoading(true)
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		if (props.plugin.settings.removeDuplicateIds) {
@@ -38,7 +35,6 @@ export const ReferenceMapList = (props: {
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
 		setPapers(indexCards)
-		// setIsLoading(false)
 	}
 
 	// unset paper when basename is changed 
@@ -133,7 +129,6 @@ export const ReferenceMapList = (props: {
 			<>
 				<div className="orm-reference-map">
 					{userSearch(true)}
-					{/* <PartialLoading isLoading={isLoading} /> */}
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
