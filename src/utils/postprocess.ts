@@ -5,7 +5,7 @@ import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
 import { getFormattedCitation } from "./zotero";
 
-export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatRemote = false): MetaData => {
+export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatCSL = false): MetaData => {
     const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
@@ -24,10 +24,18 @@ export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, 
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
     let csl = 'Could Not Recover CSL';
 
-    if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
-        csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
-    } else if (formatRemote && cache && cache.citationStyle && cache.citationLocale && paper) {
-        csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
+    if (formatCSL) {
+        if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
+            csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
+        }
+        else if (cache && cache.citationStyle && cache.citationLocale && paper) {
+            csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
+        }
+        else {
+            csl = 'Could Not Recover CSL'
+        }
+    } else {
+        csl = 'Enable CSL Formatting from Settings'
     }
 
     return {

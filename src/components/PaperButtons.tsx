@@ -57,7 +57,7 @@ export const PaperButtons = ({
 		citationLocale: settings.citationLocale
 	}
 
-	const metaData = makeMetaData(paper, cache, settings.formatRemote)
+	const metaData = makeMetaData(paper, cache, settings.formatCSL)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''

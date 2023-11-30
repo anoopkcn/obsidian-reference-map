@@ -48,7 +48,7 @@ export interface ReferenceMapSettings {
 	debugMode: boolean
 	citationStyle: string
 	citationLocale: string
-	formatRemote: boolean
+	formatCSL: boolean
 }
 export interface MetaData {
 	bibtex: string
