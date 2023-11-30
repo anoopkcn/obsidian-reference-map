@@ -3,11 +3,15 @@ import { IEEE, LOCALE_EN_US } from './utils/csl'
 
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
-export const METADATA_COPY_TEMPLATE_TWO = `# {{title}}
-**{{authors}}**
+export const METADATA_COPY_TEMPLATE_TWO = `**{{title}}**
+
+{{authors}}
+
 *{{journal}}, {{year}}*
->[!abstract] Abstract
->{{abstract}}
+
+**Abstract**
+
+{{abstract}}
 `
 export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
 
@@ -34,7 +38,7 @@ export const DEFAULT_HEADERS = {
 	Connection: 'keep-alive',
 };
 
-export const DEFAULT_ZOTERO_GROUPS: ZoteroGroup[] = [];
+export const DEFAULT_ZOTERO_GROUPS: ZoteroGroup[] = [{ id: 1, name: 'My Library' }];
 
 export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	hideButtonsOnHover: false,
@@ -51,14 +55,14 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	searchFrontMatter: false,
 	searchFrontMatterKey: 'keywords',
 	searchFrontMatterLimit: 3,
-	searchCiteKey: false,
+	searchCiteKey: true,
 	pullFromZotero: true,
 	zoteroGroups: DEFAULT_ZOTERO_GROUPS,
 	zoteroPort: DEFAULT_ZOTERO_PORT,
 	searchCiteKeyPath: '',
 	autoUpdateCitekeyFile: false,
 	linkCiteKey: true,
-	findZoteroCiteKeyFromID: false,
+	findZoteroCiteKeyFromID: true,
 	findCiteKeyFromLinksWithoutPrefix: false,
 	enableReferenceSorting: false,
 	sortByReference: 'year',

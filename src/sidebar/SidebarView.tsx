@@ -83,7 +83,6 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
-		// if (!this.plugin.initPromise.settled) return null;
 		const activeFile = this.app.workspace.getActiveFile();
 		const settings = this.plugin.settings
 		let fileCache = ''
