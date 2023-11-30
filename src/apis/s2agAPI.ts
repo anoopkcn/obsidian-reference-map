@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { requestUrl } from 'obsidian'
-import { SEMANTIC_FIELDS, SEMANTICSCHOLAR_API_URL } from 'src/constants'
+import { SEMANTIC_FIELDS, SEMANTIC_SCHOLAR_API_URL } from 'src/constants'
 import { Reference } from './s2agTypes';
 
 export const SEMANTIC_SCHOLAR_BATCH_URL = 'https://api.semanticscholar.org/graph/v1/paper/batch'
@@ -28,7 +28,7 @@ export const getBatchItems = async (paperIds: string[], debugMode = false): Prom
 
 
 export const getIndexItem = async (paperId: string, debugMode = false): Promise<Reference | null> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(',')}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
@@ -38,7 +38,7 @@ export const getIndexItem = async (paperId: string, debugMode = false): Promise<
 };
 
 export const getReferenceItems = async (paperId: string, debugMode = false): Promise<Reference[]> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
@@ -48,7 +48,7 @@ export const getReferenceItems = async (paperId: string, debugMode = false): Pro
 };
 
 export const getCitationItems = async (paperId: string, debugMode = false): Promise<Reference[]> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
@@ -62,7 +62,7 @@ export const getSearchItems = async (
 	limit: number,
 	debugMode = false
 ): Promise<Reference[]> => {
-	const url = `${SEMANTICSCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')}&offset=0&limit=${limit}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/search?query=${query}&fields=${SEMANTIC_FIELDS.join(',')}&offset=0&limit=${limit}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling

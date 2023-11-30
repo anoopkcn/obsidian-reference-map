@@ -1,5 +1,5 @@
 import React from 'react';
-import { SEMANTICSCHOLAR_URL } from 'src/constants';
+import { SEMANTIC_SCHOLAR_URL } from 'src/constants';
 import { IndexPaper, ReferenceMapSettings } from 'src/types';
 import { splitString } from 'src/utils/functions';
 
@@ -29,7 +29,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 		)
 		if (!isLocal) {
 			formatTitle = (
-				<a href={`${SEMANTICSCHOLAR_URL}/paper/${paperId}`}>
+				<a href={`${SEMANTIC_SCHOLAR_URL}/paper/${paperId}`}>
 					{(paper.location && !settings.lookupLinkedFiles) &&
 						<span className="orm-paper-tag">{paper.location}</span>
 					}
@@ -95,7 +95,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			if (!all) {
 				return (
 					<span className="orm-paper-authors">
-						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+						<a href={`${SEMANTIC_SCHOLAR_URL}/author/${authorID}`}>
 							{(authors?.[0]?.name || 'Unknown Author') + ' ' + year}
 						</a>
 					</span>
@@ -103,7 +103,7 @@ export const PaperHeading = ({ paper, settings }: Props) => {
 			} else {
 				return (
 					<span className="orm-paper-authors">
-						<a href={`${SEMANTICSCHOLAR_URL}/author/${authorID}`}>
+						<a href={`${SEMANTIC_SCHOLAR_URL}/author/${authorID}`}>
 							{(authors || []).map((author) => author.name).join(', ') + ' ' + year}
 						</a>
 					</span>
