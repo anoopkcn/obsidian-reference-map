@@ -1,6 +1,6 @@
 import React from 'react'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
-import { ClipBoardDataIcon, OpenAccessIcon, PaperClipIcon } from 'src/icons'
+import { OpenAccessIcon, CopyIconOne, CopyIconTwo, CopyIconThree } from 'src/icons'
 import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
 import { copyElToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
@@ -145,7 +145,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataOne)
 					}}
 				>
-					<PaperClipIcon size={16} />
+					<CopyIconOne size={16} />
 				</div>
 			)}
 			{settings.formatMetadataCopyTwo && (
@@ -155,7 +155,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataTwo)
 					}}
 				>
-					<PaperClipIcon size={15} />
+					<CopyIconTwo size={15} />
 				</div>
 			)}
 			{settings.formatMetadataCopyThree && (
@@ -165,7 +165,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataThree)
 					}}
 				>
-					<ClipBoardDataIcon size={15} />
+					<CopyIconThree size={15} />
 				</div>
 			)}
 			{paper.paper?.isOpenAccess ? (
