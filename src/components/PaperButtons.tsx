@@ -1,8 +1,6 @@
 import React from 'react'
-import { FiPaperclip, FiClipboard } from 'react-icons/fi'
-import { SiOpenaccess } from 'react-icons/si'
-import { BsClipboardData } from 'react-icons/bs'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
+import { ClipBoardDataIcon, OpenAccessIcon, PaperClipIcon } from 'src/icons'
 import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
 import { copyElToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
@@ -147,7 +145,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataOne)
 					}}
 				>
-					<FiClipboard size={16} />
+					<PaperClipIcon size={16} />
 				</div>
 			)}
 			{settings.formatMetadataCopyTwo && (
@@ -157,7 +155,7 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataTwo)
 					}}
 				>
-					<FiPaperclip size={15} />
+					<PaperClipIcon size={15} />
 				</div>
 			)}
 			{settings.formatMetadataCopyThree && (
@@ -167,18 +165,18 @@ export const PaperButtons = ({
 						copyElToClipboard(copyMetadataThree)
 					}}
 				>
-					<BsClipboardData size={15} />
+					<ClipBoardDataIcon size={15} />
 				</div>
 			)}
 			{paper.paper?.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${metaData.pdfurl}`}>
-						<SiOpenaccess size={15} />
+						<OpenAccessIcon size={15} />
 					</a>
 				</div>
 			) : (
 				<div className="orm-button-disable">
-					<SiOpenaccess size={15} />
+						<OpenAccessIcon size={15} />
 				</div>
 			)}
 			{citingCited}

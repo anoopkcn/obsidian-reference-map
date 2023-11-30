@@ -1,4 +1,15 @@
 import { addIcon } from 'obsidian'
+import { BsSearch } from 'react-icons/bs'
+import { FiPaperclip, FiClipboard } from 'react-icons/fi'
+import { SiOpenaccess } from 'react-icons/si'
+import { BsClipboardData } from 'react-icons/bs'
+
+export const SearchIcon = BsSearch
+export const PaperClipIcon = FiPaperclip
+export const OpenAccessIcon = SiOpenaccess
+export const ClipBoardDataIcon = BsClipboardData
+export const ClipBoardIcon = FiClipboard
+
 
 export function addIcons(): void {
 	const width = 96

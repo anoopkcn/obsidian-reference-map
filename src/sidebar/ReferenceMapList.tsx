@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef, ReactNode } from 'react'
-import { BsSearch } from 'react-icons/bs'
-import { CiteKey, IndexPaper } from 'src/types'
+import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { fillMissingReference, indexSearch } from 'src/utils/postprocess'
+import { indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
-import _ from 'lodash'
+import { SearchIcon } from 'src/icons'
 
 interface NoContentProps {
 	children: ReactNode;
@@ -22,29 +21,10 @@ export const ReferenceMapList = (props: {
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<null | HTMLDivElement>(null)
-	const { viewManager, library } = props.referenceMapData;
+	const { viewManager, library, getLocalReferences } = props.referenceMapData;
 	const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 
-	const getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
-		const indexCards: IndexPaper[] = [];
-		if (!citeKeyMap) return indexCards;
-		_.map(citeKeyMap, (item) => {
-			const localPaper = library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
-			if (localPaper) {
-				indexCards.push({
-					id: item.citeKey,
-					location: item.location,
-					isLocal: true,
-					paper: fillMissingReference(localPaper),
-					cslEntry: localPaper
-				});
-			}
-		});
-		return indexCards;
-	}
-
 	const fetchData = async () => {
-		// const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		if (props.plugin.settings.removeDuplicateIds) {
 			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId === id));
@@ -64,14 +44,7 @@ export const ReferenceMapList = (props: {
 
 	useEffect(() => {
 		fetchData()
-	}, [
-		indexIds,
-		citeKeyMap,
-		fileName,
-		frontmatter,
-		props.plugin.settings,
-		library.libraryData
-	])
+	}, [indexIds, citeKeyMap, fileName, frontmatter, props.plugin.settings, library.libraryData])
 
 	useEffect(() => {
 		if (activeRef.current !== null)
@@ -91,7 +64,7 @@ export const ReferenceMapList = (props: {
 				<div className="orm-search-form">
 					<div className="index-search">
 						<div className="orm-plugin-global-search">
-							<BsSearch size={15} className="global-search-icon" />
+							<SearchIcon size={15} className="global-search-icon" />
 						</div>
 						<input
 							type="search"

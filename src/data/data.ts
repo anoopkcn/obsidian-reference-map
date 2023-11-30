@@ -153,6 +153,24 @@ export class ReferenceMapData {
         }
     };
 
+    getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
+        const indexCards: IndexPaper[] = [];
+        if (!citeKeyMap) return indexCards;
+        _.map(citeKeyMap, (item) => {
+            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+            if (localPaper) {
+                indexCards.push({
+                    id: item.citeKey,
+                    location: item.location,
+                    isLocal: true,
+                    paper: fillMissingReference(localPaper),
+                    cslEntry: localPaper
+                });
+            }
+        });
+        return indexCards;
+    }
+
 
     getIndexCards = async (
         indexIds: Set<string>,

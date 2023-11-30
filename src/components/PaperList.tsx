@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { ReferenceMapSettings } from 'src/types'
 import { PaperCard } from './PaperCard'
 import { dataSearch, dataSort } from 'src/utils/postprocess'
-import { BsSearch } from 'react-icons/bs'
 import { Reference } from 'src/apis/s2agTypes'
+import { SearchIcon } from 'src/icons'
 
 interface Props {
 	papers: Reference[]
@@ -44,7 +44,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, cacheDir, type })
 							onChange={(e) => setQuery(e.target.value)}
 							style={{ padding: '0 30px 0 30px' }}
 						/>
-						<BsSearch size={15} className="search-icon" />
+						<SearchIcon size={15} className="search-icon" />
 					</div>
 				</div>
 			</div>
