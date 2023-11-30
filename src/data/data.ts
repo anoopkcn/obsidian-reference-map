@@ -222,7 +222,7 @@ export class ReferenceMapData {
                         if (item.citeKey !== item.paperId) {
                             const paper = await this.viewManager.getIndexPaper(item.paperId);
                             if (paper !== null && typeof paper !== "number") {
-                                const isLocal_ = paper ? false : true
+                                const isLocal_ = paper.paperId ? false : true
                                 const paper_ = fillMissingReference(localPaper, paper);
                                 const index = _.findIndex(indexCards, { id: item.citeKey });
                                 if (index !== -1) {
