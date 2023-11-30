@@ -306,7 +306,9 @@ export const indexSort = (
             return left < right ? 1 : -1;
         }
     });
-}; export const sanitizeDOI = (dirtyDOI: string) => {
+};
+
+export const sanitizeDOI = (dirtyDOI: string) => {
     const doi_matches = dirtyDOI.match(doiRegex());
     if (doi_matches) {
         for (const match of doi_matches) {
