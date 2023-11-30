@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { IndexPaper } from 'src/types'
-import { isEmpty } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 import { PaperList } from './PaperList'
 import { PaperHeading } from './PaperHeading'
@@ -28,11 +27,11 @@ export const IndexPaperCard = (props: Props) => {
 	const { settings, cacheDir } = props.plugin
 
 	useEffect(() => {
-		if (!isEmpty(props.rootPaper.paper) && !props.rootPaper.isLocal) {
+		if (props.rootPaper.paper.paperId && !props.rootPaper.isLocal) {
 			getCitations()
 			getReferences()
 		}
-	}, [])
+	}, [props.rootPaper.isLocal])
 
 	useEffect(() => {
 		setIsButtonShown(!settings.hideButtonsOnHover)
