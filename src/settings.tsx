@@ -4,7 +4,7 @@ import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
 import { RELOAD } from './types'
 import ReferenceMap from './main'
 import { t } from './lang/helpers'
-import { ZoteroPullSetting } from './components/ZoteroPullSetting'
+import { ZoteroPullSetting } from './components/ZoteroPullSettings'
 import { fragWithHTML, resolvePath } from './utils/functions'
 import { ButtonSettings } from './components/ButtonSettings';
 
