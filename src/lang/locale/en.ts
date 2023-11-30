@@ -161,11 +161,11 @@ export default {
 	METADATA_COPY_TEMPLATE_TWO: `Metadata template two`,
 	METADATA_COPY_TEMPLATE_TWO_DESC:
 		'Template of the metadata to be copied to the clipboard.<br>' +
-		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
+		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
 	METADATA_COPY_TEMPLATE_THREE: `Metadata template three`,
 	METADATA_COPY_TEMPLATE_THREE_DESC:
 		'Template of the metadata to be copied to the clipboard.<br>' +
-		'Valid variables are <code>{{id}}</code>, <code>{{title}}</code>, <code>{{author}}</code>, <code>{{authors}}</code>, <code>{{journal}}</code>, <code>{{volume}}</code>, <code>{{pages}}</code>, <code>{{year}}</code>, <code>{{abstract}}</code>, <code>{{url}}</code>, <code>{{pdfurl}}</code>, <code>{{doi}}</code>, <code>{{bibtex}}</code>',
+		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
 	METADATA_COPY_ONE_BATCH: `Metadata batch one`,
 	METADATA_COPY_ONE_BATCH_DESC:
 		'Copy metadata for all the references(cited papers) to the clipboard. This option only applies to index card button and template variable {{id}} will return empty',
