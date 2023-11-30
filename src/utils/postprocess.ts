@@ -5,7 +5,7 @@ import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
 import { getFormattedCitation } from "./zotero";
 
-export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null): MetaData => {
+export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatRemote = false): MetaData => {
     const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
@@ -26,7 +26,7 @@ export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null):
 
     if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
         csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
-    } else if (cache && cache.citationStyle && cache.citationLocale && paper) {
+    } else if (formatRemote && cache && cache.citationStyle && cache.citationLocale && paper) {
         csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
     }
 
