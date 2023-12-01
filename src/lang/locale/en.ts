@@ -86,9 +86,9 @@ export default {
 		'Path must be relative to the vault\'s root. This option is redundant if <Code>Pull Bibliography From Zotero</code> is enabled.<br>',
 	CITEKEY_PATH_ERROR: 'The citation export file can\'t be found. Please check the path.<br>' +
 		'OR set <b>Pull Bibliography From Zotero</b> to TRUE and select a library.',
-	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library file',
+	AUTO_DETECT_UPDATE_TO_CITEKEY: 'Auto detect updates to library',
 	AUTO_DETECT_UPDATE_TO_CITEKEY_DESC:
-		'Auto detect changes to the Library file given above and update the reference map.<br>' +
+		'Auto detect changes to the Library and update the reference map.<br>' +
 		'You can also use <code>Refresh Map</code> in the command palette to manually do the same<br>' +
 		'<b>Toggle ON:</b> Enable auto detection changes in the Library<br>' +
 		'<b>Toggle OFF:</b> Disable auto detection changes in the Library',
@@ -207,4 +207,7 @@ export default {
 	SEE_DOCUMENTATION: 'See documentation',
 	SEE_DOCUMENTATION_DESC:
 		"For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map/wiki'>Reference Map Wiki</a>.",
+
+	FORMAT_CSL: 'CSL format',
+	FORMAT_CSL_DESC: 'Format the citation according to a CSL format to be used for bibliography. This will add a new template variable {{csl}} to be used in buttons and templates.',
 }
