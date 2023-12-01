@@ -69,6 +69,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             icon={<CopyIconOne size={15} />}
                         >
                             <textarea
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateOne = e.target.value;
                                     plugin.saveSettings();
@@ -150,6 +151,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             icon={<CopyIconTwo size={15} />}
                         >
                             <textarea
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateTwo = e.target.value;
                                     plugin.saveSettings();
@@ -230,6 +232,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             icon={<CopyIconThree size={15} />}
                         >
                             <textarea
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateThree = e.target.value;
                                     plugin.saveSettings();
