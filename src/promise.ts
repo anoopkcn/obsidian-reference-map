@@ -1,10 +1,9 @@
-
 export class PromiseCapability<T> {
     settled = false;
     promise: Promise<T>;
-    resolve: (data: T) => void;
+    resolve!: (data: T) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    reject: (reason?: any) => void;
+    reject!: (reason?: any) => void;
 
     constructor() {
         this.promise = new Promise((resolve, reject) => {

@@ -45,7 +45,7 @@ export class ViewManager {
 		}
 	}
 
-	getIndexPaper = async (paperId: string): Promise<Reference | number | null> => {
+	getIndexPaper = async (paperId: string, cacheError = true): Promise<Reference | number | null> => {
 		const cachedPaper = this.indexCache.get(paperId)
 		if (cachedPaper) {
 			return cachedPaper
@@ -57,12 +57,11 @@ export class ViewManager {
 			this.indexCache.set(paperId, paper)
 			return paper
 		} catch (e) {
-			const errorCode = e.status as number
 			if (debugMode) {
-				console.log(`ORM: S2AG API index card request error with status ${errorCode}. Fallback library is used to show metadata. Check your internet connection, Validity of DOI/URL in the local library`)
+				console.log(`ORM: S2AG API index card request error with status ${e}. Fallback library is used to show metadata. Check your internet connection, Validity of DOI/URL in the local library`)
 			}
-			this.indexCache.set(paperId, errorCode)
-			return errorCode
+			if (cacheError) this.indexCache.set(paperId, 404)
+			return null
 		}
 	}
 
@@ -82,7 +81,7 @@ export class ViewManager {
 			return indexCardsList
 		} catch (e) {
 			if (debugMode) {
-				console.log(`ORM: S2AG API index card request error with status ${e.status as number}`)
+				console.log(`ORM: S2AG API index card request error with status ${e}`)
 			}
 			return []
 		}
@@ -101,7 +100,7 @@ export class ViewManager {
 			return references
 		} catch (e) {
 			if (debugMode) {
-				console.log(`ORM: S2AG API reference card request error with status ${e.status as number}`)
+				console.log(`ORM: S2AG API reference card request error with status ${e}`)
 			}
 			return []
 		}
@@ -120,7 +119,7 @@ export class ViewManager {
 			return citations
 		} catch (e) {
 			if (debugMode) {
-				console.log(`ORM: S2AG API citation card request error with status ${e.status as number}`)
+				console.log(`ORM: S2AG API citation card request error with status ${e}`)
 			}
 			return []
 		}

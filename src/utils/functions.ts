@@ -54,8 +54,8 @@ export function camelToNormalCase(str: string) {
 // Get normalized path
 export const resolvePath = function (rawPath: string): string {
 	const vaultRoot =
-		this.app.vault.adapter instanceof FileSystemAdapter
-			? this.app.vault.adapter.getBasePath()
+		app.vault.adapter instanceof FileSystemAdapter
+			? app.vault.adapter.getBasePath()
 			: '/'
 	return path.normalize(path.resolve(vaultRoot, rawPath))
 }
@@ -120,7 +120,7 @@ export async function getCanvasContent(fileCache: string) {
 				case 'file': {
 					if (node.file) {
 						try {
-							const file = this.app.vault.getAbstractFileByPath(node.file);
+							const file = app.vault.getAbstractFileByPath(node.file);
 							if (file instanceof TFile) {
 								const temContent = await app.vault.read(file);
 								content += temContent;

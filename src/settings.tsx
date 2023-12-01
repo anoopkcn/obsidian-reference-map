@@ -18,6 +18,10 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 	constructor(plugin: ReferenceMap) {
 		super(app, plugin)
 		this.plugin = plugin
+
+		this.citationPathLoadingEl = document.createElement('div');
+		this.citationPathErrorEl = document.createElement('div');
+		this.citationPathSuccessEl = document.createElement('div');
 	}
 
 	async checkCitationExportPath(filePath: string): Promise<boolean> {

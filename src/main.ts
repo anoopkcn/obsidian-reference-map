@@ -16,11 +16,11 @@ import { Reference } from './apis/s2agTypes'
 
 
 export default class ReferenceMap extends Plugin {
-	settings: ReferenceMapSettings
-	cacheDir: string;
-	referenceMapData: ReferenceMapData;
-	updateChecker: UpdateChecker;
-	_initPromise: PromiseCapability<void>;
+	public settings: ReferenceMapSettings
+	public cacheDir: string;
+	public referenceMapData: ReferenceMapData;
+	public updateChecker: UpdateChecker;
+	public _initPromise: PromiseCapability<void>;
 
 	get initPromise() {
 		if (!this._initPromise) {
@@ -232,16 +232,29 @@ export default class ReferenceMap extends Plugin {
 
 	async openReferenceSearchModal(query = '', mode = 'insert'): Promise<Reference[]> {
 		return new Promise((resolve, reject) => {
-			new ReferenceSearchModal(this, query, mode, (error, results: Reference[]) => {
-				error ? reject(error) : resolve(results);
+			new ReferenceSearchModal(this, query, mode, (error, results?: Reference[]) => {
+				if (error) {
+					reject(error);
+				} else if (results) {
+					resolve(results);
+				} else {
+					reject(new Error("No results returned"));
+				}
 			}).open();
 		});
 	}
 
+	// Assuming the second problem is in a similar function
 	async openReferenceSuggestModal(references: Reference[]): Promise<MetaData> {
 		return new Promise((resolve, reject) => {
-			new ReferenceSuggestModal(this.app, references, (error, selectedReference: MetaData) => {
-				error ? reject(error) : resolve(selectedReference);
+			new ReferenceSuggestModal(this.app, references, (error, selectedReference?: MetaData) => {
+				if (error) {
+					reject(error);
+				} else if (selectedReference) {
+					resolve(selectedReference);
+				} else {
+					reject(new Error("No reference selected"));
+				}
 			}).open();
 		});
 	}

@@ -23,6 +23,7 @@ export class UpdateChecker {
         this.frontmatter = '';
         this.fileName = '';
         this.basename = '';
+        this.fileMetadataCache = null;
     }
 
     resetCache = () => {

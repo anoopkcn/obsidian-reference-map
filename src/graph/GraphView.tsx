@@ -26,6 +26,7 @@ export class GraphView extends ItemView {
         this.updateChecker = new UpdateChecker()
         this.updateChecker.library = this.referenceMapData.library
         this.viewContent = this.containerEl.querySelector(".view-content") as HTMLElement;
+        this.rootEl = null;
         if (this.viewContent) {
             this.rootEl = createRoot(this.viewContent)
         } else {
