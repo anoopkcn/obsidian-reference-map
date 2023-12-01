@@ -98,7 +98,7 @@ export default {
 	CANNOT_CONNECT_TO_ZOTERO: 'Cannot connect to Zotero',
 	CANNOT_CONNECT_TO_ZOTERO_DESC: 'Start Zotero and try again.',
 	ZOTERO_PORT: 'Zotero port',
-	ZOTERO_PORT_DESC: 'Use 24119 or specify a custom port if you have changed Zotero\'s default.',
+	ZOTERO_PORT_DESC: 'Use 23119 or specify a custom port if you have changed Zotero\'s default.',
 	ZOTERO_LIBRARY_ID: 'Select libraries to include',
 	// citekey settings
 	FIND_CITEKEY_WITHOUT_PREFIX: 'Process citeKeys without <code>@</code> prefix',
@@ -160,7 +160,7 @@ export default {
 		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
 	METADATA_COPY_TEMPLATE_TWO: `Metadata template two`,
 	METADATA_COPY_TEMPLATE_TWO_DESC:
-		'Template of the metadata to be copied to the clipboard.<br>' +
+		'Template of the metadata to be copied to the clipboard. ' +
 		'Valid variables are {{id}}, {{title}}, {{author}}, {{authors}}, {{journal}}, {{volume}}, {{pages}}, {{year}}, {{abstract}}, {{url}}, {{pdfurl}}, {{doi}}, {{bibtex}}',
 	METADATA_COPY_TEMPLATE_THREE: `Metadata template three`,
 	METADATA_COPY_TEMPLATE_THREE_DESC:
