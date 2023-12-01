@@ -60,7 +60,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	zoteroGroups: DEFAULT_ZOTERO_GROUPS,
 	zoteroPort: DEFAULT_ZOTERO_PORT,
 	searchCiteKeyPath: '',
-	autoUpdateCitekeyFile: false,
+	autoUpdateCitekeyFile: true,
 	linkCiteKey: true,
 	findZoteroCiteKeyFromID: true,
 	findCiteKeyFromLinksWithoutPrefix: false,
