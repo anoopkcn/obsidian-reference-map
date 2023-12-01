@@ -43,7 +43,12 @@ export const ReferenceMapList = (props: {
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
-		fetchData()
+		if (props.plugin.settings.isLocalExclusive) {
+			const initialPapers = getLocalReferences(props.updateChecker.citeKeyMap);
+			setPapers(initialPapers);
+		} else {
+			fetchData()
+		}
 	}, [
 		props.updateChecker.basename,
 		props.updateChecker.indexIds,

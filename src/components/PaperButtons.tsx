@@ -2,7 +2,7 @@ import React from 'react'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
 import { OpenAccessIcon, CopyIconOne, CopyIconTwo, CopyIconThree } from 'src/icons'
 import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
-import { copyElToClipboard } from 'src/utils/functions'
+import { copyToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 
 type Props = {
@@ -156,7 +156,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-one"
 					onClick={() => {
-						copyElToClipboard(copyMetadataOne)
+						copyToClipboard(copyMetadataOne)
 					}}
 				>
 					<CopyIconOne size={16} />
@@ -166,7 +166,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-two"
 					onClick={() => {
-						copyElToClipboard(copyMetadataTwo)
+						copyToClipboard(copyMetadataTwo)
 					}}
 				>
 					<CopyIconTwo size={16} />
@@ -176,7 +176,7 @@ export const PaperButtons = ({
 				<div
 					className="orm-copy-metadata-three"
 					onClick={() => {
-						copyElToClipboard(copyMetadataThree)
+						copyToClipboard(copyMetadataThree)
 					}}
 				>
 					<CopyIconThree size={16} />

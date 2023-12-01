@@ -1,6 +1,6 @@
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { ItemView, MarkdownView, TFile, WorkspaceLeaf } from "obsidian";
+import { ItemView, MarkdownView, TFile, WorkspaceLeaf, debounce } from "obsidian";
 import { AppContext } from "src/context";
 import EventBus, { EVENTS } from "src/events";
 import { ReferenceMapData } from "src/data/data";
@@ -33,33 +33,39 @@ export class GraphView extends ItemView {
             return;
         }
         this.registerEvent(
-            this.app.metadataCache.on('changed', async (file) => {
-                const activeFile = this.app.workspace.getActiveFile()
-                if (activeFile && file === activeFile) {
-                    const updated = await this.prepare(activeFile)
-                    if (updated) {
-                        EventBus.trigger(EVENTS.UPDATE);
+            this.app.metadataCache.on(
+                'changed',
+                debounce(async (file) => {
+                    const activeFile = this.app.workspace.getActiveFile()
+                    if (activeFile && file === activeFile) {
+                        const updated = await this.prepare(activeFile)
+                        if (updated) {
+                            EventBus.trigger(EVENTS.UPDATE);
+                        }
                     }
-                }
-            })
+                }, 100, true)
+            )
         )
 
         this.registerEvent(
-            this.app.workspace.on('active-leaf-change', (leaf) => {
-                if (leaf) {
-                    this.app.workspace.iterateRootLeaves((rootLeaf) => {
-                        if (rootLeaf === leaf) {
-                            if (
-                                leaf.view.getViewType() === 'markdown' ||
-                                leaf.view.getViewType() === 'canvas' ||
-                                leaf.view.getViewType() === 'empty'
-                            ) {
-                                this.openGraph()
+            this.app.workspace.on(
+                'active-leaf-change',
+                debounce((leaf) => {
+                    if (leaf) {
+                        this.app.workspace.iterateRootLeaves((rootLeaf) => {
+                            if (rootLeaf === leaf) {
+                                if (
+                                    leaf.view.getViewType() === 'markdown' ||
+                                    leaf.view.getViewType() === 'canvas' ||
+                                    leaf.view.getViewType() === 'empty'
+                                ) {
+                                    this.openGraph()
+                                }
                             }
-                        }
-                    })
-                }
-            })
+                        })
+                    }
+                }, 100, true)
+            )
         )
     }
 

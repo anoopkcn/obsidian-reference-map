@@ -1,4 +1,4 @@
-import { FileSystemAdapter, Notice, TFile } from 'obsidian'
+import { FileSystemAdapter, Notice, TFile, htmlToMarkdown } from 'obsidian'
 import path from 'path'
 import { CardSpecType, IndexPaper, MetaData } from 'src/types'
 import { templateReplace } from './postprocess';
@@ -60,9 +60,20 @@ export const resolvePath = function (rawPath: string): string {
 	return path.normalize(path.resolve(vaultRoot, rawPath))
 }
 
-export function copyElToClipboard(el: string) {
+export function copyToClipboard(el: string) {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	require('electron').clipboard.writeText(el)
+	require('electron').clipboard.write({
+		text: el
+	})
+	new Notice('Copied to clipboard')
+}
+
+export function copyElToClipboard(el: HTMLElement) {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	require('electron').clipboard.write({
+		html: el.outerHTML,
+		text: htmlToMarkdown(el.outerHTML),
+	});
 	new Notice('Copied to clipboard')
 }
 

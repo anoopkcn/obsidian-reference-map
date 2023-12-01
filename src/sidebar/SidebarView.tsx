@@ -1,6 +1,6 @@
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
-import { ItemView, MarkdownView, WorkspaceLeaf } from 'obsidian'
+import { ItemView, WorkspaceLeaf, debounce } from 'obsidian'
 import ReferenceMap from 'src/main'
 import { t } from 'src/lang/helpers'
 import { AppContext } from 'src/context'
@@ -26,30 +26,39 @@ export class SidebarView extends ItemView {
 		this.rootEl = createRoot(this.containerEl.children[1])
 
 		this.registerEvent(
-			this.app.metadataCache.on('changed', (file) => {
-				const activeFile = this.app.workspace.getActiveFile()
-				if (activeFile && file === activeFile) {
-					this.processReferences()
-				}
-			})
+			this.app.metadataCache.on(
+				'changed',
+				debounce(
+					(file) => {
+						const activeFile = this.app.workspace.getActiveFile()
+						if (activeFile && file === activeFile) {
+							this.processReferences()
+						}
+					}, 100, true)
+			)
 		);
 
 		this.registerEvent(
-			this.app.workspace.on('active-leaf-change', (leaf) => {
-				if (leaf) {
-					this.app.workspace.iterateRootLeaves((rootLeaf) => {
-						if (rootLeaf === leaf) {
-							if (
-								leaf.view.getViewType() === 'markdown' ||
-								leaf.view.getViewType() === 'canvas' ||
-								leaf.view.getViewType() === 'empty'
-							) {
-								this.processReferences()
-							}
+			this.app.workspace.on(
+				'active-leaf-change',
+				debounce(
+					(leaf) => {
+						if (leaf) {
+							this.app.workspace.iterateRootLeaves((rootLeaf) => {
+								const viewType = leaf.view.getViewType()
+								if (rootLeaf === leaf) {
+									if (
+										viewType === 'markdown' ||
+										viewType === 'canvas' ||
+										viewType === 'empty'
+									) {
+										this.processReferences()
+									}
+								}
+							})
 						}
-					})
-				}
-			})
+					}, 100, true)
+			)
 		);
 
 		this.registerDomEvent(document, 'pointerup', (evt) => {
@@ -89,8 +98,7 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
-		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-		const activeFile = activeView?.file
+		const activeFile = this.app.workspace.getActiveFile();
 		const settings = this.plugin.settings
 		let fileCache = ''
 		if (activeFile) {

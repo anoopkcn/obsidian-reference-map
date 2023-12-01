@@ -153,7 +153,6 @@ export const ReferenceMapGraph = (props: {
 
     useEffect(() => {
         if (fgRef.current) {
-            // avoid collition 
             fgRef.current.d3Force("collide", d3.forceCollide().radius((node: NodeObject) => node.val + 3));
             fgRef.current.d3Force("x", d3.forceX(props.width / 2).strength(0.1));
             fgRef.current.d3Force("y", d3.forceY(props.height / 2).strength(0.1));
