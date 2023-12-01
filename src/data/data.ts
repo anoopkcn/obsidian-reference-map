@@ -212,35 +212,24 @@ export class ReferenceMapData {
                 _.map(citeKeyMap, async (item): Promise<void> => {
                     const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
                     if (localPaper) {
+                        let isLocal = true;
+                        let paper = fillMissingReference(localPaper);
+
                         if (item.citeKey !== item.paperId) {
-                            const paper = await this.viewManager.getIndexPaper(item.paperId);
-                            if (paper && typeof paper !== "number" && paper.paperId) {
-                                const paper_ = fillMissingReference(localPaper, paper);
-                                indexCards.push({
-                                    id: item.citeKey,
-                                    location: item.location,
-                                    isLocal: false,
-                                    paper: paper_,
-                                    cslEntry: localPaper
-                                });
-                            } else {
-                                indexCards.push({
-                                    id: item.citeKey,
-                                    location: item.location,
-                                    isLocal: true,
-                                    paper: fillMissingReference(localPaper),
-                                    cslEntry: localPaper
-                                });
+                            const indexPaper = await this.viewManager.getIndexPaper(item.paperId);
+                            if (indexPaper && typeof indexPaper !== "number" && indexPaper.paperId) {
+                                paper = fillMissingReference(localPaper, indexPaper);
+                                isLocal = false;
                             }
-                        } else {
-                            indexCards.push({
-                                id: item.citeKey,
-                                location: item.location,
-                                isLocal: true,
-                                paper: fillMissingReference(localPaper),
-                                cslEntry: localPaper
-                            });
                         }
+
+                        indexCards.push({
+                            id: item.citeKey,
+                            location: item.location,
+                            isLocal: isLocal,
+                            paper: paper,
+                            cslEntry: localPaper
+                        });
                     }
                 })
             );
