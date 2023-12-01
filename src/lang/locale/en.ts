@@ -209,5 +209,5 @@ export default {
 		"For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map/wiki'>Reference Map Wiki</a>.",
 
 	FORMAT_CSL: 'CSL format',
-	FORMAT_CSL_DESC: 'Format the citation according to a CSL format to be used for bibliography. This will add a new template variable {{csl}} to be used in buttons and templates.',
+	FORMAT_CSL_DESC: 'Format the citation according to a CSL format to be used for bibliography. This will add a new template variable {{csl}} to be used in buttons and templates. If you have a lot of references in the markdown or you are using lookup in linked files, this may slow down citing cited rendering since this option will apply to all the retrieved data.',
 }
