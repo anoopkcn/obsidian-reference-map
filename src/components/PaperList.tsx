@@ -29,6 +29,7 @@ export const PaperList: React.FC<Props> = ({ papers, settings, cacheDir, type })
 			paper={{ id: paper.paperId, location: null, paper }}
 			settings={settings}
 			cacheDir={cacheDir}
+			showCountButtons={false}
 		/>
 	))
 
