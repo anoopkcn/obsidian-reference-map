@@ -111,7 +111,7 @@ export const ReferenceMapGraph = (props: {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fgRef = useRef<any>();
-    const [selectedNode, setSelectedNode] = useState<NodeObject | null>(null);
+    const [selectedNode, setSelectedNode] = useState<NodeObject>();
 
     const { settings, cacheDir } = props;
     const { viewManager } = props.referenceMapData;
@@ -148,7 +148,7 @@ export const ReferenceMapGraph = (props: {
     //unset data when basename is changed
     useEffect(() => {
         setData({ nodes: [], links: [] })
-        setSelectedNode(null)
+        setSelectedNode(undefined);
     }, [props.updateChecker.basename]);
 
     useEffect(() => {
@@ -186,7 +186,6 @@ export const ReferenceMapGraph = (props: {
                         })
                     }))
                     setIsLoading(false)
-                    setSelectedNode(null)
                 });
         }
         fetchDataAndUpdate();
