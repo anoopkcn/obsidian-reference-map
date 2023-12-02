@@ -4,13 +4,9 @@ import { IEEE, LOCALE_EN_US } from './utils/csl'
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
 export const METADATA_COPY_TEMPLATE_TWO = `**{{title}}**
-
 {{authors}}
-
 *{{journal}}, {{year}}*
-
 **Abstract**
-
 {{abstract}}
 `
 export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
