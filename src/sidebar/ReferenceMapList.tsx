@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, ReactNode } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
@@ -8,9 +8,48 @@ import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { SearchIcon } from 'src/icons'
 
-interface NoContentProps {
-	children: ReactNode;
+interface UserSearchProps {
+	isSearchList: boolean;
+	setQuery: (query: string) => void;
+	papers: IndexPaper[];
 }
+
+const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers }) => (
+	<div className="orm-plugin-name">
+		<div className="orm-search-form">
+			<div className="index-search">
+				<div className="orm-plugin-global-search">
+					<SearchIcon size={15} className="global-search-icon" />
+				</div>
+				<input
+					type="search"
+					className={`orm-search-input ${isSearchList ? 'orm-index-search' : 'orm-index-no-search'}`}
+					placeholder={`Reference Map`}
+					onChange={(e) => setQuery(e.target.value)}
+					style={{ padding: '0 35px 0 35px' }}
+				/>
+				{isSearchList && <div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>}
+			</div>
+		</div>
+	</div>
+)
+
+interface SetKeyInfoProps {
+	searchCiteKey?: boolean;
+}
+
+const SetKeyInfo: React.FC<SetKeyInfoProps> = ({ searchCiteKey }) => {
+	return (
+		<div>
+			{!searchCiteKey &&
+				<div className="orm-no-content-subtext">
+					Configure <code>Get References Using CiteKey</code> in the settings tab to process citations using pandoc citekey
+				</div>
+			}
+		</div>
+	)
+}
+
 
 export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
@@ -37,15 +76,12 @@ export const ReferenceMapList = (props: {
 	}
 
 	useEffect(() => {
-		setPapers([]);
-		const initialPapers = getLocalReferences(props.updateChecker.citeKeyMap);
-		setPapers(initialPapers);
+		setPapers(getLocalReferences(props.updateChecker.citeKeyMap));
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
 		if (props.plugin.settings.isLocalExclusive) {
-			const initialPapers = getLocalReferences(props.updateChecker.citeKeyMap);
-			setPapers(initialPapers);
+			setPapers(getLocalReferences(props.updateChecker.citeKeyMap));
 		} else {
 			fetchData()
 		}
@@ -68,71 +104,25 @@ export const ReferenceMapList = (props: {
 		EventBus.on(EVENTS.SELECTION, (sel) => setSelection(sel))
 	}, [])
 
-	const userSearch = (isSearchList: boolean) => {
-		const searchFieldName = isSearchList
-			? 'orm-index-search'
-			: 'orm-index-no-search'
-		return (
-			<div className="orm-plugin-name">
-				<div className="orm-search-form">
-					<div className="index-search">
-						<div className="orm-plugin-global-search">
-							<SearchIcon size={15} className="global-search-icon" />
-						</div>
-						<input
-							type="search"
-							className={`orm-search-input ${searchFieldName}`}
-							placeholder={`Reference Map`}
-							onChange={(e) => setQuery(e.target.value)}
-							style={{ padding: '0 35px 0 35px' }}
-						/>
-						{isSearchList &&
-							<div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>
-						}
-					</div>
-				</div>
-
-			</div>
-		)
-	}
-
-	const SetKeyInfo = () => {
-		return (
-			<div>
-				{!props.plugin.settings.searchCiteKey &&
-					<div className="orm-no-content-subtext">
-						Configure <code>Get References Using CiteKey</code> in the settings tab to process citations using pandoc citekey
-					</div>
-				}
-			</div>
-		)
-	}
-
-	const NoContent: React.FC<NoContentProps> = ({ children }) => (
-		<div className="orm-no-content">
-			<div>
-				{userSearch(false)}
-				{children}
-				<SetKeyInfo />
-			</div>
-		</div>
-	);
 
 	if (!props.updateChecker.basename) {
-		return <NoContent>
-			<div className="orm-no-content-subtext">
-				No Active Markdown File.
-				<br />
-				Click on a file to view its references.
+		return (
+			<div className="orm-no-content">
+				<UserSearch isSearchList={false} setQuery={setQuery} papers={papers} />
+				<div className="orm-no-content-subtext">
+					No Active Markdown File.
+					<br />
+					Click on a file to view its references.
+				</div>
+				<SetKeyInfo searchCiteKey={props.plugin.settings.searchCiteKey} />
 			</div>
-		</NoContent>
+		)
 	}
-
 	if (papers.length > 0) {
 		return (
 			<>
 				<div className="orm-reference-map">
-					{userSearch(true)}
+					<UserSearch isSearchList={true} setQuery={setQuery} papers={papers} />
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
@@ -156,9 +146,13 @@ export const ReferenceMapList = (props: {
 		)
 	}
 
-	return <NoContent>
-		<div className="orm-no-content-subtext">
-			No Valid References Found.
+	return (
+		<div className="orm-no-content">
+			<UserSearch isSearchList={false} setQuery={setQuery} papers={papers} />
+			<div className="orm-no-content-subtext">
+				No Valid References Found.
+			</div>
+			<SetKeyInfo searchCiteKey={props.plugin.settings.searchCiteKey} />
 		</div>
-	</NoContent>
+	)
 }
