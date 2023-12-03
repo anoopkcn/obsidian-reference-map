@@ -1,15 +1,17 @@
+import React from 'react'
 import { addIcon } from 'obsidian'
-import { BsSearch } from 'react-icons/bs'
-import { SiOpenaccess } from 'react-icons/si'
-import { LuClipboardList } from "react-icons/lu";
-import { LuClipboardCopy } from "react-icons/lu";
-import { LuClipboard } from "react-icons/lu";
+import { BsSearch } from 'react-icons/bs';
+import { SiOpenaccess } from 'react-icons/si';
+import { LuClipboard, LuClipboardCopy, LuClipboardList, LuCopy } from 'react-icons/lu';
 
-export const SearchIcon = BsSearch
-export const OpenAccessIcon = SiOpenaccess
-export const CopyIconOne = LuClipboard
-export const CopyIconTwo = LuClipboardCopy
-export const CopyIconThree = LuClipboardList 
+const IconSize = 16; // Set the size you want for your icons
+
+export const SearchIcon = () => <BsSearch size={IconSize} />
+export const OpenAccessIcon = () => <SiOpenaccess size={IconSize} />
+export const CopyIconOne = () => <LuClipboard size={IconSize} />
+export const CopyIconTwo = () => <LuClipboardCopy size={IconSize} />
+export const CopyIconThree = () => <LuClipboardList size={IconSize} />
+export const CopyIcon = () => <LuCopy size={IconSize} />
 
 
 export function addIcons(): void {

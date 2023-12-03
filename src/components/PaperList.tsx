@@ -45,7 +45,9 @@ export const PaperList: React.FC<PaperListProps> = ({ papers, settings, cacheDir
 							onChange={(e) => setQuery(e.target.value)}
 							style={{ padding: '0 30px 0 30px' }}
 						/>
-						<SearchIcon size={15} className="search-icon" />
+						<div className='search-icon'>
+							<SearchIcon />
+						</div>
 					</div>
 				</div>
 			</div>

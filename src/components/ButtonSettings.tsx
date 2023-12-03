@@ -41,7 +41,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             OFF: t('FORMAT_METADATA_COPY_ONE_OFF')
                         }
                     }
-                    icon={<CopyIconOne size={15} />}
+                    icon={<CopyIconOne />}
                 >
                     <div
                         onClick={() => {
@@ -66,10 +66,10 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             description={t(
                                 "METADATA_COPY_TEMPLATE_ONE_DESC"
                             )}
-                            icon={<CopyIconOne size={15} />}
+                            icon={<CopyIconOne />}
                         >
                             <textarea
-                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateOne = e.target.value;
                                     plugin.saveSettings();
@@ -84,7 +84,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         <SettingItem
                             name={t('METADATA_COPY_ONE_BATCH')}
                             description={t('METADATA_COPY_ONE_BATCH_DESC')}
-                            icon={<CopyIconOne size={15} />}
+                            icon={<CopyIconOne />}
                             options={
                                 {
                                     ON: t('METADATA_COPY_ONE_BATCH_ON'),
@@ -123,7 +123,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             OFF: t('FORMAT_METADATA_COPY_TWO_OFF')
                         }
                     }
-                    icon={<CopyIconTwo size={15} />}
+                    icon={<CopyIconTwo />}
                 >
                     <div
                         onClick={() => {
@@ -148,10 +148,10 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             description={t(
                                 "METADATA_COPY_TEMPLATE_TWO_DESC"
                             )}
-                            icon={<CopyIconTwo size={15} />}
+                            icon={<CopyIconTwo />}
                         >
                             <textarea
-                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateTwo = e.target.value;
                                     plugin.saveSettings();
@@ -166,7 +166,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         <SettingItem
                             name={t('METADATA_COPY_TWO_BATCH')}
                             description={t('METADATA_COPY_TWO_BATCH_DESC')}
-                            icon={<CopyIconTwo size={15} />}
+                            icon={<CopyIconTwo />}
                             options={
                                 {
                                     ON: t('METADATA_COPY_TWO_BATCH_ON'),
@@ -204,7 +204,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             OFF: t('FORMAT_METADATA_COPY_THREE_OFF')
                         }
                     }
-                    icon={<CopyIconThree size={15} />}
+                    icon={<CopyIconThree />}
                 >
                     <div
                         onClick={() => {
@@ -229,10 +229,10 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                             description={t(
                                 "METADATA_COPY_TEMPLATE_THREE_DESC"
                             )}
-                            icon={<CopyIconThree size={15} />}
+                            icon={<CopyIconThree />}
                         >
                             <textarea
-                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }} 
+                                style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
                                 onChange={(e) => {
                                     plugin.settings.metadataCopyTemplateThree = e.target.value;
                                     plugin.saveSettings();
@@ -247,7 +247,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         <SettingItem
                             name={t('METADATA_COPY_THREE_BATCH')}
                             description={t('METADATA_COPY_THREE_BATCH_DESC')}
-                            icon={<CopyIconThree size={15} />}
+                            icon={<CopyIconThree />}
                             options={
                                 {
                                     ON: t('METADATA_COPY_THREE_BATCH_ON'),

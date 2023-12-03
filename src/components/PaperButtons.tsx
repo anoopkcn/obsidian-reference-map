@@ -159,7 +159,7 @@ export const PaperButtons = ({
 						copyToClipboard(copyMetadataOne)
 					}}
 				>
-					<CopyIconOne size={16} />
+					<CopyIconOne />
 				</div>
 			)}
 			{settings.formatMetadataCopyTwo && (
@@ -169,7 +169,7 @@ export const PaperButtons = ({
 						copyToClipboard(copyMetadataTwo)
 					}}
 				>
-					<CopyIconTwo size={16} />
+					<CopyIconTwo />
 				</div>
 			)}
 			{settings.formatMetadataCopyThree && (
@@ -179,18 +179,18 @@ export const PaperButtons = ({
 						copyToClipboard(copyMetadataThree)
 					}}
 				>
-					<CopyIconThree size={16} />
+					<CopyIconThree />
 				</div>
 			)}
 			{paper.paper?.isOpenAccess ? (
 				<div className="orm-openaccess">
 					<a href={`${metaData.pdfurl}`}>
-						<OpenAccessIcon size={15} />
+						<OpenAccessIcon />
 					</a>
 				</div>
 			) : (
 				<div className="orm-button-disable">
-						<OpenAccessIcon size={15} />
+						<OpenAccessIcon />
 				</div>
 			)}
 			{citingCited}

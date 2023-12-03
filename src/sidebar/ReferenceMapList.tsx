@@ -6,7 +6,7 @@ import { IndexPaperCard } from 'src/components/IndexPaperCard'
 import { indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
-import { SearchIcon } from 'src/icons'
+import { CopyIcon } from 'src/icons'
 
 type UserSearchProps = {
 	isSearchList: boolean;
@@ -18,8 +18,8 @@ const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers 
 	<div className="orm-plugin-name">
 		<div className="orm-search-form">
 			<div className="index-search">
-				<div className="orm-plugin-global-search">
-					<SearchIcon size={15} className="global-search-icon" />
+				<div className="orm-plugin-global-copy">
+					<CopyIcon />
 				</div>
 				<input
 					type="search"

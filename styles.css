@@ -350,13 +350,13 @@ body {
 	opacity: var(--orm-paper-disable-opacity);
 }
 
-.orm-paper-buttons > .orm-copy-metadata-one,
+/* .orm-paper-buttons > .orm-copy-metadata-one,
 .orm-copy-metadata-two,
 .orm-copy-metadata-three,
 .orm-button-references,
 .orm-button-citations {
 	cursor: pointer;
-}
+} */
 
 .orm-paper-buttons > .orm-copy-metadata-one:hover,
 .orm-copy-metadata-two:hover,
@@ -414,7 +414,7 @@ body {
 	text-align: center;
 }
 
-.orm-plugin-global-search {
+.orm-plugin-global-copy {
 	position: absolute;
 	top: 0;
 	left: 5px;
@@ -426,8 +426,8 @@ body {
 
 .search-icon {
 	position: absolute;
-	top: 50%;
-	left: 10px;
+	top: 55%;
+	left: 7px;
 	transform: translateY(-50%);
 	color: var(--orm-paper-buttons-color);
 }
