@@ -5,14 +5,14 @@ import { dataSearch, dataSort } from 'src/utils/postprocess'
 import { Reference } from 'src/apis/s2agTypes'
 import { SearchIcon } from 'src/icons'
 
-interface Props {
+type PaperListProps = {
 	papers: Reference[]
 	settings: ReferenceMapSettings
 	cacheDir: string
 	type: string
 }
 
-export const PaperList: React.FC<Props> = ({ papers, settings, cacheDir, type }) => {
+export const PaperList: React.FC<PaperListProps> = ({ papers, settings, cacheDir, type }) => {
 	const [query, setQuery] = useState('')
 
 	const sortedPapers = settings.enableReferenceSorting

@@ -1,4 +1,4 @@
-export interface CiteKeyEntry {
+export type CiteKeyEntry = {
     id: string
     key?: string
     type?: string
@@ -33,30 +33,30 @@ export interface CiteKeyEntry {
     "number-of-pages"?: string
 }
 
-export interface Author {
+export type Author = {
     literal?: string
     family?: string
     given?: string
     "non-dropping-particle"?: string
 }
 
-export interface Issued {
+export type Issued = {
     "date-parts": [number, number, number]
 }
 
-export interface Director {
+export type Director = {
     literal?: string
     family?: string
     given?: string
 }
 
-export interface Editor {
+export type Editor = {
     literal?: string
     family?: string
     given?: string
 }
 
-export interface BibFields {
+export type BibFields = {
     doi?: string[]
     url?: string[]
 }

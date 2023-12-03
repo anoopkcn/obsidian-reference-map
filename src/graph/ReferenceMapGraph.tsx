@@ -10,7 +10,7 @@ import { ReferenceMapData } from 'src/data/data';
 import { UpdateChecker } from 'src/data/updateChecker';
 import { Reference } from 'src/apis/s2agTypes';
 
-interface MapGraphData {
+type MapGraphData = {
     paper: IndexPaper
     references: Reference[]
     citations: Reference[]

@@ -3,12 +3,12 @@ import { SEMANTIC_SCHOLAR_URL } from 'src/constants';
 import { IndexPaper, ReferenceMapSettings } from 'src/types';
 import { splitString } from 'src/utils/functions';
 
-interface Props {
+type PaperHeadingProps = {
 	paper: IndexPaper;
 	settings: ReferenceMapSettings;
 }
 
-export const PaperHeading = ({ paper, settings }: Props) => {
+export const PaperHeading = ({ paper, settings }: PaperHeadingProps) => {
 	const { authors, directors, editors, title, year, abstract, paperId, url } = paper.paper;
 	const authorID = authors?.[0]?.authorId;
 	const isCitekey = paper?.id?.includes('@');

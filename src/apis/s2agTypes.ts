@@ -1,5 +1,5 @@
 
-export interface Reference {
+export type Reference = {
     paperId: string
     externalIds?: ExternalIds
     url?: string
@@ -24,29 +24,29 @@ export interface Reference {
     editors?: Author[]
 }
 
-export interface ExternalIds {
+export type ExternalIds = {
     ArXiv?: string
     DBLP?: string
     PubMedCentral?: string
     DOI?: string
 }
 
-export interface OpenAccessPdf {
+export type OpenAccessPdf = {
     url?: string
     status?: string
 }
 
-export interface Journal {
+export type Journal = {
     name?: string
     pages?: string
     volume?: string
 }
 
-export interface CitationStyles {
+export type CitationStyles = {
     bibtex?: string
 }
 
-export interface Author {
+export type Author = {
     authorId?: string
     name?: string
 }

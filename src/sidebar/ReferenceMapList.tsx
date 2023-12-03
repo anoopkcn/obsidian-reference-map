@@ -8,7 +8,7 @@ import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { SearchIcon } from 'src/icons'
 
-interface UserSearchProps {
+type UserSearchProps = {
 	isSearchList: boolean;
 	setQuery: (query: string) => void;
 	papers: IndexPaper[];
@@ -34,7 +34,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers 
 	</div>
 )
 
-interface SetKeyInfoProps {
+type SetKeyInfoProps = {
 	searchCiteKey?: boolean;
 }
 

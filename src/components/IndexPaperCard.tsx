@@ -9,14 +9,14 @@ import { LoadingPuff } from './LoadingPuff'
 import { Reference } from 'src/apis/s2agTypes'
 import ReferenceMap from 'src/main'
 
-interface Props {
+type IndexCardsProps = {
 	className?: string
 	plugin: ReferenceMap
 	rootPaper: IndexPaper
 	viewManager: ViewManager
 }
 
-export const IndexPaperCard = (props: Props) => {
+export const IndexPaperCard = (props: IndexCardsProps) => {
 	const [references, setReferences] = useState<Reference[]>([])
 	const [citations, setCitations] = useState<Reference[]>([])
 	const [showReferences, setShowReferences] = useState(false)

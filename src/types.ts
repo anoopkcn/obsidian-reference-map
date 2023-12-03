@@ -1,7 +1,7 @@
 import { CiteKeyEntry } from "./apis/bibTypes"
 import { Reference } from "./apis/s2agTypes"
 
-export interface ReferenceMapSettings {
+export type ReferenceMapSettings = {
 	hideButtonsOnHover: boolean
 	influentialCount: boolean
 	showAbstract: boolean
@@ -51,7 +51,7 @@ export interface ReferenceMapSettings {
 	formatCSL: boolean
 	isLocalExclusive: boolean
 }
-export interface MetaData {
+export type MetaData = {
 	bibtex: string
 	title: string
 	author: string
@@ -70,7 +70,7 @@ export interface MetaData {
 	csl?: string
 }
 
-export interface IndexPaper {
+export type IndexPaper = {
 	id: string
 	location: number | null
 	isLocal?: boolean
@@ -78,13 +78,13 @@ export interface IndexPaper {
 	cslEntry?: CiteKeyEntry
 }
 
-export interface CiteKey {
+export type CiteKey = {
 	citeKey: string
 	location: number
 	paperId: string
 }
 
-export interface Library {
+export type Library = {
 	active: boolean
 	adapter: string
 	libraryData: CiteKeyEntry[] | null
@@ -105,13 +105,13 @@ export type Direction = typeof DIRECTION[keyof typeof DIRECTION]
 
 export type CSLList = PartialCSLEntry[];
 
-export interface PartialCSLEntry {
+export type PartialCSLEntry = {
 	id: string;
 	title: string;
 	groupID?: number;
 }
 
-export interface ZoteroGroup {
+export type ZoteroGroup = {
 	id: number;
 	name: string;
 	lastUpdate?: number;

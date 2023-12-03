@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface ItemInfo {
+type ItemInfo = {
     name?: string;
     description?: string | React.ReactNode;
     options?: { ON: string; OFF: string }
