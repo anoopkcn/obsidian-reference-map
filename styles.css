@@ -309,7 +309,7 @@ body {
 	padding: var(--size-4-1) var(--size-4-2);
 	border-radius: 0.2rem;
 	background-color: rgba(var(--mono-rgb-100), 0.05);
-	line-height: 1;
+	line-height: 2;
 	font-size: var(--font-ui-smaller);
 	margin-right: 0.2rem;
 }
@@ -327,7 +327,7 @@ body {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
-	margin-top: 0.5rem;
+	margin-top: 0.2rem;
 }
 
 .orm-paper-buttons > div {
@@ -349,14 +349,6 @@ body {
 .orm-button-disable {
 	opacity: var(--orm-paper-disable-opacity);
 }
-
-/* .orm-paper-buttons > .orm-copy-metadata-one,
-.orm-copy-metadata-two,
-.orm-copy-metadata-three,
-.orm-button-references,
-.orm-button-citations {
-	cursor: pointer;
-} */
 
 .orm-paper-buttons > .orm-copy-metadata-one:hover,
 .orm-copy-metadata-two:hover,
