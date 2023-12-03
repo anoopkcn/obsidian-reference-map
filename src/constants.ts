@@ -1,5 +1,5 @@
 import { ReferenceMapSettings, ZoteroGroup } from './types'
-import { IEEE, LOCALE_EN_US } from './utils/csl'
+import { IEEE, LOCALE_EN_US } from './utils/cslList'
 
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
