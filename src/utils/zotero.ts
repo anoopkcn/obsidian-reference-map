@@ -285,18 +285,20 @@ export async function refreshZBib(
 }
 
 export function getFormattedCitation(
-    reference: CiteKeyEntry | undefined,
+    reference: CiteKeyEntry,
     citationStyle: string,
     citationLocale: string
-) {
+): string | null {
     if (!reference) return null;
+    if (!citationStyle || !citationLocale) return null;
     const citeprocSys = {
         retrieveLocale: () => citationLocale,
-        retrieveItem: (id: string) => { return reference },
+        retrieveItem: () => reference,
     };
     const citeproc = new CSL.Engine(citeprocSys, citationStyle);
     citeproc.updateItems([reference.id])
-    const bib = citeproc.makeBibliography();
+    const bib = citeproc.makeBibliography()[1] as string
+    //replace the citation index with the location
     return bib
 }
 
