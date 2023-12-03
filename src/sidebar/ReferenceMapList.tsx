@@ -59,7 +59,7 @@ export const ReferenceMapList = (props: {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
-	const activeRef = useRef<null | HTMLDivElement>(null)
+	const activeRef = useRef<HTMLDivElement>(null)
 	const { viewManager, getLocalReferences } = props.referenceMapData;
 
 	const fetchData = async () => {
@@ -98,11 +98,12 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		if (activeRef.current !== null)
 			activeRef.current.scrollIntoView({
-				block: 'nearest',
+				// block: 'nearest',
 				behavior: 'smooth',
+				inline: 'start'
 			})
 		EventBus.on(EVENTS.SELECTION, (sel) => setSelection(sel))
-	}, [])
+	}, [selection])
 
 
 	if (!props.updateChecker.basename) {
