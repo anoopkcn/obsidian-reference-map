@@ -175,41 +175,35 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
         reference.citationStyles = reference.citationStyles ?? {
             bibtex: citeKeyEntry.key,
         };
-        reference.csl = reference.csl ?? citeKeyEntry.csl;
+        reference.csl = reference?.csl ?? citeKeyEntry?.csl;
     }
     return reference;
 }
 
-export function getCSLFormats(indexPapers: IndexPaper[], cache: LocalCache | null = null, formatCSL = false) {
-    if (formatCSL && (cache?.citationLocale || cache?.citationStyle)) {
+export function getCSLFormats(indexPapers: IndexPaper[], cache: LocalCache | null = null) {
+    if ((cache?.citationLocale || cache?.citationStyle) && indexPapers.length > 0) {
         const references = indexPapers.map((indexPaper) => {
-            return convertToCiteKeyEntry(indexPaper.paper);
+            const id = indexPaper.id;
+            return convertToCiteKeyEntry(indexPaper.paper, id);
         });
         return getFormattedCitations(references, cache?.citationStyle, cache?.citationLocale);
     }
     return [];
 }
 
-export function getCSLFormat(reference: Reference | CiteKeyEntry, cache: LocalCache | null = null): string {
+export function getCSLFormat(reference: Reference, id = '', cache: LocalCache | null = null): string {
     let csl: string | null;
     if ((cache?.citationLocale || cache?.citationStyle) && reference) {
-        if (reference.type === 'CiteKeyEntry') {
-            csl = getFormattedCitation(reference as CiteKeyEntry, cache?.citationStyle, cache?.citationLocale);
-            if (csl) {
-                return htmlToMarkdown(fragWithHTML(csl))
-            }
-        } else {
-            const citeKeyEntry = convertToCiteKeyEntry(reference as Reference);
+        const citeKeyEntry = convertToCiteKeyEntry(reference as Reference, id);
             csl = getFormattedCitation(citeKeyEntry, cache?.citationStyle, cache?.citationLocale);
             if (csl) {
-                return htmlToMarkdown(fragWithHTML(csl))
+                return htmlToMarkdown(fragWithHTML(csl)).replace(/\n/g, ' ')
             }
-        }
     }
     return ''
 }
 
-export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {
+export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEntry {
     // convert YYYY-MM-DD numbers [YYYY, MM, DD]
     let issued: [number, number, number] = [0, 0, 0];
     if (reference.publicationDate) {
@@ -220,7 +214,7 @@ export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {
     }
     const citeKeyEntry: CiteKeyEntry = {
         // map the properties of Reference to the properties of CiteKeyEntry
-        id: reference.paperId,
+        id: id ? id : reference.paperId,
         URL: reference.url,
         DOI: reference.externalIds?.DOI,
         type: reference.type,

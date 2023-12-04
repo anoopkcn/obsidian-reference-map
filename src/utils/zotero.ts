@@ -298,7 +298,6 @@ export function getFormattedCitation(
     const citeproc = new CSL.Engine(citeprocSys, citationStyle);
     citeproc.updateItems([reference.id])
     const bib = citeproc.makeBibliography()[1] as string
-    //replace the citation index with the location
     return bib
 }
 
@@ -316,7 +315,6 @@ export function getFormattedCitations(
     const citeproc = new CSL.Engine(citeprocSys, citationStyle);
     citeproc.updateItems([...references.map((item) => item.id)])
     const bib = citeproc.makeBibliography()[1]
-    //replace the citation index with the location
     return bib
 }
 

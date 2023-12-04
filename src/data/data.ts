@@ -179,15 +179,14 @@ export class ReferenceMapData {
         if (!citeKeyMap) return indexCards;
         _.map(citeKeyMap, (item: CiteKey): void => {
             const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', '')) as CiteKeyEntry;
-            if (this.plugin.settings.formatCSL) {
-                localPaper.csl = getCSLFormat(localPaper, this.cache);
-            }
             if (localPaper) {
+                const paper_ = fillMissingReference(localPaper);
+                paper_.csl = getCSLFormat(paper_, item.citeKey, this.cache);
                 indexCards.push({
                     id: item.citeKey,
                     location: item.location,
                     isLocal: true,
-                    paper: fillMissingReference(localPaper),
+                    paper: paper_,
                     cslEntry: localPaper
                 });
             }
@@ -212,15 +211,17 @@ export class ReferenceMapData {
                 _.map([...indexIds], async (paperId) => {
                     const paper = await this.viewManager.getIndexPaper(paperId);
                     if (paper !== null && typeof paper !== "number") {
-                        if (this.plugin.settings.formatCSL) {
-                            paper.csl = getCSLFormat(paper, this.cache);
-                        }
+
                         const paperCiteId =
                             settings.searchCiteKey &&
                                 this.library.libraryData !== null &&
                                 settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
+
+                        if (this.plugin.settings.formatCSL) {
+                            paper.csl = getCSLFormat(paper, paperCiteId, this.cache);
+                        }
                         indexCards.push({
                             id: paperCiteId,
                             location: null,
@@ -240,9 +241,6 @@ export class ReferenceMapData {
                     const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
                     if (localPaper) {
                         let isLocal = true;
-                        if (this.plugin.settings.formatCSL) {
-                            localPaper.csl = getCSLFormat(localPaper, this.cache);
-                        }
                         let paper = fillMissingReference(localPaper);
                         if (item.citeKey !== item.paperId) {
                             const indexPaper = await this.viewManager.getIndexPaper(item.paperId);
@@ -250,6 +248,10 @@ export class ReferenceMapData {
                                 paper = fillMissingReference(localPaper, indexPaper);
                                 isLocal = false;
                             }
+                        }
+
+                        if (this.plugin.settings.formatCSL) {
+                            paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
                         }
 
                         indexCards.push({
@@ -273,6 +275,7 @@ export class ReferenceMapData {
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
+                paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
@@ -282,6 +285,7 @@ export class ReferenceMapData {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
                 frontmatter, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
+                paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }

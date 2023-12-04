@@ -23,7 +23,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers,
 			<div className="index-search">
 				<div className="orm-plugin-global-copy" onClick={async () => {
 					if (!papers) return;
-					const copyData = await getCSLFormats(papers, cache, true)?.map(
+					const copyData = await getCSLFormats(papers, cache)?.map(
 						(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/g, ' ')
 					)
 					copyToClipboard(copyData.join('\n'))
