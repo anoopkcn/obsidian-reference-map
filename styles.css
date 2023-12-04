@@ -416,6 +416,10 @@ body {
 	color: var(--orm-paper-buttons-color);
 }
 
+.orm-plugin-global-copy:hover {
+	color: var(--orm-paper-buttons-hover-color);
+}
+
 .search-icon {
 	position: absolute;
 	top: 55%;

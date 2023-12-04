@@ -21,15 +21,17 @@ const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers,
 	<div className="orm-plugin-name">
 		<div className="orm-search-form">
 			<div className="index-search">
-				<div className="orm-plugin-global-copy" onClick={async () => {
-					if (!papers) return;
-					const copyData = await getCSLFormats(papers, cache)?.map(
-						(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/g, ' ')
-					)
-					copyToClipboard(copyData.join('\n'))
-				}}>
-					<CopyIcon />
-				</div>
+				{papers && papers?.length > 0 &&
+					<div className="orm-plugin-global-copy" onClick={async () => {
+						if (!papers) return;
+						const copyData = await getCSLFormats(papers, cache)?.map(
+							(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/g, ' ')
+						)
+						copyToClipboard(copyData.join('\n'))
+					}}>
+						<CopyIcon />
+					</div>
+				}
 				<input
 					type="search"
 					className={`orm-search-input ${isSearchList ? 'orm-index-search' : 'orm-index-no-search'}`}
