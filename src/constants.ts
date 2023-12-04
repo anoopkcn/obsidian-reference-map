@@ -1,5 +1,5 @@
 import { ReferenceMapSettings, ZoteroGroup } from './types'
-import { IEEE, LOCALE_EN_US } from './utils/cslList'
+import { APA, LOCALE_EN_US } from './utils/cslList'
 
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
@@ -81,7 +81,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	metadataCopyTwoBatch: false,
 	metadataCopyThreeBatch: true,
 	debugMode: false,
-	citationStyle: IEEE,
+	citationStyle: APA,
 	citationLocale: LOCALE_EN_US,
 	formatCSL: true,
 	isLocalExclusive: false

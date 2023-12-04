@@ -296,6 +296,7 @@ export function getFormattedCitation(
         retrieveItem: () => reference,
     };
     const citeproc = new CSL.Engine(citeprocSys, citationStyle);
+    citeproc.opt.development_extensions.wrap_url_and_doi = true;
     citeproc.updateItems([reference.id])
     const bib = citeproc.makeBibliography()[1] as string
     return bib
@@ -313,6 +314,7 @@ export function getFormattedCitations(
         retrieveItem: (id: string) => references.find((item) => item.id === id),
     };
     const citeproc = new CSL.Engine(citeprocSys, citationStyle);
+    citeproc.opt.development_extensions.wrap_url_and_doi = true;
     citeproc.updateItems([...references.map((item) => item.id)])
     const bib = citeproc.makeBibliography()[1]
     return bib
