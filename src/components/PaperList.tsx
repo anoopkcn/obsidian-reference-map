@@ -8,11 +8,10 @@ import { SearchIcon } from 'src/icons'
 type PaperListProps = {
 	papers: Reference[]
 	settings: ReferenceMapSettings
-	cacheDir: string
 	type: string
 }
 
-export const PaperList: React.FC<PaperListProps> = ({ papers, settings, cacheDir, type }) => {
+export const PaperList: React.FC<PaperListProps> = ({ papers, settings, type }) => {
 	const [query, setQuery] = useState('')
 
 	const sortedPapers = settings.enableReferenceSorting
@@ -28,7 +27,6 @@ export const PaperList: React.FC<PaperListProps> = ({ papers, settings, cacheDir
 			key={`${paper.paperId}-${index}`}
 			paper={{ id: paper.paperId, location: null, paper }}
 			settings={settings}
-			cacheDir={cacheDir}
 			showCountButtons={false}
 		/>
 	))

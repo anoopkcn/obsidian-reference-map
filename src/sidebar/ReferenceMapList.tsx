@@ -1,34 +1,46 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { IndexPaper } from 'src/types'
+import { IndexPaper, LocalCache } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { indexSearch } from 'src/utils/postprocess'
+import { getCSLFormats, indexSearch } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { CopyIcon } from 'src/icons'
+import { copyToClipboard, fragWithHTML } from 'src/utils/functions'
+import { htmlToMarkdown } from 'obsidian'
 
 type UserSearchProps = {
-	isSearchList: boolean;
-	setQuery: (query: string) => void;
-	papers: IndexPaper[];
+	isSearchList?: boolean;
+	setQuery?: (query: string) => void;
+	papers?: IndexPaper[];
+	cache?: LocalCache;
 }
 
-const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers }) => (
+const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers, cache }) => (
 	<div className="orm-plugin-name">
 		<div className="orm-search-form">
 			<div className="index-search">
-				<div className="orm-plugin-global-copy">
+				<div className="orm-plugin-global-copy" onClick={async () => {
+					if (!papers) return;
+					const copyData = await getCSLFormats(papers, cache, true)?.map(
+						(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/g, ' ')
+					)
+					copyToClipboard(copyData.join('\n'))
+				}}>
 					<CopyIcon />
 				</div>
 				<input
 					type="search"
 					className={`orm-search-input ${isSearchList ? 'orm-index-search' : 'orm-index-no-search'}`}
 					placeholder={`Reference Map`}
-					onChange={(e) => setQuery(e.target.value)}
+					onChange={(e) => {
+						if (!setQuery) return;
+						return setQuery(e.target.value)
+					}}
 					style={{ padding: '0 35px 0 35px' }}
 				/>
-				{isSearchList && <div className="cardCount">{papers.length > 0 ? papers.length : ''}</div>}
+				{isSearchList && <div className="cardCount">{papers && papers?.length > 0 ? papers.length : ''}</div>}
 			</div>
 		</div>
 	</div>
@@ -76,7 +88,8 @@ export const ReferenceMapList = (props: {
 	}
 
 	useEffect(() => {
-		setPapers(getLocalReferences(props.updateChecker.citeKeyMap));
+		const localPapers = getLocalReferences(props.updateChecker.citeKeyMap)
+		setPapers(localPapers);
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
@@ -109,7 +122,7 @@ export const ReferenceMapList = (props: {
 	if (!props.updateChecker.basename) {
 		return (
 			<div className="orm-no-content">
-				<UserSearch isSearchList={false} setQuery={setQuery} papers={papers} />
+				<UserSearch />
 				<div className="orm-no-content-subtext">
 					No Active Markdown File.
 					<br />
@@ -123,7 +136,12 @@ export const ReferenceMapList = (props: {
 		return (
 			<>
 				<div className="orm-reference-map">
-					<UserSearch isSearchList={true} setQuery={setQuery} papers={papers} />
+					<UserSearch
+						isSearchList={true}
+						setQuery={setQuery}
+						papers={papers}
+						cache={props.referenceMapData.cache}
+					/>
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
 						const activeIndexCardClass = selection?.includes(paperId) ? 'orm-active-index' : '';
@@ -149,7 +167,7 @@ export const ReferenceMapList = (props: {
 
 	return (
 		<div className="orm-no-content">
-			<UserSearch isSearchList={false} setQuery={setQuery} papers={papers} />
+			<UserSearch />
 			<div className="orm-no-content-subtext">
 				No Valid References Found.
 			</div>

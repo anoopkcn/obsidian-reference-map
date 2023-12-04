@@ -1,27 +1,48 @@
 import * as fs from 'fs'
 import { parse } from '@retorquere/bibtex-parser'
 import _ from 'lodash';
-import { CiteKey, IndexPaper, Library, RELOAD, Reload } from 'src/types';
+import { CiteKey, IndexPaper, Library, LocalCache, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { fillMissingReference, getCSLFormat, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
 import { ViewManager } from './viewManager';
 import { CiteKeyEntry } from 'src/apis/bibTypes';
+import path from 'path';
+
 
 export class ReferenceMapData {
     plugin: ReferenceMap
     library: Library
     viewManager: ViewManager
     initPromise: PromiseCapability<void>;
+    cache: LocalCache;
 
     constructor(plugin: ReferenceMap) {
         this.plugin = plugin
         this.library = DEFAULT_LIBRARY
         this.viewManager = new ViewManager(plugin)
         this.initPromise = new PromiseCapability();
+        this.cache = {
+            cacheDirPath: '',
+            citationStyle: '',
+            citationLocale: ''
+        }
+    }
+
+    async loadCache() {
+        const { cacheDir, settings } = this.plugin;
+        const cacheDirPath = path.join(cacheDir, '.reference-map');
+        if (!fs.existsSync(cacheDirPath)) {
+            fs.mkdirSync(cacheDirPath);
+        }
+        this.cache = {
+            cacheDirPath,
+            citationStyle: settings.citationStyle,
+            citationLocale: settings.citationLocale
+        };
     }
 
     async reload(reloadType: Reload) {
@@ -156,8 +177,11 @@ export class ReferenceMapData {
     getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
         const indexCards: IndexPaper[] = [];
         if (!citeKeyMap) return indexCards;
-        _.map(citeKeyMap, (item) => {
-            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
+        _.map(citeKeyMap, (item: CiteKey): void => {
+            const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', '')) as CiteKeyEntry;
+            if (this.plugin.settings.formatCSL) {
+                localPaper.csl = getCSLFormat(localPaper, this.cache);
+            }
             if (localPaper) {
                 indexCards.push({
                     id: item.citeKey,
@@ -188,6 +212,9 @@ export class ReferenceMapData {
                 _.map([...indexIds], async (paperId) => {
                     const paper = await this.viewManager.getIndexPaper(paperId);
                     if (paper !== null && typeof paper !== "number") {
+                        if (this.plugin.settings.formatCSL) {
+                            paper.csl = getCSLFormat(paper, this.cache);
+                        }
                         const paperCiteId =
                             settings.searchCiteKey &&
                                 this.library.libraryData !== null &&
@@ -213,8 +240,10 @@ export class ReferenceMapData {
                     const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
                     if (localPaper) {
                         let isLocal = true;
+                        if (this.plugin.settings.formatCSL) {
+                            localPaper.csl = getCSLFormat(localPaper, this.cache);
+                        }
                         let paper = fillMissingReference(localPaper);
-
                         if (item.citeKey !== item.paperId) {
                             const indexPaper = await this.viewManager.getIndexPaper(item.paperId);
                             if (indexPaper && typeof indexPaper !== "number" && indexPaper.paperId) {

@@ -1,13 +1,12 @@
 import React from 'react'
 import { METADATA_COPY_TEMPLATE_ONE, METADATA_COPY_TEMPLATE_THREE, METADATA_COPY_TEMPLATE_TWO, } from 'src/constants'
 import { OpenAccessIcon, CopyIconOne, CopyIconTwo, CopyIconThree } from 'src/icons'
-import { IndexPaper, LocalCache, ReferenceMapSettings } from 'src/types'
+import { IndexPaper, ReferenceMapSettings } from 'src/types'
 import { copyToClipboard } from 'src/utils/functions'
 import { makeMetaData, templateReplace } from 'src/utils/postprocess'
 
 type Props = {
 	settings: ReferenceMapSettings
-	cacheDir: string
 	paper: IndexPaper
 	showCountButtons?: boolean
 	setShowReferences?: React.Dispatch<React.SetStateAction<boolean>>
@@ -23,7 +22,6 @@ type Props = {
 
 export const PaperButtons = ({
 	settings,
-	cacheDir,
 	paper,
 	showCountButtons = true,
 	setShowReferences = undefined,
@@ -48,14 +46,7 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE
 
-
-	const cache: LocalCache = {
-		cacheDirPath: cacheDir,
-		citationStyle: settings.citationStyle,
-		citationLocale: settings.citationLocale
-	}
-
-	const metaData = makeMetaData(paper, cache, settings.formatCSL)
+	const metaData = makeMetaData(paper)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''
 	let copyMetadataThree = ''

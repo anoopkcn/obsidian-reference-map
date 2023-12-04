@@ -10,8 +10,6 @@ export default {
 		'<b>Toggle OFF:</b> Hide abstract',
 	ABSTRACT_TRUNCATE_LENGTH: 'Abstract characters truncate length',
 	ABSTRACT_TRUNCATE_LENGTH_DESC:
-		// 'Number of characters to truncate the abstract.<br>' +
-		// 'Abstract will be truncated to this length and appended with <code>...</code><br>' +
 		'If set to 0, abstract will NOT be truncated (default 160)',
 	HIDE_SHOW_AUTHORS: 'Show or hide the names of all authors',
 	HIDE_SHOW_AUTHORS_DESC:
@@ -207,7 +205,6 @@ export default {
 	SEE_DOCUMENTATION: 'See documentation',
 	SEE_DOCUMENTATION_DESC:
 		"For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map/wiki'>Reference Map Wiki</a>.",
-
 	FORMAT_CSL: 'CSL format',
-	FORMAT_CSL_DESC: 'Format the citation according to a CSL format to be used for bibliography. This will add a new template variable {{csl}} to be used in buttons and templates. If you have a lot of references in the markdown or you are using lookup in linked files, this may slow down citing cited rendering since this option will apply to all the retrieved data.',
+	FORMAT_CSL_DESC: 'Format the citation according to a CSL schema. This will add a new template variable {{csl}} to be used in buttons and templates.<b>Note: {{csl}} variable is only available for index cards</b>',
 }

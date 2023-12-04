@@ -22,6 +22,7 @@ export type Reference = {
     type?: string
     directors?: Author[]
     editors?: Author[]
+    csl?: string
 }
 
 export type ExternalIds = {

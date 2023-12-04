@@ -302,6 +302,25 @@ export function getFormattedCitation(
     return bib
 }
 
+export function getFormattedCitations(
+    references: CiteKeyEntry[],
+    citationStyle: string,
+    citationLocale: string
+) {
+    if (!(references.length > 0)) return null;
+    if (!citationStyle || !citationLocale) return null;
+    const citeprocSys = {
+        retrieveLocale: () => citationLocale,
+        retrieveItem: (id: string) => references.find((item) => item.id === id),
+    };
+    const citeproc = new CSL.Engine(citeprocSys, citationStyle);
+    citeproc.updateItems([...references.map((item) => item.id)])
+    const bib = citeproc.makeBibliography()[1]
+    //replace the citation index with the location
+    return bib
+}
+
+
 
 export async function getCSLLocale(
     localeCache: Map<string, string>,

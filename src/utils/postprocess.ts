@@ -2,10 +2,12 @@ import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
-import { getFormattedCitation } from "./zotero";
+import { getFormattedCitation, getFormattedCitations } from "./zotero";
 import { sanitizeDOI } from "./parser";
+import { htmlToMarkdown } from "obsidian";
+import { fragWithHTML } from "./functions";
 
-export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, formatCSL = false): MetaData => {
+export const makeMetaData = (data: IndexPaper): MetaData => {
     const paper = data.paper;
     const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
     const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
@@ -22,21 +24,7 @@ export const makeMetaData = (data: IndexPaper, cache: LocalCache | null = null, 
     const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
     const paperURL = paper.url || 'Could not recover URL';
     const doi = paper.externalIds?.DOI || 'Could not recover DOI';
-    let csl = 'Could Not Recover CSL';
-
-    if (formatCSL) {
-        if (cache && cache.citationStyle && cache.citationLocale && data.cslEntry) {
-            csl = getFormattedCitation(data.cslEntry, cache.citationStyle, cache.citationLocale)[1]
-        }
-        else if (cache && cache.citationStyle && cache.citationLocale && paper) {
-            csl = getFormattedCitation(convertToCiteKeyEntry(paper), cache.citationStyle, cache.citationLocale)[1]
-        }
-        else {
-            csl = 'Could Not Recover CSL'
-        }
-    } else {
-        csl = 'Enable CSL Formatting from Settings'
-    }
+    const csl = paper.csl || 'Could not recover CSL';
 
     return {
         bibtex: bibTex,
@@ -186,10 +174,39 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
         });
         reference.citationStyles = reference.citationStyles ?? {
             bibtex: citeKeyEntry.key,
-    };
+        };
+        reference.csl = reference.csl ?? citeKeyEntry.csl;
     }
-
     return reference;
+}
+
+export function getCSLFormats(indexPapers: IndexPaper[], cache: LocalCache | null = null, formatCSL = false) {
+    if (formatCSL && (cache?.citationLocale || cache?.citationStyle)) {
+        const references = indexPapers.map((indexPaper) => {
+            return convertToCiteKeyEntry(indexPaper.paper);
+        });
+        return getFormattedCitations(references, cache?.citationStyle, cache?.citationLocale);
+    }
+    return [];
+}
+
+export function getCSLFormat(reference: Reference | CiteKeyEntry, cache: LocalCache | null = null): string {
+    let csl: string | null;
+    if ((cache?.citationLocale || cache?.citationStyle) && reference) {
+        if (reference.type === 'CiteKeyEntry') {
+            csl = getFormattedCitation(reference as CiteKeyEntry, cache?.citationStyle, cache?.citationLocale);
+            if (csl) {
+                return htmlToMarkdown(fragWithHTML(csl))
+            }
+        } else {
+            const citeKeyEntry = convertToCiteKeyEntry(reference as Reference);
+            csl = getFormattedCitation(citeKeyEntry, cache?.citationStyle, cache?.citationLocale);
+            if (csl) {
+                return htmlToMarkdown(fragWithHTML(csl))
+            }
+        }
+    }
+    return ''
 }
 
 export function convertToCiteKeyEntry(reference: Reference): CiteKeyEntry {

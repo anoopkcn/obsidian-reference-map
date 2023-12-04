@@ -24,7 +24,7 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 	const [isButtonShown, setIsButtonShown] = useState(!props.plugin.settings.hideButtonsOnHover)
 	const [isReferenceLoading, setIsReferenceLoading] = useState(false)
 	const [isCitationLoading, setIsCitationLoading] = useState(false)
-	const { settings, cacheDir } = props.plugin
+	const { settings } = props.plugin
 
 	useEffect(() => {
 		if (props.rootPaper.paper.paperId && !props.rootPaper.isLocal) {
@@ -91,7 +91,6 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 			{isButtonShown && (
 				<PaperButtons
 					settings={settings}
-					cacheDir={cacheDir}
 					paper={props.rootPaper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
@@ -110,10 +109,10 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 				</div>
 			)}
 			{showReferences && (
-				<PaperList settings={settings} cacheDir={cacheDir} papers={references} type={'References'} />
+				<PaperList settings={settings} papers={references} type={'References'} />
 			)}
 			{showCitations && (
-				<PaperList settings={settings} cacheDir={cacheDir} papers={citations} type={'Citations'} />
+				<PaperList settings={settings} papers={citations} type={'Citations'} />
 			)}
 		</div>
 	)

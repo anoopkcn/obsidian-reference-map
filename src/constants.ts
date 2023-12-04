@@ -83,7 +83,7 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	debugMode: false,
 	citationStyle: IEEE,
 	citationLocale: LOCALE_EN_US,
-	formatCSL: false,
+	formatCSL: true,
 	isLocalExclusive: false
 }
 

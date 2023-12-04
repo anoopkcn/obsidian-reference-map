@@ -38,6 +38,7 @@ export default class ReferenceMap extends Plugin {
 			this.initPromise.promise
 				.then(() => {
 					this.referenceMapData.loadLibrary(true);
+					this.referenceMapData.loadCache()
 				})
 				.finally(() => {
 					this.updateChecker.library = this.referenceMapData.library;

@@ -31,6 +31,7 @@ export type CiteKeyEntry = {
     "publisher-place"?: string
     editor?: Editor[]
     "number-of-pages"?: string
+    csl?: string
 }
 
 export type Author = {
