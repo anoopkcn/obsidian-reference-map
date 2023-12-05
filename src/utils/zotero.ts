@@ -3,18 +3,12 @@
 // with some modifications
 import fs from "fs";
 import http, { request } from "http";
-import https from "https";
 import path from "path";
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import { DEFAULT_HEADERS, DEFAULT_ZOTERO_PORT } from "src/constants";
 import { CSLList, PartialCSLEntry } from "src/types";
 import CSL from 'citeproc';
-
-function ensureDir(dir: string) {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-}
+import { ensureDir } from "./functions";
 
 function getGlobal() {
     if (window?.activeWindow) return activeWindow;
@@ -318,111 +312,4 @@ export function getFormattedCitations(
     citeproc.updateItems([...references.map((item) => item.id)])
     const bib = citeproc.makeBibliography()[1]
     return bib
-}
-
-
-
-export async function getCSLLocale(
-    localeCache: Map<string, string>,
-    cacheDir: string,
-    lang: string
-) {
-    if (localeCache.has(lang)) {
-        return localeCache.get(lang);
-    }
-
-    const url = `https://raw.githubusercontent.com/citation-style-language/locales/master/locales-${lang}.xml`;
-    const outPath = path.join(cacheDir, `locales-${lang}.xml`);
-
-    ensureDir(cacheDir);
-    if (fs.existsSync(outPath)) {
-        const localeData = fs.readFileSync(outPath).toString();
-        localeCache.set(lang, localeData);
-        return localeData;
-    }
-
-    const str = await new Promise<string>((res, rej) => {
-        https.get(url, (result) => {
-            let output = '';
-
-            result.setEncoding('utf8');
-            result.on('data', (chunk) => (output += chunk));
-            result.on('error', (e) => rej(`Downloading locale: ${e}`));
-            result.on('close', () => {
-                rej(new Error('Error: cannot download locale'));
-            });
-            result.on('end', () => {
-                if (/^404: Not Found/.test(output)) {
-                    rej(new Error('Error downloading locale: 404: Not Found'));
-                } else {
-                    res(output);
-                }
-            });
-        });
-    });
-
-    fs.writeFileSync(outPath, str);
-    localeCache.set(lang, str);
-    return str;
-}
-
-export async function getCSLStyle(
-    styleCache: Map<string, string>,
-    cacheDir: string,
-    url: string,
-    explicitPath?: string
-) {
-    if (explicitPath) {
-        if (styleCache.has(explicitPath)) {
-            return styleCache.get(explicitPath);
-        }
-
-        if (!fs.existsSync(explicitPath)) {
-            throw new Error(
-                `Error: retrieving citation style; Cannot find file '${explicitPath}'.`
-            );
-        }
-
-        const styleData = fs.readFileSync(explicitPath).toString();
-        styleCache.set(explicitPath, styleData);
-        return styleData;
-    }
-
-    if (styleCache.has(url)) {
-        return styleCache.get(url);
-    }
-
-    const fileFromURL = url.split('/').pop();
-    const outPath = path.join(cacheDir, fileFromURL ?? '');
-
-    ensureDir(cacheDir);
-    if (fs.existsSync(outPath)) {
-        const styleData = fs.readFileSync(outPath).toString();
-        styleCache.set(url, styleData);
-        return styleData;
-    }
-
-    const str = await new Promise<string>((res, rej) => {
-        https.get(url, (result) => {
-            let output = '';
-
-            result.setEncoding('utf8');
-            result.on('data', (chunk) => (output += chunk));
-            result.on('error', (e) => rej(`Error downloading CSL: ${e}`));
-            result.on('close', () => {
-                rej(new Error('Error: cannot download CSL'));
-            });
-            result.on('end', () => {
-                try {
-                    res(output);
-                } catch (e) {
-                    rej(e);
-                }
-            });
-        });
-    });
-
-    fs.writeFileSync(outPath, str);
-    styleCache.set(url, str);
-    return str;
 }

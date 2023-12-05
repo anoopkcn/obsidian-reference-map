@@ -1,9 +1,16 @@
 import { FileSystemAdapter, Notice, TFile, htmlToMarkdown } from 'obsidian'
 import path from 'path'
+import fs from "fs";
 import { CardSpecType, IndexPaper, MetaData } from 'src/types'
 import { templateReplace } from './postprocess';
 import { CanvasData, CanvasNodeData } from 'obsidian/canvas';
 import { Reference } from 'src/apis/s2agTypes';
+
+export function ensureDir(dir: string) {
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, { recursive: true });
+	}
+}
 
 export function splitString(str: string | undefined, length: number) {
 	if (!str) return ''
@@ -100,7 +107,6 @@ export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
 export function replaceIllegalFileNameCharactersInString(text: string) {
 	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
 }
-
 
 export async function getCanvasContent(fileCache: string) {
 	let content = '';
