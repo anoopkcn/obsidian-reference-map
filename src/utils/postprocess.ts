@@ -197,7 +197,7 @@ export function getCSLFormat(reference: Reference, id = '', cache: LocalCache | 
         const citeKeyEntry = convertToCiteKeyEntry(reference as Reference, id);
             csl = getFormattedCitation(citeKeyEntry, cache?.citationStyle, cache?.citationLocale);
             if (csl) {
-                return htmlToMarkdown(fragWithHTML(csl)).replace(/\n/g, ' ')
+                return htmlToMarkdown(fragWithHTML(csl)).replace(/\n/, ' ')
             }
     }
     return ''
