@@ -305,24 +305,29 @@ export class ReferenceMapData {
 
 
     preProcessReferences = (indexCards: IndexPaper[]) => {
-        const indexCards_ = this.plugin.settings.removeDuplicateIds ? _.uniqBy(indexCards, item => item.paper.paperId) : indexCards
+        let indexCardsTemp = removeNullReferences(indexCards);
 
         if (!this.plugin.settings.enableIndexSorting) {
-            // Remove null references and sort the array
-            return removeNullReferences(indexCards_).sort((a, b) => {
-                // If location is null, place it at the end
+            indexCardsTemp = indexCardsTemp.sort((a, b) => {
                 if (a.location === null) return 1;
                 if (b.location === null) return -1;
-
-                // Sort by location
                 return a.location - b.location;
             });
         }
-        return indexSort(
-            removeNullReferences(indexCards_),
-            this.plugin.settings.sortByIndex,
-            this.plugin.settings.sortOrderIndex
-        )
+
+        if (this.plugin.settings.removeDuplicateIds) {
+            indexCardsTemp = _.uniqBy(indexCardsTemp, item => item.paper.paperId);
+        }
+
+        if (this.plugin.settings.enableIndexSorting) {
+            indexCardsTemp = indexSort(
+                indexCardsTemp,
+                this.plugin.settings.sortByIndex,
+                this.plugin.settings.sortOrderIndex
+            );
+        }
+
+        return indexCardsTemp
     }
 }
 
