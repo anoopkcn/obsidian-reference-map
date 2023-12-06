@@ -85,3 +85,21 @@ jobs:
                   asset_path: ./styles.css
                   asset_name: styles.css
                   asset_content_type: text/css
+            # Read release notes 
+            - name: Read Release Notes
+              id: read_release_notes
+              run: |
+                  echo "::set-output name=content::$(cat RELEASE_NOTES.md)"
+            # Add release notes 
+            - name: Create Release
+              id: create_release_notes
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VERSION: ${{ github.ref }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: ${{ github.ref }}
+                  draft: false
+                  prerelease: false
+                  body: ${{ steps.read_release_notes.outputs.content }}
