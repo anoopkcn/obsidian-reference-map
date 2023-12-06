@@ -70,7 +70,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         >
                             <textarea
                                 style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
-                                onChange={(e) => {
+                                onBlur={(e) => {
                                     plugin.settings.metadataCopyTemplateOne = e.target.value;
                                     plugin.saveSettings();
                                     plugin.referenceMapData?.reload(RELOAD.VIEW);
@@ -152,7 +152,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         >
                             <textarea
                                 style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
-                                onChange={(e) => {
+                                onBlur={(e) => {
                                     plugin.settings.metadataCopyTemplateTwo = e.target.value;
                                     plugin.saveSettings();
                                     plugin.referenceMapData?.reload(RELOAD.VIEW)
@@ -233,7 +233,7 @@ export function ButtonSettings({ plugin }: { plugin: ReferenceMap }) {
                         >
                             <textarea
                                 style={{ minWidth: '200px', maxWidth: '500px', minHeight: '100px' }}
-                                onChange={(e) => {
+                                onBlur={(e) => {
                                     plugin.settings.metadataCopyTemplateThree = e.target.value;
                                     plugin.saveSettings();
                                     plugin.referenceMapData?.reload(RELOAD.VIEW)
