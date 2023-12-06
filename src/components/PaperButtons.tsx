@@ -46,6 +46,7 @@ export const PaperButtons = ({
 		? settings.metadataCopyTemplateThree
 		: METADATA_COPY_TEMPLATE_THREE
 
+	// set csl for the paper 
 	const metaData = makeMetaData(paper)
 	let copyMetadataOne = ''
 	let copyMetadataTwo = ''

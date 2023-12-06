@@ -3,31 +3,44 @@ import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { getCSLFormats, indexSearch } from 'src/utils/postprocess'
+import { convertToCiteKeyEntry } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { CopyIcon } from 'src/icons'
-import { copyToClipboard, fragWithHTML } from 'src/utils/functions'
-import { htmlToMarkdown } from 'obsidian'
+import { copyToClipboard } from 'src/utils/functions'
+import { SEARCH_PARAMETERS } from 'src/constants'
 
 type UserSearchProps = {
 	isSearchList?: boolean;
 	setQuery?: (query: string) => void;
 	papers?: IndexPaper[];
-	cache?: { cslStyle: string, cslLocale: string };
+	bib?: string[] | null;
 }
 
-const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers, cache }) => (
+export const indexSearch = (data: IndexPaper[], query: string) => {
+	return data.filter((item: IndexPaper) => SEARCH_PARAMETERS.some((parameter) => {
+		if (parameter === 'authors') {
+			return item.paper?.authors?.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
+			);
+		} else {
+			return item.paper[parameter as keyof typeof item.paper]
+				?.toString()
+				.toLowerCase()
+				.includes(query.toLowerCase());
+		}
+	})
+	);
+};
+
+const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers, bib }) => (
 	<div className="orm-plugin-name">
 		<div className="orm-search-form">
 			<div className="index-search">
 				{papers && papers?.length > 0 &&
 					<div className="orm-plugin-global-copy" onClick={async () => {
 						if (!papers) return;
-						const copyData = await getCSLFormats(papers, cache?.cslStyle, cache?.cslLocale)?.map(
-							(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/, ' ')
-						)
-						copyToClipboard(copyData.join('\n\n'))
+						if (!bib) return;
+						copyToClipboard(bib?.join('\n\n'))
 					}}>
 						<CopyIcon />
 					</div>
@@ -71,6 +84,7 @@ export const ReferenceMapList = (props: {
 	updateChecker: UpdateChecker
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
+	const [bib, setBib] = useState<string[] | null>(null)
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<HTMLDivElement>(null)
@@ -111,9 +125,31 @@ export const ReferenceMapList = (props: {
 	])
 
 	useEffect(() => {
+		if (papers) {
+			const IndexPapers = papers.map((indexPaper) => {
+				return convertToCiteKeyEntry(indexPaper.paper, indexPaper.id);
+			});
+
+			props.updateChecker.checkCSlEngineUpdate(
+				IndexPapers,
+				props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
+				props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string
+			);
+
+			const bib = props.updateChecker.getCSL([...IndexPapers.map((indexPaper) => indexPaper.id)]);
+			setBib(bib);
+			// set papers.paper.csl for each paper
+			if (bib) {
+				bib.forEach((bibEntry, index) => {
+					papers[index].paper.csl = bibEntry;
+				});
+			}
+		}
+	}, [papers]);
+
+	useEffect(() => {
 		if (activeRef.current !== null)
 			activeRef.current.scrollIntoView({
-				// block: 'nearest',
 				behavior: 'smooth',
 				inline: 'start'
 			})
@@ -142,11 +178,7 @@ export const ReferenceMapList = (props: {
 						isSearchList={true}
 						setQuery={setQuery}
 						papers={papers}
-						cache={{
-							cslStyle: props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
-							cslLocale: props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string,
-						}
-						}
+						bib={bib}
 					/>
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');

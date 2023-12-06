@@ -2,29 +2,26 @@ import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
-import { getFormattedCitation, getFormattedCitations } from "./zotero";
 import { sanitizeDOI } from "./parser";
-import { htmlToMarkdown } from "obsidian";
-import { fragWithHTML } from "./functions";
 
 export const makeMetaData = (data: IndexPaper): MetaData => {
     const paper = data.paper;
-    const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') || 'Could not recover Title';
-    const author = paper.authors?.[0]?.name?.trim() || 'Could not recover Author';
-    const authors = paper.authors?.map(author => author.name).join(', ') || 'Could not recover Authors';
-    const year = paper.year?.toString().trim() || 'Could not recover Year';
-    const journal = paper.journal?.name?.trim() || 'Could not recover Journal';
-    const volume = paper.journal?.volume?.trim() || 'Could not recover Volume';
-    const pages = paper.journal?.pages?.trim() || 'Could not recover Pages';
-    const abstract = paper.abstract?.trim() || 'No abstract available';
-    const bibTex = paper.citationStyles?.bibtex || 'No BibTex available';
-    const referenceCount = paper.referenceCount || 0;
-    const citationCount = paper.citationCount || 0;
-    const influentialCount = paper.influentialCitationCount || 0;
-    const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url || '' : '';
-    const paperURL = paper.url || 'Could not recover URL';
-    const doi = paper.externalIds?.DOI || 'Could not recover DOI';
-    const csl = paper.csl || 'Could not recover CSL';
+    const paperTitle = paper.title?.trim().replace(/[^\x20-\x7E]/g, '') ?? 'Could not recover Title';
+    const author = paper.authors?.[0]?.name?.trim() ?? 'Could not recover Author';
+    const authors = paper.authors?.map(author => author.name).join(', ') ?? 'Could not recover Authors';
+    const year = paper.year?.toString().trim() ?? 'Could not recover Year';
+    const journal = paper.journal?.name?.trim() ?? 'Could not recover Journal';
+    const volume = paper.journal?.volume?.trim() ?? 'Could not recover Volume';
+    const pages = paper.journal?.pages?.trim() ?? 'Could not recover Pages';
+    const abstract = paper.abstract?.trim() ?? 'No abstract available';
+    const bibTex = paper.citationStyles?.bibtex ?? 'No BibTex available';
+    const referenceCount = paper.referenceCount ?? 0;
+    const citationCount = paper.citationCount ?? 0;
+    const influentialCount = paper.influentialCitationCount ?? 0;
+    const openAccessPdfUrl = paper.isOpenAccess ? paper.openAccessPdf?.url ?? '' : '';
+    const paperURL = paper.url ?? 'Could not recover URL';
+    const doi = paper.externalIds?.DOI ?? 'Could not recover DOI';
+    const csl = paper.csl ?? 'Could not recover CSL';
 
     return {
         bibtex: bibTex,
@@ -180,29 +177,6 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
     return reference;
 }
 
-export function getCSLFormats(indexPapers: IndexPaper[], citationStyle = '', citationLocale = '') {
-    if ((citationLocale || citationStyle) && indexPapers.length > 0) {
-        const references = indexPapers.map((indexPaper) => {
-            const id = indexPaper.id;
-            return convertToCiteKeyEntry(indexPaper.paper, id);
-        });
-        return getFormattedCitations(references, citationStyle, citationLocale);
-    }
-    return [];
-}
-
-export function getCSLFormat(reference: Reference, id = '', citationStyle = '', citationLocale = ''): string {
-    let csl: string | null;
-    if ((citationLocale || citationStyle) && reference) {
-        const citeKeyEntry = convertToCiteKeyEntry(reference as Reference, id);
-        csl = getFormattedCitation(citeKeyEntry, citationStyle, citationLocale);
-            if (csl) {
-                return htmlToMarkdown(fragWithHTML(csl)).replace(/\n/, ' ')
-            }
-    }
-    return ''
-}
-
 export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEntry {
     // convert YYYY-MM-DD numbers [YYYY, MM, DD]
     let issued: [number, number, number] = [0, 0, 0];
@@ -285,21 +259,6 @@ export const dataSort = (
             return left < right ? 1 : -1;
         }
     });
-};
-
-export const indexSearch = (data: IndexPaper[], query: string) => {
-    return data.filter((item: IndexPaper) => SEARCH_PARAMETERS.some((parameter) => {
-        if (parameter === 'authors') {
-            return item.paper?.authors?.some((author) => author.name?.toLowerCase().includes(query.toLowerCase())
-            );
-        } else {
-            return item.paper[parameter as keyof typeof item.paper]
-                ?.toString()
-                .toLowerCase()
-                .includes(query.toLowerCase());
-        }
-    })
-    );
 };
 
 export const indexSort = (

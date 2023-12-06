@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { CiteKey, IndexPaper, Library, LocalCache, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { fillMissingReference, getCSLFormat, indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
@@ -36,6 +36,8 @@ export class ReferenceMapData {
         if (!fs.existsSync(cacheDir)) {
             fs.mkdirSync(cacheDir);
         }
+
+        // The following will set the style cache and localeCache
         const citationStyle = await getCSLStyle(this.cache.styleCache, cacheDir, settings.citationStyleURL);
         const citationLocale = await getCSLLocale(this.cache.localeCache, cacheDir, settings.cslLocale);
 
@@ -181,7 +183,6 @@ export class ReferenceMapData {
             const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', '')) as CiteKeyEntry;
             if (localPaper) {
                 const paper_ = fillMissingReference(localPaper);
-                paper_.csl = getCSLFormat(paper_, item.citeKey, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({
                     id: item.citeKey,
                     location: item.location,
@@ -218,10 +219,6 @@ export class ReferenceMapData {
                                 settings.findZoteroCiteKeyFromID
                                 ? setCiteKeyId(paperId, this.library)
                                 : paperId;
-
-                        if (this.plugin.settings.formatCSL) {
-                            paper.csl = getCSLFormat(paper, paperCiteId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
-                        }
                         indexCards.push({
                             id: paperCiteId,
                             location: null,
@@ -249,11 +246,6 @@ export class ReferenceMapData {
                                 isLocal = false;
                             }
                         }
-
-                        if (this.plugin.settings.formatCSL) {
-                            paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
-                        }
-
                         indexCards.push({
                             id: item.citeKey,
                             location: item.location,
@@ -275,7 +267,6 @@ export class ReferenceMapData {
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
-                paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
@@ -285,7 +276,6 @@ export class ReferenceMapData {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
                 frontmatter, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
-                paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }

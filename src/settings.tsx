@@ -420,20 +420,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 
 
 		containerEl.createEl('h2', { text: 'Buttons Settings' })
-		new Setting(containerEl)
-			.setName(t('FORMAT_CSL'))
-			.setDesc(fragWithHTML(t('FORMAT_CSL_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.formatCSL)
-					.onChange(async (value) => {
-						this.plugin.settings.formatCSL = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
 
 		containerEl.createDiv('setting-item orm-setting-item-wrapper', (el) => {
 			createRoot(el).render(

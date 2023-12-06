@@ -48,7 +48,6 @@ export type ReferenceMapSettings = {
 	debugMode: boolean
 	isLocalExclusive: boolean
 	// CSL Settings
-	formatCSL: boolean
 	cslStyle: string
 	citationStyleURL: string
 	citationStylePath: string

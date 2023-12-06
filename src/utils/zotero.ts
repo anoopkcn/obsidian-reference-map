@@ -4,10 +4,8 @@
 import fs from "fs";
 import http, { request } from "http";
 import path from "path";
-import { CiteKeyEntry } from "src/apis/bibTypes";
 import { DEFAULT_HEADERS, DEFAULT_ZOTERO_PORT } from "src/constants";
 import { CSLList, PartialCSLEntry } from "src/types";
-import CSL from 'citeproc';
 import { ensureDir } from "./functions";
 
 function getGlobal() {
@@ -276,40 +274,4 @@ export async function refreshZBib(
         list: applyGroupID(list, groupId),
         modified,
     };
-}
-
-export function getFormattedCitation(
-    reference: CiteKeyEntry,
-    citationStyle: string,
-    citationLocale: string
-): string | null {
-    if (!reference) return null;
-    if (!citationStyle || !citationLocale) return null;
-    const citeprocSys = {
-        retrieveLocale: () => citationLocale,
-        retrieveItem: () => reference,
-    };
-    const citeproc = new CSL.Engine(citeprocSys, citationStyle);
-    citeproc.opt.development_extensions.wrap_url_and_doi = true;
-    citeproc.updateItems([reference.id])
-    const bib = citeproc.makeBibliography()[1] as string
-    return bib
-}
-
-export function getFormattedCitations(
-    references: CiteKeyEntry[],
-    citationStyle: string,
-    citationLocale: string
-) {
-    if (!(references.length > 0)) return null;
-    if (!citationStyle || !citationLocale) return null;
-    const citeprocSys = {
-        retrieveLocale: () => citationLocale,
-        retrieveItem: (id: string) => references.find((item) => item.id === id),
-    };
-    const citeproc = new CSL.Engine(citeprocSys, citationStyle);
-    citeproc.opt.development_extensions.wrap_url_and_doi = true;
-    citeproc.updateItems([...references.map((item) => item.id)])
-    const bib = citeproc.makeBibliography()[1]
-    return bib
 }

@@ -82,9 +82,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	debugMode: false,
 	isLocalExclusive: false,
 	// CSL Settings
-	formatCSL: true,
-	cslStyle: 'apa',
-	citationStyleURL: 'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl',
+	cslStyle: 'ieee',
+	citationStyleURL: 'https://raw.githubusercontent.com/citation-style-language/styles/master/ieee.csl',
 	citationStylePath: '',
 	cslLocale: 'en-US',
 }
