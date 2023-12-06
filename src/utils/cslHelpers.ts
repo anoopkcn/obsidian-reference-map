@@ -9,6 +9,8 @@ export async function getCSLLocale(
     cacheDir: string,
     lang: string
 ): Promise<string> {
+    if (!lang) lang = 'en-US';
+
     if (localeCache.has(lang)) {
         return localeCache.get(lang) as string
     }
@@ -53,6 +55,8 @@ export async function getCSLStyle(
     cacheDir: string,
     url: string,
 ): Promise<string> {
+    if (!url) url = 'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl';
+
     if (styleCache.has(url)) {
         return styleCache.get(url) as string
     }
