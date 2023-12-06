@@ -1,5 +1,4 @@
 import { ReferenceMapSettings, ZoteroGroup } from './types'
-import { APA, LOCALE_EN_US } from './utils/cslList'
 
 export const METADATA_COPY_TEMPLATE_ONE = `{{bibtex}}`
 
@@ -81,10 +80,13 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	metadataCopyTwoBatch: false,
 	metadataCopyThreeBatch: true,
 	debugMode: false,
-	citationStyle: APA,
-	citationLocale: LOCALE_EN_US,
+	isLocalExclusive: false,
+	// CSL Settings
 	formatCSL: true,
-	isLocalExclusive: false
+	cslStyle: 'apa',
+	citationStyleURL: 'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl',
+	citationStylePath: '',
+	cslLocale: 'en-US',
 }
 
 export const DEFAULT_LIBRARY = {

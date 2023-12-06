@@ -1,7 +1,7 @@
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
-import { MetaData, Library, CiteKey, IndexPaper, LocalCache } from "src/types";
+import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
 import { getFormattedCitation, getFormattedCitations } from "./zotero";
 import { sanitizeDOI } from "./parser";
 import { htmlToMarkdown } from "obsidian";
@@ -180,22 +180,22 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
     return reference;
 }
 
-export function getCSLFormats(indexPapers: IndexPaper[], cache: LocalCache | null = null) {
-    if ((cache?.citationLocale || cache?.citationStyle) && indexPapers.length > 0) {
+export function getCSLFormats(indexPapers: IndexPaper[], citationStyle = '', citationLocale = '') {
+    if ((citationLocale || citationStyle) && indexPapers.length > 0) {
         const references = indexPapers.map((indexPaper) => {
             const id = indexPaper.id;
             return convertToCiteKeyEntry(indexPaper.paper, id);
         });
-        return getFormattedCitations(references, cache?.citationStyle, cache?.citationLocale);
+        return getFormattedCitations(references, citationStyle, citationLocale);
     }
     return [];
 }
 
-export function getCSLFormat(reference: Reference, id = '', cache: LocalCache | null = null): string {
+export function getCSLFormat(reference: Reference, id = '', citationStyle = '', citationLocale = ''): string {
     let csl: string | null;
-    if ((cache?.citationLocale || cache?.citationStyle) && reference) {
+    if ((citationLocale || citationStyle) && reference) {
         const citeKeyEntry = convertToCiteKeyEntry(reference as Reference, id);
-            csl = getFormattedCitation(citeKeyEntry, cache?.citationStyle, cache?.citationLocale);
+        csl = getFormattedCitation(citeKeyEntry, citationStyle, citationLocale);
             if (csl) {
                 return htmlToMarkdown(fragWithHTML(csl)).replace(/\n/, ' ')
             }

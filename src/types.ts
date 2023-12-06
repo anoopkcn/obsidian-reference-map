@@ -46,10 +46,13 @@ export type ReferenceMapSettings = {
 	metadataCopyTwoBatch: boolean
 	metadataCopyThreeBatch: boolean
 	debugMode: boolean
-	citationStyle: string
-	citationLocale: string
-	formatCSL: boolean
 	isLocalExclusive: boolean
+	// CSL Settings
+	formatCSL: boolean
+	cslStyle: string
+	citationStyleURL: string
+	citationStylePath: string
+	cslLocale: string
 }
 export type MetaData = {
 	bibtex: string
@@ -119,8 +122,7 @@ export type ZoteroGroup = {
 
 export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
 
-export type LocalCache = {
-	cacheDirPath: string;
-	citationStyle: string;
-	citationLocale: string;
+export interface LocalCache {
+	styleCache: Map<string, string>;
+	localeCache: Map<string, string>;
 }

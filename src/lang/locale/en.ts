@@ -205,6 +205,6 @@ export default {
 	SEE_DOCUMENTATION: 'See documentation',
 	SEE_DOCUMENTATION_DESC:
 		"For more information regarding the plugin see the <a href='https://github.com/anoopkcn/obsidian-reference-map/wiki'>Reference Map Wiki</a>.",
-	FORMAT_CSL: 'CSL format',
+	FORMAT_CSL: 'CSL format template variable',
 	FORMAT_CSL_DESC: 'Format the citation according to a CSL schema. This will add a new template variable {{csl}} to be used in buttons and templates.<b>Note: {{csl}} variable is only available for index cards</b>',
 }

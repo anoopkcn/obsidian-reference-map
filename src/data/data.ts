@@ -10,7 +10,7 @@ import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
 import { ViewManager } from './viewManager';
 import { CiteKeyEntry } from 'src/apis/bibTypes';
-import path from 'path';
+import { getCSLLocale, getCSLStyle } from 'src/utils/cslHelpers';
 
 
 export class ReferenceMapData {
@@ -26,23 +26,23 @@ export class ReferenceMapData {
         this.viewManager = new ViewManager(plugin)
         this.initPromise = new PromiseCapability();
         this.cache = {
-            cacheDirPath: '',
-            citationStyle: '',
-            citationLocale: ''
+            styleCache: new Map<string, string>(),
+            localeCache: new Map<string, string>()
         }
     }
 
     async loadCache() {
         const { cacheDir, settings } = this.plugin;
-        const cacheDirPath = path.join(cacheDir, '.reference-map');
-        if (!fs.existsSync(cacheDirPath)) {
-            fs.mkdirSync(cacheDirPath);
+        if (!fs.existsSync(cacheDir)) {
+            fs.mkdirSync(cacheDir);
         }
-        this.cache = {
-            cacheDirPath,
-            citationStyle: settings.citationStyle,
-            citationLocale: settings.citationLocale
-        };
+        const citationStyle = await getCSLStyle(this.cache.styleCache, cacheDir, settings.citationStyleURL);
+        const citationLocale = await getCSLLocale(this.cache.localeCache, cacheDir, settings.cslLocale);
+
+        if (citationStyle && citationLocale) {
+            return true;
+        }
+        return false;
     }
 
     async reload(reloadType: Reload) {
@@ -181,7 +181,7 @@ export class ReferenceMapData {
             const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', '')) as CiteKeyEntry;
             if (localPaper) {
                 const paper_ = fillMissingReference(localPaper);
-                paper_.csl = getCSLFormat(paper_, item.citeKey, this.cache);
+                paper_.csl = getCSLFormat(paper_, item.citeKey, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({
                     id: item.citeKey,
                     location: item.location,
@@ -220,7 +220,7 @@ export class ReferenceMapData {
                                 : paperId;
 
                         if (this.plugin.settings.formatCSL) {
-                            paper.csl = getCSLFormat(paper, paperCiteId, this.cache);
+                            paper.csl = getCSLFormat(paper, paperCiteId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                         }
                         indexCards.push({
                             id: paperCiteId,
@@ -251,7 +251,7 @@ export class ReferenceMapData {
                         }
 
                         if (this.plugin.settings.formatCSL) {
-                            paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
+                            paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                         }
 
                         indexCards.push({
@@ -275,7 +275,7 @@ export class ReferenceMapData {
                 settings.searchLimit
             );
             _.forEach(titleSearchPapers, (paper) => {
-                paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
+                paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
@@ -285,7 +285,7 @@ export class ReferenceMapData {
             const frontMatterPapers = await this.viewManager.searchIndexPapers(
                 frontmatter, settings.searchFrontMatterLimit);
             _.forEach(frontMatterPapers, (paper) => {
-                paper.csl = getCSLFormat(paper, paper.paperId, this.cache);
+                paper.csl = getCSLFormat(paper, paper.paperId, this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string, this.cache.localeCache.get(this.plugin.settings.cslLocale) as string);
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }

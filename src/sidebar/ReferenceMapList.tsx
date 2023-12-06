@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { IndexPaper, LocalCache } from 'src/types'
+import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
@@ -14,7 +14,7 @@ type UserSearchProps = {
 	isSearchList?: boolean;
 	setQuery?: (query: string) => void;
 	papers?: IndexPaper[];
-	cache?: LocalCache;
+	cache?: { cslStyle: string, cslLocale: string };
 }
 
 const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers, cache }) => (
@@ -24,7 +24,7 @@ const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers,
 				{papers && papers?.length > 0 &&
 					<div className="orm-plugin-global-copy" onClick={async () => {
 						if (!papers) return;
-						const copyData = await getCSLFormats(papers, cache)?.map(
+						const copyData = await getCSLFormats(papers, cache?.cslStyle, cache?.cslLocale)?.map(
 							(item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/, ' ')
 						)
 						copyToClipboard(copyData.join('\n\n'))
@@ -142,7 +142,11 @@ export const ReferenceMapList = (props: {
 						isSearchList={true}
 						setQuery={setQuery}
 						papers={papers}
-						cache={props.referenceMapData.cache}
+						cache={{
+							cslStyle: props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
+							cslLocale: props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string,
+						}
+						}
 					/>
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');
