@@ -17,6 +17,7 @@ export class UpdateChecker {
     frontmatter = '';
     fileName = '';
     basename = '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cslEngine: any;
 
     constructor() {
