@@ -1,12 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client'
 import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
-import { RELOAD } from './types'
-import ReferenceMap from './main'
-import { t } from './lang/helpers'
-import { ZoteroPullSetting } from './components/ZoteroPullSettings'
-import { fragWithHTML, resolvePath } from './utils/functions'
-import { ButtonSettings } from './components/ButtonSettings';
+import { RELOAD } from '../types'
+import ReferenceMap from '../main'
+import { t } from '../lang/helpers'
+import { ZoteroPullSetting } from './ZoteroPullSettings'
+import { fragWithHTML, resolvePath } from '../utils/functions'
+import { ButtonSettings } from './ButtonSettings';
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -397,7 +397,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 									this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							})
 						})
-			)
+				)
 			new Setting(containerEl)
 				.setName(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX')))
 				.setDesc(fragWithHTML(t('FIND_CITEKEY_WITHOUT_PREFIX_DESC')))
@@ -644,7 +644,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								this.plugin.referenceMapData.reload(RELOAD.HARD)
 						})
 					})
-		)
+			)
 		containerEl.createEl('hr')
 		containerEl.createEl('h2', { text: t('SEE_DOCUMENTATION') })
 		containerEl.createEl('p', {
