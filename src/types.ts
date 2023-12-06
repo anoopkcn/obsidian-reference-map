@@ -125,3 +125,9 @@ export interface LocalCache {
 	styleCache: Map<string, string>;
 	localeCache: Map<string, string>;
 }
+
+export type BibData = {
+	id: string;
+	index: number;
+	bib: string;
+}

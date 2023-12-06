@@ -14,7 +14,6 @@ type UserSearchProps = {
 	isSearchList?: boolean;
 	setQuery?: (query: string) => void;
 	papers?: IndexPaper[];
-	bib?: string[] | null;
 }
 
 export const indexSearch = (data: IndexPaper[], query: string) => {
@@ -32,14 +31,14 @@ export const indexSearch = (data: IndexPaper[], query: string) => {
 	);
 };
 
-const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers, bib }) => (
+const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers }) => (
 	<div className="orm-plugin-name">
 		<div className="orm-search-form">
 			<div className="index-search">
 				{papers && papers?.length > 0 &&
 					<div className="orm-plugin-global-copy" onClick={async () => {
 						if (!papers) return;
-						if (!bib) return;
+						const bib = papers.map((paper) => paper.paper.csl)
 						copyToClipboard(bib?.join('\n\n'))
 					}}>
 						<CopyIcon />
@@ -84,7 +83,6 @@ export const ReferenceMapList = (props: {
 	updateChecker: UpdateChecker
 }) => {
 	const [papers, setPapers] = useState<IndexPaper[]>([])
-	const [bib, setBib] = useState<string[] | null>(null)
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<HTMLDivElement>(null)
@@ -100,6 +98,25 @@ export const ReferenceMapList = (props: {
 		const indexCards = await props.referenceMapData.getIndexCards(
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
+		if (indexCards.length > 0) {
+			const CiteKeyEntry = papers.map((indexPaper) => {
+				return convertToCiteKeyEntry(indexPaper, indexPaper.id);
+			});
+			props.updateChecker.checkCSlEngineUpdate(
+				CiteKeyEntry,
+				props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
+				props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string
+			);
+			const bibData = props.updateChecker.getCSL([...CiteKeyEntry.map((item) => item.id)]);
+			if (bibData) {
+				bibData.forEach((item) => {
+					const paperIndex = indexCards.findIndex(paper => paper.id === item.id);
+					if (paperIndex !== -1) {
+						indexCards[paperIndex].paper.csl = item.bib;
+					}
+				});
+			}
+		}
 		setPapers(indexCards)
 	}
 
@@ -109,11 +126,7 @@ export const ReferenceMapList = (props: {
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
-		if (props.plugin.settings.isLocalExclusive) {
-			setPapers(getLocalReferences(props.updateChecker.citeKeyMap));
-		} else {
-			fetchData()
-		}
+		fetchData()
 	}, [
 		props.updateChecker.basename,
 		props.updateChecker.indexIds,
@@ -123,29 +136,6 @@ export const ReferenceMapList = (props: {
 		props.plugin.settings,
 		props.referenceMapData.library.libraryData
 	])
-
-	useEffect(() => {
-		if (papers) {
-			const IndexPapers = papers.map((indexPaper) => {
-				return convertToCiteKeyEntry(indexPaper, indexPaper.id);
-			});
-
-			props.updateChecker.checkCSlEngineUpdate(
-				IndexPapers,
-				props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
-				props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string
-			);
-
-			const bib = props.updateChecker.getCSL([...IndexPapers.map((indexPaper) => indexPaper.id)]);
-			setBib(bib);
-			// set papers.paper.csl for each paper
-			if (bib) {
-				bib.forEach((bibEntry, index) => {
-					papers[index].paper.csl = bibEntry;
-				});
-			}
-		}
-	}, [papers]);
 
 	useEffect(() => {
 		if (activeRef.current !== null)
@@ -178,7 +168,6 @@ export const ReferenceMapList = (props: {
 						isSearchList={true}
 						setQuery={setQuery}
 						papers={papers}
-						bib={bib}
 					/>
 					{indexSearch(papers, query).map((paper, index) => {
 						const paperId = paper.id.replace('@', '');

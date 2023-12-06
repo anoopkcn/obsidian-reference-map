@@ -1,5 +1,5 @@
 import { CachedMetadata, htmlToMarkdown } from "obsidian";
-import { CiteKey, Library } from "src/types";
+import { BibData, CiteKey, Library } from "src/types";
 import { EXCLUDE_FILE_NAMES } from "src/constants";
 import { areSetsEqual, fragWithHTML } from "src/utils/functions";
 import { getCiteKeyIds } from 'src/utils/postprocess';
@@ -109,14 +109,17 @@ export class UpdateChecker {
         // return this.bibliography
     }
 
-    getCSL = (ids: string[]) => {
+    getCSL = (ids: string[]): BibData[] | null => {
         if (!this.cslEngine) return null;
         this.cslEngine.updateItems(ids)
-        const bibHtml = this.cslEngine.makeBibliography()[1]
-        const bib = bibHtml?.map(
-            (item: string) => htmlToMarkdown(fragWithHTML(item)).replace(/\n/, ' ')
-        ) as string[]
-        return bib
-
+        const bibHtml = this.cslEngine.makeBibliography()
+        const bibMetadataIds = bibHtml[0]?.entry_ids
+        const cslData: BibData[] = bibMetadataIds.map((id: string[], index: number) => {
+            const bib = htmlToMarkdown(fragWithHTML(bibHtml[1][index])).replace(/\n/, ' ')
+            const index_ = index + 1 // CSL index starts from 1
+            return { id: id[0], index: index_, bib: bib } as BibData
+        });
+        if (cslData.length === 0) return null;
+        return cslData
     }
 }
