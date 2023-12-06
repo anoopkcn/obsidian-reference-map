@@ -124,22 +124,31 @@ export const getCiteKeyIds = (citeKeys: Set<string>, citeLibrary: Library | null
 };
 
 //convert citeKeyEntry to Reference
-export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, reference: Reference = { paperId: '' }): Reference {
+export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, reference: Reference | null = null): Reference {
     // map the properties of citeKeyEntry to the properties of Reference
+    //if reference is null, create a new reference
+    let ref: Reference;
+    if (reference) {
+        ref = reference;
+    } else {
+        const paperId = citeKeyEntry?.id ?? '';
+        ref = { paperId: paperId };
+    }
+
     if (citeKeyEntry) {
-        reference.paperId = reference.paperId ?? citeKeyEntry.id;
-        reference.externalIds = reference.externalIds ?? { DOI: citeKeyEntry.DOI };
-        reference.url = reference.url ?? citeKeyEntry.URL;
-        reference.type = reference.type ?? citeKeyEntry.type;
-        reference.title = reference.title ?? citeKeyEntry.title;
-        reference.abstract = reference.abstract ?? citeKeyEntry.abstract;
-        reference.year = reference.year ?? citeKeyEntry.issued?.['date-parts'].flat().join('-') //.toString();
-        reference.journal = reference.journal ?? {
+        ref.paperId = ref.paperId ?? citeKeyEntry.id;
+        ref.externalIds = ref.externalIds ?? { DOI: citeKeyEntry.DOI };
+        ref.url = ref.url ?? citeKeyEntry.URL;
+        ref.type = ref.type ?? citeKeyEntry.type;
+        ref.title = ref.title ?? citeKeyEntry.title;
+        ref.abstract = ref.abstract ?? citeKeyEntry.abstract;
+        ref.year = ref.year ?? citeKeyEntry.issued?.['date-parts'].flat().join('-') //.toString();
+        ref.journal = ref.journal ?? {
             name: citeKeyEntry['container-title'],
             volume: citeKeyEntry.volume,
             pages: citeKeyEntry.page,
         };
-        reference.authors = reference.authors ?? citeKeyEntry.author?.map((author) => {
+        ref.authors = ref.authors ?? citeKeyEntry.author?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -149,7 +158,7 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
                 name: author.given + ' ' + author.family,
             };
         });
-        reference.directors = reference.directors ?? citeKeyEntry.director?.map((author) => {
+        ref.directors = ref.directors ?? citeKeyEntry.director?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -159,7 +168,7 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
                 name: author.given + ' ' + author.family,
             };
         });
-        reference.editors = reference.editors ?? citeKeyEntry.editor?.map((author) => {
+        ref.editors = ref.editors ?? citeKeyEntry.editor?.map((author) => {
             if (author.literal) {
                 return {
                     name: author.literal,
@@ -169,12 +178,12 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
                 name: author.given + ' ' + author.family,
             };
         });
-        reference.citationStyles = reference.citationStyles ?? {
+        ref.citationStyles = ref.citationStyles ?? {
             bibtex: citeKeyEntry.key,
         };
-        reference.csl = reference?.csl ?? citeKeyEntry?.csl;
+        ref.csl = ref?.csl ?? citeKeyEntry?.csl;
     }
-    return reference;
+    return ref;
 }
 
 export function convertToCiteKeyEntry(paper: IndexPaper, id = ''): CiteKeyEntry {

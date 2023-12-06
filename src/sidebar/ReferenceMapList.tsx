@@ -3,7 +3,6 @@ import { IndexPaper } from 'src/types'
 import ReferenceMap from 'src/main'
 import EventBus, { EVENTS } from 'src/events'
 import { IndexPaperCard } from 'src/components/IndexPaperCard'
-import { convertToCiteKeyEntry } from 'src/utils/postprocess'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { CopyIcon } from 'src/icons'
@@ -31,34 +30,43 @@ export const indexSearch = (data: IndexPaper[], query: string) => {
 	);
 };
 
-const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers }) => (
-	<div className="orm-plugin-name">
-		<div className="orm-search-form">
-			<div className="index-search">
-				{papers && papers?.length > 0 &&
-					<div className="orm-plugin-global-copy" onClick={async () => {
-						if (!papers) return;
-						const bib = papers.map((paper) => paper.paper.csl)
-						copyToClipboard(bib?.join('\n\n'))
-					}}>
-						<CopyIcon />
-					</div>
-				}
-				<input
-					type="search"
-					className={`orm-search-input ${isSearchList ? 'orm-index-search' : 'orm-index-no-search'}`}
-					placeholder={`Reference Map`}
-					onChange={(e) => {
-						if (!setQuery) return;
-						return setQuery(e.target.value)
-					}}
-					style={{ padding: '0 35px 0 35px' }}
-				/>
-				{isSearchList && <div className="cardCount">{papers && papers?.length > 0 ? papers.length : ''}</div>}
+const UserSearch: React.FC<UserSearchProps> = ({ isSearchList, setQuery, papers }) => {
+	// if none of the papers have paper.paper.csl then set isCsl to false
+	const isCSL = papers?.some((paper) => paper.paper.csl !== undefined)
+	return (
+		<div className="orm-plugin-name">
+			<div className="orm-search-form">
+				<div className="index-search">
+					{!isCSL &&
+						<div className='orm-plugin-global-copy-disabled'>
+							<CopyIcon />
+						</div>
+					}
+					{papers && papers?.length > 0 && isCSL &&
+						<div className='orm-plugin-global-copy' onClick={async () => {
+							if (!papers) return;
+							const bib = papers.map((paper) => paper.paper.csl)
+							copyToClipboard(bib?.join('\n\n'))
+						}}>
+							<CopyIcon />
+						</div>
+					}
+					<input
+						type="search"
+						className={`orm-search-input ${isSearchList ? 'orm-index-search' : 'orm-index-no-search'}`}
+						placeholder={`Reference Map`}
+						onChange={(e) => {
+							if (!setQuery) return;
+							return setQuery(e.target.value)
+						}}
+						style={{ padding: '0 35px 0 35px' }}
+					/>
+					{isSearchList && <div className="cardCount">{papers && papers?.length > 0 ? papers.length : ''}</div>}
+				</div>
 			</div>
 		</div>
-	</div>
-)
+	)
+}
 
 type SetKeyInfoProps = {
 	searchCiteKey?: boolean;
@@ -88,45 +96,30 @@ export const ReferenceMapList = (props: {
 	const activeRef = useRef<HTMLDivElement>(null)
 	const { viewManager, getLocalReferences } = props.referenceMapData;
 
-	const fetchData = async () => {
+	const fetchData = async (isLocal = false) => {
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
-		if (props.plugin.settings.removeDuplicateIds) {
-			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId.toLocaleLowerCase() === id.toLocaleLowerCase()));
-			updatedIndexIds = new Set(updatedIndexIdsArray);
-		}
-		const indexCards = await props.referenceMapData.getIndexCards(
-			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
-		)
-		if (indexCards.length > 0) {
-			const CiteKeyEntry = papers.map((indexPaper) => {
-				return convertToCiteKeyEntry(indexPaper, indexPaper.id);
-			});
-			props.updateChecker.checkCSlEngineUpdate(
-				CiteKeyEntry,
-				props.referenceMapData.cache.styleCache.get(props.plugin.settings.citationStyleURL) as string,
-				props.referenceMapData.cache.localeCache.get(props.plugin.settings.cslLocale) as string
-			);
-			const bibData = props.updateChecker.getCSL([...CiteKeyEntry.map((item) => item.id)]);
-			if (bibData) {
-				bibData.forEach((item) => {
-					const paperIndex = indexCards.findIndex(paper => paper.id === item.id);
-					if (paperIndex !== -1) {
-						indexCards[paperIndex].paper.csl = item.bib;
-					}
-				});
+		let indexCards: IndexPaper[] = [];
+		if (isLocal) {
+			indexCards = await getLocalReferences(props.updateChecker.citeKeyMap)
+		} else {
+			if (props.plugin.settings.removeDuplicateIds) {
+				const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId.toLocaleLowerCase() === id.toLocaleLowerCase()));
+				updatedIndexIds = new Set(updatedIndexIdsArray);
 			}
+			indexCards = await props.referenceMapData.getIndexCards(
+				updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
+			)
 		}
 		setPapers(indexCards)
 	}
 
 	useEffect(() => {
-		const localPapers = getLocalReferences(props.updateChecker.citeKeyMap)
-		setPapers(localPapers);
+		fetchData(true)
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
-		fetchData()
+		fetchData(false)
 	}, [
 		props.updateChecker.basename,
 		props.updateChecker.indexIds,

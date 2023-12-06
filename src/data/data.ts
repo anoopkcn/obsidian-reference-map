@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { CiteKey, IndexPaper, Library, LocalCache, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
 import { removeNullReferences, resolvePath } from 'src/utils/functions'
-import { fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
+import { convertToCiteKeyEntry, fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
 import ReferenceMap from 'src/main';
@@ -176,7 +176,7 @@ export class ReferenceMapData {
         }
     };
 
-    getLocalReferences = (citeKeyMap: CiteKey[] = []) => {
+    getLocalReferences = async (citeKeyMap: CiteKey[] = []) => {
         const indexCards: IndexPaper[] = [];
         if (!citeKeyMap) return indexCards;
         _.map(citeKeyMap, (item: CiteKey): void => {
@@ -234,7 +234,7 @@ export class ReferenceMapData {
         // Get references using the cite keys
         if (citeKeyMap.length > 0 && settings.searchCiteKey) {
             await Promise.all(
-                _.map(citeKeyMap, async (item): Promise<void> => {
+                _.map(citeKeyMap, async (item, index): Promise<void> => {
                     const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', ''));
                     if (localPaper) {
                         let isLocal = true;
@@ -279,14 +279,37 @@ export class ReferenceMapData {
                 indexCards.push({ id: paper.paperId, location: null, isLocal: false, paper });
             });
         }
-        return this.preProcessReferences(indexCards);
+
+        const indexCards_ = this.preProcessReferences(indexCards);
+        if (indexCards_.length > 0) {
+            const CiteKeyEntry = indexCards_.map((indexPaper) => {
+                return convertToCiteKeyEntry(indexPaper, indexPaper.id);
+            });
+            this.plugin.updateChecker.checkCSlEngineUpdate(
+                CiteKeyEntry,
+                this.cache.styleCache.get(this.plugin.settings.citationStyleURL) as string,
+                this.cache.localeCache.get(this.plugin.settings.cslLocale) as string
+            );
+            const bibData = this.plugin.updateChecker.getCSL([...CiteKeyEntry.map((item) => item.id)]);
+            if (bibData) {
+                bibData.forEach((item) => {
+                    const paperIndex = indexCards_.findIndex(paper => paper.id === item.id);
+                    if (paperIndex !== -1) {
+                        indexCards_[paperIndex].paper.csl = item.bib;
+                    }
+                });
+            }
+        }
+        return indexCards_
     };
 
 
     preProcessReferences = (indexCards: IndexPaper[]) => {
+        const indexCards_ = this.plugin.settings.removeDuplicateIds ? _.uniqBy(indexCards, item => item.paper.paperId) : indexCards
+
         if (!this.plugin.settings.enableIndexSorting) {
             // Remove null references and sort the array
-            return removeNullReferences(indexCards).sort((a, b) => {
+            return removeNullReferences(indexCards_).sort((a, b) => {
                 // If location is null, place it at the end
                 if (a.location === null) return 1;
                 if (b.location === null) return -1;
@@ -296,7 +319,7 @@ export class ReferenceMapData {
             });
         }
         return indexSort(
-            removeNullReferences(indexCards),
+            removeNullReferences(indexCards_),
             this.plugin.settings.sortByIndex,
             this.plugin.settings.sortOrderIndex
         )
