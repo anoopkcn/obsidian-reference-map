@@ -188,7 +188,7 @@ export class ReferenceMapData {
                     location: item.location,
                     isLocal: true,
                     paper: paper_,
-                    cslEntry: localPaper
+                    bibEntry: localPaper
                 });
             }
         });
@@ -224,7 +224,7 @@ export class ReferenceMapData {
                             location: null,
                             isLocal: false,
                             paper: paper,
-                            cslEntry: undefined
+                            bibEntry: undefined
                         });
                     }
                 })
@@ -251,7 +251,7 @@ export class ReferenceMapData {
                             location: item.location,
                             isLocal: isLocal,
                             paper: paper,
-                            cslEntry: localPaper
+                            bibEntry: localPaper
                         });
                     }
                 })

@@ -77,7 +77,7 @@ export type IndexPaper = {
 	location: number | null
 	isLocal?: boolean
 	paper: Reference
-	cslEntry?: CiteKeyEntry
+	bibEntry?: CiteKeyEntry
 }
 
 export type CiteKey = {

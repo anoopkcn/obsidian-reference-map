@@ -1,4 +1,4 @@
-import { CiteKeyEntry } from "src/apis/bibTypes";
+import { CiteKeyEntry, Issued } from "src/apis/bibTypes";
 import { Reference } from "src/apis/s2agTypes";
 import { VALID_S2AG_API_URLS, SEARCH_PARAMETERS } from "src/constants";
 import { MetaData, Library, CiteKey, IndexPaper } from "src/types";
@@ -177,29 +177,32 @@ export function fillMissingReference(citeKeyEntry: CiteKeyEntry | undefined, ref
     return reference;
 }
 
-export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEntry {
+export function convertToCiteKeyEntry(paper: IndexPaper, id = ''): CiteKeyEntry {
     // convert YYYY-MM-DD numbers [YYYY, MM, DD]
-    let issued: [number, number, number] = [0, 0, 0];
+    const reference = paper.paper;
+    const bibEntry = paper.bibEntry;
+    let issued: Issued = { 'date-parts': [[0, 0, 0]] };
     if (reference.publicationDate) {
         const dateParts = reference.publicationDate.split('-').map(Number);
         if (dateParts.length === 3) {
-            issued = [dateParts[0], dateParts[1], dateParts[2]] as [number, number, number];
+            issued = {
+                'date-parts': [[dateParts[0], dateParts[1], dateParts[2]]],
+            };
         }
     }
+
     const citeKeyEntry: CiteKeyEntry = {
         // map the properties of Reference to the properties of CiteKeyEntry
         id: id ? id : reference.paperId,
-        URL: reference.url,
-        DOI: reference.externalIds?.DOI,
-        type: reference.type,
-        title: reference.title,
-        abstract: reference.abstract,
-        issued: {
-            'date-parts': issued,
-        },
-        'container-title': reference.journal?.name,
-        volume: reference.journal?.volume,
-        page: reference.journal?.pages,
+        key: bibEntry?.key,
+        type: bibEntry?.type ?? reference.type,
+        abstract: bibEntry?.abstract ?? reference.abstract,
+        DOI: bibEntry?.DOI ?? reference.externalIds?.DOI,
+        fields: bibEntry?.fields,
+        note: bibEntry?.note,
+        page: bibEntry?.page ?? reference.journal?.pages,
+        title: reference.title ?? bibEntry?.title,
+        URL: bibEntry?.URL ?? reference.url,
         author: reference.authors?.map((author) => {
             const nameParts = author.name ? author.name.split(' ') : [''];
             return {
@@ -207,6 +210,15 @@ export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEnt
                 family: nameParts.slice(-1).join(' '),
             };
         }),
+        issued: bibEntry?.issued ?? issued,
+        'container-title': reference.journal?.name,
+        ISSN: bibEntry?.ISSN,
+        issue: bibEntry?.issue,
+        volume: bibEntry?.volume ?? reference.journal?.volume,
+        language: bibEntry?.language,
+        'title-short': bibEntry?.['title-short'],
+        dimensions: bibEntry?.dimensions,
+        source: bibEntry?.source,
         director: reference.directors?.map((director) => {
             const nameParts = director.name ? director.name.split(' ') : [''];
             return {
@@ -214,6 +226,15 @@ export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEnt
                 family: nameParts.slice(-1).join(' '),
             };
         }),
+        genre: bibEntry?.genre,
+        number: bibEntry?.number,
+        publisher: bibEntry?.publisher,
+        license: bibEntry?.license,
+        journalAbbreviation: bibEntry?.journalAbbreviation,
+        'collection-title': bibEntry?.['collection-title'],
+        'event-place': bibEntry?.['event-place'],
+        ISBN: bibEntry?.ISBN,
+        'publisher-place': bibEntry?.['publisher-place'],
         editor: reference.editors?.map((editor) => {
             const nameParts = editor.name ? editor.name.split(' ') : [''];
             return {
@@ -221,7 +242,7 @@ export function convertToCiteKeyEntry(reference: Reference, id = ''): CiteKeyEnt
                 family: nameParts.slice(-1).join(' '),
             };
         }),
-        key: reference.citationStyles?.bibtex,
+        'number-of-pages': bibEntry?.['number-of-pages']
     };
     return citeKeyEntry;
 }

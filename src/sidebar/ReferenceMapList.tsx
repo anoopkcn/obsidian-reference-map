@@ -127,7 +127,7 @@ export const ReferenceMapList = (props: {
 	useEffect(() => {
 		if (papers) {
 			const IndexPapers = papers.map((indexPaper) => {
-				return convertToCiteKeyEntry(indexPaper.paper, indexPaper.id);
+				return convertToCiteKeyEntry(indexPaper, indexPaper.id);
 			});
 
 			props.updateChecker.checkCSlEngineUpdate(

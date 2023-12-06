@@ -42,7 +42,7 @@ export type Author = {
 }
 
 export type Issued = {
-    "date-parts": [number, number, number]
+    "date-parts": [number, number, number][]
 }
 
 export type Director = {
