@@ -9,7 +9,7 @@ export const LoadingPuff = () => {
 					stroke="none"
 					cx="18"
 					cy="1"
-					r="0.25"
+					r="0.15"
 				>
 					<animate
 						attributeName="opacity"
@@ -24,7 +24,7 @@ export const LoadingPuff = () => {
 					stroke="none"
 					cx="20"
 					cy="1"
-					r="0.25"
+					r="0.15"
 				>
 					<animate
 						attributeName="opacity"
@@ -39,7 +39,7 @@ export const LoadingPuff = () => {
 					stroke="none"
 					cx="22"
 					cy="1"
-					r="0.25"
+					r="0.15"
 				>
 					<animate
 						attributeName="opacity"

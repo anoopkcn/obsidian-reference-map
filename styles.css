@@ -471,9 +471,13 @@ body {
 }
 
 .orm-loading-puff {
+	position: absolute;
+	bottom: 0;
+	right: 0;
 	display: block;
 	text-align: center;
 	width: 100%;
+	height: 20px;
 }
 
 /** Settings Dialog **/

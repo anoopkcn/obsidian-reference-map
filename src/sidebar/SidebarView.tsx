@@ -9,6 +9,7 @@ import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { ReferenceMapList } from './ReferenceMapList'
 import { getCanvasContent, getLinkedFiles } from 'src/utils/functions'
+import { IndexPaper } from 'src/types'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -101,6 +102,7 @@ export class SidebarView extends ItemView {
 		const activeFile = this.app.workspace.getActiveFile();
 		const settings = this.plugin.settings
 		let fileCache = ''
+		let localCards: IndexPaper[] = []
 		if (activeFile) {
 			try {
 				fileCache = await this.app.vault.read(activeFile);
@@ -129,6 +131,7 @@ export class SidebarView extends ItemView {
 			if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix, true)
 			if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
 			if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
+			localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
 		} else {
 			this.updateChecker.resetCache()
 		}
@@ -138,6 +141,7 @@ export class SidebarView extends ItemView {
 					plugin={this.plugin}
 					referenceMapData={this.referenceMapData}
 					updateChecker={this.updateChecker}
+					localCards={localCards}
 				/>
 			</AppContext.Provider>
 		)

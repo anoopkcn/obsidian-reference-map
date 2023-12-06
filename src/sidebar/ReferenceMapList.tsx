@@ -89,37 +89,31 @@ export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
 	referenceMapData: ReferenceMapData
 	updateChecker: UpdateChecker
+	localCards: IndexPaper[]
 }) => {
-	const [papers, setPapers] = useState<IndexPaper[]>([])
+	const [papers, setPapers] = useState<IndexPaper[]>(props.localCards)
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<HTMLDivElement>(null)
-	const { viewManager, getLocalReferences } = props.referenceMapData;
+	const { viewManager } = props.referenceMapData;
 
-	const fetchData = async (isLocal = false) => {
+	const fetchData = async () => {
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		let indexCards: IndexPaper[] = [];
-		if (isLocal) {
-			indexCards = await getLocalReferences(props.updateChecker.citeKeyMap)
-		} else {
-			if (props.plugin.settings.removeDuplicateIds) {
-				const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId.toLocaleLowerCase() === id.toLocaleLowerCase()));
-				updatedIndexIds = new Set(updatedIndexIdsArray);
-			}
-			indexCards = await props.referenceMapData.getIndexCards(
-				updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
-			)
+		if (props.plugin.settings.removeDuplicateIds) {
+			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId.toLocaleLowerCase() === id.toLocaleLowerCase()));
+			updatedIndexIds = new Set(updatedIndexIdsArray);
 		}
+		indexCards = await props.referenceMapData.getIndexCards(
+			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
+		)
+
 		setPapers(indexCards)
 	}
 
 	useEffect(() => {
-		fetchData(true)
-	}, [props.updateChecker.basename])
-
-	useEffect(() => {
-		fetchData(false)
+		fetchData()
 	}, [
 		props.updateChecker.basename,
 		props.updateChecker.indexIds,
