@@ -85,13 +85,7 @@ export function copyElToClipboard(el: HTMLElement) {
 }
 
 export function removeNullReferences(references: IndexPaper[]) {
-	const result = references.filter((element) => {
-		if (element.paper && element.paper.paperId !== null) {
-			return true
-		}
-		return false
-	})
-	return result
+	return references.filter(element => element.paper && element.paper.paperId !== null);
 }
 
 export function makeFileName(metaData: MetaData, fileNameFormat?: string) {
