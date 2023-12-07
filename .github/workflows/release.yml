@@ -29,6 +29,10 @@ jobs:
                   mkdir ${{ github.event.repository.name }}
                   cp main.js manifest.json styles.css README.md ${{ github.event.repository.name }}
                   zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+            - name: Read Release Notes
+              id: read_release_notes
+              run: |
+                  echo "::set-output name=content::$(cat RELEASE_NOTES.md)"
             # Create the release on github
             - name: Create Release
               id: create_release
@@ -41,6 +45,7 @@ jobs:
                   release_name: ${{ github.ref }}
                   draft: false
                   prerelease: false
+                  body: ${{ steps.read_release_notes.outputs.content }}
             # Upload the packaged release file
             - name: Upload zip file
               id: upload-zip
@@ -85,21 +90,3 @@ jobs:
                   asset_path: ./styles.css
                   asset_name: styles.css
                   asset_content_type: text/css
-            # Read release notes 
-            - name: Read Release Notes
-              id: read_release_notes
-              run: |
-                  echo "::set-output name=content::$(cat RELEASE_NOTES.md)"
-            # Add release notes 
-            - name: Create Release
-              id: create_release_notes
-              uses: actions/create-release@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ github.ref }}
-              with:
-                  tag_name: ${{ github.ref }}
-                  release_name: ${{ github.ref }}
-                  draft: false
-                  prerelease: false
-                  body: ${{ steps.read_release_notes.outputs.content }}
