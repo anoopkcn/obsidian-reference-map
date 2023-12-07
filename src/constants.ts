@@ -82,10 +82,11 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	debugMode: false,
 	isLocalExclusive: false,
 	// CSL Settings
-	cslStyle: 'apa',
-	citationStyleURL: 'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl',
+	cslStyle: 'American Psychological Association 7th edition (default)',
 	citationStylePath: '',
-	cslLocale: 'en-US',
+	cslLocale: 'English (US)',
+	defaultStyleURL: 'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl',
+	defaultLocale: 'en-US',
 }
 
 export const DEFAULT_LIBRARY = {

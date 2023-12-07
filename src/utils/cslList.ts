@@ -1228,7 +1228,7 @@ export const cslListRaw = [
       'https://raw.githubusercontent.com/citation-style-language/styles/master/apa-with-abstract.csl',
   },
   {
-    label: 'American Psychological Association 7th edition',
+    label: 'American Psychological Association 7th edition (default)',
     id: 'apa',
     value:
       'https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl',

@@ -49,9 +49,10 @@ export type ReferenceMapSettings = {
 	isLocalExclusive: boolean
 	// CSL Settings
 	cslStyle: string
-	citationStyleURL: string
 	citationStylePath: string
 	cslLocale: string
+	defaultStyleURL: string
+	defaultLocale: string
 }
 export type MetaData = {
 	bibtex: string

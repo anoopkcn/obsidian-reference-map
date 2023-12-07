@@ -595,3 +595,7 @@ body {
 	position: absolute;
 	top: 0;
 }
+
+.orm-csl-search{
+	width: calc(100% - 20px);
+}

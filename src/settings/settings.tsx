@@ -7,6 +7,7 @@ import { t } from '../lang/helpers'
 import { ZoteroPullSetting } from './ZoteroPullSettings'
 import { fragWithHTML, resolvePath } from '../utils/functions'
 import { ButtonSettings } from './ButtonSettings';
+import { CSLListSuggest, CSLLocaleSuggest } from './list-suggest';
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -291,6 +292,44 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						})
 				)
 		}
+
+		new Setting(this.containerEl)
+			.setName("Citation style")
+			.addSearch((cb) => {
+				new CSLListSuggest(this.app, cb.inputEl);
+				cb.setPlaceholder("CSL Style: style-name")
+					.setValue(this.plugin.settings.cslStyle)
+					.onChange((style) => {
+						this.plugin.settings.cslStyle = style;
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view) {
+								this.plugin.referenceMapData.loadCache()
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+							}
+						})
+					});
+				// @ts-ignore
+				cb.containerEl.addClass("orm-csl-search");
+			});
+
+		new Setting(this.containerEl)
+			.setName("Citation style language")
+			.addSearch((cb) => {
+				new CSLLocaleSuggest(this.app, cb.inputEl);
+				cb.setPlaceholder("CSL Style Locale: locale-name")
+					.setValue(this.plugin.settings.cslLocale)
+					.onChange((style) => {
+						this.plugin.settings.cslLocale = style;
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view) {
+								this.plugin.referenceMapData.loadCache()
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+							}
+						})
+					});
+				// @ts-ignore
+				cb.containerEl.addClass("orm-csl-search");
+			});
 
 		containerEl.createEl('h2', { text: 'Static List Settings' })
 		new Setting(containerEl)
