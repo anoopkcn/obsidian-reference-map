@@ -7,6 +7,7 @@ export const METADATA_COPY_TEMPLATE_TWO = `**{{title}}**
 *{{journal}}, {{year}}*
 **Abstract**
 {{abstract}}
+{{doi}}
 `
 export const METADATA_COPY_TEMPLATE_THREE = `[[{{title}}-{{author}} {{year}}]]`
 
@@ -14,15 +15,16 @@ export const METADATA_MODAL_INSERT_TEMPLATE = `{{title}}
 {{authors}}
 {{journal}}, {{year}}
 {{abstract}}
+{{doi}}
 `
 
 export const METADATA_MODAL_CREATE_TEMPLATE = `{{title}}
 {{authors}}
 {{journal}}, {{year}}
 {{abstract}}
-{{doi}}
 [External Link]({{url}})
 {{pdfurl}}
+{{doi}}
 `
 export const DEFAULT_ZOTERO_PORT = '23119';
 
