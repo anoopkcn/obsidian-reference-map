@@ -7,7 +7,7 @@ import { t } from '../lang/helpers'
 import { ZoteroPullSetting } from './ZoteroPullSettings'
 import { fragWithHTML, resolvePath } from '../utils/functions'
 import { ButtonSettings } from './ButtonSettings';
-import { CSLListSuggest, CSLLocaleSuggest } from './list-suggest';
+import { CSLListSuggest, CSLLocaleSuggest, FolderSuggest } from './list-suggest';
 
 export class ReferenceMapSettingTab extends PluginSettingTab {
 	plugin: ReferenceMap
@@ -304,7 +304,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view) {
 								this.plugin.referenceMapData.loadCache()
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							}
 						})
 					});
@@ -323,7 +323,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view) {
 								this.plugin.referenceMapData.loadCache()
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							}
 						})
 					});
@@ -494,14 +494,18 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_CREATE_FOLDER')))
 			.setDesc(fragWithHTML(t('MODAL_SEARCH_CREATE_FOLDER_DESC')))
-			.addText((text) =>
-				text
+			.addSearch((cb) => {
+				new FolderSuggest(this.app, cb.inputEl);
+				cb.setPlaceholder("Folder Name: folder/subfolder")
 					.setValue(this.plugin.settings.folder)
-					.onChange(async (value) => {
-						this.plugin.settings.folder = value
+					.onChange((folder) => {
+						this.plugin.settings.folder = folder;
 						this.plugin.saveSettings()
-					})
-			)
+					});
+				// @ts-ignore
+				cb.containerEl.addClass("orm-csl-search");
+			});
+
 		new Setting(containerEl)
 			.setName(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_FORMAT')))
 			.setDesc(fragWithHTML(t('MODAL_SEARCH_CREATE_FILE_FORMAT_DESC')))
