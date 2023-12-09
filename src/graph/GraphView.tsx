@@ -113,10 +113,10 @@ export class GraphView extends ItemView {
                 fileCache = await this.app.vault.cachedRead(activeFile);
             }
             if (activeFile.extension === 'canvas') {
-                fileCache += await getCanvasContent(fileCache)
+                fileCache += await getCanvasContent(fileCache, this.app.vault)
             }
             if (settings.lookupLinkedFiles) {
-                const linkedFiles = getLinkedFiles(activeFile)
+                const linkedFiles = getLinkedFiles(activeFile, this.app.metadataCache)
                 for (const file of linkedFiles) {
                     if (file) {
                         const cache = await this.app.vault.cachedRead(file)

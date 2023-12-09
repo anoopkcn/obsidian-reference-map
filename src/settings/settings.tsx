@@ -1,4 +1,5 @@
 import React from 'react';
+import { App, debounce } from 'obsidian';
 import { createRoot } from 'react-dom/client'
 import { FileSystemAdapter, PluginSettingTab, Setting } from 'obsidian'
 import { RELOAD } from '../types'
@@ -16,7 +17,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 	citationPathErrorEl: HTMLElement
 	citationPathSuccessEl: HTMLElement
 
-	constructor(plugin: ReferenceMap) {
+	constructor(app: App, plugin: ReferenceMap) {
 		super(app, plugin)
 		this.plugin = plugin
 
@@ -29,7 +30,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		this.citationPathLoadingEl.addClass('d-none')
 		if (filePath.endsWith('.json') || filePath.endsWith('.bib')) {
 			try {
-				await FileSystemAdapter.readLocalFile(resolvePath(filePath))
+				await FileSystemAdapter.readLocalFile(resolvePath(filePath, this.app))
 				this.citationPathErrorEl.addClass('d-none')
 			} catch (e) {
 				this.citationPathSuccessEl.addClass('d-none')
@@ -299,7 +300,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				new CSLListSuggest(this.app, cb.inputEl);
 				cb.setPlaceholder("CSL Style: style-name")
 					.setValue(this.plugin.settings.cslStyle)
-					.onChange((style) => {
+					.onChange(
+						debounce((style) => {
 						this.plugin.settings.cslStyle = style;
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view) {
@@ -307,7 +309,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							}
 						})
-					});
+						}, 300)
+					);
 				// @ts-ignore
 				cb.containerEl.addClass("orm-csl-search");
 			});
@@ -318,7 +321,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				new CSLLocaleSuggest(this.app, cb.inputEl);
 				cb.setPlaceholder("CSL Style Locale: locale-name")
 					.setValue(this.plugin.settings.cslLocale)
-					.onChange((style) => {
+					.onChange(
+						debounce((style) => {
 						this.plugin.settings.cslLocale = style;
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view) {
@@ -326,7 +330,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 								this.plugin.referenceMapData.reload(RELOAD.VIEW)
 							}
 						})
-					});
+						}, 300)
+					);
 				// @ts-ignore
 				cb.containerEl.addClass("orm-csl-search");
 			});

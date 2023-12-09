@@ -1,4 +1,4 @@
-import { FileSystemAdapter, Notice, TFile, htmlToMarkdown } from 'obsidian'
+import { App, FileSystemAdapter, MetadataCache, Notice, TFile, Vault, htmlToMarkdown } from 'obsidian'
 import path from 'path'
 import fs from "fs";
 import { CardSpecType, IndexPaper, MetaData } from 'src/types'
@@ -18,18 +18,18 @@ export function splitString(str: string | undefined, length: number) {
 	return str.replace(regex, "$1 ");
 }
 
-export const getLinkedFiles = (file: TFile) => {
+export const getLinkedFiles = (file: TFile, metadataCache: MetadataCache) => {
 	if (file) {
-		const links = app.metadataCache.getFileCache(file)?.links
+		const links = metadataCache.getFileCache(file)?.links
 		// IF this links exist in the vault as markdown files then get the file path
 		if (links) {
-			return links.map((link) => app.metadataCache.getFirstLinkpathDest(link.link, ''))
+			return links.map((link) => metadataCache.getFirstLinkpathDest(link.link, ''))
 		}
 	}
 	return []
 }
 
-export function getVaultRoot() {
+export function getVaultRoot(app: App) {
 	// This is a desktop only plugin, so assume adapter is FileSystemAdapter
 	return (app.vault.adapter as FileSystemAdapter).getBasePath();
 }
@@ -59,7 +59,7 @@ export function camelToNormalCase(str: string) {
 }
 
 // Get normalized path
-export const resolvePath = function (rawPath: string): string {
+export const resolvePath = function (rawPath: string, app: App): string {
 	const vaultRoot =
 		app.vault.adapter instanceof FileSystemAdapter
 			? app.vault.adapter.getBasePath()
@@ -102,7 +102,7 @@ export function replaceIllegalFileNameCharactersInString(text: string) {
 	return text.replace(/[\\,#%&{}/*<>$":@?.]/g, '').replace(/\s+/g, ' ');
 }
 
-export async function getCanvasContent(fileCache: string) {
+export async function getCanvasContent(fileCache: string, vault: Vault) {
 	let content = '';
 	const canvasJson: CanvasData = JSON.parse(fileCache);
 	const nodes = canvasJson?.nodes as CanvasNodeData[];
@@ -122,7 +122,7 @@ export async function getCanvasContent(fileCache: string) {
 						try {
 							const file = app.vault.getAbstractFileByPath(node.file);
 							if (file instanceof TFile) {
-								const temContent = await app.vault.read(file);
+								const temContent = await vault.read(file);
 								content += temContent;
 							} else {
 								content += node?.file ? node?.file : '';

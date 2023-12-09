@@ -119,7 +119,7 @@ export class ReferenceMapData {
     loadBibFileFromUserPath = async () => {
         const { searchCiteKey, searchCiteKeyPath, debugMode } = this.plugin.settings;
         if (!searchCiteKey || !searchCiteKeyPath) return null;
-        const libraryPath = resolvePath(searchCiteKeyPath);
+        const libraryPath = resolvePath(searchCiteKeyPath, this.plugin.app);
         try {
             const stats = fs.statSync(libraryPath);
             const mtime = stats.mtimeMs;

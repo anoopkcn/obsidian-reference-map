@@ -30,7 +30,7 @@ export default class ReferenceMap extends Plugin {
 	}
 
 	async onload() {
-		this.cacheDir = path.join(getVaultRoot(), '.reference-map');
+		this.cacheDir = path.join(getVaultRoot(this.app), '.reference-map');
 		this.referenceMapData = new ReferenceMapData(this)
 		this.updateChecker = new UpdateChecker()
 		this.loadSettings().then(() => {
@@ -53,7 +53,7 @@ export default class ReferenceMap extends Plugin {
 	async init(): Promise<void> {
 		addIcons()
 
-		this.addSettingTab(new ReferenceMapSettingTab(this))
+		this.addSettingTab(new ReferenceMapSettingTab(this.app, this))
 
 		this.registerView(
 			REFERENCE_MAP_VIEW_TYPE,
