@@ -3,8 +3,8 @@
 import { TAbstractFile, TFile, TFolder } from "obsidian";
 
 import { TextInputSuggest } from "./suggest";
-import { cslListRaw } from "src/utils/cslList";
-import { langListRaw } from "src/utils/cslLangList";
+import { cslList } from "src/utils/cslList";
+import { cslLangList } from "src/utils/cslLangList";
 
 export class FileSuggest extends TextInputSuggest<TFile> {
     getSuggestions(inputStr: string): TFile[] {
@@ -69,7 +69,7 @@ export class FolderSuggest extends TextInputSuggest<TFolder> {
 export class CSLListSuggest extends TextInputSuggest<string> {
     getSuggestions(inputStr: string): string[] {
         const lowerCaseInputStr = inputStr.toLowerCase();
-        const listItem = cslListRaw.filter(item => item.label.toLowerCase().contains(lowerCaseInputStr))
+        const listItem = cslList.filter(item => item.label.toLowerCase().contains(lowerCaseInputStr))
         return listItem.map(item => item.label);
     }
 
@@ -88,7 +88,7 @@ export class CSLListSuggest extends TextInputSuggest<string> {
 export class CSLLocaleSuggest extends TextInputSuggest<string> {
     getSuggestions(inputStr: string): string[] {
         const lowerCaseInputStr = inputStr.toLowerCase();
-        const listItem = langListRaw.filter(item => item.label.toLowerCase().contains(lowerCaseInputStr))
+        const listItem = cslLangList.filter(item => item.label.toLowerCase().contains(lowerCaseInputStr))
         return listItem.map(item => item.label);
     }
 

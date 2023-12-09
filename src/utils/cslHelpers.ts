@@ -1,3 +1,6 @@
+// Following functions are copied from 
+// https://github.com/mgmeyers/obsidian-pandoc-reference-list
+// with some modifications
 
 import https from "https";
 import fs from "fs";

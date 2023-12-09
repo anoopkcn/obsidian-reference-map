@@ -1,4 +1,7 @@
-export const cslListRaw = [
+// Following list are copied from 
+// https://github.com/mgmeyers/obsidian-pandoc-reference-list
+// with some modifications
+export const cslList = [
   {
     label: 'Academy of Management Review',
     id: 'academy-of-management-review',

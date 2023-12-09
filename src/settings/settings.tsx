@@ -294,7 +294,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		}
 
 		new Setting(this.containerEl)
-			.setName("Citation style")
+			.setName("Citation style ")
 			.addSearch((cb) => {
 				new CSLListSuggest(this.app, cb.inputEl);
 				cb.setPlaceholder("CSL Style: style-name")
@@ -313,7 +313,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(this.containerEl)
-			.setName("Citation style language")
+			.setName("Citation language")
 			.addSearch((cb) => {
 				new CSLLocaleSuggest(this.app, cb.inputEl);
 				cb.setPlaceholder("CSL Style Locale: locale-name")

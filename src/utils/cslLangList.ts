@@ -1,4 +1,7 @@
-export const langListRaw = [
+// Following list are copied from 
+// https://github.com/mgmeyers/obsidian-pandoc-reference-list
+// with some modifications
+export const cslLangList = [
     {
         value: 'af-ZA',
         label: 'Afrikaans',
