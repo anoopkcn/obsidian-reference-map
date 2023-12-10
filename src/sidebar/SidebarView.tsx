@@ -42,7 +42,6 @@ export class SidebarView extends ItemView {
 		this.registerEvent(
 			this.app.workspace.on(
 				'active-leaf-change',
-				debounce(
 					(leaf) => {
 						if (leaf) {
 							this.app.workspace.iterateRootLeaves((rootLeaf) => {
@@ -58,7 +57,7 @@ export class SidebarView extends ItemView {
 								}
 							})
 						}
-					}, 100, true)
+					}
 			)
 		);
 
