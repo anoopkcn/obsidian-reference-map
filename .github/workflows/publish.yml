@@ -2,7 +2,7 @@ name: Reference Map Publish
 on:
     push:
         branches:
-        - 'master'
+        - 'develop'
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -23,5 +23,8 @@ jobs:
         - name: Create Publish Pull Request
           id: changesets
           uses: changesets/action@v1
+          with:
+            # this expects you to have a npm script called version that runs some logic and then calls `changeset version`.
+            version: pnpm version
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
