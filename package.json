@@ -8,7 +8,7 @@
 		"lint": "tsc --noEmit --skipLibCheck",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs",
-		"tag": "git tag -a $(node -p require('./package.json').version) -m \"$(node -p require('./package.json').version)\""
+		"release": "git tag -a $(node -p require('./package.json').version) -m \"$(node -p require('./package.json').version)\" && git push --tags"
 	},
 	"keywords": [],
 	"author": "Anoop K. Chandran",
