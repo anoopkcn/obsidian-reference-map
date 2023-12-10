@@ -55,13 +55,16 @@ export class ReferenceMapData {
         const debug = this.plugin.settings.debugMode
         if (reloadType === RELOAD.HARD) {
             this.viewManager.clearCache()
+            this.viewManager.clearCache()
             this.library.mtime = 0;
             await this.loadLibrary(false)
+            this.loadCache()
             this.plugin.updateChecker.library = this.library;
             this.plugin.view?.processReferences()
             if (debug) console.log('ORM: Reloaded View and library')
         } else if (reloadType === RELOAD.SOFT) {
             await this.loadLibrary(false)
+            this.viewManager.clearCache()
             this.plugin.updateChecker.library = this.library;
             this.plugin.view?.processReferences()
             if (debug) console.log('ORM: Reloaded library')

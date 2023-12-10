@@ -307,7 +307,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.citedLimit = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
 						})
 					})
 			)
@@ -331,7 +331,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 						this.plugin.settings.citingLimit = value
 						this.plugin.saveSettings().then(() => {
 							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
 						})
 					})
 			)
