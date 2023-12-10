@@ -294,57 +294,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				)
 		}
 
-		let citedMaxLimit: HTMLDivElement
-		new Setting(containerEl)
-			.setName(t('CITED_MAX_LIMIT'))
-			// .setDesc(fragWithHTML(t('CITED_MAX_LIMIT_DESC')))
-			.addSlider((slider) =>
-				slider
-					.setLimits(50, 1000, 50)
-					.setValue(this.plugin.settings.citedLimit)
-					.onChange(async (value) => {
-						citedMaxLimit.innerText = ` ${value.toString()}`
-						this.plugin.settings.citedLimit = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-			.settingEl.createDiv('', (el) => {
-				citedMaxLimit = el
-				el.style.minWidth = '2.3em'
-				el.style.textAlign = 'right'
-				el.innerText = ` ${this.plugin.settings.citedLimit.toString()}`
-			})
-
-		let citingMaxLimit: HTMLDivElement
-		new Setting(containerEl)
-			.setName(t('CITING_MAX_LIMIT'))
-			// .setDesc(fragWithHTML(t('CITING_MAX_LIMIT_DESC')))
-			.addSlider((slider) =>
-				slider
-					.setLimits(50, 1000, 50)
-					.setValue(this.plugin.settings.citingLimit)
-					.onChange(async (value) => {
-						citingMaxLimit.innerText = ` ${value.toString()}`
-						this.plugin.settings.citingLimit = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.SOFT)
-						})
-					})
-			)
-			.settingEl.createDiv('', (el) => {
-				citingMaxLimit = el
-				el.style.minWidth = '2.3em'
-				el.style.textAlign = 'right'
-				el.innerText = ` ${this.plugin.settings.citingLimit.toString()}`
-			})
-
-
-
-
 		new Setting(this.containerEl)
 			.setName("Citation style ")
 			.addSearch((cb) => {
@@ -601,6 +550,54 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 			})
 
 		containerEl.createEl('h2', { text: 'Misc' })
+
+		let citedMaxLimit: HTMLDivElement
+		new Setting(containerEl)
+			.setName(t('CITED_MAX_LIMIT'))
+			.setDesc(fragWithHTML(t('CITED_MAX_LIMIT_DESC')))
+			.addSlider((slider) =>
+				slider
+					.setLimits(50, 1000, 50)
+					.setValue(this.plugin.settings.citedLimit)
+					.onChange(async (value) => {
+						citedMaxLimit.innerText = ` ${value.toString()}`
+						this.plugin.settings.citedLimit = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+			.settingEl.createDiv('', (el) => {
+				citedMaxLimit = el
+				el.style.minWidth = '2.3em'
+				el.style.textAlign = 'right'
+				el.innerText = ` ${this.plugin.settings.citedLimit.toString()}`
+			})
+
+		let citingMaxLimit: HTMLDivElement
+		new Setting(containerEl)
+			.setName(t('CITING_MAX_LIMIT'))
+			.setDesc(fragWithHTML(t('CITING_MAX_LIMIT_DESC')))
+			.addSlider((slider) =>
+				slider
+					.setLimits(50, 1000, 50)
+					.setValue(this.plugin.settings.citingLimit)
+					.onChange(async (value) => {
+						citingMaxLimit.innerText = ` ${value.toString()}`
+						this.plugin.settings.citingLimit = value
+						this.plugin.saveSettings().then(() => {
+							if (this.plugin.view)
+								this.plugin.referenceMapData.reload(RELOAD.SOFT)
+						})
+					})
+			)
+			.settingEl.createDiv('', (el) => {
+				citingMaxLimit = el
+				el.style.minWidth = '2.3em'
+				el.style.textAlign = 'right'
+				el.innerText = ` ${this.plugin.settings.citingLimit.toString()}`
+			})
 
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
