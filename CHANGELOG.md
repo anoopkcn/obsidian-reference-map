@@ -1,5 +1,16 @@
 # reference-map
 
+## 1.7.0
+
+### Minor Changes
+
+- Option to change the cited/citing retrieve limit for each index card
+
+### Patch Changes
+
+- Remove redundant duplicate option
+- Make indexing faster for CSL generation
+
 ## 1.6.5
 
 ### Patch Changes
