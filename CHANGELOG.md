@@ -1,5 +1,11 @@
 # reference-map
 
+## 1.7.2
+
+### Patch Changes
+
+- Fix fetchData bug and update dependencies
+
 ## 1.7.1
 
 ### Patch Changes
