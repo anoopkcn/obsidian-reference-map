@@ -104,7 +104,6 @@ export const ReferenceMapList = (props: {
 		indexCards = await props.referenceMapData.getIndexCards(
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
-
 		setPapers(indexCards)
 	}
 

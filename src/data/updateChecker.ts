@@ -103,10 +103,6 @@ export class UpdateChecker {
         };
         this.cslEngine = new CSL.Engine(citeprocOptions, citationStyle);
         return this.cslEngine
-        // citeproc.opt.development_extensions.wrap_url_and_doi = true;
-        // cslEngine.updateItems([...references.map((item) => item.id)])
-        // this.bibliography = cslEngine.makeBibliography()[1]
-        // return this.bibliography
     }
 
     getCSL = (ids: string[]): BibData[] | null => {
