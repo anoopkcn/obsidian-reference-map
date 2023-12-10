@@ -5,6 +5,7 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
+		"lint": "tsc --noEmit --skipLibCheck",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add package.json manifest.json versions.json",
 		"tag": "git tag -a $(node -p require('./package.json').version) -m \"$(node -p require('./package.json').version)\""
