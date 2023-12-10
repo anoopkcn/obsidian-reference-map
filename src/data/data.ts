@@ -14,7 +14,6 @@ import { getCSLLocale, getCSLStyle } from 'src/utils/cslHelpers';
 import { cslList } from 'src/utils/cslList';
 import { cslLangList } from 'src/utils/cslLangList'
 
-
 export class ReferenceMapData {
     plugin: ReferenceMap
     library: Library
@@ -56,7 +55,7 @@ export class ReferenceMapData {
         const debug = this.plugin.settings.debugMode
         if (reloadType === RELOAD.HARD) {
             this.viewManager.clearCache()
-            this.resetLibraryTime()
+            this.library.mtime = 0;
             await this.loadLibrary(false)
             this.plugin.updateChecker.library = this.library;
             this.plugin.view?.processReferences()
@@ -70,10 +69,6 @@ export class ReferenceMapData {
             this.plugin.view?.processReferences()
             if (debug) console.log('ORM: Reloaded View')
         }
-    }
-
-    resetLibraryTime = () => {
-        this.library.mtime = 0;
     }
 
     async reinit(clearCache: boolean) {
@@ -200,7 +195,6 @@ export class ReferenceMapData {
         return indexCards;
     }
 
-
     getIndexCards = async (
         indexIds: Set<string>,
         citeKeyMap: CiteKey[],
@@ -296,12 +290,13 @@ export class ReferenceMapData {
                 this.cache.styleCache.get(this.cache.styleURL) as string,
                 this.cache.localeCache.get(this.cache.locale) as string
             );
-            const bibData = this.plugin.updateChecker.getCSL([...CiteKeyEntry.map((item) => item.id)]);
+            const bibData = this.plugin.updateChecker.getCSL(CiteKeyEntry.map(item => item.id));
             if (bibData) {
+                const indexCardsMap = new Map(indexCards_.map(item => [item.id, item]));
                 bibData.forEach((item) => {
-                    const paperIndex = indexCards_.findIndex(paper => paper.id === item.id);
-                    if (paperIndex !== -1) {
-                        indexCards_[paperIndex].paper.csl = item.bib;
+                    const paper = indexCardsMap.get(item.id);
+                    if (paper) {
+                        paper.paper.csl = item.bib;
                     }
                 });
             }
