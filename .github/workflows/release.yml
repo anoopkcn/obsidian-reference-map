@@ -1,4 +1,4 @@
-name: Release Obsidian Plugin
+name: Reference Map Release Plugin
 on:
     push:
         tags:

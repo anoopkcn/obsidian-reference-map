@@ -1,4 +1,4 @@
-name: CI
+name: Reference Map CI
 on:
     push:
         branches:
