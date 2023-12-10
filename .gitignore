@@ -21,3 +21,6 @@ data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+# Do not commit changeset temporary markdown files
+.changeset/*.md
