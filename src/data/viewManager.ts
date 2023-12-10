@@ -95,7 +95,7 @@ export class ViewManager {
 
 		const debugMode = this.plugin.settings.debugMode
 		try {
-			const references = await getReferenceItems(paperId, debugMode)
+			const references = await getReferenceItems(paperId, this.plugin.settings.citedLimit, debugMode)
 			this.refCache.set(paperId, references)
 			return references
 		} catch (e) {
@@ -114,7 +114,7 @@ export class ViewManager {
 
 		const debugMode = this.plugin.settings.debugMode
 		try {
-			const citations = await getCitationItems(paperId, debugMode)
+			const citations = await getCitationItems(paperId, this.plugin.settings.citingLimit, debugMode)
 			this.citeCache.set(paperId, citations)
 			return citations
 		} catch (e) {

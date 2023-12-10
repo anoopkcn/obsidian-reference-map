@@ -24,6 +24,8 @@ export type ReferenceMapSettings = {
 	linkCiteKey: boolean
 	findZoteroCiteKeyFromID: boolean
 	findCiteKeyFromLinksWithoutPrefix: boolean
+	citedLimit: number
+	citingLimit: number
 	enableReferenceSorting: boolean
 	sortByReference: string
 	sortOrderReference: string

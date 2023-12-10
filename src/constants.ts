@@ -60,6 +60,8 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	linkCiteKey: true,
 	findZoteroCiteKeyFromID: true,
 	findCiteKeyFromLinksWithoutPrefix: false,
+	citedLimit: 100,
+	citingLimit: 100,
 	enableReferenceSorting: false,
 	sortByReference: 'year',
 	sortOrderReference: 'desc',

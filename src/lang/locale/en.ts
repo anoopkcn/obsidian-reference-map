@@ -127,6 +127,10 @@ export default {
 		'<b>Toggle ON:</b> Enable sorting of the Index cards<br>' +
 		'<b>Toggle OFF:</b> Default sorting, as appear in the markdown',
 	SORT_BY: 'Sort By',
+	CITED_MAX_LIMIT: 'Maximum number of cited papers',
+	CITED_MAX_LIMIT_DESC: 'Maximum number of cited papers to show for each index card.<br>' + ' Default is set to 100. Maximum is 1000.',
+	CITING_MAX_LIMIT: 'Maximum number of citing papers',
+	CITING_MAX_LIMIT_DESC: 'Maximum number of citing papers to show for each index card.<br>' + ' Default is set to 100. Maximum is 1000.',
 	// SORT_BY_DESC: "Sort references and citations by the selected value",
 	SORT_BY_YEAR: 'Year',
 	SORT_BY_CITATION_COUNT: 'Citation count',
