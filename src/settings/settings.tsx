@@ -302,13 +302,13 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.cslStyle)
 					.onChange(
 						debounce((style) => {
-						this.plugin.settings.cslStyle = style;
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view) {
-								this.plugin.referenceMapData.loadCache()
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							}
-						})
+							this.plugin.settings.cslStyle = style;
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view) {
+									this.plugin.referenceMapData.loadCache()
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+								}
+							})
 						}, 300)
 					);
 				// @ts-ignore
@@ -323,13 +323,13 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.cslLocale)
 					.onChange(
 						debounce((style) => {
-						this.plugin.settings.cslLocale = style;
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view) {
-								this.plugin.referenceMapData.loadCache()
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-							}
-						})
+							this.plugin.settings.cslLocale = style;
+							this.plugin.saveSettings().then(() => {
+								if (this.plugin.view) {
+									this.plugin.referenceMapData.loadCache()
+									this.plugin.referenceMapData.reload(RELOAD.VIEW)
+								}
+							})
 						}, 300)
 					);
 				// @ts-ignore
