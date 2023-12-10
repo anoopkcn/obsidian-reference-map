@@ -1,5 +1,12 @@
 # reference-map
 
+## 1.7.1
+
+### Patch Changes
+
+- Move option to Misc section with a warning
+- Clear cache after setting limits
+
 ## 1.7.0
 
 ### Minor Changes
