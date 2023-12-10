@@ -3,6 +3,9 @@ on:
     push:
         tags:
             - '*'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -10,10 +13,12 @@ jobs:
             - uses: actions/checkout@v2
               with:
                   fetch-depth: 0
+            - uses: pnpm/action-setup@v2
             - name: Use Node.js
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
                   node-version: '18.x'
+                  cache: "pnpm"
             - name: Get Version
               id: version
               run: echo "tag=$(git describe --abbrev=0)" >> $GITHUB_OUTPUT
@@ -21,8 +26,8 @@ jobs:
             - name: Build
               id: build
               run: |
-                  npm install
-                  npm run build --if-present
+                  pnpm install --frozen-lockfile
+                  pnpm build --if-present
             # Package the required files into a zip
             - name: Package
               run: |
