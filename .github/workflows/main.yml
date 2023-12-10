@@ -4,6 +4,7 @@ on:
         branches:
         - '**'
         - '!master' # master is used for releases
+        - '!develop' # develop is used for releases
 
 jobs:
     build:
