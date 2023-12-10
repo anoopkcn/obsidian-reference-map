@@ -552,21 +552,6 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', { text: 'Misc' })
 
 		new Setting(containerEl)
-			.setName(t('REMOVE_DUPLICATE_IDS'))
-			.setDesc(fragWithHTML(t('REMOVE_DUPLICATE_IDS_DESC')))
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.removeDuplicateIds)
-					.onChange(async (value) => {
-						this.plugin.settings.removeDuplicateIds = value
-						this.plugin.saveSettings().then(() => {
-							if (this.plugin.view)
-								this.plugin.referenceMapData.reload(RELOAD.VIEW)
-						})
-					})
-			)
-
-		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
 			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))
 			.addToggle((toggle) =>

@@ -321,9 +321,7 @@ export class ReferenceMapData {
             });
         }
 
-        if (this.plugin.settings.removeDuplicateIds) {
-            indexCardsTemp = _.uniqBy(indexCardsTemp, item => item.paper.paperId);
-        }
+        indexCardsTemp = _.uniqBy(indexCardsTemp, item => item.paper.paperId);
 
         if (this.plugin.settings.enableIndexSorting) {
             indexCardsTemp = indexSort(

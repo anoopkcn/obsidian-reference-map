@@ -45,7 +45,6 @@ export const DEFAULT_SETTINGS: ReferenceMapSettings = {
 	showAuthors: false,
 	showJournal: true,
 	filterRedundantReferences: false,
-	removeDuplicateIds: true,
 	lookupLinkedFiles: false,
 	searchTitle: false,
 	searchLimit: 3,

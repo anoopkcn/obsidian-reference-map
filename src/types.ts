@@ -9,7 +9,6 @@ export type ReferenceMapSettings = {
 	showJournal: boolean
 	abstractTruncateLength: number
 	filterRedundantReferences: boolean
-	removeDuplicateIds: boolean
 	lookupLinkedFiles: boolean
 	searchTitle: boolean
 	searchLimit: number

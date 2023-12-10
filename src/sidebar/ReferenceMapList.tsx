@@ -101,10 +101,6 @@ export const ReferenceMapList = (props: {
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
 		let updatedIndexIds = indexIds;
 		let indexCards: IndexPaper[] = [];
-		if (props.plugin.settings.removeDuplicateIds) {
-			const updatedIndexIdsArray = [...indexIds].filter((id: string) => !Object.values(citeKeyMap).some(item => item.paperId.toLocaleLowerCase() === id.toLocaleLowerCase()));
-			updatedIndexIds = new Set(updatedIndexIdsArray);
-		}
 		indexCards = await props.referenceMapData.getIndexCards(
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
 		)
