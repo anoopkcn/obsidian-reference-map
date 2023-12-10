@@ -1,16 +1,14 @@
 import React from "react";
 import { Root, createRoot } from "react-dom/client";
-import { ItemView, TFile, WorkspaceLeaf, debounce } from "obsidian";
+import { ItemView, MarkdownView, WorkspaceLeaf, debounce } from "obsidian";
 import { AppContext } from "src/context";
 import EventBus, { EVENTS } from "src/events";
 import { ReferenceMapData } from "src/data/data";
 import { UpdateChecker } from "src/data/updateChecker";
 import ReferenceMap from "src/main";
 import { ReferenceMapGraph } from "./ReferenceMapGraph";
-import { getCanvasContent, getLinkedFiles } from 'src/utils/functions'
 
 export const REFERENCE_MAP_GRAPH_VIEW_TYPE = 'reference-map-graph-view'
-
 
 export class GraphView extends ItemView {
     plugin: ReferenceMap
@@ -23,8 +21,7 @@ export class GraphView extends ItemView {
         super(leaf);
         this.plugin = plugin;
         this.referenceMapData = this.plugin.referenceMapData
-        this.updateChecker = new UpdateChecker()
-        this.updateChecker.library = this.referenceMapData.library
+        this.updateChecker = this.plugin.updateChecker
         this.viewContent = this.containerEl.querySelector(".view-content") as HTMLElement;
         this.rootEl = null;
         if (this.viewContent) {
@@ -39,7 +36,7 @@ export class GraphView extends ItemView {
                 debounce(async (file) => {
                     const activeFile = this.app.workspace.getActiveFile()
                     if (activeFile && file === activeFile) {
-                        const updated = await this.prepare(activeFile)
+                        const updated = await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
                         if (updated) {
                             EventBus.trigger(EVENTS.UPDATE);
                         }
@@ -51,13 +48,12 @@ export class GraphView extends ItemView {
         this.registerEvent(
             this.app.workspace.on(
                 'active-leaf-change',
-                debounce((leaf) => {
+                (leaf) => {
                     if (leaf) {
                         this.app.workspace.iterateRootLeaves((rootLeaf) => {
                             if (rootLeaf === leaf) {
                                 if (
                                     leaf.view.getViewType() === 'markdown' ||
-                                    leaf.view.getViewType() === 'canvas' ||
                                     leaf.view.getViewType() === 'empty'
                                 ) {
                                     this.openGraph()
@@ -65,7 +61,7 @@ export class GraphView extends ItemView {
                             }
                         })
                     }
-                }, 100, true)
+                }
             )
         )
     }
@@ -99,53 +95,9 @@ export class GraphView extends ItemView {
         return super.onClose()
     }
 
-    prepare = async (activeFile: TFile | null | undefined) => {
-        if (activeFile === undefined) return false
-        const settings = this.plugin.settings
-        let isUpdate = false
-        let fileCache = ''
-        if (activeFile) {
-            let isFm = false, isFn = false, isIdx = false, isCite = false;
-            this.updateChecker.basename = activeFile.basename
-            try {
-                fileCache = await this.app.vault.read(activeFile);
-            } catch (e) {
-                fileCache = await this.app.vault.cachedRead(activeFile);
-            }
-            if (activeFile.extension === 'canvas') {
-                fileCache += await getCanvasContent(fileCache, this.app.vault)
-            }
-            if (settings.lookupLinkedFiles) {
-                const linkedFiles = getLinkedFiles(activeFile, this.app.metadataCache)
-                for (const file of linkedFiles) {
-                    if (file) {
-                        const cache = await this.app.vault.cachedRead(file)
-                        fileCache += cache
-                    }
-                }
-            }
-            const fileMetadataCache = this.app.metadataCache.getFileCache(activeFile);
-            const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
-            if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
-            this.updateChecker.setCache(fileCache, fileMetadataCache)
-            const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
-
-            if (settings.searchFrontMatter) isFm = this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
-            if (settings.searchTitle) isFn = this.updateChecker.checkFileNameUpdate()
-            if (settings.searchCiteKey) isCite = this.updateChecker.checkCiteKeysUpdate(prefix)
-            isIdx = this.updateChecker.checkIndexIdsUpdate()
-            isUpdate = isFm || isFn || isIdx || isCite
-        }
-        else {
-            this.updateChecker.resetCache()
-            isUpdate = true
-        }
-        return isUpdate
-    }
-
     openGraph = async () => {
-        const activeFile = this.app.workspace.getActiveFile();
-        await this.prepare(activeFile)
+        const activeFile = this.app.workspace.getActiveViewOfType(MarkdownView)?.file
+        await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
 
         this.rootEl?.render(
             <AppContext.Provider value={this.app}>

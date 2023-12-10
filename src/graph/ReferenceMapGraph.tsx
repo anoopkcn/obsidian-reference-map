@@ -144,7 +144,7 @@ export const ReferenceMapGraph = (props: {
         return await Promise.all(dataPromises);
     }
 
-    //unset data when basename is changed
+    // //unset data when basename is changed
     useEffect(() => {
         setData({ nodes: [], links: [] })
         setSelectedNode(undefined);

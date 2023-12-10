@@ -1,6 +1,6 @@
 import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
-import { ItemView, WorkspaceLeaf, debounce } from 'obsidian'
+import { ItemView, MarkdownView, WorkspaceLeaf, debounce } from 'obsidian'
 import ReferenceMap from 'src/main'
 import { t } from 'src/lang/helpers'
 import { AppContext } from 'src/context'
@@ -8,7 +8,6 @@ import EventBus, { EVENTS } from 'src/events'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { ReferenceMapList } from './ReferenceMapList'
-import { getCanvasContent, getLinkedFiles } from 'src/utils/functions'
 import { IndexPaper } from 'src/types'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
@@ -29,35 +28,36 @@ export class SidebarView extends ItemView {
 		this.registerEvent(
 			this.app.metadataCache.on(
 				'changed',
-				debounce(
-					(file) => {
-						const activeFile = this.app.workspace.getActiveFile()
-						if (activeFile && file === activeFile) {
-							this.processReferences()
+				debounce(async (file) => {
+					const activeFile = this.app.workspace.getActiveFile()
+					if (activeFile && file === activeFile) {
+						const updated = await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
+						if (updated) {
+							EventBus.trigger(EVENTS.UPDATE);
 						}
-					}, 100, true)
+					}
+				}, 100, true)
 			)
 		);
 
 		this.registerEvent(
 			this.app.workspace.on(
 				'active-leaf-change',
-					(leaf) => {
-						if (leaf) {
-							this.app.workspace.iterateRootLeaves((rootLeaf) => {
-								const viewType = leaf.view.getViewType()
-								if (rootLeaf === leaf) {
-									if (
-										viewType === 'markdown' ||
-										viewType === 'canvas' ||
-										viewType === 'empty'
-									) {
-										this.processReferences()
-									}
+				(leaf) => {
+					if (leaf) {
+						this.app.workspace.iterateRootLeaves((rootLeaf) => {
+							const viewType = leaf.view.getViewType()
+							if (rootLeaf === leaf) {
+								if (
+									viewType === 'markdown' ||
+									viewType === 'empty'
+								) {
+									this.processReferences()
 								}
-							})
-						}
+							}
+						})
 					}
+				}
 			)
 		);
 
@@ -95,45 +95,15 @@ export class SidebarView extends ItemView {
 	}
 	onunload() {
 		EventBus.off(EVENTS.SELECTION, () => { })
+		EventBus.off(EVENTS.UPDATE, () => { });
 	}
 
 	processReferences = async () => {
-		const activeFile = this.app.workspace.getActiveFile();
-		const settings = this.plugin.settings
-		let fileCache = ''
+		let activeFile = this.app.workspace.getActiveViewOfType(MarkdownView)?.file
 		let localCards: IndexPaper[] = []
-		if (activeFile) {
-			try {
-				fileCache = await this.app.vault.read(activeFile);
-			} catch (e) {
-				fileCache = await this.app.vault.cachedRead(activeFile);
-			}
-			if (activeFile.extension === 'canvas') {
-				fileCache += await getCanvasContent(fileCache, this.app.vault)
-			}
-			if (settings.lookupLinkedFiles) {
-				const linkedFiles = getLinkedFiles(activeFile, this.app.metadataCache)
-				for (const file of linkedFiles) {
-					if (file) {
-						const cache = await this.app.vault.cachedRead(file)
-						fileCache += cache
-					}
-				}
-			}
-			this.updateChecker.basename = activeFile.basename
-			const fileMetadataCache = this.app.metadataCache.getFileCache(activeFile);
-			const isLibrary = settings.searchCiteKey && this.referenceMapData.library.libraryData !== null
-			if (isLibrary && settings.autoUpdateCitekeyFile) this.referenceMapData.loadLibrary(false)
-			this.updateChecker.setCache(fileCache, fileMetadataCache)
-			const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
-			this.updateChecker.checkIndexIdsUpdate()
-			if (settings.searchCiteKey) this.updateChecker.checkCiteKeysUpdate(prefix, true)
-			if (settings.searchFrontMatter) this.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
-			if (settings.searchTitle) this.updateChecker.checkFileNameUpdate()
-			localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
-		} else {
-			this.updateChecker.resetCache()
-		}
+		localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
+		await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
+
 		this.rootEl?.render(
 			<AppContext.Provider value={this.app}>
 				<ReferenceMapList

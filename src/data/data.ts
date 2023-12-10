@@ -3,7 +3,7 @@ import { parse } from '@retorquere/bibtex-parser'
 import _ from 'lodash';
 import { CiteKey, IndexPaper, Library, LocalCache, RELOAD, Reload } from 'src/types';
 import { DEFAULT_LIBRARY, EXCLUDE_FILE_NAMES } from 'src/constants';
-import { removeNullReferences, resolvePath } from 'src/utils/functions'
+import { getCanvasContent, getLinkedFiles, removeNullReferences, resolvePath } from 'src/utils/functions'
 import { convertToCiteKeyEntry, fillMissingReference, indexSort, setCiteKeyId } from 'src/utils/postprocess';
 import { PromiseCapability } from 'src/promise';
 import { getZBib } from 'src/utils/zotero';
@@ -13,6 +13,7 @@ import { CiteKeyEntry } from 'src/apis/bibTypes';
 import { getCSLLocale, getCSLStyle } from 'src/utils/cslHelpers';
 import { cslList } from 'src/utils/cslList';
 import { cslLangList } from 'src/utils/cslLangList'
+import { MetadataCache, TFile, Vault } from 'obsidian';
 
 export class ReferenceMapData {
     plugin: ReferenceMap
@@ -178,6 +179,50 @@ export class ReferenceMapData {
             this.library = DEFAULT_LIBRARY
         }
     };
+
+    prepare = async (activeFile: TFile | null | undefined, vault: Vault, metadataCache: MetadataCache) => {
+        if (activeFile === undefined) return false
+        const settings = this.plugin.settings
+        let isUpdate = false
+        let fileCache = ''
+        if (activeFile) {
+            let isFm = false, isFn = false, isIdx = false, isCite = false;
+            this.plugin.updateChecker.basename = activeFile.basename
+            try {
+                fileCache = await vault.read(activeFile);
+            } catch (e) {
+                fileCache = await vault.cachedRead(activeFile);
+            }
+            if (activeFile.extension === 'canvas') {
+                fileCache += await getCanvasContent(fileCache, vault)
+            }
+            if (settings.lookupLinkedFiles) {
+                const linkedFiles = getLinkedFiles(activeFile, metadataCache)
+                for (const file of linkedFiles) {
+                    if (file) {
+                        const cache = await vault.cachedRead(file)
+                        fileCache += cache
+                    }
+                }
+            }
+            const fileMetadataCache = metadataCache.getFileCache(activeFile);
+            const isLibrary = settings.searchCiteKey && this.library.libraryData !== null
+            if (isLibrary && settings.autoUpdateCitekeyFile) this.loadLibrary(false)
+            this.plugin.updateChecker.setCache(fileCache, fileMetadataCache)
+            const prefix = settings.findCiteKeyFromLinksWithoutPrefix ? '' : '@';
+
+            if (settings.searchFrontMatter) isFm = this.plugin.updateChecker.checkFrontmatterUpdate(settings.searchFrontMatterKey)
+            if (settings.searchTitle) isFn = this.plugin.updateChecker.checkFileNameUpdate()
+            if (settings.searchCiteKey) isCite = this.plugin.updateChecker.checkCiteKeysUpdate(prefix)
+            isIdx = this.plugin.updateChecker.checkIndexIdsUpdate()
+            isUpdate = isFm || isFn || isIdx || isCite
+        }
+        else {
+            this.plugin.updateChecker.resetCache()
+            isUpdate = true
+        }
+        return isUpdate
+    }
 
     getLocalReferences = async (citeKeyMap: CiteKey[] = []) => {
         const indexCards: IndexPaper[] = [];

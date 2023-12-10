@@ -109,6 +109,7 @@ export const ReferenceMapList = (props: {
 
 	useEffect(() => {
 		fetchData()
+		EventBus.on(EVENTS.UPDATE, fetchData);
 	}, [
 		props.updateChecker.basename,
 		props.updateChecker.indexIds,

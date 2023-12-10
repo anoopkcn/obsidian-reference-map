@@ -209,6 +209,12 @@ body {
 	display: block;
 }
 
+/* .orm-plugin-name{
+	position: sticky;
+    top: 0;
+	z-index: 1000;
+} */
+
 /* RootPaperCard */
 .orm-root-paper {
 	border: var(--orm-paper-line-thickness) solid var(--orm-paper-line-color);
@@ -364,12 +370,12 @@ body {
 
 /* Paper List */
 .orm-paper-list {
-	margin: 0.5rem 0;
+	margin: 0.5rem 0 0 0;
 }
 
 .orm-paper-list .orm-paper-heading {
 	padding-top: 0.5rem 0;
-	margin-top: 0.5rem 0;
+	margin-top: 0.5rem 0 0 0;
 }
 
 .orm-paper-card {
@@ -393,7 +399,6 @@ body {
 .orm-search-form {
 	width: 100%;
 	position: relative;
-	margin-bottom: 0.5rem;
 }
 
 .orm-search-input {

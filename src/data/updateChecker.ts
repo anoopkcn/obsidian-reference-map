@@ -6,6 +6,7 @@ import { getCiteKeyIds } from 'src/utils/postprocess';
 import { getCiteKeys, getPaperIds, extractKeywords } from 'src/utils/parser';
 import { CiteKeyEntry } from "src/apis/bibTypes";
 import CSL from 'citeproc';
+import _ from "lodash";
 
 export class UpdateChecker {
     citeKeys: Set<string>;
@@ -51,10 +52,8 @@ export class UpdateChecker {
         // checkOrder is used to force update (usually for reference map view order correction)
         if (this.library === null) return false;
         const newCiteKeys = getCiteKeys(this.library, this.fileCache, prefix)
-        if (!checkOrder) {
-            if (areSetsEqual(newCiteKeys, this.citeKeys)) {
-                return false;
-            }
+        if (_.isEqual(Array.from(newCiteKeys), Array.from(this.citeKeys))) {
+            return false;
         }
         this.citeKeys = newCiteKeys;
         this.citeKeyMap = getCiteKeyIds(this.citeKeys, this.library)
@@ -63,7 +62,7 @@ export class UpdateChecker {
 
     checkIndexIdsUpdate = () => {
         const newIds = getPaperIds(this.fileCache)
-        if (areSetsEqual(newIds, this.indexIds)) return false;
+        if (_.isEqual(Array.from(newIds), Array.from(this.indexIds))) return false;
         this.indexIds = newIds;
         return true;
     }
