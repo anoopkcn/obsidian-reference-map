@@ -32,11 +32,7 @@ export async function isZoteroRunning(port: string = DEFAULT_ZOTERO_PORT) {
                 res.on('end', () => resolve(data));
             });
             req.on('error', (error: NodeJS.ErrnoException) => {
-                // if (error.code === 'ECONNREFUSED') {
                 resolve(null); // if connection is refused, return false
-                // } else {
-                // 	reject(error); // for other errors, reject the promise
-                // }
             });
             req.end();
         }),
