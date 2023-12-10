@@ -28,6 +28,8 @@ export class ReferenceMapData {
         this.viewManager = new ViewManager(plugin)
         this.initPromise = new PromiseCapability();
         this.cache = {
+            styleURL: '',
+            locale: '',
             styleCache: new Map<string, string>(),
             localeCache: new Map<string, string>()
         }
@@ -38,11 +40,11 @@ export class ReferenceMapData {
         if (!fs.existsSync(cacheDir)) {
             fs.mkdirSync(cacheDir);
         }
-        const citationStyleURL = cslList.find((item) => item.label === settings.cslStyle)?.value ?? settings.defaultStyleURL
-        const citationLocaleValue = cslLangList.find((item) => item.label === settings.cslLocale)?.value ?? settings.defaultLocale
+        this.cache.styleURL = cslList.find((item) => item.label === settings.cslStyle)?.value ?? settings.defaultStyleURL
+        this.cache.locale = cslLangList.find((item) => item.label === settings.cslLocale)?.value ?? settings.defaultLocale
         // The following will set the style cache and localeCache
-        const citationStyle = await getCSLStyle(this.cache.styleCache, cacheDir, citationStyleURL);
-        const citationLocale = await getCSLLocale(this.cache.localeCache, cacheDir, citationLocaleValue);
+        const citationStyle = await getCSLStyle(this.cache.styleCache, cacheDir, this.cache.styleURL);
+        const citationLocale = await getCSLLocale(this.cache.localeCache, cacheDir, this.cache.locale);
 
         if (citationStyle && citationLocale) {
             return true;
@@ -288,13 +290,11 @@ export class ReferenceMapData {
             const CiteKeyEntry = indexCards_.map((indexPaper) => {
                 return convertToCiteKeyEntry(indexPaper, indexPaper.id);
             });
-            const citationStyleURL = cslList.find((item) => item.label === settings.cslStyle)?.value ?? settings.defaultStyleURL
-            const citationLocaleValue = cslLangList.find((item) => item.label === settings.cslLocale)?.value ?? settings.defaultLocale
 
             this.plugin.updateChecker.checkCSlEngineUpdate(
                 CiteKeyEntry,
-                this.cache.styleCache.get(citationStyleURL) as string,
-                this.cache.localeCache.get(citationLocaleValue) as string
+                this.cache.styleCache.get(this.cache.styleURL) as string,
+                this.cache.localeCache.get(this.cache.locale) as string
             );
             const bibData = this.plugin.updateChecker.getCSL([...CiteKeyEntry.map((item) => item.id)]);
             if (bibData) {

@@ -122,6 +122,8 @@ export type ZoteroGroup = {
 export type CardSpecType = 'media' | 'image' | 'pdf' | 'text' | 'file' | 'link';
 
 export interface LocalCache {
+	styleURL: string;
+	locale: string;
 	styleCache: Map<string, string>;
 	localeCache: Map<string, string>;
 }
