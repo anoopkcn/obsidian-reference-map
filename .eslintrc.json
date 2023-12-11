@@ -26,5 +26,9 @@
         "@typescript-eslint/ban-ts-comment": "off",
         "no-prototype-builtins": "off",
         "@typescript-eslint/no-empty-function": "off"
-    }
+    },
+    "ignorePatterns": [
+        "main.js",
+        "node_modules/*"
+    ]
 }
