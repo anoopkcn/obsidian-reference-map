@@ -1,7 +1,7 @@
 import { CachedMetadata, htmlToMarkdown } from "obsidian";
 import { BibData, CiteKey, Library } from "src/types";
 import { EXCLUDE_FILE_NAMES } from "src/constants";
-import { areSetsEqual, fragWithHTML } from "src/utils/functions";
+import { fragWithHTML } from "src/utils/functions";
 import { getCiteKeyIds } from 'src/utils/postprocess';
 import { getCiteKeys, getPaperIds, extractKeywords } from 'src/utils/parser';
 import { CiteKeyEntry } from "src/apis/bibTypes";

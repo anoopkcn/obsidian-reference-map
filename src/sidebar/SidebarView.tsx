@@ -8,7 +8,6 @@ import EventBus, { EVENTS } from 'src/events'
 import { UpdateChecker } from 'src/data/updateChecker'
 import { ReferenceMapData } from 'src/data/data'
 import { ReferenceMapList } from './ReferenceMapList'
-import { IndexPaper } from 'src/types'
 
 export const REFERENCE_MAP_VIEW_TYPE = 'reference-map-view'
 
@@ -99,9 +98,8 @@ export class SidebarView extends ItemView {
 	}
 
 	processReferences = async () => {
-		let activeFile = this.app.workspace.getActiveViewOfType(MarkdownView)?.file
-		let localCards: IndexPaper[] = []
-		localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
+		const activeFile = this.app.workspace.getActiveViewOfType(MarkdownView)?.file
+		const localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
 		await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
 
 		this.rootEl?.render(

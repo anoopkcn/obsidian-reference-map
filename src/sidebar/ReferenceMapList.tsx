@@ -99,7 +99,7 @@ export const ReferenceMapList = (props: {
 
 	const fetchData = async () => {
 		const { indexIds, citeKeyMap, fileName, frontmatter, basename } = props.updateChecker
-		let updatedIndexIds = indexIds;
+		const updatedIndexIds = indexIds;
 		let indexCards: IndexPaper[] = [];
 		indexCards = await props.referenceMapData.getIndexCards(
 			updatedIndexIds, citeKeyMap, fileName, frontmatter, basename
