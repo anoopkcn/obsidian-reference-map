@@ -10,7 +10,7 @@ import {
 import { Reference } from 'src/apis/s2agTypes'
 
 export class ViewManager {
-	private indexCache = new LRUCache<string, Reference | null>({ max: 150 })
+	private indexCache = new LRUCache<string, Reference | null | undefined>({ max: 150 })
 	private refCache = new LRUCache<string, Reference[]>({ max: 150 })
 	private citeCache = new LRUCache<string, Reference[]>({ max: 150 })
 	private searchCache = new LRUCache<string, Reference[]>({ max: 20 })
@@ -45,10 +45,10 @@ export class ViewManager {
 		}
 	}
 
-	getIndexPaper = async (paperId: string, cacheError = true): Promise<Reference | null> => {
-		const cachedPaper = this.indexCache.get(paperId)
-		if (cachedPaper) {
-			return cachedPaper
+	getIndexPaper = async (paperId: string, cacheError = true): Promise<Reference | null | undefined> => {
+
+		if (this.indexCache.has(paperId)) {
+			return this.indexCache.get(paperId)
 		}
 
 		const debugMode = this.plugin.settings.debugMode
@@ -88,9 +88,8 @@ export class ViewManager {
 	}
 
 	getReferences = async (paperId: string): Promise<Reference[]> => {
-		const cachedRefs = this.refCache.get(paperId)
-		if (cachedRefs) {
-			return cachedRefs
+		if (this.refCache.has(paperId)) {
+			return this.refCache.get(paperId) ?? []
 		}
 
 		const debugMode = this.plugin.settings.debugMode
@@ -107,11 +106,9 @@ export class ViewManager {
 	}
 
 	getCitations = async (paperId: string): Promise<Reference[]> => {
-		const cachedCitations = this.citeCache.get(paperId)
-		if (cachedCitations) {
-			return cachedCitations
+		if (this.citeCache.has(paperId)) {
+			return this.citeCache.get(paperId) ?? []
 		}
-
 		const debugMode = this.plugin.settings.debugMode
 		try {
 			const citations = await getCitationItems(paperId, this.plugin.settings.citingLimit, debugMode)

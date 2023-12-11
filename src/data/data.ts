@@ -257,8 +257,7 @@ export class ReferenceMapData {
             await Promise.all(
                 _.map([...indexIds], async (paperId) => {
                     const paper = await this.viewManager.getIndexPaper(paperId);
-                    if (paper !== null && typeof paper !== "number") {
-
+                    if (paper && paper.paperId) {
                         const paperCiteId =
                             settings.searchCiteKey &&
                                 this.library.libraryData !== null &&
