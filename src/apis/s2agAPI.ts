@@ -38,7 +38,7 @@ export const getIndexItem = async (paperId: string, debugMode = false): Promise<
 };
 
 export const getReferenceItems = async (paperId: string, limit = 100, debugMode = false): Promise<Reference[]> => {
-	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/references?limit=${limit}&fields=${SEMANTIC_FIELDS.join(',')}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/references?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
@@ -48,7 +48,7 @@ export const getReferenceItems = async (paperId: string, limit = 100, debugMode 
 };
 
 export const getCitationItems = async (paperId: string, limit = 100, debugMode = false): Promise<Reference[]> => {
-	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/citations?limit=${limit}&fields=${SEMANTIC_FIELDS.join(',')}`;
+	const url = `${SEMANTIC_SCHOLAR_API_URL}/paper/${paperId}/citations?fields=${SEMANTIC_FIELDS.join(',')}`;
 	const response = await requestUrl(url);
 	if (response.status !== 200) {
 		if (debugMode) console.log(`Error ${response.status}`); //TODO: better error handling
