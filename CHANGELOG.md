@@ -1,5 +1,11 @@
 # reference-map
 
+## 1.7.3
+
+### Patch Changes
+
+- Fix basename change bug
+
 ## 1.7.2
 
 ### Patch Changes
