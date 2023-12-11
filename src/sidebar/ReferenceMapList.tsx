@@ -112,16 +112,13 @@ export const ReferenceMapList = (props: {
 	}
 
 	useEffect(() => {
-		if (props.plugin.settings.searchCiteKey) {
-			getLocalData()
-		}
+		getLocalData()
 	}, [props.updateChecker.basename])
 
 	useEffect(() => {
 		fetchData()
 		EventBus.on(EVENTS.UPDATE, fetchData);
 	}, [
-		props.updateChecker.basename,
 		props.updateChecker.indexIds,
 		props.updateChecker.citeKeyMap,
 		props.updateChecker.fileName,

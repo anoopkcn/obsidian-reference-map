@@ -181,10 +181,13 @@ export class ReferenceMapData {
 
     prepare = async (activeFile: TFile | null | undefined, vault: Vault, metadataCache: MetadataCache) => {
         let isUpdate = false
-        if (activeFile === undefined) return isUpdate
-        const settings = this.plugin.settings
-        let fileCache = ''
-        if (activeFile) {
+        if (!activeFile) {
+            this.plugin.updateChecker.resetCache()
+            this.plugin.updateChecker.basename = ''
+            isUpdate = true
+        } else {
+            const settings = this.plugin.settings
+            let fileCache = ''
             let isFm = false, isFn = false, isIdx = false, isCite = false;
             this.plugin.updateChecker.basename = activeFile.basename
             try {
@@ -215,10 +218,6 @@ export class ReferenceMapData {
             if (settings.searchCiteKey) isCite = this.plugin.updateChecker.checkCiteKeysUpdate(prefix)
             isIdx = this.plugin.updateChecker.checkIndexIdsUpdate()
             isUpdate = isFm || isFn || isIdx || isCite
-        }
-        else {
-            this.plugin.updateChecker.resetCache()
-            isUpdate = true
         }
         return isUpdate
     }
