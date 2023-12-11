@@ -89,9 +89,8 @@ export const ReferenceMapList = (props: {
 	plugin: ReferenceMap
 	referenceMapData: ReferenceMapData
 	updateChecker: UpdateChecker
-	localCards: IndexPaper[]
 }) => {
-	const [papers, setPapers] = useState<IndexPaper[]>(props.localCards)
+	const [papers, setPapers] = useState<IndexPaper[]>([])
 	const [selection, setSelection] = useState('')
 	const [query, setQuery] = useState('')
 	const activeRef = useRef<HTMLDivElement>(null)
@@ -106,6 +105,17 @@ export const ReferenceMapList = (props: {
 		)
 		setPapers(indexCards)
 	}
+
+	const getLocalData = async () => {
+		const localCards = await props.referenceMapData.getLocalReferences(props.updateChecker.citeKeyMap)
+		setPapers(localCards)
+	}
+
+	useEffect(() => {
+		if (props.plugin.settings.searchCiteKey) {
+			getLocalData()
+		}
+	}, [props.updateChecker.basename])
 
 	useEffect(() => {
 		fetchData()

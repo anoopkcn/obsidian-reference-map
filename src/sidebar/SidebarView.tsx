@@ -99,7 +99,6 @@ export class SidebarView extends ItemView {
 
 	processReferences = async () => {
 		const activeFile = this.app.workspace.getActiveViewOfType(MarkdownView)?.file
-		const localCards = await this.referenceMapData.getLocalReferences(this.updateChecker.citeKeyMap)
 		await this.referenceMapData.prepare(activeFile, this.app.vault, this.app.metadataCache)
 
 		this.rootEl?.render(
@@ -108,7 +107,6 @@ export class SidebarView extends ItemView {
 					plugin={this.plugin}
 					referenceMapData={this.referenceMapData}
 					updateChecker={this.updateChecker}
-					localCards={localCards}
 				/>
 			</AppContext.Provider>
 		)
