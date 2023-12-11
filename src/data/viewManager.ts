@@ -10,11 +10,11 @@ import {
 import { Reference } from 'src/apis/s2agTypes'
 
 export class ViewManager {
-	private indexCache = new LRUCache<string, Reference | number | null>({ max: 150 })
-	private batchCache = new LRUCache<string, Reference[]>({ max: 50 })
+	private indexCache = new LRUCache<string, Reference | null>({ max: 150 })
 	private refCache = new LRUCache<string, Reference[]>({ max: 150 })
 	private citeCache = new LRUCache<string, Reference[]>({ max: 150 })
 	private searchCache = new LRUCache<string, Reference[]>({ max: 20 })
+	private batchCache = new LRUCache<string, Reference[]>({ max: 50 })
 
 	constructor(private plugin: ReferenceMap) { }
 
@@ -45,7 +45,7 @@ export class ViewManager {
 		}
 	}
 
-	getIndexPaper = async (paperId: string, cacheError = true): Promise<Reference | number | null> => {
+	getIndexPaper = async (paperId: string, cacheError = true): Promise<Reference | null> => {
 		const cachedPaper = this.indexCache.get(paperId)
 		if (cachedPaper) {
 			return cachedPaper
@@ -60,7 +60,7 @@ export class ViewManager {
 			if (debugMode) {
 				console.log(`ORM: S2AG API index card request error with status ${e}. Fallback library is used to show metadata. Check your internet connection, Validity of DOI/URL in the local library`)
 			}
-			if (cacheError) this.indexCache.set(paperId, 404)
+			if (cacheError) this.indexCache.set(paperId, null)
 			return null
 		}
 	}
