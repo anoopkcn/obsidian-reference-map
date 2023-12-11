@@ -56,7 +56,6 @@ export class ReferenceMapData {
         const debug = this.plugin.settings.debugMode
         if (reloadType === RELOAD.HARD) {
             this.viewManager.clearCache()
-            this.viewManager.clearCache()
             this.library.mtime = 0;
             await this.loadLibrary(false)
             this.loadCache()
@@ -181,17 +180,17 @@ export class ReferenceMapData {
     };
 
     prepare = async (activeFile: TFile | null | undefined, vault: Vault, metadataCache: MetadataCache) => {
-        if (activeFile === undefined) return false
-        const settings = this.plugin.settings
         let isUpdate = false
+        if (activeFile === undefined) return isUpdate
+        const settings = this.plugin.settings
         let fileCache = ''
         if (activeFile) {
             let isFm = false, isFn = false, isIdx = false, isCite = false;
             this.plugin.updateChecker.basename = activeFile.basename
             try {
-                fileCache = await vault.read(activeFile);
-            } catch (e) {
                 fileCache = await vault.cachedRead(activeFile);
+            } catch (e) {
+                fileCache = await vault.read(activeFile);
             }
             if (activeFile.extension === 'canvas') {
                 fileCache += await getCanvasContent(fileCache, vault)
@@ -226,7 +225,7 @@ export class ReferenceMapData {
 
     getLocalReferences = async (citeKeyMap: CiteKey[] = []) => {
         const indexCards: IndexPaper[] = [];
-        if (!citeKeyMap) return indexCards;
+        if (_.isEmpty(citeKeyMap)) return indexCards;
         _.map(citeKeyMap, (item: CiteKey): void => {
             const localPaper = this.library.libraryData?.find((entry) => entry.id === item.citeKey.replace('@', '')) as CiteKeyEntry;
             if (localPaper) {
@@ -288,7 +287,7 @@ export class ReferenceMapData {
                         let paper = fillMissingReference(localPaper);
                         if (item.citeKey !== item.paperId) {
                             const indexPaper = await this.viewManager.getIndexPaper(item.paperId);
-                            if (indexPaper && typeof indexPaper !== "number" && indexPaper.paperId) {
+                            if (indexPaper && indexPaper.paperId) {
                                 paper = fillMissingReference(localPaper, indexPaper);
                                 isLocal = false;
                             }
@@ -355,6 +354,10 @@ export class ReferenceMapData {
 
     preProcessReferences = (indexCards: IndexPaper[]) => {
         let indexCardsTemp = removeNullReferences(indexCards);
+
+        // This sorting has to be first because it is based on the location
+        // of the reference in the file. otherwise _.uniqBy will remove the
+        // duplicate references with locations
 
         if (!this.plugin.settings.enableIndexSorting) {
             indexCardsTemp = indexCardsTemp.sort((a, b) => {
