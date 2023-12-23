@@ -1,5 +1,11 @@
 # reference-map
 
+## 1.8.0
+
+### Minor Changes
+
+- Convert selected citekey to a link to open item in zotero
+
 ## 1.7.3
 
 ### Patch Changes
