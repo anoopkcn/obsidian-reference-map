@@ -12,7 +12,7 @@ import ReferenceMap from 'src/main'
 type IndexCardsProps = {
 	className?: string
 	plugin: ReferenceMap
-	rootPaper: IndexPaper
+	indexPaper: IndexPaper
 	viewManager: ViewManager
 }
 
@@ -27,11 +27,11 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 	const { settings } = props.plugin
 
 	useEffect(() => {
-		if (props.rootPaper.paper.paperId && !props.rootPaper.isLocal) {
+		if (props.indexPaper.paper.paperId && !props.indexPaper.isLocal) {
 			getCitations()
 			getReferences()
 		}
-	}, [props.rootPaper.isLocal])
+	}, [props.indexPaper.isLocal])
 
 	useEffect(() => {
 		setIsButtonShown(!settings.hideButtonsOnHover)
@@ -47,7 +47,7 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 
 	const getReferences = async () => {
 		setIsReferenceLoading(true);
-		const references = await props.viewManager.getReferences(props.rootPaper.paper.paperId);
+		const references = await props.viewManager.getReferences(props.indexPaper.paper.paperId);
 		const filteredReferences = settings.filterRedundantReferences
 			? references.filter((reference) => (reference.referenceCount && reference.referenceCount > 0) || (reference.citationCount && reference.citationCount > 0))
 			: references;
@@ -57,7 +57,7 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 
 	const getCitations = async () => {
 		setIsCitationLoading(true);
-		const citations = await props.viewManager.getCitations(props.rootPaper.paper.paperId);
+		const citations = await props.viewManager.getCitations(props.indexPaper.paper.paperId);
 		const filteredCitations = settings.filterRedundantReferences
 			? citations.filter((citation) => (citation.referenceCount && citation.referenceCount > 0) || (citation.citationCount && citation.citationCount > 0))
 			: citations;
@@ -87,11 +87,11 @@ export const IndexPaperCard = (props: IndexCardsProps) => {
 			onMouseEnter={() => handleHoverButtons(true)}
 			onMouseLeave={() => handleHoverButtons(false)}
 		>
-			<PaperHeading paper={props.rootPaper} settings={settings} />
+			<PaperHeading paper={props.indexPaper} settings={settings} />
 			{isButtonShown && (
 				<PaperButtons
 					settings={settings}
-					paper={props.rootPaper}
+					paper={props.indexPaper}
 					setShowReferences={setShowReferences}
 					showReferences={showReferences}
 					setShowCitations={setShowCitations}

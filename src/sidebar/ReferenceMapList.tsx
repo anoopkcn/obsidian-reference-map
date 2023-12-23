@@ -171,7 +171,7 @@ export const ReferenceMapList = (props: {
 								<IndexPaperCard
 									className={activeIndexCardClass}
 									plugin={props.plugin}
-									rootPaper={paper}
+									indexPaper={paper}
 									viewManager={viewManager}
 								/>
 							</div>
