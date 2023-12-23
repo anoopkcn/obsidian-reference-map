@@ -100,6 +100,13 @@ export default class ReferenceMap extends Plugin {
 			callback: () => this.openReferenceMapGraph(false),
 		});
 
+		this.addCommand({
+			id: "convert-selection-zotero-link",
+			name: "Convert Selection to Zotero Link",
+			callback: () => this.convertSelectionToZoteroLink(),
+		});
+
+
 		this.app.workspace.onLayoutReady(() => {
 			this.ensureLeafExists(false)
 		})
@@ -283,6 +290,37 @@ export default class ReferenceMap extends Plugin {
 		if (active) {
 			workspace.revealLeaf(leaf);
 		}
+	}
+
+	async convertSelectionToZoteroLink() {
+		try {
+			if (!this.settings.searchCiteKey) {
+				new Notice('Please enable Get references using citeKey in the settings.');
+				return;
+			}
+			const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (!markdownView || markdownView.getMode() !== 'source') {
+				new Notice('No active markdown view OR in Reading view');
+				return;
+			}
+
+			const selection = markdownView.editor.getSelection().trim();
+			const from = markdownView.editor.getCursor("from");
+			const to = markdownView.editor.getCursor("to");
+			const citeKeys = Array.from(this.updateChecker.citeKeys);
+			const foundCiteKey = citeKeys.find(key => selection.includes(key));
+			if (foundCiteKey) {
+				const renderedContents = `[${selection}](zotero://select/items/@${foundCiteKey})`;
+				markdownView.editor.replaceRange(renderedContents, from, to);
+				return;
+			} else {
+				new Notice('No citekey found in the selection.');
+				return;
+			}
+		} catch (err) {
+			new Notice('Sorry, something went wrong.');
+		}
+
 	}
 
 }
