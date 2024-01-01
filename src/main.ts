@@ -7,13 +7,13 @@ import { PromiseCapability } from './promise'
 import { addIcons } from './icons'
 import { SidebarView, REFERENCE_MAP_VIEW_TYPE } from './sidebar/SidebarView'
 import { GraphView, REFERENCE_MAP_GRAPH_VIEW_TYPE } from './graph/GraphView';
-import { ReferenceSearchModal, ReferenceSuggestModal } from './search/modals'
 import { getVaultRoot, makeFileName } from './utils/functions'
 import { templateReplace } from './utils/postprocess'
 import { ReferenceMapData } from './data/data'
 import { UpdateChecker } from './data/updateChecker'
 import { Reference } from './apis/s2agTypes'
-
+import { ReferenceSearchModal } from './search/SearchModal'
+import { ReferenceSuggestModal } from './search/SuggestModal'
 
 export default class ReferenceMap extends Plugin {
 	public settings: ReferenceMapSettings
