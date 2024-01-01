@@ -16,6 +16,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 	citationPathLoadingEl: HTMLElement
 	citationPathErrorEl: HTMLElement
 	citationPathSuccessEl: HTMLElement
+	warningEl: HTMLElement
 
 	constructor(app: App, plugin: ReferenceMap) {
 		super(app, plugin)
@@ -24,6 +25,8 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		this.citationPathLoadingEl = document.createElement('div');
 		this.citationPathErrorEl = document.createElement('div');
 		this.citationPathSuccessEl = document.createElement('div');
+		this.warningEl = document.createElement('div');
+		this.warningEl.addClass('orm-Warning')
 	}
 
 	async checkCitationExportPath(filePath: string): Promise<boolean> {
@@ -555,6 +558,7 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(t('CITED_MAX_LIMIT'))
 			.setDesc(fragWithHTML(t('CITED_MAX_LIMIT_DESC')))
+			// append warning this.warningEl to the setting to description
 			.addSlider((slider) =>
 				slider
 					.setLimits(50, 1000, 50)
@@ -574,6 +578,11 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				el.style.textAlign = 'right'
 				el.innerText = ` ${this.plugin.settings.citedLimit.toString()}`
 			})
+
+		this.warningEl = containerEl.createEl('p', {
+			cls: 'orm-Warning',
+			text: 'WARNING: Increasing this value may substantially slowdown rendering and therefore performance of Obsidian itself for documents containing large number of citations.'
+		})
 
 		let citingMaxLimit: HTMLDivElement
 		new Setting(containerEl)
@@ -599,6 +608,10 @@ export class ReferenceMapSettingTab extends PluginSettingTab {
 				el.innerText = ` ${this.plugin.settings.citingLimit.toString()}`
 			})
 
+		this.warningEl = containerEl.createEl('p', {
+			cls: 'orm-Warning',
+			text: 'WARNING: Increasing this value may substantially slowdown rendering and therefore performance of Obsidian itself for documents containing large number of citations.'
+		})
 		new Setting(containerEl)
 			.setName(t('HIDE_SHOW_REDUNDANT_REFERENCES'))
 			.setDesc(fragWithHTML(t('HIDE_SHOW_REDUNDANT_REFERENCES_DESC')))

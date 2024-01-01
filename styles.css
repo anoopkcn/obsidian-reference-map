@@ -507,6 +507,10 @@ body {
 	color: var(--text-accent);
 }
 
+.orm-Warning {
+	color: var(--text-warning);
+}
+
 /* Settings page CSS */
 
 .orm-settings-description {
