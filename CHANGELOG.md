@@ -1,5 +1,12 @@
 # reference-map
 
+## 1.8.1
+
+### Patch Changes
+
+- Refactor modal to a separate class
+- Add warning text to increaing the retrive limit
+
 ## 1.8.0
 
 ### Minor Changes
